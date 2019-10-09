@@ -6,9 +6,8 @@ import re
 from datetime import timedelta
 
 import six
-from dash.categories.fields import CategoryChoiceField
-from dash.categories.models import Category, CategoryImage
-from dash.orgs.models import OrgBackend
+
+from dash.categories.models import Category
 from dash.orgs.views import OrgObjPermsMixin, OrgPermsMixin
 from smartmin.csv_imports.models import ImportTask
 from smartmin.views import (
@@ -17,7 +16,6 @@ from smartmin.views import (
     SmartCSVImportView,
     SmartListView,
     SmartUpdateView,
-    SmartTemplateView,
 )
 
 from django import forms
@@ -494,31 +492,6 @@ class PollCRUDL(SmartCRUDL):
 
             return initial
 
-    # class List(OrgPermsMixin, SmartTemplateView):
-    #     permission = "polls.poll_list"
-    #     default_template = "polls/index.html"
-
-    #     def get_context_data(self, **kwargs):
-    #         context = super().get_context_data(**kwargs)
-    #         query = self.request.GET.get("query", "")
-    #         sort_field = self.request.GET.get("sort")
-    #         sort_direction = self.request.GET.get("dir")
-    #         page = self.request.GET.get("page")
-
-    #         filters = {}
-    #         sortered = "title"
-
-    #         if query:
-    #             filters["title__icontains"] = query
-
-    #         if sort_field:
-    #             sortered = "{}{}".format("-" if sort_direction == "desc" else "", sort_field)
-
-    #         context["polls"] = get_paginator(
-    #             Poll.objects.filter(**filters, is_active=True).filter(org=self.request.org).order_by(sortered), page
-    #         )
-    #         return context
-
     class List(OrgPermsMixin, SmartListView):
         search_fields = ("title__icontains",)
         fields = ("title", "poll_date", "category", "questions", "opinion_response", "sync_status", "created_on")
@@ -589,8 +562,9 @@ class PollCRUDL(SmartCRUDL):
 
     class Update(OrgObjPermsMixin, SmartUpdateView):
         form_class = PollForm
-        fields = ("is_active", "is_featured", "title", "category", "category_image")
-        success_url = "id@polls.poll_poll_flow"
+        fields = ("is_active", "title")
+        success_url = "id@polls.poll_poll_date"
+        default_template = "polls/form.html"
 
         def derive_title(self):
             obj = self.get_object()
@@ -606,6 +580,7 @@ class PollCRUDL(SmartCRUDL):
         def get_form_kwargs(self):
             kwargs = super(PollCRUDL.Update, self).get_form_kwargs()
             kwargs["org"] = self.request.org
+            kwargs["backend"] = self.request.org.backends.filter(is_active=True).first()
             return kwargs
 
         def post_save(self, obj):
