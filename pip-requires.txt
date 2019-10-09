@@ -35,3 +35,11 @@ pip-tools
 black
 isort
 flake8
+python-decouple
+sentry-sdk
+whitenoise
+django-sass-processor
+django-filter
+django-taggit
+libsass
+django-qurl-templatetag

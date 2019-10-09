@@ -14,7 +14,7 @@ black==19.3b0
 boto3==1.7.67
 botocore==1.10.67         # via boto3, s3transfer
 celery[redis]==4.2.1
-certifi==2018.4.16        # via requests
+certifi==2018.4.16        # via requests, sentry-sdk
 chardet==3.0.4            # via requests
 click==6.7                # via black, pip-tools
 coreapi==2.3.3            # via django-rest-swagger, openapi-codec
@@ -26,11 +26,15 @@ django-compressor==2.3
 django-countries==5.3.1
 django-debug-toolbar==1.9.1
 django-digest==1.13
+django-filter==2.2.0
 django-hamlpy==1.2
+django-qurl-templatetag==0.0.13
 django-redis==4.9.0
 django-rest-swagger==2.2.0
 django-rosetta==0.8.1
+django-sass-processor==0.7.3
 django-storages==1.6.6
+django-taggit==1.1.0
 django-timezone-field==2.1  # via rapidpro-dash
 django==2.2.5
 djangorestframework==3.8.2
@@ -48,6 +52,7 @@ itypes==1.1.0             # via coreapi
 jinja2==2.10              # via coreschema
 jmespath==0.9.3           # via boto3, botocore
 kombu==4.2.1              # via celery
+libsass==0.19.3
 markdown==2.6.11
 markupsafe==1.0           # via jinja2
 mccabe==0.6.1             # via flake8
@@ -65,6 +70,7 @@ pycodestyle==2.3.1        # via flake8
 pycountry==18.5.26
 pyflakes==1.6.0           # via flake8
 python-dateutil==2.7.3    # via botocore, rapidpro-dash
+python-decouple==3.1
 pytz==2018.5              # via celery, django, django-timezone-field, rapidpro-python, smartmin
 rapidpro-dash==1.4.5
 rapidpro-python==2.6.1
@@ -73,17 +79,19 @@ rcssmin==1.0.6            # via django-compressor
 redis==2.10.6             # via celery, django-redis, rapidpro-dash, smartmin
 regex==2018.7.11
 requests==2.19.1          # via coreapi, django-rosetta, microsofttranslator, rapidpro-dash, rapidpro-python
-rjsmin==1.1.0            # via django-compressor
+rjsmin==1.1.0             # via django-compressor
 s3transfer==0.1.13        # via boto3
+sentry-sdk==0.12.3
 simplejson==3.16.0        # via django-rest-swagger
-six==1.11.0               # via django-rosetta, microsofttranslator, mock, pip-tools, python-dateutil
+six==1.11.0               # via django-rosetta, libsass, microsofttranslator, mock, pip-tools, python-dateutil
 smartmin==2.2.0
 smmap2==2.0.4             # via gitdb2
 sqlparse==0.2.4           # via django, django-debug-toolbar, smartmin
 toml==0.9.4               # via black
 uritemplate==3.0.0        # via coreapi
-urllib3==1.23             # via requests
+urllib3==1.23             # via requests, sentry-sdk
 vine==1.1.4               # via amqp
+whitenoise==4.1.4
 xlrd==1.1.0               # via rapidpro-dash, smartmin, xlutils
 xlutils==2.0.0
 xlwt==1.3.0               # via rapidpro-dash, smartmin, xlutils

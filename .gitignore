@@ -93,3 +93,6 @@ celerybeat-schedule
 
 # VS code 
 .vscode
+
+# dotenv environment variables file
+.env
