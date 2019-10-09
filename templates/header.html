@@ -27,7 +27,7 @@
       {% if request.user.is_superuser %}
       <a class="navbar-item surveys" href="">Global Surveys</a>
       {% else %}
-      <a class="navbar-item surveys" href="">Surveys</a>
+      <a class="navbar-item surveys" href="{% url 'polls.poll_list' %}">Surveys</a>
       {% endif %}
       <a class="navbar-item rtm-help">Help</a>
     </div>

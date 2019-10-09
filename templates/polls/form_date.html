@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load i18n static sass_tags %}
+
+{% block nav_item %}page-surveys{% endblock %}
+
+{% block css_extra %}
+<link rel="stylesheet" href="{% sass_src 'css/polls/form.scss' %}">
+{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="columns">
+    <div class="column is-three-fifths is-offset-one-fifth">
+      <div class="columns tabs">
+        <div class="column tab">{% trans "1 Poll for flow" %}</div>
+        <div class="column tab is-active">{% trans "2 Date Setting" %}</div>
+        <div class="column tab">{% trans "3 Survey Questions" %}</div>
+        <!-- <div class="column tab">{% trans "4 What inspired you?" %}</div> -->
+      </div>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="column box is-three-fifths is-offset-one-fifth">
+      <form class="generic-form" method="post">
+        {% csrf_token %}
+        <h1 class="title">{% trans "Date Setting" %}</h1>
+        <div class="field">
+          <label class="label">{{ form.poll_date.label }}</label>
+          <div class="control">
+            {{ form.poll_date }}
+            {{ form.poll_date.errors }}
+          </div>
+        </div>
+        <div class="field">
+        
+        <label class="label">{{ form.end_date.label }}</label>
+          <div class="control">
+            {{ form.end_date }}
+            {{ form.end_date.errors }}
+          </div>
+        </div>
+        <div class="columns wrapper-buttons">
+          <div class="column">
+            <button type="submit" class="button is-primary">{% trans "OK" %}</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block js_extra %}
+<script src="{% static 'js/forms/errors.js' %}"></script>
+<script type="text/javascript">
+{% for field in form.errors %}
+  setErrors('{{field}}');
+{% endfor %}
+</script>
+{% endblock %}

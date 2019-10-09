@@ -59,6 +59,7 @@ urlpatterns = [
     # rtm custom urls
     url(r"^uncts/", include("ureport.uncts.urls")),
     url(r"^users/", include("ureport.accounts.urls")),
+    url(r"^surveys/", include("ureport.polls.urls")),
 ]
 
 if settings.DEBUG:

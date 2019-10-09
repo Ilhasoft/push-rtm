@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load i18n static ureport %}
+
+{% block nav_item %}page-surveys{% endblock %}
+
+{% block content %}
+<section class="section">
+  <h1 class="title">{{ request.org.name }}</h1>
+  <h2 class="subtitle">{% trans "Surveys" %}</h2>
+</section>
+
+<section class="section">
+    <div class="columns -is-mobile">
+      <div class="column auto">
+        <div class="control has-icons-left">
+          <form>
+            <input class="input is-medium search is-borderless" name="query" placeholder="Search" value="{{ query }}">
+            <span class="icon is-left">
+              <i class="material-icons">search</i>
+            </span>
+          </form>
+        </div>
+      </div>
+      {% if not request.org.is_master %}
+        <div class="column is-narrow">
+          <div class="control">
+            <a class="button is-medium is-info" href="{% url 'polls.poll_create' %}">
+              <span class="icon">
+                <i class="material-icons">share</i>
+              </span>
+              <span>{% trans "Connect Survey" %}</span>
+            </a>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+    <table class="table is-fullwidth is-hoverable">
+      <thead>
+      <tr class="is-tr">
+        <th></th>
+        <th>{% autosort title _("Name") %}</th>
+        <th>{% trans "SDGs" %}</th>
+        <th class="has-text-centered">{% autosort runs_count _("Runs") %}</th>
+      </tr>
+      </thead>
+      <tbody class="has-header">
+      
+      {% for poll in polls %}
+        <tr>
+          <td><a href="{% url 'polls.poll_update' poll.id %}"><i class="material-icons">insert_drive_file</i></a></td>
+          <td><a href="">{{ poll.title }}</a></td>
+          <td>
+            <span class="tag sdg-{{ sdg }}">SDG {{ sdg }}</span>
+          </td>
+          <td>{{ poll.runs_count }}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="7" class="has-text-centered">{% trans "No results found" %}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <div class="is-pulled-right">
+      {% include "paginator.html" with paginator=polls %}
+    </div>
+  </section>
+{% endblock %}
