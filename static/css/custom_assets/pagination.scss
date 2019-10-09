@@ -1,0 +1,17 @@
+.pagination {
+  .pagination-link,
+  .pagination-previous,
+  .pagination-next {
+    background-color: #fff;
+    border-radius: 5px;
+    margin: 0.1rem;
+
+    &:active {
+      box-shadow: 0 0 transparent;
+    }
+
+    .pagination-ellipsis {
+      padding: 0px;
+    }
+  }
+}

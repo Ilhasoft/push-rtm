@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load i18n static sass_tags ureport %}
+
+{% block nav_item %}page-users{% endblock %}
+
+{% block css_extra %}
+<link rel="stylesheet" href="{% static 'plugins/checkbox/checkbox.min.css' %}">
+<link rel="stylesheet" href="{% sass_src 'css/accounts/form.scss' %}">
+{% endblock %}
+
+{% block content %}
+<section class="section">
+  <h1 class="title">{% trans "Users" %}</h1>
+  <h2 class="subtitle">{{ page_subtitle }}</h2>
+</section>
+
+<div class="column is-4 center-form">
+  <form class="generic-form box" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="field">
+      <label class="label">{% trans "Username" %}</label>
+      <div class="control">
+        {{ form.username }}
+        {{ form.username.errors }}
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">{{ form.new_password.label }}</label>
+      <div class="control">
+        {{ form.new_password }}
+        {{ form.new_password.errors }}
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">{% trans "Name" %}</label>
+      <div class="control">
+        {{ form.first_name }}
+        {{ form.first_name.errors }}
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">{% trans "Email" %}</label>
+      <div class="control">
+        {{ form.email }}
+        {{ form.email.errors }}
+      </div>
+    </div>
+    <div class="field">
+    <label class="label">{% trans "Groups" %}</label>
+    {% for group in form.groups.field.choices %}
+      <div class="field">
+        <input
+          class="is-checkradio"
+          id="id_choice_{{group.0}}"
+          value="{{group.0}}"
+          type="radio"
+          name="groups"
+          {% if group.0 in form.groups.data|items_to_list or group.0 in form.groups.initial|items_to_list %} checked="checked"{% endif %}>
+        <label for="id_choice_{{group.0}}">{{group.1}}</label>
+      </div>
+    {% endfor %}
+  {{form.groups.errors}}
+  </div>
+    <div class="columns">
+      <div class="column is-centered">
+        <button type="submit" class="button is-primary">{% trans "OK" %}</button>
+        <a href="{% url 'accounts.user_list' %}" class="button primary-reverse">{% trans "Cancel" %}</a>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block js_extra %}
+<script src="{% static 'js/forms/errors.js' %}"></script>
+<script type="text/javascript">
+{% for field in form.errors %}
+  setErrors('{{field}}');
+{% endfor %}
+</script>
+{% endblock %}

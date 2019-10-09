@@ -1,0 +1,27 @@
+.button-primary {
+  width: 140px;
+  padding: 1rem;
+}
+
+.primary-reverse {
+  background-color: transparent !important;
+  color: $primary !important;
+  border-color: $primary !important;
+}
+
+.button-no-bg {
+  border: 0 solid transparent;
+  background-color: transparent;
+  cursor: pointer;
+  outline: none;
+}
+
+a.button.is-outlined .material-icons {
+  color: #03aeef;
+}
+
+a.button .material-icons,
+a.button.is-info:hover .material-icons,
+a.button.is-outlined:hover .material-icons{
+  color: #FFFFFF;
+}

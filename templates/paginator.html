@@ -1,0 +1,37 @@
+{% load qurl i18n %}
+
+<nav class="pagination is-centered">
+  {% if paginator.has_previous %}
+    <a class="pagination-previous" href="{% qurl request.get_full_path page=paginator.previous_page_number %}">{% trans "Previous" %}</a>
+  {% endif %}
+
+  <ul class="pagination-list">
+    {% if paginator.has_previous and paginator.number > 3 %}
+      <li><a class="pagination-link" href="{% qurl request.get_full_path page=1 %}">1</a></li>
+      {% if paginator.number > 4 %}
+        <li><a class="pagination-link"><span class="pagination-ellipsis">&hellip;</span></a></li>
+      {% endif %}
+    {% endif %}
+
+    {% for num in paginator.paginator.page_range %}
+      {% if paginator.number == num %}
+        <li><a class="pagination-link is-current">{{ num }}</a></li>
+      {% elif num > paginator.number|add:'-3' and num < paginator.number|add:'3' %}
+        <li><a class="pagination-link" href="{% qurl request.get_full_path page=num %}">{{ num }}</a></li>
+      {% endif %}
+    {% endfor %}
+
+    {% if paginator.has_next %}
+      {% if paginator.number < paginator.paginator.num_pages|add:'-3' %}
+        <li><a class="pagination-link"><span class="pagination-ellipsis">&hellip;</span></a></li>
+        <li><a class="pagination-link" href="{% qurl request.get_full_path page=paginator.paginator.num_pages %}">{{ paginator.paginator.num_pages }}</a></li>
+      {% elif paginator.number < paginator.paginator.num_pages|add:'-2' %}
+        <li><a class="pagination-link" href="{% qurl request.get_full_path page=paginator.paginator.num_pages %}">{{ paginator.paginator.num_pages }}</a></li>
+      {% endif %}
+    {% endif %}
+  </ul>
+
+  {% if paginator.has_next %}
+    <a class="pagination-next" href="{% qurl request.get_full_path page=paginator.next_page_number %}">{% trans "Next" %}</a>
+  {% endif %}
+</nav>

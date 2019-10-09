@@ -1,0 +1,55 @@
+{% load i18n %}
+
+<nav class="navbar gap-navbar" role="navigation" aria-label="main navigation">
+  <div class="container">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="https://bulma.io">
+      <!-- <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28"> -->
+    </a>
+    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  {% if request.user.is_authenticated and request.org in request.user.get_user_orgs or request.user.is_superuser %}
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+      {% if request.user.is_superuser %}
+      <a class="navbar-item summary">Global Summary</a>
+      <a class="navbar-item uncts" href="{% url 'uncts.unct_list' %}">UNCTs</a>
+      {%  else %}
+      <a class="navbar-item summary">Summary</a>
+      <a class="navbar-item uncts" href="">{{ request.org }}</a>
+      {% endif %}
+      <a class="navbar-item users" href="">Users</a>
+      <a class="navbar-item flowhub" href="">Repository</a>
+      {% if request.user.is_superuser %}
+      <a class="navbar-item surveys" href="">Global Surveys</a>
+      {% else %}
+      <a class="navbar-item surveys" href="">Surveys</a>
+      {% endif %}
+      <a class="navbar-item rtm-help">Help</a>
+    </div>
+    <div class="navbar-end">
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          English
+        </a>
+        <div class="navbar-dropdown is-boxed custom-is-boxed">
+          <a class="navbar-item">
+            Spanish
+          </a>
+          <a class="navbar-item">
+            Japanese
+          </a>
+        </div>
+      </div>
+      <div class="navbar-item">
+        <i class="material-icons">account_circle</i>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+</nav>

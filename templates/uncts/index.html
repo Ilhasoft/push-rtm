@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load i18n static ureport %}
+
+{% block nav_item %}page-uncts{% endblock %}
+
+{% block content %}
+<section class="section">
+  <h1 class="title">{% trans "UNCTs" %}</h1>
+</section>
+
+<section class="section">
+  <div class="columns is-mobile">
+    <div class="column auto">
+      <div class="control has-icons-left">
+        <form>
+          <input class="input is-medium search is-borderless" name="query" placeholder="Search" value="{{ query }}">
+          <span class="icon is-left icon-search">
+            <i class="material-icons">search</i>
+          </span>
+        </form>
+      </div>
+    </div>
+    <div class="column is-narrow">
+      <div class="control">
+        <a class="button is-medium is-info" href="{% url 'uncts.unct_create' %}">
+          <span class="icon">
+            <i class="material-icons">add</i>
+          </span>
+          <span>{% trans "UNCT" %}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <table class="table is-fullwidth">
+    <thead>
+      <tr class="is-tr">
+        <th>{% autosort name _("Name") %}</th>
+        <th>{% autosort timezone _("Timezone") %}</th>
+        <th>{% autosort language _("Language") %}</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody class="has-header">
+      {% for org in orgs %}
+        <tr class="is-tr">
+          <td>{{ org.name }}</td>
+          <td>{{ org.timezone }} </td>
+          <td>{{ org.language }}</td>
+          <td>
+            <a href="{% url 'uncts.unct_update' org.id %}">
+              <i class="material-icons">border_color</i>
+            </a>
+          </td>
+          <td>
+            <a href="{% url 'accounts.user_org_list' org.id %}">
+              <i class="material-icons">people</i>
+            </a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5" class="has-text-centered">{% trans "No results found" %}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="is-pulled-right">
+
+  </div>
+</section>
+{% endblock %}

@@ -20,6 +20,10 @@ import pytz
 from ureport.assets.models import Image, FLAG, LOGO
 from raven.contrib.django.raven_compat.models import client
 
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.admin.models import ACTION_FLAG_CHOICES, LogEntry
+
 from ureport.locations.models import Boundary
 from ureport.polls.models import Poll, PollResult
 from ureport.stats.models import PollStats, GenderSegment, AgeSegment
@@ -30,6 +34,31 @@ ORG_CONTACT_COUNT_KEY = "org:%d:contacts-counts"
 ORG_CONTACT_COUNT_TIMEOUT = 300
 
 logger = logging.getLogger(__name__)
+
+
+def get_paginator(queryset, page=1, items_per_page=10):
+    paginator = Paginator(queryset, items_per_page)
+
+    try:
+        paginator = paginator.page(page)
+    except PageNotAnInteger:
+        paginator = paginator.page(1)
+    except EmptyPage:
+        paginator = paginator.page(paginator.num_pages)
+
+    return paginator
+
+
+def log_save(user, obj, action):
+    content_type_pk = ContentType.objects.get_for_model(obj._meta.model).pk
+    LogEntry.objects.log_action(
+        user.pk,
+        content_type_pk,
+        obj.pk,
+        repr(obj),
+        action,
+        change_message="{}: {} by {}".format(str(obj), dict(ACTION_FLAG_CHOICES).get(action), user.username),
+    )
 
 
 def offline_context():
