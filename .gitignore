@@ -69,9 +69,6 @@ docs/_build/
 # Dev
 dash.sqlite
 
-# never check in the settings file/link
-ureport/settings.py
-
 # ignore sitestatic directory
 sitestatic/
 config/
