@@ -1,0 +1,145 @@
+$primary: #03aeef;
+
+//bulma derived variables
+$info: $primary;
+
+// White variations
+$white: #ffffff;
+
+//Grey variations
+$grey-lighter: #c9c9c9;
+$grey-light: #7f8587;
+$grey: #f2f6f9;
+$strong-grey: #7f8587;
+
+// Nav bar variables
+$navbar-background-color: $white;
+$navbar-height: 5.5rem;
+$navbar-item-hover-color: $primary;
+$navbar-tab-hover-border-bottom-color: $primary;
+$navbar-item-hover-background-color: transparent;
+$navbar-padding-horizontal: 0;
+
+// Font family
+$family-sans-serif: 'Roboto', sans-serif;
+
+// Notifications colors
+$error: #d41d00;
+
+// Tables
+$table-body-background-color: $grey;
+$table-background-color: $grey;
+
+// Buttons
+$button-padding-horizontal: 3rem;
+
+// Pagination
+$pagination-color: #707070;
+$pagination-border-color: transparent;
+$pagination-current-border-color: $primary;
+$pagination-current-background-color: $primary;
+$pagination-hover-border-color: transparent;
+$pagination-hover-color: #707070;
+$pagination-focus-border-color: transparent;
+$pagination-focus-color: transparent;
+
+// Nav menu
+$menu-itens: (
+  'uncts',
+  'global-summary',
+  'flowhub',
+  'users',
+  'surveys',
+  'rtm-help'
+);
+
+// Title
+$title-size: 25px;
+$subtitle-color: #707070;
+$subtitle-size: 19px;
+
+// Flow Menu
+$menu-item-color: #000;
+$menu-item-active-color: #000;
+$menu-item-active-background-color: #fff;
+$menu-item-hover-background-color: #efefef;
+
+// Sdgs colors
+$sdgs-colors: (
+  1 #e3263b,
+  2 #dfa739,
+  3 #4d9f45,
+  4 #c5202e,
+  5 #ef402c,
+  6 #29bee2,
+  7 #f9c316,
+  8 #a21b45,
+  9 #f3692c,
+  10 #dd2467,
+  11 #f99d28,
+  12 #be8b2d,
+  13 #407f45,
+  14 #1c97d3,
+  15 #5ebb47,
+  16 #056a9d,
+  17 #18486a,
+);
+
+@each $id, $color in $sdgs-colors {
+  .sdg-#{$id} {
+    color: #FFFFFF !important;
+    background-color: $color !important;
+    font-weight: bold;
+  }
+}
+
+// Box
+$box-shadow: 0px 0px transparent;
+
+// Section size
+$section-padding: 2rem 1.5rem;
+
+// Label
+$label-weight: 0px;
+
+// inputs
+$input-icon-active-color: $grey-lighter;
+$input-border-color: #7f8587;
+
+
+//spaces
+$spaceSizes: (0,5,10,20,30,40,50,60,70);
+$positions: ('top','right','bottom','left');
+
+@each $size in $spaceSizes {
+  @each $position in $positions {
+    .#{$position}-m-#{$size} {
+      margin-#{$position}: $size + px !important;
+    }
+    .#{$position}-p-#{$size} {
+      padding-#{$position}: $size + px !important;
+    }
+
+    .p-#{$size} {
+      padding: $size + px !important;
+    }
+
+    .m-#{$size} {
+      margin: $size + px !important;
+    }
+  }
+}
+
+//borders
+@each $position in $positions {
+  .border-#{$position}{
+    border-#{$position}: 1px solid #e5e5e5;
+  }
+
+  .border {
+    border: 1px solid #e5e5e5;
+  }
+}
+
+//Tag
+$tag-radius: 0;

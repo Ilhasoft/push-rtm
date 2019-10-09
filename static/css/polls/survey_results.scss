@@ -1,0 +1,123 @@
+#page-surveys {
+  .survey-filters {
+    background-color: #FFFFFF;
+    border-radius: 6px;
+  }
+
+  .survey-filters {
+    .survey-filters-content {
+      .sdg-checkbox {
+        margin-bottom: .5rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    h3 {
+      color: #707070;
+      font-weight: bold;
+    }
+  }
+
+  .level {
+    .level-item {
+      align-items: flex-end;
+      padding: 2rem 0;
+
+      .dropdown {
+        a {
+          align-items: baseline;
+        }
+      }
+    }
+  }
+
+  .info-icon {
+    font-size: 18px;
+    color: #b3b3b3;
+    cursor: default;
+  }
+
+  .arrow-down-icon {
+    align-self: flex-end;
+  }
+
+  .export-icon {
+    font-size: 30px;
+  }
+
+  .survey-item {
+    display: grid;
+    grid-template-columns: 3rem 1fr 70px;
+    grid-template-rows: auto;
+    padding: 25px 30px;
+    grid-template-areas:
+      "survey-question-number survey-question accordion-btn"
+      "question-details question-details question-details";
+
+    .survey-question-number {
+      color: #707070;
+      border-radius: 50%;
+      justify-content: center;
+      display: flex;
+      width: 32px;
+      height: 32px;
+      font-weight: bold;
+      align-items: center;
+      background-color: #f2f6f9;
+      grid-area: survey-question-number;
+    }
+
+    .survey-question {
+      font-weight: bold;
+      font-size: 18px;
+      color: #3e3e3e;
+      grid-area: survey-question;
+    }
+
+    .accordion-btn  {
+      align-self: flex-end;
+      cursor: pointer;
+      grid-area: accordion-btn;
+      position: relative;
+    }
+
+    .accordion-btn:before {
+      content: "More";
+    }
+
+    .accordion-btn:after {
+      content: "\2304";
+    }
+
+    .active:before {
+      content: "Less";
+    }
+
+    .active:after {
+      content: "\2303";
+      position: absolute;
+    }
+
+    .accordion-btn:after, .active:after {
+      font-size: 25px;
+    }
+
+    .question-details {
+      display: none;
+      overflow: hidden;
+      grid-area: question-details;
+    }
+  }
+
+  .bottom {
+    vertical-align: bottom;
+  }
+
+  @media(max-width: 995px) {
+    .survey-filters>div {
+      padding: 20px 15px;
+    }
+  }
+}

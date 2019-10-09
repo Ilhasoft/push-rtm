@@ -22,6 +22,7 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import RedirectView
+from django.shortcuts import redirect
 
 from ureport.countries.models import CountryAlias
 from ureport.jobs.models import JobSource
@@ -31,7 +32,13 @@ from ureport.utils import get_global_count, get_linked_orgs
 
 
 class IndexView(SmartTemplateView):
-    template_name = "public/index.html"
+    template_name = "public/home.html"
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        if not self.request.user.is_authenticated:
+            return redirect(reverse("users.user_login"))
+        return self.render_to_response(context)
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)

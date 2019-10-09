@@ -56,6 +56,10 @@ urlpatterns = [
     url(r"^api/$", RedirectView.as_view(pattern_name="api.v1.docs", permanent=False), name="api"),
     url(r"^api/v1/", include("ureport.api.urls")),
     url(r"^jsi18n/$", JavaScriptCatalog.as_view(), name="javascript-catalog"),
+    # rtm custom urls
+    url(r"^uncts/", include("ureport.uncts.urls")),
+    url(r"^users/", include("ureport.accounts.urls")),
+    url(r"^surveys/", include("ureport.polls.urls")),
 ]
 
 if settings.DEBUG:

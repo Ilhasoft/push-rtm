@@ -1,0 +1,73 @@
+html {
+  background-color: $grey !important;
+}
+
+.section {
+  & .no-padding-left {
+    padding-left: 0;
+  }
+}
+
+.navbar-start {
+  & .navbar-item:not(.flowhub-item) {
+    border-bottom: solid transparent;
+    margin-right: 2rem;
+
+    &:hover {
+      border-bottom: solid $primary;
+    }
+  }
+
+  & .navbar-item.has-dropdown {
+    border-bottom-width: 0 !important;
+  }
+
+  a.flowhub-item {
+    &:hover {
+      color: $primary !important;
+      background-color: transparent !important;
+    }
+  }
+}
+
+.navbar-end {
+  .navbar-item {
+    .user-icon {
+      font-size: 24px;
+    }
+  }
+}
+
+.box {
+  -webkit-box-shadow: 0 0 2px 0 rgba(204,204,204,1) !important;
+  -moz-box-shadow: 0 0 2px 0 rgba(204,204,204,1) !important;
+  box-shadow: 0 0 2px 0 rgba(204,204,204,1) !important;
+}
+
+@each $item in $menu-itens {
+  #page-#{$item} .#{$item} {
+    border-bottom: solid $primary;
+    padding-bottom: 5px;
+    color: $primary;
+  }
+}
+
+@each $sdg in $sdgs-colors {
+  $sdg-id: nth($sdg, 1);
+  $sdg-bg-color: nth($sdg, 2);
+
+  .badge-sdg-#{$sdg-id} {
+    font-size: 16px;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: $sdg-bg-color !important;
+  }
+}
+
+.custom-is-boxed {
+  margin-top: .25rem;
+}
+
+.middle {
+  vertical-align: middle;
+}

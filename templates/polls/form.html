@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load i18n static sass_tags %}
+
+{% block nav_item %}page-surveys{% endblock %}
+
+{% block css_extra %}
+  <link rel="stylesheet" href="{% sass_src 'css/polls/survey_form.scss' %}">
+{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="columns top-m-50">
+    <div class="column is-four-fifths is-offset-1">
+      <div class="columns tabs">
+        <div class="column tab is-active">{% trans "1 General" %}</div>
+        <div class="column tab">{% trans "2 Date Setting" %}</div>
+        <div class="column tab">{% trans "3 Questions" %}</div>
+      </div>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="column box is-four-fifths is-offset-1">
+      <form class="generic-form" method="post">
+        {% csrf_token %}
+        {{ form.errors }}
+        <h1 class="title">{% trans "General Information" %}</h1>
+        <h2 class="subtitle has-text-grey-dark">{% trans "Fill the fields below" %}</h2>
+
+        {% if form.flow_uuid %}
+        <div class="field">
+          <label class="label">{% trans "Survey selection" %}</label>
+          <div class="select is-fullwidth">
+            {{ form.flow_uuid }}
+            {{ form.flow_uuid.errors }}
+          </div>
+        </div>
+        {% endif %}
+
+        <div class="field">
+          <label class="label">{{ form.title.label }}</label>
+          <div class="control">
+              {{ form.title }}
+              {{ form.title.errors }}
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">{{ form.description.label }}</label>
+          <div class="control">
+              {{ form.description }}
+              {{ form.description.errors }}
+          </div>
+        </div>
+
+        {% if form.is_active %}
+        <div class="field">
+          <div class="control">
+            {{ form.is_active }}
+            <label class="label" for="{{ form.is_active.auto_id }}">{{ form.is_active.label }}</label>
+          </div>
+          <p class="help">{{ field.help_text }}</p>
+        </div>
+        {% endif %}
+        <div class="columns wrapper-buttons">
+          <div class="column">
+            <button type="submit" class="button is-primary">{% trans "OK" %}</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block js_extra %}
+<script src="{% static 'js/forms/errors.js' %}"></script>
+<script type="text/javascript">
+{% for field in form.errors %}
+  setErrors('{{field}}');
+{% endfor %}
+</script>
+{% endblock %}

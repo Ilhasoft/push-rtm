@@ -8,6 +8,8 @@ from django.conf import settings
 from django.template import TemplateSyntaxError
 from django.urls import reverse
 from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext_lazy as _
+from django.contrib.staticfiles.templatetags.staticfiles import static
 
 from ureport.utils import get_linked_orgs
 
@@ -229,3 +231,107 @@ def is_radio(field):
 @register.filter
 def is_file(field):
     return isinstance(field.field.widget, forms.FileInput)
+
+
+# Based on https://github.com/webstack/webstack-django-sorting
+
+
+@register.tag(name="autosort")
+def autosort(parser, token):
+    bits = [b for b in token.split_contents()]
+
+    if len(bits) < 2:
+        raise template.TemplateSyntaxError("anchor tag takes at least 1 argument.")
+
+    try:
+        title = _(bits[2][3:-2])
+    except IndexError:
+        title = bits[1].capitalize()
+
+    try:
+        only_url = bits[3]
+    except IndexError:
+        only_url = False
+
+    return SortAnchorNode(bits[1].strip(), title.strip(), bool(only_url))
+
+
+class SortAnchorNode(template.Node):
+
+    sort_directions = {
+        "asc": {"icon": "up-arrow", "inverse": "desc"},
+        "desc": {"icon": "down-arrow", "inverse": "asc"},
+        "": {"icon": "", "inverse": "asc"},
+    }
+
+    def __init__(self, field, title, only_url=False):
+        self.field = field
+        self.title = title
+        self.only_url = only_url
+
+    def render(self, context):
+        request = context["request"]
+        getvars = request.GET.copy()
+
+        if "sort" in getvars:
+            sortby = getvars["sort"]
+            del getvars["sort"]
+        else:
+            sortby = ""
+
+        if "dir" in getvars:
+            sortdir = self.sort_directions.get(getvars["dir"], self.sort_directions[""])
+            del getvars["dir"]
+        else:
+            sortdir = self.sort_directions[""]
+
+        if sortby == self.field:
+            getvars["dir"] = sortdir["inverse"]
+            icon = sortdir["icon"]
+        else:
+            getvars["dir"] = "desc"
+            icon = "up-arrow"
+
+        if len(getvars.keys()) > 0:
+            urlappend = "&{}".format(getvars.urlencode())
+        else:
+            urlappend = ""
+
+        if icon:
+            icon = static("svg/{}.svg".format(icon))
+            title = '{} <img src="{}">'.format(self.title, icon)
+        else:
+            title = self.title
+
+        if "dir" in getvars:
+            url = "{}?sort={}{}".format(request.path, self.field, urlappend)
+        else:
+            url = "{}{}{}".format(request.path, "?" if urlappend else "", urlappend)
+
+        if self.only_url:
+            return url
+
+        return '<a href="{}" title="{}">{}</a>'.format(url, self.title, title)
+
+
+@register.filter(name="user_org_group")
+def user_org_group(user):
+    return ", ".join([group.name for group in user.groups.all()])
+
+
+@register.filter(name="items_to_list")
+def items_to_list(items_list):
+    return list(map(lambda x: int(x), items_list))
+
+
+@register.filter(name="get_language")
+def get_language(language):
+    if language and language != "base":
+        import pycountry
+        return pycountry.languages.get(alpha_3=language).name
+    return None
+
+
+@register.filter(name="get_value_in_qs")
+def get_value_in_qs(queryset, key):
+    return queryset.values_list(key, flat=True)

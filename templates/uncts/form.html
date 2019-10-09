@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block nav_item %}page-uncts{% endblock %}
+
+{% block content %}
+
+<section class="section">
+  <div class="columns">
+    <div class="column box is-three-fifths is-offset-one-fifth">
+      <form class="generic-form" method="post">
+          <h1 class="title">{% trans "UNCTs" %}</h1>
+          <h2 class="subtitle has-text-grey-light">{{ page_subtitle }}</h2>
+        {% csrf_token %}
+        <div class="field bottom-m-20">
+          <label class="label">{% trans "Name" %}</label>
+          <div class="control">
+            {{ form.name }}
+            {{ form.name.errors }}
+          </div>
+        </div>
+        <div class="field bottom-m-20">
+          <label class="label">{% trans "Language" %}</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              {{ form.language }}
+              {{ form.language.errors }}
+            </div>
+          </div>
+        </div>
+
+        <div class="field bottom-m-20">
+          <label class="label">{% trans "RapidPro URL" %}</label>
+          <div class="control">
+            {{ form.host }}
+            {{ form.host.errors }}
+          </div>
+        </div>
+        <div class="field bottom-m-20">
+          <label class="label">{% trans "Token Rapidpro" %}</label>
+          <div class="control">
+            {{ form.api_token }}
+            {{ form.api_token.errors }}
+          </div>
+        </div>
+        <div class="field bottom-m-20">
+          <label class="label">{% trans "Timezone" %}</label>
+          <div class="control">
+            <div class="select">
+              {{ form.timezone }}
+              {{ form.timezone.errors }}
+            </div>
+          </div>
+        </div>
+        <div class="field bottom-m-20">
+          <label class="label">{% trans "Slug" %}</label>
+          <div class="control">
+            {{ form.subdomain }}
+            {{ form.subdomain.errors }}
+          </div>
+        </div>
+        <button type="submit" class="button is-medium is-info right-m-20">{% trans "OK" %}</button>
+        <a href="{% url 'uncts.unct_list' %}" class="button is-medium primary-reverse l-m-10">{% trans "Cancel" %}</a>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block js_extra %}
+<script src="{% static 'js/forms/errors.js' %}"></script>
+<script type="text/javascript">
+
+{% for field in form.errors %}
+  setErrors('{{field}}');
+{% endfor %}
+</script>
+{% endblock %}

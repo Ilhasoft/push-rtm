@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load i18n static sass_tags %}
+
+{% block nav_item %}page-surveys{% endblock %}
+
+{% block css_extra %}
+<link rel="stylesheet" href="{% sass_src 'plugins/choices/choices.scss' %}">
+<link rel="stylesheet" href="{% sass_src 'css/polls/survey_form.scss' %}">
+<link rel="stylesheet" href="{% static 'plugins/checkbox/checkbox.min.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="columns">
+    <div class="column is-three-fifths is-offset-one-fifth">
+      <div class="columns tabs">
+        <div class="column tab">{% trans "1 General" %}</div>
+        <div class="column tab">{% trans "2 Date Setting" %}</div>
+        <div class="column tab is-active">{% trans "3 Survey Questions" %}</div>
+      </div>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="column box is-three-fifths is-offset-one-fifth">
+      <form class="generic-form questions" method="post">
+        {% csrf_token %}
+        <h1 class="title is-4">{% trans "Survey Question" %}</h1>
+        {% for field in form %}
+        <div class="field{% if field.label == 'Display' and not forloop.last %} has-border{% endif %}">
+          {% if field.field.widget.input_type != 'checkbox' %}
+          <label class="label" for="{{ field.auto_id }}">{{ field.label }}</label>
+          {% endif %}
+
+          <div class="{% if field.field.widget.input_type == 'select' %}select is-fullwidth{% else %}control{% endif %}">
+            {{ field }}
+            {% if field.field.widget.input_type == 'checkbox' %}
+            <label class="label" for="{{ field.auto_id }}">{{ field.label }}</label>
+            {% endif %}
+          </div>
+          <!-- <p class="help">{{ field.help_text }}</p> -->
+        </div>
+        {% endfor %}
+        <div class="columns wrapper-buttons">
+          <div class="column">
+            <button type="submit" class="button is-primary">{% trans "OK" %}</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block js_extra %}
+<script type="text/javascript">
+  {% for field, errors in form.errors.items %}{% for error in errors %}{% if error %}
+  bulmaToast.toast({
+    message: "{{ error }}",
+    type: "is-danger",
+    position: "top-center",
+    closeOnClick: true,
+    dismissible: true
+  });
+  {% endif %}{% endfor %}{% endfor %}
+</script>
+{% endblock %}

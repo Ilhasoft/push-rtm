@@ -11,7 +11,14 @@ from dash.categories.models import Category, CategoryImage
 from dash.orgs.models import OrgBackend
 from dash.orgs.views import OrgObjPermsMixin, OrgPermsMixin
 from smartmin.csv_imports.models import ImportTask
-from smartmin.views import SmartCreateView, SmartCRUDL, SmartCSVImportView, SmartListView, SmartUpdateView
+from smartmin.views import (
+    SmartCreateView,
+    SmartCRUDL,
+    SmartCSVImportView,
+    SmartListView,
+    SmartUpdateView,
+    SmartTemplateView,
+)
 
 from django import forms
 from django.core.cache import cache
@@ -23,31 +30,31 @@ from django.utils import timezone
 from django.utils.timesince import timesince
 from django.utils.translation import ugettext_lazy as _
 
-from ureport.utils import json_date_to_datetime
+from ureport.utils import json_date_to_datetime, get_paginator
 
 from .models import Poll, PollImage, PollQuestion
 
 
 class PollForm(forms.ModelForm):
-    is_active = forms.BooleanField(required=False)
-    backend = forms.ModelChoiceField(OrgBackend.objects.none(), required=False)
-    title = forms.CharField(max_length=255, widget=forms.Textarea)
-    category = CategoryChoiceField(Category.objects.none())
-    category_image = forms.ModelChoiceField(CategoryImage.objects.none(), required=False)
+    is_active = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={"class": "is-checkradio"}))
+    title = forms.CharField(
+        max_length=255, widget=forms.TextInput(attrs={"placeholder": _("Insert the survey name"), "class": "input"})
+    )
+    flow_uuid = forms.ChoiceField(choices=[])
 
     def __init__(self, *args, **kwargs):
         self.org = kwargs["org"]
         del kwargs["org"]
+        self.backend = kwargs["backend"]
+        del kwargs["backend"]
 
         super(PollForm, self).__init__(*args, **kwargs)
-        self.fields["category"].queryset = Category.objects.filter(org=self.org)
 
-        self.fields["backend"].queryset = OrgBackend.objects.filter(org=self.org, is_active=True).order_by("slug")
-
-        # only display category images for this org which are active
-        self.fields["category_image"].queryset = CategoryImage.objects.filter(
-            category__org=self.org, is_active=True
-        ).order_by("category__name", "name")
+        flows = self.org.get_flows(self.backend)
+        self.fields["flow_uuid"].choices = [
+            (f["uuid"], f["name"] + " (" + f.get("date_hint", "--") + ")")
+            for f in sorted(flows.values(), key=lambda k: k["name"].lower().strip())
+        ]
 
     def clean(self):
 
@@ -56,11 +63,13 @@ class PollForm(forms.ModelForm):
         if not self.org.backends.filter(is_active=True).exists():
             raise ValidationError(_("Your org does not have any API token configuration."))
 
+        cleaned_data["category"] = Category.objects.get(org=self.org)
+
         return cleaned_data
 
     class Meta:
         model = Poll
-        fields = ("is_active", "is_featured", "backend", "title", "category", "category_image")
+        fields = ("is_active", "backend", "title", "flow_uuid", "category")
 
 
 class PollResponseForm(forms.ModelForm):
@@ -75,31 +84,30 @@ class PollResponseForm(forms.ModelForm):
 
 
 class PollFlowForm(forms.ModelForm):
-    flow_uuid = forms.ChoiceField(choices=[])
-    poll_date = forms.DateTimeField(required=False)
+    poll_date = forms.DateTimeField(
+        required=False,
+        widget=forms.DateTimeInput(
+            attrs={
+                "placeholder": _("Registration date or leave this field empty to keep the date flow creation date"),
+                "class": "input",
+            }
+        ),
+    )
 
     def __init__(self, *args, **kwargs):
         self.org = kwargs["org"]
         del kwargs["org"]
-        self.backend = kwargs["backend"]
-        del kwargs["backend"]
+        self.flow = kwargs["flow"]
+        del kwargs["flow"]
 
         super(PollFlowForm, self).__init__(*args, **kwargs)
-
-        # find all the flows on this org, create choices for those
-        flows = self.org.get_flows(self.backend)
-        self.fields["flow_uuid"].choices = [
-            (f["uuid"], f["name"] + " (" + f.get("date_hint", "--") + ")")
-            for f in sorted(flows.values(), key=lambda k: k["name"].lower().strip())
-        ]
 
     def clean(self):
         cleaned_data = self.cleaned_data
         poll_date = cleaned_data.get("poll_date")
-        flow_uuid = cleaned_data.get("flow_uuid")
 
-        flows = self.org.get_flows(self.backend)
-        flow = flows.get(flow_uuid)
+        flows = self.org.get_flows(self.flow.backend)
+        flow = flows.get(self.flow.flow_uuid)
 
         if not poll_date and flow:
             date = flow.get("created_on", None)
@@ -114,7 +122,7 @@ class PollFlowForm(forms.ModelForm):
 
     class Meta:
         model = Poll
-        fields = ("flow_uuid", "poll_date")
+        fields = ("poll_date",)
 
 
 class QuestionForm(ModelForm):
@@ -172,12 +180,13 @@ class PollCRUDL(SmartCRUDL):
         title = _("Adjust poll date")
         success_url = "id@polls.poll_questions"
         fields = ("poll_date",)
+        default_template = "polls/form_date.html"
         success_message = _("Your poll has been updated, now pick which questions to include.")
 
         def get_form_kwargs(self):
             kwargs = super(PollCRUDL.PollDate, self).get_form_kwargs()
             kwargs["org"] = self.request.org
-            kwargs["backend"] = self.object.backend
+            kwargs["flow"] = self.object
             return kwargs
 
     class PollFlow(OrgObjPermsMixin, SmartUpdateView):
@@ -236,31 +245,40 @@ class PollCRUDL(SmartCRUDL):
 
     class Create(OrgPermsMixin, SmartCreateView):
         form_class = PollForm
-        success_url = "id@polls.poll_poll_flow"
-        fields = ("is_featured", "backend", "title", "category", "category_image")
+        success_url = "id@polls.poll_poll_date"
+        permission = "polls.poll_create"
+        default_template = "polls/form.html"
+        fields = ("title", "flow_uuid")
         success_message = _("Your poll has been created, now configure its flow.")
+        title = _("Create Survey")
 
-        def derive_fields(self):
-            org = self.request.org
-
-            backend_options = org.backends.filter(is_active=True).values_list("slug", flat=True)
-            if len(backend_options) <= 1:
-                return ("is_featured", "title", "category", "category_image")
-            return ("is_featured", "backend", "title", "category", "category_image")
+        def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            context["page_subtitle"] = _("New")
+            return context
 
         def get_form_kwargs(self):
             kwargs = super(PollCRUDL.Create, self).get_form_kwargs()
             kwargs["org"] = self.request.org
+            kwargs["backend"] = self.request.org.backends.filter(is_active=True).first()
+
+            try:
+                Category.objects.get(org=self.org)
+            except Category.DoesNotExist:
+                Category.objects.create(
+                    name="default",
+                    org=self.org,
+                    created_by_id=self.request.user.pk,
+                    modified_by_id=self.request.user.pk,
+                )
+
             return kwargs
 
         def pre_save(self, obj):
             obj = super(PollCRUDL.Create, self).pre_save(obj)
             org = self.request.org
             obj.org = org
-
-            backend_options = org.backends.filter(is_active=True)
-            if len(backend_options) == 1:
-                obj.backend = backend_options[0]
+            obj.backend = org.backends.filter(is_active=True).first()
 
             now = timezone.now()
             five_minutes_ago = now - timedelta(minutes=5)
@@ -271,7 +289,22 @@ class PollCRUDL(SmartCRUDL):
             if similar_poll:
                 obj = similar_poll
 
-            obj.poll_date = timezone.now()
+            flow = obj.get_flow()
+
+            date = flow.get("created_on", None)
+            if date:
+                flow_date = json_date_to_datetime(date)
+            else:
+                flow_date = timezone.now()
+
+            obj.poll_date = flow_date
+            return obj
+
+        def post_save(self, obj):
+            obj = super(PollCRUDL.Create, self).post_save(obj)
+            obj.update_or_create_questions(user=self.request.user)
+
+            Poll.pull_poll_results_task(obj)
             return obj
 
     class Images(OrgObjPermsMixin, SmartUpdateView):
@@ -339,20 +372,21 @@ class PollCRUDL(SmartCRUDL):
             return kwargs
 
     class Questions(OrgObjPermsMixin, SmartUpdateView):
-        success_url = "id@polls.poll_images"
+        success_url = "@polls.poll_list"
         title = _("Poll Questions")
         form_class = QuestionForm
-        success_message = _("Now set what images you want displayed on your poll page. (if any)")
+        success_message = _("Your poll has been updated.")
+        default_template = "polls/form_questions.html"
 
         def derive_fields(self):
             questions = self.object.questions.all()
 
             fields = []
             for question in questions:
-                fields.append("ruleset_%s_include" % question.ruleset_uuid)
                 fields.append("ruleset_%s_priority" % question.ruleset_uuid)
                 fields.append("ruleset_%s_label" % question.ruleset_uuid)
                 fields.append("ruleset_%s_title" % question.ruleset_uuid)
+                fields.append("ruleset_%s_include" % question.ruleset_uuid)
 
             return fields
 
@@ -372,26 +406,28 @@ class PollCRUDL(SmartCRUDL):
                 include_field_name = "ruleset_%s_include" % question.ruleset_uuid
                 include_field_initial = initial.get(include_field_name, False)
                 include_field = forms.BooleanField(
-                    label=_("Include"),
+                    label=_("Display"),
                     required=False,
                     initial=include_field_initial,
                     help_text=_("Whether to include this question in your public results"),
+                    widget=forms.CheckboxInput(attrs={"class": "is-checkradio"}),
                 )
 
                 priority_field_name = "ruleset_%s_priority" % question.ruleset_uuid
                 priority_field_initial = initial.get(priority_field_name, None)
-                priority_field = forms.IntegerField(
-                    label=_("Priority"),
+                priority_field = forms.ChoiceField(
+                    label=_("Position inside survey"),
                     required=False,
                     initial=priority_field_initial,
+                    choices=list(map(lambda x: (x, x), range(1, 11))),
                     help_text=_("The priority of this question on the poll page, higher priority comes first"),
                 )
 
                 label_field_name = "ruleset_%s_label" % question.ruleset_uuid
                 label_field_initial = initial.get(label_field_name, "")
                 label_field = forms.CharField(
-                    label=_("Ruleset Label"),
-                    widget=forms.TextInput(attrs={"readonly": "readonly"}),
+                    label=_("Ruleset Name"),
+                    widget=forms.TextInput(attrs={"readonly": "readonly", "class": "input"}),
                     required=False,
                     initial=label_field_initial,
                     help_text=_("The label of the ruleset from RapidPro"),
@@ -401,16 +437,18 @@ class PollCRUDL(SmartCRUDL):
                 title_field_initial = initial.get(title_field_name, "")
                 title_field = forms.CharField(
                     label=_("Title"),
-                    widget=forms.Textarea,
+                    widget=forms.Textarea(
+                        attrs={"class": "textarea", "rows": 3, "placeholder": _("Put a title here for your question")}
+                    ),
                     required=False,
                     initial=title_field_initial,
                     help_text=_("The question posed to your audience, will be displayed publicly"),
                 )
 
-                self.form.fields[include_field_name] = include_field
                 self.form.fields[priority_field_name] = priority_field
                 self.form.fields[label_field_name] = label_field
                 self.form.fields[title_field_name] = title_field
+                self.form.fields[include_field_name] = include_field
 
             return self.form
 
@@ -456,11 +494,37 @@ class PollCRUDL(SmartCRUDL):
 
             return initial
 
+    # class List(OrgPermsMixin, SmartTemplateView):
+    #     permission = "polls.poll_list"
+    #     default_template = "polls/index.html"
+
+    #     def get_context_data(self, **kwargs):
+    #         context = super().get_context_data(**kwargs)
+    #         query = self.request.GET.get("query", "")
+    #         sort_field = self.request.GET.get("sort")
+    #         sort_direction = self.request.GET.get("dir")
+    #         page = self.request.GET.get("page")
+
+    #         filters = {}
+    #         sortered = "title"
+
+    #         if query:
+    #             filters["title__icontains"] = query
+
+    #         if sort_field:
+    #             sortered = "{}{}".format("-" if sort_direction == "desc" else "", sort_field)
+
+    #         context["polls"] = get_paginator(
+    #             Poll.objects.filter(**filters, is_active=True).filter(org=self.request.org).order_by(sortered), page
+    #         )
+    #         return context
+
     class List(OrgPermsMixin, SmartListView):
         search_fields = ("title__icontains",)
         fields = ("title", "poll_date", "category", "questions", "opinion_response", "sync_status", "created_on")
         link_fields = ("title", "poll_date", "questions", "opinion_response", "images")
         default_order = ("-created_on", "id")
+        default_template = "polls/index.html"
 
         def get_queryset(self):
             queryset = super(PollCRUDL.List, self).get_queryset().filter(org=self.request.org)
@@ -501,6 +565,27 @@ class PollCRUDL(SmartCRUDL):
                 return reverse("polls.poll_responses", args=[obj.pk])
             else:
                 return super(PollCRUDL.List, self).lookup_field_link(context, field, obj)
+
+        def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            query = self.request.GET.get("query", "")
+            sort_field = self.request.GET.get("sort")
+            sort_direction = self.request.GET.get("dir")
+            page = self.request.GET.get("page")
+
+            filters = {}
+            sortered = "title"
+
+            if query:
+                filters["title__icontains"] = query
+
+            if sort_field:
+                sortered = "{}{}".format("-" if sort_direction == "desc" else "", sort_field)
+
+            context["polls"] = get_paginator(
+                Poll.objects.filter(**filters, is_active=True).filter(org=self.request.org).order_by(sortered), page
+            )
+            return context
 
     class Update(OrgObjPermsMixin, SmartUpdateView):
         form_class = PollForm

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load i18n static ureport %}
+
+{% block nav_item %}page-users{% endblock %}
+
+{% block content %}
+<section class="section">
+  <h1 class="title">{% trans "Users" %}</h1>
+</section>
+
+<section class="section">
+  <div class="columns is-mobile">
+    <div class="column auto">
+      <div class="control has-icons-left">
+        <form>
+          <input class="input is-medium search" name="query" placeholder="Search" value="{{ query }}">
+          <span class="icon is-left">
+            <i class="material-icons">search</i>
+          </span>
+        </form>
+      </div>
+    </div>
+    <div class="column is-narrow">
+      <div class="control">
+        <a
+          class="button is-medium is-info"
+          href="{% if request.user.is_superuser %}{% url 'accounts.user_org_create' org %}{% else %}{% url 'accounts.user_create' %}{% endif %}">
+          <span class="icon">
+            <i class="material-icons">add</i>
+          </span>
+          <span>{% trans "User" %}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <table class="table is-fullwidth">
+    <thead>
+      <tr class="is-tr">
+        <th>{% autosort first_name _("Name") %}</th>
+        <th>{% trans "Username" %}</th>
+        <th>{% trans "Email" %}</th>
+        <th>{% trans "Permission" %}</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody class="has-header">
+      {% for user in users %}
+        <tr class="is-tr">
+          <td>{{ user.first_name }} </td>
+          <td>{{ user.username }} </td>
+          <td>{{ user.email }} </td>
+          <td>{{ user|user_org_group }}</td>
+          <td>
+            <a
+              href="{% if request.user.is_superuser %}{% url 'accounts.user_org_update' org user.pk %}{% else %}{% url 'accounts.user_update' user.pk %}{% endif %}">
+              <i class="material-icons">border_color</i>
+            </a>
+          </td>
+          <td>
+            <form
+              action="{% if request.user.is_superuser %}{% url 'accounts.user_org_delete' org user.id %}{% else %}{% url 'accounts.user_delete' user.pk %}{% endif %}"
+              method="POST">
+              {% csrf_token %}
+              <button class="button-no-bg" type="submit">
+                <i class="material-icons">delete</i>
+              </button>
+            </form>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="6" class="has-text-centered">{% trans "No results found" %}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="is-pulled-right">
+    {% include "paginator.html" with paginator=users %}
+  </div>
+</section>
+{% endblock %}
