@@ -37,7 +37,6 @@
             <label class="label" for="{{ field.auto_id }}">{{ field.label }}</label>
             {% endif %}
           </div>
-          <!-- <p class="help">{{ field.help_text }}</p> -->
         </div>
         {% endfor %}
         <div class="columns wrapper-buttons">
@@ -52,15 +51,22 @@
 {% endblock %}
 
 {% block js_extra %}
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <script type="text/javascript">
-  {% for field, errors in form.errors.items %}{% for error in errors %}{% if error %}
-  bulmaToast.toast({
-    message: "{{ error }}",
-    type: "is-danger",
-    position: "top-center",
-    closeOnClick: true,
-    dismissible: true
-  });
-  {% endif %}{% endfor %}{% endfor %}
+
+new Choices(".chosen-select", {
+  removeItemButton: true,
+  listItems: "choices__list--multiple"
+});
+
+{% for field, errors in form.errors.items %}{% for error in errors %}{% if error %}
+bulmaToast.toast({
+  message: "{{ error }}",
+  type: "is-danger",
+  position: "top-center",
+  closeOnClick: true,
+  dismissible: true
+});
+{% endif %}{% endfor %}{% endfor %}
 </script>
 {% endblock %}
