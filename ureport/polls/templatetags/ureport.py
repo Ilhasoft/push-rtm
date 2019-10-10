@@ -338,4 +338,6 @@ def get_value_in_qs(queryset, key):
     for a in queryset.values_list(key, flat=True):
         [sdgs.append(b) for b in a]
 
-    return list(set(sdgs))
+    sdgs = list(set(sdgs))
+    sdgs.sort()
+    return sdgs
