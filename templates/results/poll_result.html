@@ -90,8 +90,10 @@
               <div class="column"><strong>{{ poll.title }}</strong></div>
             </div>
             <div class="columns bottom-m-20">
-              <div class="column is-2 has-text-right">{% trans 'Description:'%}</div>
-              <div class="column">{{ poll.response_content }}</div>
+              {% if poll.response_content %}
+                <div class="column is-2 has-text-right">{% trans 'Description:'%}</div>
+                <div class="column">{{ poll.response_content }}</div>
+              {% endif %}
             </div>
             <div class="columns bottom-m-10">
               <div class="column is-2 has-text-right">{% trans 'Linked SDGs:'%}</div>
@@ -148,12 +150,24 @@
                   </div>
                 </div>
               </div>
+              
+              {% with results=question|question_results %}
+                {% with categories=results.categories %}
+                  {% for category in categories %}
+                    <div
+                      class="chart-question-{{ question.pk }}-category"
+                      data-category="{{ category.label }}"
+                      data-percentage="{% widthratio category.count results.set 100 %}">
+                    </div>
+                  {% endfor %}
+                {% endwith %}
+              {% endwith %}
               {% endif %}
               <div
                 id="chart-question-{{ question.pk }}"
                 data-question="{{ question.pk }}"
-                data-question-type="{% if question.is_open_ended %}cloud{% else  %}chart{% endif %}"
-              ></div>
+                data-question-type="{% if question.is_open_ended %}cloud{% else  %}chart{% endif %}">
+              </div>
             </div>
           </div>
           {% endfor %}
@@ -232,6 +246,40 @@
     // lineChart.render();
     // barChart.render();
 
+    const results = [];
+
+    $("div[data-question-type=\"chart\"]").each(function() {
+      const question = $(this).attr("data-question");
+      const labels = [];
+      const series = [];
+      const colors = [];
+
+      $.each($(".chart-question-" + question + "-category"), function() {
+        labels.push($(this).attr("data-category"));
+        series.push(parseInt($(this).attr("data-percentage")));
+        colors.push("#" + Math.floor(Math.random()*16777215).toString(16));
+      });
+
+      let donutOptions = {
+        chart: { type: 'donut' },
+        legend: { position: 'top', horizontalAlign: 'center', fontSize: '16px', onItemClick: { toggleDataSeries: true }},
+      colors: colors,
+      series: series,
+      labels: labels,
+        plotOptions: { pie: { size: 170 }},
+        // dataLabels: { formatter: function (val) { return val + "%" }, style: { fontSize: '16px'}},
+        tooltip: { enabled: false },
+      };
+
+      console.log(series);
+
+      let donutChart = new ApexCharts(
+        document.querySelector("#chart-question-" + question),
+        donutOptions
+      )
+      donutChart.render();
+    });
+
     const availableWordCloudColors = [
       "#89e7ff",
       "#03aeef",
@@ -239,7 +287,7 @@
       "#0400a4",
     ];
 
-    function fillWordColor(d, i) {
+    const fillWordColor = function(d, i) {
       return availableWordCloudColors[i % availableWordCloudColors.length];
     }
 
