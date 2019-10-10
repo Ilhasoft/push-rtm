@@ -48,7 +48,7 @@
       {% for poll in polls %}
         <tr>
           <td><a href="{% url 'polls.poll_update' poll.id %}"><i class="material-icons">insert_drive_file</i></a></td>
-          <td><a href="">{{ poll.title }}</a></td>
+          <td><a href="{% url 'results.poll_read' poll.id %}">{{ poll.title }}</a></td>
           <td>
             {% for sdg in poll.questions.distinct|get_value_in_qs:'sdgs' %}
               <span class="tag sdg-{{ sdg }}">SDG {{ sdg }}</span>

@@ -106,6 +106,7 @@ INSTALLED_APPS += (
     "qurl_templatetag",
     "ureport.uncts",
     "ureport.accounts",
+    "ureport.results",
 )
 
 SITE_ALLOW_NO_ORG += (

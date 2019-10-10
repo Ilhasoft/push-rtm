@@ -1,0 +1,403 @@
+{% extends "base.html" %}
+{% load i18n static sass_tags %}
+
+{% block nav_item %}page-surveys{% endblock %}
+
+{% block css_extra %}
+  <link rel="stylesheet" href="{% static 'plugins/checkbox/checkbox.min.css' %}">
+  <link rel="stylesheet" href="{% sass_src 'plugins/tooltip/tooltip.scss' %}">
+  <link rel="stylesheet" href="{% sass_src 'css/polls/survey_results.scss' %}"/>
+{% endblock %}
+
+{% block content %}
+  <section class="section top-p-0">
+    <nav class="breadcrumb" aria-label="breadcrumbs">
+      <ul>
+        {% if request.user.is_superuser %}
+        <li><a href="{% url 'polls.poll_list' %}">{% trans 'Global Surveys'%}</a></li>
+        {% else %}
+        <li><a href="{% url 'polls.poll_list' %}">{% trans 'Surveys'%}</a></li>
+        {% endif %}
+        <li class="is-active"><a href="#" aria-current="page">{% trans 'Survey Results'%}</a></li>
+      </ul>
+    </nav>
+  </section>
+  <section class="section">
+    <h1 class="title">{% trans 'Survey Results'%}</h1>
+  </section>
+  <section class="section">
+    <div class="columns is-mobile">
+      <div class="column is-one-third-mobile is-one-quarter">
+        <aside class="survey-filters">
+          {% if request.user.is_superuser %}
+            <div class="border-bottom p-30">
+              <h3 class="bottom-m-10">
+                <img class="right-m-5" src="{% static 'svg/unct.svg' %}" alt="">
+                <span>UNCTs</span>
+              </h3>
+              <div class="control has-icons-left">
+                <form>
+                  <input class="input is-medium search" name="query" placeholder="{% trans 'Search'%}" value="{{ query }}">
+                  <span class="icon is-left">
+                  <i class="material-icons">search</i>
+                </span>
+                </form>
+              </div>
+            </div>
+          {% endif %}
+          <div class="survey-filters-content p-30">
+            <h3 class="bottom-m-10">
+              <img class="right-m-5" src="{% static 'svg/sdg.svg' %}" alt="">
+              <span>SDG</span>
+            </h3>
+
+            {% for sdg in SDGS %}
+              <div class="sdg-checkbox">
+                <input class="is-checkradio" type="checkbox" id="sdg{{sdg.0}}" name="sdg{{sdg.0}}">
+                <label for="sdg{{sdg.0}}" title="{{ sdg.1 }}">{{ sdg.1 }}</label>
+              </div>
+            {% endfor %}
+
+          </div>
+        </aside>
+      </div>
+      <div class="column">
+        <div class="box is-paddingless">
+          <nav class="level is-paddingless border-bottom is-mobile">
+            <div class="level-item border-right">
+              <span class="title right-m-10 left-m-10">{{ survey.questions_quantity }}</span>
+              <span>{% trans 'Questions'%}</span>
+              <span class="tooltip top left-m-10">
+              <i class="material-icons info-icon">info</i>
+              <span class="tooltip-content">{% trans 'The amount of questions in this survey'%}</span>
+            </span>
+            </div>
+<!--          <div class="level-item border-right border-left">-->
+<!--            <div class="dropdown is-right">-->
+<!--              <div class="dropdown-trigger">-->
+<!--                <a class="is-inline-flex" aria-haspopup="true" aria-controls="dropdown-menu">-->
+<!--                  <img class="globe-icon" src="{% static 'svg/earth-globe.svg' %}" alt="">-->
+<!--                  <p class="title right-m-10 left-m-10">12</p>-->
+<!--                  <p class="has-text-grey-dark">Countries</p>-->
+<!--                  <i class="material-icons arrow-down-icon">keyboard_arrow_down</i>-->
+<!--                  <span class="tooltip top left-m-10">-->
+<!--                    <i class="material-icons info-icon">info</i>-->
+<!--                    <span class="tooltip-content">Countries participating in this global survey</span>-->
+<!--                  </span>-->
+<!--                </a>-->
+<!--              </div>-->
+<!--              <div class="dropdown-menu" id="dropdown-menu" role="menu">-->
+<!--                <div class="dropdown-content">-->
+<!--                  <a class="dropdown-item">Brasil</a>-->
+<!--                  <a class="dropdown-item">USA</a>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+            <div class="level-item">
+              <i class="material-icons export-icon right-m-5">save_alt</i>
+              <span>Export</span>
+              <span class="tooltip top left-m-10">
+              <i class="material-icons info-icon">info</i>
+              <span class="tooltip-content">{% trans 'Export results on .csv format'%}</span>
+            </span>
+            </div>
+          </nav>
+          <div class="p-30 bottom-p-10">
+            <div class="bottom-m-40">{{ survey.start_date }}</div>
+            <div class="columns bottom-m-20">
+              <div class="column is-2 has-text-right">{% trans 'Title:'%}</div>
+              <div class="column"><strong>{{ survey.name }}</strong></div>
+            </div>
+            <div class="columns bottom-m-20">
+              <div class="column is-2 has-text-right">{% trans 'Description:'%}</div>
+              <div class="column">{{ survey.description }}</div>
+            </div>
+            <div class="columns bottom-m-10">
+              <div class="column is-2 has-text-right">{% trans 'Linked SDGs:'%}</div>
+              <div class="column">
+                {% for sdg in survey.sdgs %}
+                  <span class="tag sdg-{{ sdg.0 }} is-medium right-m-5 bottom-m-5">{{ sdg.0 }} {{ sdg.1 }}</span>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="columns is-multiline">
+          <div class="column is-half">
+            <div class="box">
+              <div class="survey-question">
+                <div class="survey-question__number">{{ question.number }}</div>
+                <div class="survey-question__info">
+                  <span class="survey-question__info__title">{{ question.title }}</span>
+                  <div class="top-m-20">
+                    <span class="right-m-30">{% trans 'Answered:'%} {{ question.answered }}</span>
+                    <span>{% trans 'Skipped:'%} {{ question.skipped }}</span>
+                  </div>
+                  <div class="top-m-30">
+                   <span class="tag sdg-1 is-medium right-m-5 bottom-m-5">13  CLIMATE ACTION</span>
+                  </div>
+                </div>
+              </div>
+              <div class="is-pulled-right">
+                <div class="dropdown is-hoverable is-right">
+                  <div class="dropdown-trigger">
+                    <div aria-haspopup="true" aria-controls="dropdown-menu">
+                      <span>Segment by</span>
+                      <span class="icon is-small">
+                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                  </span>
+                    </div>
+                  </div>
+                  <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                    <div class="dropdown-content">
+                      <a href="#" class="dropdown-item">None</a>
+                      <a href="#" class="dropdown-item">Gender</a>
+                      <a href="#" class="dropdown-item">Age</a>
+                      <a href="#" class="dropdown-item">Education</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="barChart"></div>
+            </div>
+          </div>
+
+          <div class="column is-half">
+            <div class="box">
+              <div class="survey-question">
+                <div class="survey-question__number">{{ question.number }}</div>
+                <div class="survey-question__info">
+                  <span class="survey-question__info__title">{{ question.title }}</span>
+                  <div class="top-m-20">
+                    <span class="right-m-30">{% trans 'Answered:'%} {{ question.answered }}</span>
+                    <span>{% trans 'Skipped:'%} {{ question.skipped }}</span>
+                  </div>
+                  <div class="top-m-30">
+                   <span class="tag sdg-1 is-medium right-m-5 bottom-m-5">13  CLIMATE ACTION</span>
+                  </div>
+                </div>
+              </div>
+              <div class="is-pulled-right">
+                <div class="dropdown is-hoverable is-right">
+                  <div class="dropdown-trigger">
+                    <div aria-haspopup="true" aria-controls="dropdown-menu">
+                      <span>Segment by</span>
+                      <span class="icon is-small">
+                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                  </span>
+                    </div>
+                  </div>
+                  <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                    <div class="dropdown-content">
+                      <a href="#" class="dropdown-item">None</a>
+                      <a href="#" class="dropdown-item">Gender</a>
+                      <a href="#" class="dropdown-item">Age</a>
+                      <a href="#" class="dropdown-item">Education</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="lineChart"></div>
+            </div>
+          </div>
+
+          <div class="column is-half">
+            <div class="box">
+              <div class="survey-question">
+                <div class="survey-question__number">{{ question.number }}</div>
+                <div class="survey-question__info">
+                  <span class="survey-question__info__title">{{ question.title }}</span>
+                  <div class="top-m-20">
+                    <span class="right-m-30">{% trans 'Answered:'%} {{ question.answered }}</span>
+                    <span>{% trans 'Skipped:'%} {{ question.skipped }}</span>
+                  </div>
+                  <div class="top-m-30">
+                   <span class="tag sdg-1 is-medium right-m-5 bottom-m-5">13  CLIMATE ACTION</span>
+                  </div>
+                </div>
+              </div>
+              <div class="is-pulled-right">
+                <div class="dropdown is-hoverable is-right">
+                  <div class="dropdown-trigger">
+                    <div aria-haspopup="true" aria-controls="dropdown-menu">
+                      <span>Segment by</span>
+                      <span class="icon is-small">
+                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                  </span>
+                    </div>
+                  </div>
+                  <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                    <div class="dropdown-content">
+                      <a href="#" class="dropdown-item">None</a>
+                      <a href="#" class="dropdown-item">Gender</a>
+                      <a href="#" class="dropdown-item">Age</a>
+                      <a href="#" class="dropdown-item">Education</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="donutChart"></div>
+            </div>
+          </div>
+
+          <div class="column is-half">
+            <div class="box">
+              <div class="survey-question">
+                <div class="survey-question__number">1</div>
+                <div class="survey-question__info">
+                  <span class="survey-question__info__title">fdgfdgfd</span>
+                  <div class="top-m-20">
+                    <span class="right-m-30">{% trans 'Answered:'%} 12</span>
+                    <span>{% trans 'Skipped:'%} 33</span>
+                  </div>
+                  <div class="top-m-30">
+                   <span class="tag sdg-1 is-medium right-m-5 bottom-m-5">13  CLIMATE ACTION</span>
+                  </div>
+                </div>
+              </div>
+              <div class="is-pulled-right">
+                <div class="dropdown is-hoverable is-right">
+                  <div class="dropdown-trigger">
+                    <div aria-haspopup="true" aria-controls="dropdown-menu">
+                      <span>Segment by</span>
+                      <span class="icon is-small">
+                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                  </span>
+                    </div>
+                  </div>
+                  <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                    <div class="dropdown-content">
+                      <a href="#" class="dropdown-item">None</a>
+                      <a href="#" class="dropdown-item">Gender</a>
+                      <a href="#" class="dropdown-item">Age</a>
+                      <a href="#" class="dropdown-item">Education</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="wordCloud"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block js_extra %}
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <script src="{% static 'plugins/wordcloud/d3.js' %}"></script>
+  <script src="{% static 'plugins/wordcloud/d3.layout.cloud.js' %}"></script>
+
+  <script>
+    // mocked charts
+    let donutOptions = {
+      chart: { type: 'donut' },
+      legend: { position: 'top', horizontalAlign: 'center', fontSize: '16px', onItemClick: { toggleDataSeries: true }},
+      colors: ['#03aeef', '#0400a4'],
+      series: [50, 50],
+      labels: ['Yes', 'No'],
+      plotOptions: { pie: { size: 170 }},
+      dataLabels: { formatter: function (val) { return val + "%" }, style: { fontSize: '16px'}},
+      tooltip: { enabled: false },
+    };
+
+    let lineOptions = {
+      chart: { height: 350, type: 'line', toolbar: { show: false }},
+      legend: { position: 'top', horizontalAlign: 'center', fontSize: '16px', onItemClick: { toggleDataSeries: true }, itemMargin: { horizontal: 10, vertical: 10 }},
+      grid: { row: { colors: ['transparent'], opacity: 0.5 }},
+      stroke: { curve: 'smooth' },
+      colors: ['#89e7ff', '#03aeef', '#0054e2', '#0400a4'],
+      xaxis: { categories: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+      series: [
+        { name: "14 or less", data: [10, 22, 35, 45, 30, 42, 40, 45, 60, 65] },
+        { name: "15 - 25", data: [5, 10, 22, 35, 26, 40, 45, 30, 52, 46] },
+        { name: "26-40", data: [22, 36, 18, 28, 48, 62, 10, 51, 49, 30] },
+        { name: "41 or more", data: [10, 41, 35, 51, 49, 62, 69, 28, 68, 39] }
+      ],
+    };
+
+    let barOptions = {
+      chart: { height: 410, type: 'bar', stacked: true, toolbar: { show: false }},
+      plotOptions: { bar: { horizontal: true }},
+      legend: { position: 'top', horizontalAlign: 'center', fontSize: '16px', onItemClick: { toggleDataSeries: true }, itemMargin: { horizontal: 10, vertical: 10 }},
+      grid: { row: { colors: ['transparent'], opacity: 0.5 }},
+      dataLabels: { enabled: false },
+      colors: ['#89e7ff', '#03aeef', '#0054e2', '#0400a4'],
+      xaxis: { categories: ['14 or less', '15 - 25', '26-40', '41 or more']},
+      series: [
+        { name: "Sometimes", data: [10, 22, 35, 45] },
+        { name: "Often", data: [5, 10, 22, 35] },
+        { name: "Always", data: [22, 36, 18, 28] },
+        { name: "Rarely", data: [10, 41, 35, 51] }
+      ],
+    };
+
+    let donutChart = new ApexCharts(
+      document.querySelector("#donutChart"),
+      donutOptions
+    );
+
+    let lineChart = new ApexCharts(
+      document.querySelector("#lineChart"),
+      lineOptions
+    );
+
+    let barChart = new ApexCharts(
+      document.querySelector("#barChart"),
+      barOptions
+    );
+
+    donutChart.render();
+    lineChart.render();
+    barChart.render();
+
+    const availableWordCloudColors = ['#89e7ff', '#03aeef', '#0054e2', '#0400a4'];
+    const words = ["water", "climate", "life", "rights", "industry", "work", "words"].map(function (word, index) {
+      return {
+        text: word,
+        size: 10 + Math.random() * 90,
+      };
+    });
+
+    function fillWordColor(d,i){
+      return availableWordCloudColors[i % availableWordCloudColors.length];
+    }
+
+    let wordCloud = d3.scale.category20();
+    d3.layout.cloud().size([320, 320])
+      .words(words)
+      .rotate(function() { return ~~(Math.random() * 2) * 90; })
+      .font("Impact")
+      .fontSize(function(d) { return d.size; })
+      .on("end", draw)
+      .start();
+    function draw(words) {
+      d3.select("#wordCloud").append("svg")
+        .attr("width", 340)
+        .attr("height", 340)
+        .append("g")
+        .attr("transform", "translate(150,150)")
+        .selectAll("text")
+        .data(words)
+        .enter().append("text")
+        .style("font-size", function (d) {
+          return d.size + "px";
+        })
+        .style("font-family", "Impact")
+        .style("fill", function (d, i) {
+          return wordCloud(i);
+        })
+        .attr("text-anchor", "middle")
+        .attr("transform", function (d) {
+          return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+        })
+        .style('fill', fillWordColor)
+        .text(function (d) {
+          return d.text;
+        });
+    }
+
+  </script>
+{% endblock %}

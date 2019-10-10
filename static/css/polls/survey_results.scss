@@ -2,9 +2,7 @@
   .survey-filters {
     background-color: #FFFFFF;
     border-radius: 6px;
-  }
 
-  .survey-filters {
     .survey-filters-content {
       .sdg-checkbox {
         margin-bottom: .5rem;
@@ -47,16 +45,11 @@
     font-size: 30px;
   }
 
-  .survey-item {
+  .survey-question {
     display: grid;
-    grid-template-columns: 3rem 1fr 70px;
-    grid-template-rows: auto;
-    padding: 25px 30px;
-    grid-template-areas:
-      "survey-question-number survey-question accordion-btn"
-      "question-details question-details question-details";
+    grid-template-columns: 3rem 1fr;
 
-    .survey-question-number {
+    &__number {
       color: #707070;
       border-radius: 50%;
       justify-content: center;
@@ -66,53 +59,23 @@
       font-weight: bold;
       align-items: center;
       background-color: #f2f6f9;
-      grid-area: survey-question-number;
     }
 
-    .survey-question {
-      font-weight: bold;
-      font-size: 18px;
-      color: #3e3e3e;
-      grid-area: survey-question;
-    }
-
-    .accordion-btn  {
-      align-self: flex-end;
-      cursor: pointer;
-      grid-area: accordion-btn;
-      position: relative;
-    }
-
-    .accordion-btn:before {
-      content: "More";
-    }
-
-    .accordion-btn:after {
-      content: "\2304";
-    }
-
-    .active:before {
-      content: "Less";
-    }
-
-    .active:after {
-      content: "\2303";
-      position: absolute;
-    }
-
-    .accordion-btn:after, .active:after {
-      font-size: 25px;
-    }
-
-    .question-details {
-      display: none;
-      overflow: hidden;
-      grid-area: question-details;
+    &__info {
+      &__title {
+        font-weight: bold;
+        font-size: 18px;
+        color: #3e3e3e;
+      }
     }
   }
 
   .bottom {
     vertical-align: bottom;
+  }
+
+  .dropdown {
+    z-index: 10000;
   }
 
   @media(max-width: 995px) {
