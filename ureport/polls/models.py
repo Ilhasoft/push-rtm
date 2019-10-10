@@ -24,6 +24,8 @@ from django.db.models import Count, Sum
 from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.postgres.fields import ArrayField
+
 
 logger = logging.getLogger(__name__)
 
@@ -847,6 +849,10 @@ class PollQuestion(SmartModel):
 
     priority = models.IntegerField(
         default=0, null=True, blank=True, help_text=_("The priority number for this question on the poll")
+    )
+
+    sdgs = ArrayField(models.IntegerField(
+        choices=settings.SDG_LIST, blank=True, null=True)
     )
 
     @classmethod

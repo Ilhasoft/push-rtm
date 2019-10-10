@@ -19,6 +19,7 @@ from smartmin.views import (
 )
 
 from django import forms
+from django.conf import settings
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
@@ -385,6 +386,7 @@ class PollCRUDL(SmartCRUDL):
                 fields.append("ruleset_%s_label" % question.ruleset_uuid)
                 fields.append("ruleset_%s_title" % question.ruleset_uuid)
                 fields.append("ruleset_%s_include" % question.ruleset_uuid)
+                fields.append("ruleset_%s_sdgs" % question.ruleset_uuid)
 
             return fields
 
@@ -443,6 +445,23 @@ class PollCRUDL(SmartCRUDL):
                     help_text=_("The question posed to your audience, will be displayed publicly"),
                 )
 
+                sdgs_field_name = "ruleset_%s_sdgs" % question.ruleset_uuid
+                sdgs_field_initial = initial.get(sdgs_field_name, "")
+                sdgs_field = forms.MultipleChoiceField(
+                    label=_("SDG's"),
+                    choices=settings.SDG_LIST,
+                    initial=sdgs_field_initial,
+                    widget=forms.SelectMultiple(
+                        attrs={
+                            "required": True,
+                            "multiple": True,
+                            "class": "chosen-select form-control",
+                            "data-placeholder": _("Select one or more Tags."),
+                        }
+                    ),
+                )
+
+                self.form.fields[sdgs_field_name] = sdgs_field
                 self.form.fields[priority_field_name] = priority_field
                 self.form.fields[label_field_name] = label_field
                 self.form.fields[title_field_name] = title_field
@@ -465,9 +484,10 @@ class PollCRUDL(SmartCRUDL):
                     priority = 0
 
                 title = data["ruleset_%s_title" % r_uuid]
+                sdgs = data["ruleset_%s_sdgs" % r_uuid]
 
                 PollQuestion.objects.filter(poll=poll, ruleset_uuid=r_uuid).update(
-                    is_active=included, title=title, priority=priority
+                    is_active=included, title=title, priority=priority, sdgs=sdgs
                 )
 
             return self.object
@@ -489,6 +509,7 @@ class PollCRUDL(SmartCRUDL):
                 initial["ruleset_%s_priority" % question.ruleset_uuid] = question.priority
                 initial["ruleset_%s_label" % question.ruleset_uuid] = question.ruleset_label
                 initial["ruleset_%s_title" % question.ruleset_uuid] = question.title
+                initial["ruleset_%s_sdgs" % question.ruleset_uuid] = question.sdgs
 
             return initial
 

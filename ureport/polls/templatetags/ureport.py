@@ -334,4 +334,8 @@ def get_language(language):
 
 @register.filter(name="get_value_in_qs")
 def get_value_in_qs(queryset, key):
-    return queryset.values_list(key, flat=True)
+    sdgs = []
+    for a in queryset.values_list(key, flat=True):
+        [sdgs.append(b) for b in a]
+
+    return list(set(sdgs))
