@@ -20,14 +20,7 @@
 
   .level {
     .level-item {
-      align-items: flex-end;
       padding: 2rem 0;
-
-      .dropdown {
-        a {
-          align-items: baseline;
-        }
-      }
     }
   }
 
@@ -38,17 +31,18 @@
     vertical-align: text-bottom;
   }
 
-  .arrow-down-icon {
-    align-self: flex-end;
-  }
-
   .export-icon {
     font-size: 30px;
   }
 
   .survey-question {
     display: grid;
-    grid-template-columns: 3rem 1fr;
+    grid-template-columns: 3rem 1fr 70px;
+    grid-template-rows: auto;
+    padding: 25px 30px;
+    grid-template-areas:
+      "survey-question-number survey-question accordion-btn"
+      "question-details question-details question-details";
 
     &__number {
       color: #707070;
@@ -60,23 +54,59 @@
       font-weight: bold;
       align-items: center;
       background-color: #f2f6f9;
+      grid-area: survey-question-number;
     }
 
     &__info {
+      grid-area: survey-question;
       &__title {
         font-weight: bold;
         font-size: 18px;
         color: #3e3e3e;
       }
     }
-  }
 
-  .bottom {
-    vertical-align: bottom;
+    &__details {
+      display: none;
+      overflow: hidden;
+      grid-area: question-details;
+    }
+
+    &__accordion-btn  {
+      align-self: flex-end;
+      cursor: pointer;
+      grid-area: accordion-btn;
+      position: relative;
+    }
+
+    &__accordion-btn:before {
+      content: "More";
+    }
+
+    &__accordion-btn:after {
+      content: "\2304";
+    }
+
+    .btn-active:before {
+      content: "Less";
+    }
+
+    .btn-active:after {
+      content: "\2303";
+      position: absolute;
+    }
+
+    &__accordion-btn:after, .btn-active:after {
+      font-size: 25px;
+    }
   }
 
   .dropdown {
     z-index: 10000;
+  }
+
+  .flex-end {
+    justify-content: flex-end;
   }
 
   @media(max-width: 995px) {
