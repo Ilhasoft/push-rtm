@@ -7,15 +7,17 @@
         <a href="#">
           <strong>{{ flow.name }}</strong> | <i>{{ flow.org.name }}</i> 
         </a>
-        <form class="form-flowhub" action="{% url 'flowhub.flow_delete' flow.pk %}" method="POST">
-          {% csrf_token %}
-          <a href="#">
-            <img src="{% static 'svg/pencil.svg' %}" alt="pencil">
-          </a>
-          <button class="button-no-bg" type="submit">
-            <img src="{% static 'svg/trash.svg' %}" alt="trash">
-          </button>
-        </form>
+        {% if request.org == flow.org %}
+          <form class="form-flowhub" action="{% url 'flowhub.flow_delete' flow.pk %}" method="POST">
+            {% csrf_token %}
+            <a href="#">
+              <img src="{% static 'svg/pencil.svg' %}" alt="pencil">
+            </a>
+            <button class="button-no-bg" type="submit">
+              <img src="{% static 'svg/trash.svg' %}" alt="trash">
+            </button>
+          </form>
+        {% endif %}
       </div>
       <div class="column stars">
         <img src="{% static 'svg/star.svg' %}" alt="stars">
