@@ -1,4 +1,6 @@
 import json
+import operator
+from functools import reduce
 
 from django.http import HttpResponse
 from django.shortcuts import redirect
@@ -11,28 +13,72 @@ from smartmin.views import SmartCreateView, SmartListView, SmartTemplateView
 from .models import Flow
 from .forms import FlowForm
 
+class RTMBaseListView(SmartListView):
+    search_query_name = 'search'
 
-class ListView(SmartListView):
+    def search(self, queryset):
+        '''
+        It receives the queryset parameters, applies the filter and returns the queryset.
+        This method requires the class to have the 'search_fields' and 'search_query_name' atrributes.
+        eg:
+        search_fields = ['title__icontains', 'description__icontains']
+        search_query_name = 'search' # in template, this attribute is an input name by search field
+        '''
+        search_query = self.request.GET.get(self.search_query_name)
+        search_fields = self.derive_search_fields()
+
+        if search_fields and search_query:
+            term_queries = []
+            for term in search_query.split(' '):
+                field_queries = []
+                for field in search_fields:
+                    field_queries.append(Q(**{field: term}))
+                term_queries.append(reduce(operator.or_, field_queries))
+
+            queryset = queryset.filter(reduce(operator.and_, term_queries))
+        
+        # add any select related
+        related = self.derive_select_related()
+        if related:
+            queryset = queryset.select_related(*related)
+        
+        return queryset
+
+
+class ListView(RTMBaseListView):
     template_name = 'flowhub/index.html'
     #permission = 'flowhub.flow_list'
     model = Flow
     context_object_name = 'flows'
-    #search_fields = ('name__icontains','description__icontains')
-
+    search_fields = ['name__icontains','description__icontains']
+    search_query_name = 'search'
+    
     def get_queryset(self):
         queryset = Flow.objects.filter(is_active=True)
-        return queryset
+        return self.search(queryset)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["subtitle"] = _('All flows')
+        return context
+    
 
-
-class MyOrgListView(SmartListView):
+class MyOrgListView(RTMBaseListView):
     template_name = 'flowhub/index.html'
     #permission = 'flohub.flow_list'
     model = Flow
     context_object_name = 'flows'
+    search_fields = ['name__icontains','description__icontains']
 
     def get_queryset(self):
         queryset = Flow.objects.filter(is_active=True, org=self.request.org)
-        return queryset
+        return self.search(queryset)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["subtitle"] = "{} {}".format(self.request.org.name, _('flows'))
+        return context
+    
 
 
 class CreateView(SmartCreateView):

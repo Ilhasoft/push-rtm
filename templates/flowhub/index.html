@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="{% sass_src 'css/flowhub/detail.scss' %}"/>
 {% endblock %}
 
-{% block flow_section %}{% trans "All flows" %}{% endblock %}
+{% block flow_section %}{{ subtitle }}{% endblock %}
 {% block flow_section_id %}flowhub-all{% endblock %}
 
 {% block flow_content %}
@@ -17,7 +17,7 @@
     <div class="column">
       <div class="control has-icons-left">
         <form>
-          <input class="input is-medium search" name="query" placeholder="Search" value="{{ query }}">
+          <input type="text" class="input is-medium search" name="search" value="" placeholder="Search">
           <span class="icon is-left">
             <i class="material-icons">search</i>
           </span>

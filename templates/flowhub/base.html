@@ -14,7 +14,7 @@
         <div class="column">
           <aside class="menu">
             <ul class="menu-list">
-              <li><a class="all" href="#">{% trans "All flows" %}</a></li>
+              <li><a class="all" href="{% url 'flowhub.flow_list' %}">{% trans "All flows" %}</a></li>
               <li><a class="uncts" href="#">{% trans "UNCTs" %}</a></li>
               <li><a class="my-org" href="{% url 'flowhub.my_org_flow_list' %}">{% trans "My UNCT" %}</a></li>
               <li><a class="upload" href="{% url 'flowhub.flow_create' %}">{% trans "Upload Flows" %}</a></li>
