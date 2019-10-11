@@ -205,6 +205,23 @@
 
     // lineChart.render();
 
+    const availableColors = [
+      "#0CD7F0",
+      "#0CA2FA",
+      "#016AF5",
+      "#003CFA",
+      "#1F00F5",
+      "#02008A",
+      "#0300B0",
+      "#0400A4",
+      "#0400F0",
+      "#020063",
+      "#2709BD"
+      ,"#1C0B70",
+      "#320CF0",
+      "#4927F2",
+      "#170670",
+    ];
     const results_bars = [];
     const results_donuts = [];
     let question = 0;
@@ -216,7 +233,6 @@
         results_donuts[question] = {
           "labels": [],
           "series": [],
-          "colors": [],
         };
 
         {% with results=question|question_results %}
@@ -224,7 +240,6 @@
             {% for category in categories %}
               results_donuts[question]["labels"].push("{{ category.label }}");
               results_donuts[question]["series"].push(parseInt("{% widthratio category.count results.set 100 %}"));
-              results_donuts[question]["colors"].push("#" + Math.floor(Math.random()*16777215).toString(16));
             {% endfor %}
           {% endwith %}
         {% endwith %}
@@ -265,7 +280,7 @@
           legend: { position: 'top', horizontalAlign: 'center', fontSize: '16px', onItemClick: { toggleDataSeries: true }, itemMargin: { horizontal: 10, vertical: 10 }},
           grid: { row: { colors: ['transparent'], opacity: 0.5 }},
           dataLabels: { enabled: false },
-          colors: ['#89e7ff', '#03aeef', '#0054e2', '#0400a4'],
+          colors: availableColors,
           xaxis: { categories: result.categories },
           series: result.series,
         };
@@ -286,7 +301,7 @@
           fontSize: '16px',
           onItemClick: { toggleDataSeries: true },
         },
-        colors: ["#0CD7F0","#0CA2FA","#016AF5","#003CFA","#1F00F5","#02008A","#0300B0","#0400A4","#0400F0","#020063","#2709BD","#1C0B70","#320CF0","#4927F2","#170670"],
+        colors: availableColors,
         series: result.series,
         labels: result.labels,
         tooltip: { enabled: false },
@@ -299,15 +314,8 @@
     });
     {% endif %}
 
-    const availableWordCloudColors = [
-      "#89e7ff",
-      "#03aeef",
-      "#0054e2",
-      "#0400a4",
-    ];
-
     const fillWordColor = function(d, i) {
-      return availableWordCloudColors[i % availableWordCloudColors.length];
+      return availableColors[i % availableColors.length];
     }
 
     $("div[data-question-type=\"cloud\"]").each(function() {
