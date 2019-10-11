@@ -60,6 +60,7 @@ urlpatterns = [
     url(r"^uncts/", include("ureport.uncts.urls")),
     url(r"^users/", include("ureport.accounts.urls")),
     url(r"^surveys/", include("ureport.polls.urls")),
+    url(r"^flowhub/", include("ureport.flowhub.urls")),
 ]
 
 if settings.DEBUG:

@@ -104,8 +104,11 @@ OAUTHLIB_APP_ID = config("OAUTHLIB_APP_ID", default="uninfortm")
 INSTALLED_APPS += (
     "sass_processor",
     "qurl_templatetag",
+    "taggit",
+    "widget_tweaks",
     "ureport.uncts",
     "ureport.accounts",
+    "ureport.flowhub",
 )
 
 SITE_ALLOW_NO_ORG += (

@@ -1,0 +1,62 @@
+{% load static i18n %}
+
+<tr class="is-tr">
+  <td class="has-text-left" colspan="3">
+    <div class="columns is-gapless">
+      <div class="column is-11">
+        <a href="#">
+          <strong>{{ flow.name }}</strong> | <i>{{ flow.org.name }}</i> 
+        </a>
+        <form class="form-flowhub" action="{% url 'flowhub.flow_delete' flow.pk %}" method="POST">
+          {% csrf_token %}
+          <a href="#">
+            <img src="{% static 'svg/pencil.svg' %}" alt="pencil">
+          </a>
+          <button class="button-no-bg" type="submit">
+            <img src="{% static 'svg/trash.svg' %}" alt="trash">
+          </button>
+        </form>
+      </div>
+      <div class="column stars">
+        <img src="{% static 'svg/star.svg' %}" alt="stars">
+        <span>{{ flow.stars }}</span>
+      </div>
+    </div>
+    <div class="columns">
+      <div class="column description">
+        <p>{{ flow.description }}</p>
+      </div>
+    </div>
+    {% if flow.get_languages %}
+    <div class="columns">
+      <div class="column languages">
+        <strong>{% trans "Languages" %}:</strong> {{ flow.get_languages }}
+      </div>
+    </div>
+    {% endif %}
+    {% if flow.tags.count %}
+    <div class="columns">
+      <div class="column">
+        {% for tag in flow.tags.all %}
+          <span class="tag">{{ tag }}</span>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+    
+    <div class="columns">
+      <div class="column">
+        {% for key, name in flow.get_sdgs.items %}
+          <span class="tag sdg-{{ key }}">{{ name }}</span>
+        {% endfor %}
+      </div>
+    </div>    
+
+    <div class="columns">
+      <div class="column download">
+        <a href="{% url 'flowhub.flow_download' flow.pk %}" class="button button-primary is-primary">{% trans "Download" %}</a>
+        <span>{{ flow.downloads }} {% trans "downloads" %}</span>
+      </div>
+    </div>
+  </td>
+</tr>
