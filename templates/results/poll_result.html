@@ -113,7 +113,7 @@
               <span class="survey-question__info__title">{{ question.title }}</span>
               <div class="top-m-20">
                 <span class="right-m-30">{% trans 'Answered:'%} {{ question.get_responded|intcomma }}</span>
-                <span>{% trans 'Skipped:'%} {{ question.get_polled|intcomma }}</span>
+                <span>{% trans 'Polled:'%} {{ question.get_polled|intcomma }}</span>
               </div>
               <div class="top-m-30">
                 {% for sdg in question.sdgs %}
@@ -137,25 +137,36 @@
 
                     <div class="dropdown-menu" id="dropdown-menu" role="menu">
                       <div class="dropdown-content">
-                        <a href="#" class="dropdown-item">{% trans "All" %}</a>
+                        <a href="javascript:showChart('statistics', {{ question.pk }});" class="dropdown-item statistics">{% trans "All" %}</a>
                         {% if not is_iorg and show_gender_stats %} 
-                          <a href="#" class="dropdown-item">{% trans "Gender" %}</a>
+                          <a href="javascript:showChart('gender', {{ question.pk }});" class="dropdown-item gender">{% trans "Gender" %}</a>
                         {% endif %}
 
                         {% if not is_iorg and show_age_stats %} 
-                          <a href="#" class="dropdown-item">{% trans "Age" %}</a>
+                          <a href="javascript:showChart('age', {{ question.pk }});" class="dropdown-item age">{% trans "Age" %}</a>
                         {% endif %}
                       </div>
                     </div>
                   </div>
                 {% endif %}
               </div>
-              <div
-                class="has-text-centered"
-                id="chart-question-{{ question.pk }}"
-                data-question="{{ question.pk }}"
-                data-question-type="{% if question.is_open_ended %}cloud{% else  %}chart{% endif %}">
-              </div>
+              {% if not question.is_open_ended %}
+                {% for tab in tabs %}
+                <div
+                  class="has-text-centered"
+                  id="chart-question-{{ question.pk }}"
+                  data-question="{{ question.pk }}"
+                  data-question-type="chart">
+                </div>
+                {% endfor %}
+              {% else %}
+                <div
+                  class="has-text-centered"
+                  id="chart-question-cloud-{{ question.pk }}"
+                  data-question="{{ question.pk }}"
+                  data-question-type="cloud">
+                </div>
+              {% endif %}
             </div>
           </div>    
       </div>
@@ -183,6 +194,63 @@
         }
       });
     }
+
+    function showChart(tab, question) {
+      if (tab == "statistics") {
+        ApexCharts.exec("chart-question-" + question, "updateOptions", {
+          chart: { height: 600, type: "donut", id: "chart-question-" + question },
+          legend: {
+            position: "top",
+            horizontalAlign: "center",
+            fontSize: "16px",
+            onItemClick: { toggleDataSeries: true },
+          },
+          colors: availableColors,
+          series: results_statistics[question].series,
+          labels: results_statistics[question].labels,
+          tooltip: { enabled: false },
+        }, true, true);
+      }
+
+      if (tab == "gender") {
+        ApexCharts.exec("chart-question-" + question, "updateOptions", {
+          chart: { height: 350, type: "bar", stacked: true, toolbar: { show: false }},
+          plotOptions: { bar: { horizontal: true }},
+          legend: {
+            position: "top",
+            horizontalAlign: "center",
+            fontSize: "16px",
+            onItemClick: { toggleDataSeries: true },
+            itemMargin: { horizontal: 10, vertical: 10 },
+          },
+          grid: { row: { colors: ["transparent"], opacity: 0.5 }},
+          dataLabels: { enabled: false },
+          colors: availableColors,
+          xaxis: { categories: results_gender[question].categories },
+          series: results_gender[question].series,
+        }, true, true);
+      }
+
+      if (tab == "age") {
+        ApexCharts.exec("chart-question-" + question, "updateOptions", {
+          chart: { height: 350, type: "bar", stacked: true, toolbar: { show: false }},
+          plotOptions: { bar: { horizontal: true }},
+          legend: {
+            position: "top",
+            horizontalAlign: "center",
+            fontSize: "16px",
+            onItemClick: { toggleDataSeries: true },
+            itemMargin: { horizontal: 10, vertical: 10 },
+          },
+          grid: { row: { colors: ["transparent"], opacity: 0.5 }},
+          dataLabels: { enabled: false },
+          colors: availableColors,
+          xaxis: { categories: results_age[question].categories },
+          series: results_age[question].series,
+        }, true, true);
+      }
+    }
+
     // let lineOptions = {
     //   chart: { type: 'line', toolbar: { show: false }},
     //   legend: { position: 'top', horizontalAlign: 'center', fontSize: '16px', onItemClick: { toggleDataSeries: true }, itemMargin: { horizontal: 10, vertical: 10 }},
@@ -222,45 +290,46 @@
       "#4927F2",
       "#170670",
     ];
-    const results_bars = [];
-    const results_donuts = [];
+    const results_age = [];
+    const results_gender = [];
+    const results_statistics = [];
     let question = 0;
-    
+
     {% for question in poll.get_questions %}
       {% if not question.is_open_ended %}
         question = {{ question.pk }};
 
-        results_donuts[question] = {
-          "labels": [],
-          "series": [],
+        results_statistics[question] = {
+          labels: [],
+          series: [],
         };
 
         {% with results=question|question_results %}
           {% with categories=results.categories %}
             {% for category in categories %}
-              results_donuts[question]["labels"].push("{{ category.label }}");
-              results_donuts[question]["series"].push(parseInt("{% widthratio category.count results.set 100 %}"));
+              results_statistics[question]["labels"].push("{{ category.label }}");
+              results_statistics[question]["series"].push(parseInt("{% widthratio category.count results.set 100 %}"));
             {% endfor %}
           {% endwith %}
         {% endwith %}
 
         {% if not is_iorg and show_age_stats %}
-          results_bars[question] = {
-            "categories": [],
-            "series": [],
+          results_age[question] = {
+            categories: [],
+            series: [],
           };
 
           {% with seg_results=question|question_segmented_results:"age" %}
             {% for results in seg_results %}
-              results_bars[question]["categories"].push("{{ results.label }}");
+              results_age[question]["categories"].push("{{ results.label }}");
 
               {% with categories=results.categories %}
                 {% for category in categories %}
-                  results_bars[question]["series"]["{{ forloop.counter0 }}"] = (typeof results_bars[question]["series"]["{{ forloop.counter0 }}"] != "undefined") ? results_bars[question]["series"]["{{ forloop.counter0 }}"] : {
+                  results_age[question]["series"]["{{ forloop.counter0 }}"] = (typeof results_age[question]["series"]["{{ forloop.counter0 }}"] != "undefined") ? results_age[question]["series"]["{{ forloop.counter0 }}"] : {
                     name: "{{ category.label }}",
                     data: [],
                   };
-                  results_bars[question]["series"]["{{ forloop.counter0 }}"].data.push(
+                  results_age[question]["series"]["{{ forloop.counter0 }}"].data.push(
                     {% widthratio category.count results.set 100 %}
                   );
                 {% endfor %}
@@ -268,51 +337,52 @@
             {% endfor %}
           {% endwith %}
         {% endif %}
+
+        {% if not is_iorg and show_gender_stats %}
+          results_gender[question] = {
+            categories: [],
+            series: [],
+          };
+          
+          {% with seg_results=question|question_segmented_results:"gender" %}
+            {% for results in seg_results %}
+              results_gender[question]["categories"].push("{{ results.label }}");
+
+              {% with categories=results.categories %}
+                {% for category in categories %}
+                  results_gender[question]["series"]["{{ forloop.counter0 }}"] = (typeof results_gender[question]["series"]["{{ forloop.counter0 }}"] != "undefined") ? results_gender[question]["series"]["{{ forloop.counter0 }}"] : {
+                      name: "{{ category.label }}",
+                      data: [],
+                    };
+                  results_gender[question]["series"]["{{ forloop.counter0 }}"].data.push(
+                    {% widthratio category.count results.set 100 %}
+                  );
+                {% endfor %}
+              {% endwith %}
+            {% endfor %}
+          {% endwith %}
+        {% endif %}
       {% endif %}
     {% endfor %}
 
-    {% if not is_iorg and show_age_stats %}
-    results_bars.map(function(result, question) {
-      if (result) {
-        let barOptions = {
-          chart: { height: 350, type: 'bar', stacked: true, toolbar: { show: false }},
-          plotOptions: { bar: { horizontal: true }},
-          legend: { position: 'top', horizontalAlign: 'center', fontSize: '16px', onItemClick: { toggleDataSeries: true }, itemMargin: { horizontal: 10, vertical: 10 }},
-          grid: { row: { colors: ['transparent'], opacity: 0.5 }},
-          dataLabels: { enabled: false },
+    results_statistics.map(function(result, question) {
+      let apex = new ApexCharts(
+        document.querySelector("#chart-question-" + question),
+        {
+          chart: { height: 600, type: "donut", id: "chart-question-" + question },
+          legend: {
+            position: "top",
+            horizontalAlign: "center",
+            fontSize: "16px",
+            onItemClick: { toggleDataSeries: true },
+          },
           colors: availableColors,
-          xaxis: { categories: result.categories },
           series: result.series,
-        };
-
-        // new ApexCharts(
-        //   document.querySelector("#chart-question-" + question),
-        //   barOptions
-        // ).render();
-      }
+          labels: result.labels,
+          tooltip: { enabled: false },
+        }
+      ).render();
     });
-
-    results_donuts.map(function(result, question) {
-      let donutOptions = {
-        chart: { height: 600, type: 'donut' },
-        legend: {
-          position: 'top',
-          horizontalAlign: 'center',
-          fontSize: '16px',
-          onItemClick: { toggleDataSeries: true },
-        },
-        colors: availableColors,
-        series: result.series,
-        labels: result.labels,
-        tooltip: { enabled: false },
-      };
-
-      // new ApexCharts(
-      //   document.querySelector("#chart-question-" + question),
-      //   donutOptions
-      // ).render();
-    });
-    {% endif %}
 
     const fillWordColor = function(d, i) {
       return availableColors[i % availableColors.length];
@@ -349,7 +419,7 @@
             .start();
 
           function draw(words) {
-            d3.select("#chart-question-" + question).append("svg")
+            d3.select("#chart-question-cloud-" + question).append("svg")
               .attr("width", 340)
               .attr("height", 340)
               .append("g")

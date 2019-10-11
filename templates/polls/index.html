@@ -1,7 +1,11 @@
 {% extends "base.html" %}
-{% load i18n static ureport %}
+{% load i18n static ureport sass_tags %}
 
 {% block nav_item %}page-surveys{% endblock %}
+
+{% block css_extra %}
+  <link rel="stylesheet" href="{% sass_src 'plugins/tooltip/tooltip.scss' %}">
+{% endblock %}
 
 {% block content %}
 <section class="section">
@@ -50,9 +54,23 @@
           <td><a href="{% url 'polls.poll_update' poll.id %}"><i class="material-icons">insert_drive_file</i></a></td>
           <td><a href="{% url 'results.poll_read' poll.id %}">{{ poll.title }}</a></td>
           <td>
-            {% for sdg in poll.questions.distinct|get_value_in_qs:'sdgs' %}
-              <span class="tag sdg-{{ sdg }}">SDG {{ sdg }}</span>
-            {% endfor %}
+            {% if poll.questions.count > 3 %}
+              <span class="tooltip right">
+                {% for sdg in poll.questions.distinct|slice:":3"|get_value_in_qs:'sdgs' %}
+                  <span class="tag sdg-{{ sdg }}">SDG {{ sdg }}</span>
+                {% endfor %}
+
+                <span class="tooltip-content">
+                  {% for sdg in poll.questions.distinct|get_value_in_qs:'sdgs' %}
+                    <span class="tag sdg-{{ sdg }}">SDG {{ sdg }}</span>
+                  {% endfor %}
+                </span>
+              </span>
+            {% else %}
+              {% for sdg in poll.questions.distinct|get_value_in_qs:'sdgs' %}
+                <span class="tag sdg-{{ sdg }}">SDG {{ sdg }}</span>
+              {% endfor %}
+            {% endif%}
           </td>
           <td>{{ poll.runs_count }}</td>
         </tr>
