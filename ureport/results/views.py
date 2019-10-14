@@ -1,6 +1,7 @@
 import json
 
 from django.http import HttpResponse
+from django.conf import settings
 
 from smartmin.views import SmartReadView
 
@@ -17,6 +18,7 @@ class PollReadView(SmartReadView):
         context["org"] = self.request.org
         context["poll"] = self.get_object()
         context["tabs"] = ["statistics", "gender", "age"]
+        context["sdgs"] = settings.SDG_LIST
         return context
 
     def derive_queryset(self):

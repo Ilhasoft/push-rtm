@@ -53,10 +53,10 @@
               <span>SDG</span>
             </h3>
 
-            {% for sdg in SDGS %}
+            {% for sdg in sdgs %}
               <div class="sdg-checkbox">
-                <input class="is-checkradio" type="checkbox" id="sdg{{sdg.0}}" name="sdg{{sdg.0}}">
-                <label for="sdg{{sdg.0}}" title="{{ sdg.1 }}">{{ sdg.1 }}</label>
+                <input class="is-checkradio" name="sdgs" type="checkbox" value="{{ sdg.0 }}" id="sdg{{ sdg.0 }}"/>
+                <label for="sdg{{ sdg.0 }}" title="{{ sdg.1 }}"><strong>{{ sdg.0 }}</strong> {{ sdg.1 }}</label>
               </div>
             {% endfor %}
           </div>
@@ -106,7 +106,7 @@
           </div>
         </div>
         {% for question in poll.get_questions %}
-        <div class="box is-paddingless">
+        <div class="box is-paddingless" data-question-sdgs="{{ question.sdgs|join:"," }}">
           <div class="survey-question border-bottom">
             <div class="survey-question__number">{{ forloop.counter }}</div>
             <div class="survey-question__info">
@@ -194,6 +194,27 @@
         }
       });
     }
+
+    $("input:checkbox").click(function() {
+      let isChecked = $("input:checkbox").filter(":checked");
+      
+      isChecked.map(function() {
+        let sdg = this.value;
+
+        $("div[data-question-sdgs").each(function() {
+          let sdgs = $(this).attr("data-question-sdgs");
+          if (!sdgs.split(",").includes(sdg)) {
+            $(this).hide();
+          }
+        });
+      });
+
+      if (isChecked.length == 0) {
+        $("div[data-question-sdgs").each(function() {
+          $(this).show();
+        });
+      }
+    });
 
     // let lineOptions = {
     //   chart: { type: 'line', toolbar: { show: false }},
@@ -367,6 +388,7 @@
           xaxis: { categories: results_gender[question].categories },
           series: results_gender[question].series,
           tooltip: { enabled: true },
+          plotOptions: { bar: { horizontal: true }},
         };
       }
 
@@ -428,31 +450,32 @@
             .on("end", draw)
             .start();
           function draw(words) {
-            d3.select("#chart-question-cloud-" + question).append("svg")
-              .attr("width", '70%')
-              .attr("height", '70%')
-              .attr('viewBox','0 0 ' + Math.min(width,height) + ' ' + Math.min(width,height))
-              .attr('preserveAspectRatio','xMinYMin')
-              .append("g")
-              .attr("transform", "translate(" + Math.min(width,height) / 2 + "," + Math.min(width,height) / 2 + ")")
-              .selectAll("text")
-              .data(words)
-              .enter().append("text")
-              .style("font-size", function (d) {
-                return d.size + "px";
-              })
-              .style("font-family", "Impact")
-              .style("fill", function (d, i) {
-                return wordCloud(i);
-              })
-              .attr("text-anchor", "middle")
-              .attr("transform", function (d) {
-                return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-              })
-              .style('fill', fillWordColor)
-              .text(function (d) {
-                return d.text;
-              });
+            d3.select("#chart-question-cloud-" + question)
+            .append("svg")
+            .attr("width", "70%")
+            .attr("height", "70%")
+            .attr("viewBox","0 0 " + Math.min(width,height) + " " + Math.min(width,height))
+            .attr("preserveAspectRatio", "xMinYMin")
+            .append("g")
+            .attr("transform", "translate(" + Math.min(width,height) / 2 + "," + Math.min(width,height) / 2 + ")")
+            .selectAll("text")
+            .data(words)
+            .enter().append("text")
+            .style("font-size", function(d) {
+              return d.size + "px";
+            })
+            .style("font-family", "Impact")
+            .style("fill", function(d, i) {
+              return wordCloud(i);
+            })
+            .attr("text-anchor", "middle")
+            .attr("transform", function(d) {
+              return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+            })
+            .style('fill', fillWordColor)
+            .text(function(d) {
+              return d.text;
+            });
           }
         }
       });
