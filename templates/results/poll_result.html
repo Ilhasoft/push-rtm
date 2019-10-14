@@ -195,62 +195,6 @@
       });
     }
 
-    function showChart(tab, question) {
-      if (tab == "statistics") {
-        ApexCharts.exec("chart-question-" + question, "updateOptions", {
-          chart: { height: 600, type: "donut", id: "chart-question-" + question },
-          legend: {
-            position: "top",
-            horizontalAlign: "center",
-            fontSize: "16px",
-            onItemClick: { toggleDataSeries: true },
-          },
-          colors: availableColors,
-          series: results_statistics[question].series,
-          labels: results_statistics[question].labels,
-          tooltip: { enabled: false },
-        }, true, true);
-      }
-
-      if (tab == "gender") {
-        ApexCharts.exec("chart-question-" + question, "updateOptions", {
-          chart: { height: 350, type: "bar", stacked: true, toolbar: { show: false }},
-          plotOptions: { bar: { horizontal: true }},
-          legend: {
-            position: "top",
-            horizontalAlign: "center",
-            fontSize: "16px",
-            onItemClick: { toggleDataSeries: true },
-            itemMargin: { horizontal: 10, vertical: 10 },
-          },
-          grid: { row: { colors: ["transparent"], opacity: 0.5 }},
-          dataLabels: { enabled: false },
-          colors: availableColors,
-          xaxis: { categories: results_gender[question].categories },
-          series: results_gender[question].series,
-        }, true, true);
-      }
-
-      if (tab == "age") {
-        ApexCharts.exec("chart-question-" + question, "updateOptions", {
-          chart: { height: 350, type: "bar", stacked: true, toolbar: { show: false }},
-          plotOptions: { bar: { horizontal: true }},
-          legend: {
-            position: "top",
-            horizontalAlign: "center",
-            fontSize: "16px",
-            onItemClick: { toggleDataSeries: true },
-            itemMargin: { horizontal: 10, vertical: 10 },
-          },
-          grid: { row: { colors: ["transparent"], opacity: 0.5 }},
-          dataLabels: { enabled: false },
-          colors: availableColors,
-          xaxis: { categories: results_age[question].categories },
-          series: results_age[question].series,
-        }, true, true);
-      }
-    }
-
     // let lineOptions = {
     //   chart: { type: 'line', toolbar: { show: false }},
     //   legend: { position: 'top', horizontalAlign: 'center', fontSize: '16px', onItemClick: { toggleDataSeries: true }, itemMargin: { horizontal: 10, vertical: 10 }},
@@ -379,10 +323,75 @@
           colors: availableColors,
           series: result.series,
           labels: result.labels,
-          tooltip: { enabled: false },
+          tooltip: { enabled: true },
         }
       ).render();
     });
+
+    function showChart(tab, question) {
+      let updateOptions = {};
+      if (tab == "statistics") {
+        updateOptions = {
+          chart: { height: 600, type: "donut", id: "chart-question-" + question },
+          legend: {
+            position: "top",
+            horizontalAlign: "center",
+            fontSize: "16px",
+            show: true,
+            onItemClick: { toggleDataSeries: true },
+          },
+          dataLabels: {
+            enabled: true,
+          },
+          colors: availableColors,
+          series: results_statistics[question].series,
+          labels: results_statistics[question].labels,
+          tooltip: { enabled: true },
+        };
+      }
+
+      if (tab == "gender") {
+        updateOptions = {
+          chart: { height: 350, type: "bar", stacked: true, toolbar: { show: false }},
+          plotOptions: { bar: { horizontal: true }},
+          legend: {
+            position: "top",
+            horizontalAlign: "center",
+            fontSize: "16px",
+            onItemClick: { toggleDataSeries: true },
+            itemMargin: { horizontal: 10, vertical: 10 },
+          },
+          grid: { row: { colors: ["transparent"], opacity: 0.5 }},
+          dataLabels: { enabled: true },
+          colors: availableColors,
+          xaxis: { categories: results_gender[question].categories },
+          series: results_gender[question].series,
+          tooltip: { enabled: true },
+        };
+      }
+
+      if (tab == "age") {
+        updateOptions = {
+          chart: { height: 350, type: "bar", stacked: true, toolbar: { show: false }},
+          plotOptions: { bar: { horizontal: true }},
+          legend: {
+            position: "top",
+            horizontalAlign: "center",
+            fontSize: "16px",
+            onItemClick: { toggleDataSeries: true },
+            itemMargin: { horizontal: 10, vertical: 10 },
+          },
+          grid: { row: { colors: ["transparent"], opacity: 0.5 }},
+          dataLabels: { enabled: true },
+          colors: availableColors,
+          xaxis: { categories: results_age[question].categories },
+          series: results_age[question].series,
+          tooltip: { enabled: true },
+        };
+      }
+
+      ApexCharts.exec("chart-question-" + question, "updateOptions", updateOptions, false, true, true);
+    }
 
     const fillWordColor = function(d, i) {
       return availableColors[i % availableColors.length];
@@ -409,6 +418,7 @@
         });
 
         if (words.length > 0) {
+          let width = 300, height = 300;
           let wordCloud = d3.scale.category20();
           d3.layout.cloud()
             .words(words)
@@ -417,17 +427,18 @@
             .fontSize(function(d) { return d.size; })
             .on("end", draw)
             .start();
-
           function draw(words) {
             d3.select("#chart-question-cloud-" + question).append("svg")
-              .attr("width", 340)
-              .attr("height", 340)
+              .attr("width", '70%')
+              .attr("height", '70%')
+              .attr('viewBox','0 0 ' + Math.min(width,height) + ' ' + Math.min(width,height))
+              .attr('preserveAspectRatio','xMinYMin')
               .append("g")
-              .attr("transform", "translate(150,150)")
+              .attr("transform", "translate(" + Math.min(width,height) / 2 + "," + Math.min(width,height) / 2 + ")")
               .selectAll("text")
               .data(words)
               .enter().append("text")
-              .style("font-size", function(d) {
+              .style("font-size", function (d) {
                 return d.size + "px";
               })
               .style("font-family", "Impact")
@@ -435,7 +446,7 @@
                 return wordCloud(i);
               })
               .attr("text-anchor", "middle")
-              .attr("transform", function(d) {
+              .attr("transform", function (d) {
                 return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
               })
               .style('fill', fillWordColor)
