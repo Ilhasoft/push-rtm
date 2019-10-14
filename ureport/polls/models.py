@@ -872,6 +872,7 @@ class PollQuestion(SmartModel):
                 is_active=False,
                 created_by=user,
                 modified_by=user,
+                sdgs=[],
             )
         return question
 

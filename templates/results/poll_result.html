@@ -32,7 +32,7 @@
       <div class="column is-one-third-mobile is-one-quarter">
         <aside class="survey-filters">
           {% if request.user.is_superuser %}
-            <div class="border-bottom p-30">
+            <!-- <div class="border-bottom p-30">
               <h3 class="bottom-m-10">
                 <img class="right-m-5" src="{% static 'svg/unct.svg' %}" alt="">
                 <span>UNCTs</span>
@@ -45,7 +45,7 @@
                 </span>
                 </form>
               </div>
-            </div>
+            </div> -->
           {% endif %}
           <div class="survey-filters-content p-30">
             <h3 class="bottom-m-10">
@@ -176,7 +176,7 @@
 {% endblock %}
 
 {% block js_extra %}
-  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <script src="{% static 'plugins/apexcharts.js' %}"></script>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script src="{% static 'plugins/wordcloud/d3.js' %}"></script>
   <script src="{% static 'plugins/wordcloud/d3.layout.cloud.js' %}"></script>
@@ -412,7 +412,7 @@
         };
       }
 
-      ApexCharts.exec("chart-question-" + question, "updateOptions", updateOptions, false, true, true);
+      ApexCharts.exec("chart-question-" + question, "updateOptions", updateOptions, false, false, false);
     }
 
     const fillWordColor = function(d, i) {
