@@ -36,17 +36,24 @@ from .models import Poll, PollImage, PollQuestion
 
 class PollForm(forms.ModelForm):
     is_active = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={"class": "is-checkradio"}))
+
     title = forms.CharField(
         max_length=255, widget=forms.TextInput(attrs={"placeholder": _("Insert the survey name"), "class": "input"})
     )
-    flow_uuid = forms.ChoiceField(choices=[])
+
+    flow_uuid = forms.ChoiceField(
+        label=_("Select a flow on RapidPro"),
+        help_text=_("Select a flow on RapidPro"),
+        choices=[],
+    )
 
     response_content = forms.CharField(
         required=False,
-        help_text=_("Insert the survey description "),
+        label=_("Description"),
+        help_text=_("Description"),
         widget=forms.Textarea(
             attrs={
-                "placeholder": _("Insert the survey description "),
+                "placeholder": _("Insert the survey description"),
                 "class": "textarea",
                 "rows": 6,
             }
@@ -96,6 +103,7 @@ class PollResponseForm(forms.ModelForm):
 
 class PollFlowForm(forms.ModelForm):
     poll_date = forms.DateTimeField(
+        label=_("Start Date"),
         required=False,
         widget=forms.DateTimeInput(
             attrs={
@@ -394,7 +402,6 @@ class PollCRUDL(SmartCRUDL):
 
             fields = []
             for question in questions:
-                fields.append("ruleset_%s_priority" % question.ruleset_uuid)
                 fields.append("ruleset_%s_label" % question.ruleset_uuid)
                 fields.append("ruleset_%s_title" % question.ruleset_uuid)
                 fields.append("ruleset_%s_include" % question.ruleset_uuid)
@@ -425,21 +432,11 @@ class PollCRUDL(SmartCRUDL):
                     widget=forms.CheckboxInput(attrs={"class": "is-checkradio"}),
                 )
 
-                priority_field_name = "ruleset_%s_priority" % question.ruleset_uuid
-                priority_field_initial = initial.get(priority_field_name, None)
-                priority_field = forms.ChoiceField(
-                    label=_("Position inside survey"),
-                    required=False,
-                    initial=priority_field_initial,
-                    choices=list(map(lambda x: (x, x), range(1, 11))),
-                    help_text=_("The priority of this question on the poll page, higher priority comes first"),
-                )
-
                 label_field_name = "ruleset_%s_label" % question.ruleset_uuid
                 label_field_initial = initial.get(label_field_name, "")
                 label_field = forms.CharField(
                     label=_("Ruleset Name"),
-                    widget=forms.TextInput(attrs={"readonly": "readonly", "class": "input"}),
+                    widget=forms.HiddenInput(attrs={"readonly": "readonly", "class": "input"}),
                     required=False,
                     initial=label_field_initial,
                     help_text=_("The label of the ruleset from RapidPro"),
@@ -448,7 +445,7 @@ class PollCRUDL(SmartCRUDL):
                 title_field_name = "ruleset_%s_title" % question.ruleset_uuid
                 title_field_initial = initial.get(title_field_name, "")
                 title_field = forms.CharField(
-                    label=_("Title"),
+                    label=_("Question"),
                     widget=forms.Textarea(
                         attrs={"class": "textarea", "rows": 3, "placeholder": _("Put a title here for your question")}
                     ),
@@ -460,7 +457,7 @@ class PollCRUDL(SmartCRUDL):
                 sdgs_field_name = "ruleset_%s_sdgs" % question.ruleset_uuid
                 sdgs_field_initial = initial.get(sdgs_field_name, "")
                 sdgs_field = forms.MultipleChoiceField(
-                    label=_("SDG's"),
+                    label=_("SDGs"),
                     choices=settings.SDG_LIST,
                     initial=sdgs_field_initial,
                     widget=forms.SelectMultiple(
@@ -473,10 +470,9 @@ class PollCRUDL(SmartCRUDL):
                     ),
                 )
 
-                self.form.fields[sdgs_field_name] = sdgs_field
-                self.form.fields[priority_field_name] = priority_field
                 self.form.fields[label_field_name] = label_field
                 self.form.fields[title_field_name] = title_field
+                self.form.fields[sdgs_field_name] = sdgs_field
                 self.form.fields[include_field_name] = include_field
 
             return self.form
@@ -491,15 +487,12 @@ class PollCRUDL(SmartCRUDL):
                 r_uuid = question.ruleset_uuid
 
                 included = data.get("ruleset_%s_include" % r_uuid, False)
-                priority = data.get("ruleset_%s_priority" % r_uuid, None)
-                if not priority:
-                    priority = 0
 
                 title = data["ruleset_%s_title" % r_uuid]
                 sdgs = data["ruleset_%s_sdgs" % r_uuid]
 
                 PollQuestion.objects.filter(poll=poll, ruleset_uuid=r_uuid).update(
-                    is_active=included, title=title, priority=priority, sdgs=sdgs
+                    is_active=included, title=title, priority=0, sdgs=sdgs
                 )
 
             return self.object
@@ -518,7 +511,6 @@ class PollCRUDL(SmartCRUDL):
 
             for question in questions:
                 initial["ruleset_%s_include" % question.ruleset_uuid] = question.is_active
-                initial["ruleset_%s_priority" % question.ruleset_uuid] = question.priority
                 initial["ruleset_%s_label" % question.ruleset_uuid] = question.ruleset_label
                 initial["ruleset_%s_title" % question.ruleset_uuid] = question.title
                 initial["ruleset_%s_sdgs" % question.ruleset_uuid] = question.sdgs

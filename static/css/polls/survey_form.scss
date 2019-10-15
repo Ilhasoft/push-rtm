@@ -21,6 +21,40 @@
     }
   }
 
+  .info-icon {
+    font-size: 18px;
+    color: #b3b3b3;
+    cursor: default;
+    vertical-align: text-bottom;
+  }
+
+  .question {
+    display: grid;
+    align-items: center;
+    grid-gap: 10px;
+    grid-template-columns: 3% 1fr;
+
+    &__title {
+      font-weight: bold;
+    }
+
+    &__number {
+      color: #707070;
+      border-radius: 50%;
+      justify-content: center;
+      display: flex;
+      width: 32px;
+      height: 32px;
+      font-weight: bold;
+      align-items: center;
+      background-color: #f2f6f9;
+    }
+  }
+
+  hr {
+    border-bottom: 1px solid #a9a9a9;
+  }
+
   .box {
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;

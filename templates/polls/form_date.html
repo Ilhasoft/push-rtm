@@ -10,17 +10,16 @@
 {% block content %}
 <section class="section">
   <div class="columns">
-    <div class="column is-three-fifths is-offset-one-fifth">
+    <div class="column is-four-fifths is-offset-1">
       <div class="columns tabs">
         <div class="column tab">{% trans "1 Poll for flow" %}</div>
         <div class="column tab is-active">{% trans "2 Date Setting" %}</div>
         <div class="column tab">{% trans "3 Survey Questions" %}</div>
-        <!-- <div class="column tab">{% trans "4 What inspired you?" %}</div> -->
       </div>
     </div>
   </div>
   <div class="columns">
-    <div class="column box is-three-fifths is-offset-one-fifth">
+    <div class="column box is-four-fifths is-offset-1">
       <form class="generic-form" method="post">
         {% csrf_token %}
         <h1 class="title">{% trans "Date Setting" %}</h1>
@@ -41,7 +40,8 @@
         </div>
         <div class="columns wrapper-buttons">
           <div class="column">
-            <button type="submit" class="button is-primary">{% trans "OK" %}</button>
+            <a href="{% url 'polls.poll_update' poll.id %}" class="button primary-reverse">{% trans "Back" %}</a>
+            <button type="submit" class="button is-primary is-pulled-right">{% trans "Save" %}</button>
           </div>
         </div>
       </form>

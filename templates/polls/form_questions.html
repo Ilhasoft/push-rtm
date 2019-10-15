@@ -6,13 +6,14 @@
 {% block css_extra %}
 <link rel="stylesheet" href="{% sass_src 'plugins/choices/choices.scss' %}">
 <link rel="stylesheet" href="{% sass_src 'css/polls/survey_form.scss' %}">
+<link rel="stylesheet" href="{% sass_src 'plugins/tooltip/tooltip.scss' %}">
 <link rel="stylesheet" href="{% static 'plugins/checkbox/checkbox.min.css' %}">
 {% endblock %}
 
 {% block content %}
 <section class="section">
   <div class="columns">
-    <div class="column is-three-fifths is-offset-one-fifth">
+    <div class="column is-four-fifths is-offset-1">
       <div class="columns tabs">
         <div class="column tab">{% trans "1 General" %}</div>
         <div class="column tab">{% trans "2 Date Setting" %}</div>
@@ -21,27 +22,48 @@
     </div>
   </div>
   <div class="columns">
-    <div class="column box is-three-fifths is-offset-one-fifth">
+    <div class="column box is-four-fifths is-offset-1">
       <form class="generic-form questions" method="post">
         {% csrf_token %}
-        <h1 class="title is-4">{% trans "Survey Question" %}</h1>
+        <h1 class="title is-4">{% trans "Survey Questions" %}</h1>
         {% for field in form %}
-        <div class="field{% if field.label == 'Display' and not forloop.last %} has-border{% endif %}">
-          {% if field.field.widget.input_type != 'checkbox' %}
-          <label class="label" for="{{ field.auto_id }}">{{ field.label }}</label>
+          {% if field.field.widget.input_type == "hidden" %}
+            <div class="question">
+              <div class="question__number">1</div>
+              <div class="question__title">{{ field.value }}</div>
+            </div>
           {% endif %}
 
-          <div class="{% if field.field.widget.input_type == 'select' %}select is-fullwidth{% else %}control{% endif %}">
-            {{ field }}
-            {% if field.field.widget.input_type == 'checkbox' %}
-            <label class="label" for="{{ field.auto_id }}">{{ field.label }}</label>
+          {% if field.field.widget.input_type != "hidden" %}
+          <div class="field top-m-40">
+            {% if field.field.widget.input_type != 'checkbox' %}
+            <label class="label" for="{{ field.auto_id }}">
+              {{ field.label }}
+              {% if field.label == 'Question' %}
+                <span class="tooltip top left-m-10">
+                  <i class="material-icons info-icon">info</i>
+                  <span class="tooltip-content">{% trans "You can change the tittle to appear diferently from the RapidPro version" %}</span>
+                </span>
+              {% endif %}
+            </label>
             {% endif %}
+
+            <div class="{% if field.field.widget.input_type == 'select' %}select is-fullwidth{% else %}control{% endif %}">
+              {{ field }}
+              {% if field.field.widget.input_type == 'checkbox' %}
+              <label class="label" for="{{ field.auto_id }}">{{ field.label }}</label>
+              {% endif %}
+            </div>
           </div>
-        </div>
+          {% endif %}
+          {% if field.label == 'Display' %}
+            <hr class="top-m-40 bottom-m-40">
+          {% endif %}
         {% endfor %}
         <div class="columns wrapper-buttons">
           <div class="column">
-            <button type="submit" class="button is-primary">{% trans "OK" %}</button>
+            <a href="{% url 'polls.poll_poll_date' poll.id %}" class="button primary-reverse">{% trans "Back" %}</a>
+            <button type="submit" class="button is-primary is-pulled-right">{% trans "Save" %}</button>
           </div>
         </div>
       </form>
