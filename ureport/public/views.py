@@ -28,7 +28,7 @@ from ureport.countries.models import CountryAlias
 from ureport.jobs.models import JobSource
 from ureport.news.models import NewsItem, Video
 from ureport.polls.models import Poll, PollQuestion
-from ureport.utils import get_global_count, get_linked_orgs
+from ureport.utils import get_linked_orgs
 
 
 class IndexView(SmartTemplateView):
@@ -42,36 +42,6 @@ class IndexView(SmartTemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
-
-        org = self.request.org
-        context["org"] = org
-
-        latest_poll = Poll.get_main_poll(org)
-        context["latest_poll"] = latest_poll
-        if context["latest_poll"]:
-            context["trending_words"] = latest_poll.get_trending_words()
-
-        brick_poll_ids = Poll.get_brick_polls_ids(org)
-        context["recent_polls"] = Poll.objects.filter(id__in=brick_poll_ids).order_by("-created_on")
-
-        context["stories"] = Story.objects.filter(org=org, is_active=True, featured=True).order_by("-created_on")
-
-        videos = Video.objects.filter(is_active=True, org=org).order_by("-created_on")
-        context["videos"] = videos
-
-        news = NewsItem.objects.filter(is_active=True, org=org).order_by("-created_on")
-        context["news"] = news.count() > 0
-
-        context["most_active_regions"] = org.get_regions_stats()
-
-        # global counter
-        if org.get_config("common.is_global"):
-            context["global_counter"] = get_global_count()
-
-        context["gender_stats"] = org.get_gender_stats()
-        context["age_stats"] = org.get_age_stats()
-        context["reporters"] = org.get_reporters_count()
-
         return context
 
 
