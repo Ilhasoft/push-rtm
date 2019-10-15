@@ -150,7 +150,7 @@ SASS_PROCESSOR_INCLUDE_FILE_PATTERN = r"^.+\.scss$"
 
 LOGIN_URL = "/users/login/"
 LOGOUT_URL = "/users/logout/"
-LOGIN_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = "/surveys/poll/"
 LOGOUT_REDIRECT_URL = "/"
 
 SITE_CHOOSER_TEMPLATE = "public/index.html"
