@@ -1,0 +1,484 @@
+{% extends "base.html" %}
+{% load i18n static sass_tags humanize ureport %}
+
+{% block nav_item %}page-surveys{% endblock %}
+
+{% block css_extra %}
+  <link rel="stylesheet" href="{% static 'plugins/checkbox/checkbox.min.css' %}">
+  <link rel="stylesheet" href="{% sass_src 'plugins/tooltip/tooltip.scss' %}">
+  <link rel="stylesheet" href="{% sass_src 'css/polls/survey_results.scss' %}"/>
+{% endblock %}
+
+{% block content %}
+  <section class="section top-p-0">
+    <nav class="breadcrumb" aria-label="breadcrumbs">
+      <ul>
+        {% if request.user.is_superuser %}
+        <li><a href="{% url 'polls.poll_list' %}">{% trans 'Global Surveys'%}</a></li>
+        {% else %}
+        <li><a href="{% url 'polls.poll_list' %}">{% trans 'Surveys'%}</a></li>
+        {% endif %}
+        <li class="is-active"><a href="#" aria-current="page">{% trans 'Survey Results'%}</a></li>
+      </ul>
+    </nav>
+  </section>
+
+  <section class="section">
+    <h1 class="title">{% trans 'Survey Results'%}</h1>
+  </section>
+  
+  <section class="section">
+    <div class="columns is-mobile">
+      <div class="column is-one-third-mobile is-one-quarter">
+        <aside class="survey-filters">
+          {% if request.user.is_superuser %}
+            <!-- <div class="border-bottom p-30">
+              <h3 class="bottom-m-10">
+                <img class="right-m-5" src="{% static 'svg/unct.svg' %}" alt="">
+                <span>UNCTs</span>
+              </h3>
+              <div class="control has-icons-left">
+                <form>
+                  <input class="input is-medium search" name="query" placeholder="{% trans 'Search'%}" value="{{ query }}">
+                  <span class="icon is-left">
+                  <i class="material-icons">search</i>
+                </span>
+                </form>
+              </div>
+            </div> -->
+          {% endif %}
+          <div class="survey-filters-content p-30">
+            <h3 class="bottom-m-10">
+              <img class="right-m-5" src="{% static 'svg/sdg.svg' %}" alt="">
+              <span>SDG</span>
+            </h3>
+
+            {% for sdg in sdgs %}
+              <div class="sdg-checkbox">
+                <input class="is-checkradio" name="sdgs" type="checkbox" value="{{ sdg.0 }}" id="sdg{{ sdg.0 }}"/>
+                <label for="sdg{{ sdg.0 }}" title="{{ sdg.1 }}"><strong>{{ sdg.0 }}</strong> {{ sdg.1 }}</label>
+              </div>
+            {% endfor %}
+          </div>
+        </aside>
+      </div>
+
+      <div class="column">
+        <div class="box is-paddingless">
+          <nav class="level is-paddingless border-bottom is-mobile">
+            <div class="level-item border-right">
+              <span class="title right-m-10 left-m-10">{{ poll.get_questions.count }}</span>
+              <span>{% trans "Question" %}{{ poll.get_questions.count|pluralize }}</span>
+              <span class="tooltip top left-m-10">
+                <i class="material-icons info-icon">info</i>
+                <span class="tooltip-content">{% trans 'The amount of questions in this survey'%}</span>
+              </span>
+            </div>
+            <div class="level-item">
+              <i class="material-icons export-icon right-m-5">save_alt</i>
+              <span>Export</span>
+              <span class="tooltip top left-m-10">
+              <i class="material-icons info-icon">info</i>
+              <span class="tooltip-content">{% trans 'Export results on .csv format'%}</span>
+            </span>
+            </div>
+          </nav>
+          <div class="p-30 bottom-p-10">
+            <div class="bottom-m-40">{{ poll.poll_date|date:"F d, Y" }}</div>
+            <div class="columns bottom-m-20">
+              <div class="column is-2 has-text-right">{% trans 'Title:'%}</div>
+              <div class="column"><strong>{{ poll.title }}</strong></div>
+            </div>
+            <div class="columns bottom-m-20">
+              {% if poll.response_content %}
+                <div class="column is-2 has-text-right">{% trans 'Description:'%}</div>
+                <div class="column">{{ poll.response_content }}</div>
+              {% endif %}
+            </div>
+            <div class="columns bottom-m-10">
+              <div class="column is-2 has-text-right">{% trans 'Linked SDGs:'%}</div>
+              <div class="column">
+                {% for sdg in poll.questions.distinct|get_value_in_qs:'sdgs' %}
+                  <span class="tag sdg-{{ sdg }} is-medium right-m-5 bottom-m-5">{{ sdg }} {{ sdg|get_sdg }}</span>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+        {% for question in poll.get_questions %}
+        <div class="box is-paddingless" data-question-sdgs="{{ question.sdgs|join:"," }}">
+          <div class="survey-question border-bottom">
+            <div class="survey-question__number">{{ forloop.counter }}</div>
+            <div class="survey-question__info">
+              <span class="survey-question__info__title">{{ question.title }}</span>
+              <div class="top-m-20">
+                <span class="right-m-30">{% trans 'Answered:'%} {{ question.get_responded|intcomma }}</span>
+                <span>{% trans 'Polled:'%} {{ question.get_polled|intcomma }}</span>
+              </div>
+              <div class="top-m-30">
+                {% for sdg in question.sdgs %}
+                <span class="tag sdg-{{ sdg }} is-medium right-m-5 bottom-m-5">{{ sdg }} {{ sdg|get_sdg }}</span>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="survey-question__accordion-btn"></div>
+            <div class="survey-question__details top-m-40">
+              <div class="is-flex flex-end right-m-20">
+                {% if not question.is_open_ended %}
+                  <div class="dropdown is-hoverable is-right bottom-m-10">
+                    <div class="dropdown-trigger">
+                      <div aria-haspopup="true" aria-controls="dropdown-menu">
+                        <span>{% trans "Segment by" %}</span>
+                        <span class="icon is-small">
+                          <i class="fas fa-angle-down" aria-hidden="true"></i>
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                      <div class="dropdown-content">
+                        <a href="javascript:showChart('statistics', {{ question.pk }});" class="dropdown-item statistics">{% trans "All" %}</a>
+                        {% if not is_iorg and show_gender_stats %} 
+                          <a href="javascript:showChart('gender', {{ question.pk }});" class="dropdown-item gender">{% trans "Gender" %}</a>
+                        {% endif %}
+
+                        {% if not is_iorg and show_age_stats %} 
+                          <a href="javascript:showChart('age', {{ question.pk }});" class="dropdown-item age">{% trans "Age" %}</a>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+              </div>
+              {% if not question.is_open_ended %}
+                {% for tab in tabs %}
+                <div
+                  class="has-text-centered"
+                  id="chart-question-{{ question.pk }}"
+                  data-question="{{ question.pk }}"
+                  data-question-type="chart">
+                </div>
+                {% endfor %}
+              {% else %}
+                <div
+                  class="has-text-centered"
+                  id="chart-question-cloud-{{ question.pk }}"
+                  data-question="{{ question.pk }}"
+                  data-question-type="cloud">
+                </div>
+              {% endif %}
+            </div>
+          </div>    
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+{% endblock %}
+
+{% block js_extra %}
+  <script src="{% static 'plugins/apexcharts.js' %}"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="{% static 'plugins/wordcloud/d3.js' %}"></script>
+  <script src="{% static 'plugins/wordcloud/d3.layout.cloud.js' %}"></script>
+
+  <script type="text/javascript">
+    let acc = document.getElementsByClassName("survey-question__accordion-btn");
+    for (let i = 0; i < acc.length; i++) {
+      acc[i].addEventListener("click", function() {
+        this.classList.toggle("btn-active");
+        let panel = this.nextElementSibling;
+        if (panel.style.display === "block") {
+          panel.style.display = "none";
+        } else {
+          panel.style.display = "block";
+        }
+      });
+    }
+
+    $("input:checkbox").click(function() {
+      let isChecked = $("input:checkbox").filter(":checked");
+      
+      isChecked.map(function() {
+        let sdg = this.value;
+
+        $("div[data-question-sdgs").each(function() {
+          let sdgs = $(this).attr("data-question-sdgs");
+          if (!sdgs.split(",").includes(sdg)) {
+            $(this).hide();
+          }
+        });
+      });
+
+      if (isChecked.length == 0) {
+        $("div[data-question-sdgs").each(function() {
+          $(this).show();
+        });
+      }
+    });
+
+    // let lineOptions = {
+    //   chart: { type: 'line', toolbar: { show: false }},
+    //   legend: { position: 'top', horizontalAlign: 'center', fontSize: '16px', onItemClick: { toggleDataSeries: true }, itemMargin: { horizontal: 10, vertical: 10 }},
+    //   grid: { row: { colors: ['transparent'], opacity: 0.5 }},
+    //   stroke: { curve: 'smooth' },
+    //   colors: ['#89e7ff', '#03aeef', '#0054e2', '#0400a4'],
+    //   xaxis: { categories: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+    //   series: [
+    //     { name: "14 or less", data: [10, 22, 35, 45, 30, 42, 40, 45, 60, 65] },
+    //     { name: "15 - 25", data: [5, 10, 22, 35, 26, 40, 45, 30, 52, 46] },
+    //     { name: "26-40", data: [22, 36, 18, 28, 48, 62, 10, 51, 49, 30] },
+    //     { name: "41 or more", data: [10, 41, 35, 51, 49, 62, 69, 28, 68, 39] }
+    //   ],
+    // };
+
+    // let lineChart = new ApexCharts(
+    //   document.querySelector("#lineChart"),
+    //   lineOptions
+    // );
+
+    // lineChart.render();
+
+    const availableColors = [
+      "#0CD7F0",
+      "#0CA2FA",
+      "#016AF5",
+      "#003CFA",
+      "#1F00F5",
+      "#02008A",
+      "#0300B0",
+      "#0400A4",
+      "#0400F0",
+      "#020063",
+      "#2709BD"
+      ,"#1C0B70",
+      "#320CF0",
+      "#4927F2",
+      "#170670",
+    ];
+    const results_age = [];
+    const results_gender = [];
+    const results_statistics = [];
+    let question = 0;
+
+    {% for question in poll.get_questions %}
+      {% if not question.is_open_ended %}
+        question = {{ question.pk }};
+
+        results_statistics[question] = {
+          labels: [],
+          series: [],
+        };
+
+        {% with results=question|question_results %}
+          {% with categories=results.categories %}
+            {% for category in categories %}
+              results_statistics[question]["labels"].push("{{ category.label }}");
+              results_statistics[question]["series"].push(parseInt("{% widthratio category.count results.set 100 %}"));
+            {% endfor %}
+          {% endwith %}
+        {% endwith %}
+
+        {% if not is_iorg and show_age_stats %}
+          results_age[question] = {
+            categories: [],
+            series: [],
+          };
+
+          {% with seg_results=question|question_segmented_results:"age" %}
+            {% for results in seg_results %}
+              results_age[question]["categories"].push("{{ results.label }}");
+
+              {% with categories=results.categories %}
+                {% for category in categories %}
+                  results_age[question]["series"]["{{ forloop.counter0 }}"] = (typeof results_age[question]["series"]["{{ forloop.counter0 }}"] != "undefined") ? results_age[question]["series"]["{{ forloop.counter0 }}"] : {
+                    name: "{{ category.label }}",
+                    data: [],
+                  };
+                  results_age[question]["series"]["{{ forloop.counter0 }}"].data.push(
+                    {% widthratio category.count results.set 100 %}
+                  );
+                {% endfor %}
+              {% endwith %}              
+            {% endfor %}
+          {% endwith %}
+        {% endif %}
+
+        {% if not is_iorg and show_gender_stats %}
+          results_gender[question] = {
+            categories: [],
+            series: [],
+          };
+          
+          {% with seg_results=question|question_segmented_results:"gender" %}
+            {% for results in seg_results %}
+              results_gender[question]["categories"].push("{{ results.label }}");
+
+              {% with categories=results.categories %}
+                {% for category in categories %}
+                  results_gender[question]["series"]["{{ forloop.counter0 }}"] = (typeof results_gender[question]["series"]["{{ forloop.counter0 }}"] != "undefined") ? results_gender[question]["series"]["{{ forloop.counter0 }}"] : {
+                      name: "{{ category.label }}",
+                      data: [],
+                    };
+                  results_gender[question]["series"]["{{ forloop.counter0 }}"].data.push(
+                    {% widthratio category.count results.set 100 %}
+                  );
+                {% endfor %}
+              {% endwith %}
+            {% endfor %}
+          {% endwith %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+
+    results_statistics.map(function(result, question) {
+      let apex = new ApexCharts(
+        document.querySelector("#chart-question-" + question),
+        {
+          chart: { height: 600, type: "donut", id: "chart-question-" + question },
+          legend: {
+            position: "top",
+            horizontalAlign: "center",
+            fontSize: "16px",
+            onItemClick: { toggleDataSeries: true },
+          },
+          colors: availableColors,
+          series: result.series,
+          labels: result.labels,
+          tooltip: { enabled: true },
+        }
+      ).render();
+    });
+
+    function showChart(tab, question) {
+      let updateOptions = {};
+      if (tab == "statistics") {
+        updateOptions = {
+          chart: { height: 600, type: "donut", id: "chart-question-" + question },
+          legend: {
+            position: "top",
+            horizontalAlign: "center",
+            fontSize: "16px",
+            show: true,
+            onItemClick: { toggleDataSeries: true },
+          },
+          dataLabels: {
+            enabled: true,
+          },
+          colors: availableColors,
+          series: results_statistics[question].series,
+          labels: results_statistics[question].labels,
+          tooltip: { enabled: true },
+        };
+      }
+
+      if (tab == "gender") {
+        updateOptions = {
+          chart: { height: 350, type: "bar", stacked: true, toolbar: { show: false }},
+          plotOptions: { bar: { horizontal: true }},
+          legend: {
+            position: "top",
+            horizontalAlign: "center",
+            fontSize: "16px",
+            onItemClick: { toggleDataSeries: true },
+            itemMargin: { horizontal: 10, vertical: 10 },
+          },
+          grid: { row: { colors: ["transparent"], opacity: 0.5 }},
+          dataLabels: { enabled: true },
+          colors: availableColors,
+          xaxis: { categories: results_gender[question].categories },
+          series: results_gender[question].series,
+          tooltip: { enabled: true },
+          plotOptions: { bar: { horizontal: true }},
+        };
+      }
+
+      if (tab == "age") {
+        updateOptions = {
+          chart: { height: 350, type: "bar", stacked: true, toolbar: { show: false }},
+          plotOptions: { bar: { horizontal: true }},
+          legend: {
+            position: "top",
+            horizontalAlign: "center",
+            fontSize: "16px",
+            onItemClick: { toggleDataSeries: true },
+            itemMargin: { horizontal: 10, vertical: 10 },
+          },
+          grid: { row: { colors: ["transparent"], opacity: 0.5 }},
+          dataLabels: { enabled: true },
+          colors: availableColors,
+          xaxis: { categories: results_age[question].categories },
+          series: results_age[question].series,
+          tooltip: { enabled: true },
+        };
+      }
+
+      ApexCharts.exec("chart-question-" + question, "updateOptions", updateOptions, false, false, false);
+    }
+
+    const fillWordColor = function(d, i) {
+      return availableColors[i % availableColors.length];
+    }
+
+    $("div[data-question-type=\"cloud\"]").each(function() {
+      const question = $(this).attr("data-question");
+      const words = [];
+
+      $.ajax({url: `/results/survey/${question}/pollquestion/`, dataType: "json"}).done(function(result) {
+        if (!result) {
+          return;
+        }
+
+        const results = result[0];
+        results["categories"].map(function(word, index) {
+          word = results.categories[index];
+          if (word) {
+            words.push({
+              text: word.label.trim().toUpperCase(),
+              size: 20 + word.count,
+            });
+          }
+        });
+
+        if (words.length > 0) {
+          let width = 300, height = 300;
+          let wordCloud = d3.scale.category20();
+          d3.layout.cloud()
+            .words(words)
+            .rotate(function() { return ~~(Math.random() * 2) * 90; })
+            .font("Impact")
+            .fontSize(function(d) { return d.size; })
+            .on("end", draw)
+            .start();
+          function draw(words) {
+            d3.select("#chart-question-cloud-" + question)
+            .append("svg")
+            .attr("width", "70%")
+            .attr("height", "70%")
+            .attr("viewBox","0 0 " + Math.min(width,height) + " " + Math.min(width,height))
+            .attr("preserveAspectRatio", "xMinYMin")
+            .append("g")
+            .attr("transform", "translate(" + Math.min(width,height) / 2 + "," + Math.min(width,height) / 2 + ")")
+            .selectAll("text")
+            .data(words)
+            .enter().append("text")
+            .style("font-size", function(d) {
+              return d.size + "px";
+            })
+            .style("font-family", "Impact")
+            .style("fill", function(d, i) {
+              return wordCloud(i);
+            })
+            .attr("text-anchor", "middle")
+            .attr("transform", function(d) {
+              return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+            })
+            .style('fill', fillWordColor)
+            .text(function(d) {
+              return d.text;
+            });
+          }
+        }
+      });
+    });
+  </script>
+{% endblock %}

@@ -341,3 +341,8 @@ def get_value_in_qs(queryset, key):
     sdgs = list(set(sdgs))
     sdgs.sort()
     return sdgs
+
+
+@register.filter(name="get_sdg")
+def get_sdg(key):
+    return dict(settings.SDG_LIST).get(key)

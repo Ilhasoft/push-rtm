@@ -41,6 +41,18 @@ class PollForm(forms.ModelForm):
     )
     flow_uuid = forms.ChoiceField(choices=[])
 
+    response_content = forms.CharField(
+        required=False,
+        help_text=_("Insert the survey description "),
+        widget=forms.Textarea(
+            attrs={
+                "placeholder": _("Insert the survey description "),
+                "class": "textarea",
+                "rows": 6,
+            }
+        ),
+    )
+
     def __init__(self, *args, **kwargs):
         self.org = kwargs["org"]
         del kwargs["org"]
@@ -68,7 +80,7 @@ class PollForm(forms.ModelForm):
 
     class Meta:
         model = Poll
-        fields = ("is_active", "backend", "title", "flow_uuid", "category")
+        fields = ("is_active", "backend", "title", "flow_uuid", "category", "response_content",)
 
 
 class PollResponseForm(forms.ModelForm):
@@ -247,7 +259,7 @@ class PollCRUDL(SmartCRUDL):
         success_url = "id@polls.poll_poll_date"
         permission = "polls.poll_create"
         default_template = "polls/form.html"
-        fields = ("title", "flow_uuid")
+        fields = ("title", "flow_uuid", "response_content",)
         success_message = _("Your poll has been created, now configure its flow.")
         title = _("Create Survey")
 
@@ -583,7 +595,7 @@ class PollCRUDL(SmartCRUDL):
 
     class Update(OrgObjPermsMixin, SmartUpdateView):
         form_class = PollForm
-        fields = ("is_active", "title")
+        fields = ("is_active", "title", "response_content",)
         success_url = "id@polls.poll_poll_date"
         default_template = "polls/form.html"
 
