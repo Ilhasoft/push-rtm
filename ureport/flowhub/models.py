@@ -18,7 +18,7 @@ class Flow(SmartModel):
     sdgs = ArrayField(models.IntegerField(choices=settings.SDG_LIST, blank=False))
     flow = JSONField()
     visible_globally = models.BooleanField(default=False)
-    languages = ArrayField(models.CharField(choices=settings.LANGUAGES, blank=False, max_length=2))
+    languages = ArrayField(models.CharField(choices=settings.LANGUAGES, blank=False, max_length=5))
     downloads = models.IntegerField(default=0)
 
     class Meta:
