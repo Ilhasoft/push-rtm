@@ -160,7 +160,6 @@ class EditView(SmartTemplateView):
 
         if form.is_valid():
             instance = form.save(self.request)
-            
             messages.success(request, _("Flow updated with success!"))
             return redirect(reverse("flowhub.flow_list"))
         else:
