@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block content %}
+<section class="section">
+  <h1 class="title">{% trans "Repository" %}</h1>
+  <h2 class="subtitle">{% block flow_section %}{% endblock %}</h2>
+</section>
+
+<section class="section" id="{% block flow_section_id %}{% endblock %}">
+  <div class="columns is-desktop">
+    <div class="column is-one-quarter">
+      <div class="columns">
+        <div class="column">
+          <aside class="menu">
+            <ul class="menu-list">
+              <li><a class="all" href="{% url 'flowhub.flow_list' %}">{% trans "All flows" %}</a></li>
+              <li><a class="uncts" href="#">{% trans "UNCTs" %}</a></li>
+              <li><a class="my-org" href="{% url 'flowhub.my_org_flow_list' %}">{% trans "My UNCT" %}</a></li>
+              <li><a class="upload" href="{% url 'flowhub.flow_create' %}">{% trans "Upload Flow" %}</a></li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+    </div>
+    {% block flow_content %} {% endblock %}
+  </div>
+</section>
+{% endblock %}

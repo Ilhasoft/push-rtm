@@ -1,0 +1,75 @@
+{% extends "flowhub/base.html" %}
+{% load i18n static sass_tags rtm humanize flowhub %}
+
+{% block nav_item %}page-flowhub{% endblock %}
+
+{% block css_extra %}
+<link rel="stylesheet" href="{% sass_src 'css/flowhub/common.scss' %}"/>
+<link rel="stylesheet" href="{% sass_src 'css/flowhub/detail.scss' %}"/>
+{% endblock %}
+
+{% block flow_section %}{% trans "UNCTs" %}{% endblock %}
+{% block flow_section_id %}flowhub-uncts{% endblock %}
+
+{% block flow_content %}
+<div class="column auto">
+  <div class="columns">
+    <div class="column">
+      <div class="control has-icons-left">
+        <form>
+          <input class="input is-medium search" name="query" placeholder="Search" value="{{ query }}">
+          <span class="icon is-left">
+            <i class="material-icons">search</i>
+          </span>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="flowhub-table-header">
+      <div class="dropdown is-right">
+        <div class="dropdown-trigger">
+          <div>
+            <span>{% trans "Sorty by" %}</span>
+            <i class="material-icons middle">unfold_more</i>
+          </div>
+        </div>
+        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+          <div class="dropdown-content">
+            <a href="{% autosort name '' true %}" class="dropdown-item">{% trans "Alphabetical" %}</a>
+            <a href="{% autosort flows__stars '' true %}" class="dropdown-item">{% trans "Most stars" %}</a>
+            <a href="{% autosort created_on '' true %}" class="dropdown-item">{% trans "Newest" %}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <table class="table is-fullwidth">
+      <tbody>
+      {% for unct in uncts %}
+      <tr class="is-tr">
+        <td class="has-text-left">
+          <strong>{{ unct.name }}</strong>
+        </td>
+        <td class="has-text-centered">
+          {{ unct.flows.count }} {% trans "flows" %}
+        </td>
+        <td class="has-text-centered">
+          {% trans "Registered" %} {{ unct.flows.last.created_on|naturaltime }}
+        </td>
+        <td class="has-text-centered">
+          <div class="stars">
+            <img src="{% static 'svg/star-solid.svg' %}" alt="stars">
+            <span>{{ unct|sum_stars }}</span>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <div class="is-pulled-right">
+      {% include "paginator.html" with paginator=uncts %}
+    </div>
+  </div>
+  {% endblock %}

@@ -1,0 +1,29 @@
+#page-flowhub {
+  .info {
+    .back {
+      background-color: #fff;
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 5px;
+    }
+  }
+
+  .detail {
+    margin-top: 0px;
+  }
+
+  .sdgs {
+    display: flex;
+    flex-wrap: wrap;
+    
+    span {
+      margin: 0.3rem;
+    }
+  }
+
+  button[type="button"], [type="reset"], [type="submit"] {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+}

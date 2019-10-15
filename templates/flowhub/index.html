@@ -1,0 +1,98 @@
+{% extends "flowhub/base.html" %}
+{% load i18n static sass_tags ureport %}
+
+{% block nav_item %}page-flowhub{% endblock %}
+
+{% block css_extra %}
+<link rel="stylesheet" href="{% sass_src 'css/flowhub/common.scss' %}"/>
+<link rel="stylesheet" href="{% sass_src 'css/flowhub/detail.scss' %}"/>
+{% endblock %}
+
+{% block flow_section %}{{ subtitle }}{% endblock %}
+{% block flow_section_id %}flowhub-all{% endblock %}
+
+{% block flow_content %}
+<div class="column auto">
+  <div class="columns">
+    <div class="column">
+      <div class="control has-icons-left">
+        <form>
+          <input type="text" class="input is-medium search" name="search" value="" placeholder="Search">
+          <span class="icon is-left">
+            <i class="material-icons">search</i>
+          </span>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="flowhub-table-header">
+    <div class="filters">
+      <div>
+        <div class="dropdown">
+          <div class="dropdown-trigger">
+            <div>
+              <span>{% trans "SDGs" %}</span>
+              <i class="material-icons middle">keyboard_arrow_down</i>
+            </div>
+          </div>
+          <div class="dropdown-menu" id="dropdown-menu" role="menu">
+            <div class="dropdown-content">
+              {% for id, name in sdgs %}
+              <a href="?sdg={{ id }}&lang={{ language }}" class="dropdown-item">{{ name }}</a>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <div class="dropdown">
+          <div class="dropdown-trigger">
+            <div>
+              <span>{% trans "Languages" %}</span>
+              <i class="material-icons middle">keyboard_arrow_down</i>
+            </div>
+          </div>
+          <div class="dropdown-menu" id="dropdown-menu" role="menu">
+            <div class="dropdown-content">
+              {% for id, name in languages %}
+              <a href="?sdg={{ sdg }}&lang={{ id }}" class="dropdown-item">{{ name }}</a>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="dropdown is-right">
+          <div class="dropdown-trigger">
+            <div>
+              <span>{% trans "Sorty by" %}</span>
+              <i class="material-icons middle">unfold_more</i>
+            </div>
+          </div>
+          <div class="dropdown-menu" id="dropdown-menu" role="menu">
+            <div class="dropdown-content">
+              <a href="#" class="dropdown-item">{% trans "Alphabetical" %}</a>
+              <a href="#" class="dropdown-item">{% trans "Most stars" %}</a>
+              <a href="#" class="dropdown-item">{% trans "Newest" %}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <table class="table is-fullwidth">
+    <tbody>
+    {% for flow in flows %}
+      {% include "flowhub/flow_detail.html" with flow=flow section="all" %}
+    {% empty %}
+    <tr>
+      <td class="has-text-centered">{% trans "No results found" %}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <div class="is-pulled-right">
+    {% include "paginator.html" with paginator=flows %}
+  </div>
+</div>
+{% endblock %}

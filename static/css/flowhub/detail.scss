@@ -1,0 +1,89 @@
+#page-flowhub {
+  select {
+    color: #03aeef;
+    max-width: 12rem;
+  }
+
+  .is-tr {
+    a {
+      color: #707070;
+    }
+
+    td {
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+    }
+  }
+
+  .is-marginless-bottom {
+    margin-bottom: 0px;
+  }
+
+  .stars {
+    display: flex;
+    justify-content: flex-start;
+    max-width: 50px;
+
+    span {
+      margin: 0 .5rem;
+    }
+  }
+
+  .description {
+    color: #707070;
+    padding-right: 2.3rem;
+
+    p {
+      overflow: hidden;
+      position: relative;
+      line-height: 1.2rem;
+      max-height: 3.6rem;
+      padding-right: 2rem;
+
+      &:before {
+        content: '[...]';
+        position: absolute;
+        right: 0;
+        bottom: 0;
+      }
+
+      &:after {
+        content: '';
+        position: absolute;
+        right: 0;
+        width: 2rem;
+        height: 2rem;
+        background: #fff;
+      }
+    }
+  }
+
+  .languages {
+    color: #707070;
+
+    span {
+      font-weight: 500;
+    }
+  }
+
+  .filters {
+    display: flex;
+    justify-content: space-between;
+
+    @media screen and (max-width: 768px) {
+      padding-left: 12px;
+    }
+  }
+
+  .dropdown {
+    cursor: pointer;
+    @media screen and (min-width: 768px) {
+      margin-right: 2rem;
+    }
+  }
+
+  .dropdown-content {
+    max-height: 25rem;
+    overflow: auto;
+  }
+}

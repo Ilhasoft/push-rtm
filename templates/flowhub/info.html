@@ -1,0 +1,98 @@
+{% extends "flowhub/base.html" %}
+{% load i18n static sass_tags rtm %}
+
+{% block nav_item %}page-flowhub{% endblock %}
+
+{% block css_extra %}
+<link rel="stylesheet" href="{% sass_src 'css/flowhub/common.scss' %}" />
+<link rel="stylesheet" href="{% sass_src 'css/flowhub/info.scss' %}" />
+{% endblock %}
+
+{% block flow_section %}{% trans "All flows" %}{% endblock %}
+{% block flow_section_id %}{% if flow_section %}flowhub-{{ flow_section }}{% else %}flowhub-all{% endif %}{% endblock %}
+
+{% block flow_content %}
+<div class="column auto info">
+  {% if back %}
+  <div class="columns">
+    <div class="column">
+      <a href="{{ back }}" class="icon is-medium is-left back">
+        <img src="{% static 'svg/left-arrow.svg' %}" alt="{% trans 'back' %}">
+      </a>
+    </div>
+  </div>
+  {% endif %}
+  <div class="box detail">
+    <div class="columns">
+      <div class="column">
+        <strong>{{ flow.name }}</strong>
+        <form class="form-flowhub" action="{% url 'flowhub.flow_delete' flow.pk %}" method="POST">
+          {% csrf_token %}
+          <a href="{% url 'flowhub.flow_update' flow.pk %}">
+            <img src="{% static 'svg/pencil.svg' %}" alt="pencil">
+          </a>
+          <button type="submit">
+            <img src="{% static 'svg/trash.svg' %}" alt="trash">
+          </button>
+        </form>
+      </div>
+      <div class="column has-text-right">
+        {% trans "Visible globally" %} 
+        <label class="switch">
+          <input type="checkbox" disabled="disabled" {% if flow.visible_globally %}checked{% endif %}>
+          <span class="slider round"></span>
+        </label>
+      </div>
+    </div>
+    <div class="columns">
+      <div class="column">
+        {{ flow.org.name }}
+      </div>
+    </div>
+    <div class="columns">
+      <div class="column">
+        <p class="has-text-weight-bold">{% trans "Description" %}</p>
+        {{ flow.description }}
+      </div>
+    </div>
+    <div class="columns">
+      <div class="column">
+        <p class="has-text-weight-bold">{% trans "Collected data" %}</p>
+        {{ flow.collected_data }}
+      </div>
+    </div>
+    {% if flow.get_languages %}
+    <div class="columns">
+      <div class="column">
+        <p class="has-text-weight-bold">{% trans "Languages" %}</p>
+        {{ flow.get_languages }}
+      </div>
+    </div>
+    {% endif %}
+    <div class="columns">
+      <div class="column">
+        <p class="has-text-weight-bold">{% trans "Tags" %}</p>
+        {% for tag in flow.tags.all %}
+          <span class="tag">{{ tag }}</span>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="columns">
+      <div class="column">
+        <p class="has-text-weight-bold">{% trans "SDGs" %}</p>
+        <div class="sdgs">
+          {% for id, name in flow.get_sdgs.items %}
+            <span class="badge-sdg-{{ id }}">{{ id }} - {{ name }}</span>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <div class="columns">
+      <div class="column download">
+        <a href="{% url 'flowhub.flow_download' flow.pk %}" class="button button-primary is-primary">{% trans "Download" %}</a>
+        <span>{{ flow.downloads }} {% trans "downloads" %}</span>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
