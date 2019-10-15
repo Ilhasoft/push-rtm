@@ -15,38 +15,13 @@ from smartmin.views import SmartCreateView, SmartListView, SmartTemplateView
 from .models import Flow
 from .forms import FlowForm
 
+
 class RTMBaseListView(SmartListView):
     search_query_name = 'search'
 
     def get_queryset(self):
         queryset = self.model.objects.filter(is_active=True)
         return self.search(queryset)
-
-    """
-    def filter(self, queryset):
-        sort_field = self.request.GET.get('sort')
-        sort_direction = self.request.GET.get('dir')
-        page = self.request.GET.get('page')
-        #language = self.request.GET.get('lang', '')
-        #sdg = self.request.GET.get('sdg', 0)
-
-        filters = {}
-        sortered = "pk"
-
-        #if language: filters['languages__contains'] = list(language)
-        #if sdg: filters['sdgs__contains'] = list(sdg)
-       if 
-    
-    
-        
-        
-        
-        if sort_field:
-            sortered = "{}{}".format("-" if sort_direction == "desc" else "", sort_field)
-        
-        queryset.filter
-    """
-
 
     def search(self, queryset):
         '''
@@ -105,7 +80,7 @@ class MyOrgListView(RTMBaseListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["subtitle"] = "{} {}".format(self.request.org.name, _('flows'))
-        return context   
+        return context
 
 
 class CreateView(SmartTemplateView):
