@@ -7,8 +7,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic import CreateView
 from django.contrib import messages
+from django.conf import settings
 
 from smartmin.views import SmartListView, SmartTemplateView
 
@@ -16,12 +16,22 @@ from .models import Flow
 from .forms import FlowForm
 
 
-class RTMBaseListView(SmartListView):
+class FlowBaseListView(SmartListView):
     search_query_name = "search"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["languages"] = settings.LANGUAGES
+        context["sdgs"] = settings.SDG_LIST
+        return context
+
     def get_queryset(self):
-        queryset = self.model.objects.filter(is_active=True).order_by("-stars", "name")
-        return self.search(queryset)
+        queryset = self.model.objects.filter(is_active=True).filter(Q(org=self.request.org) | Q(visible_globally=True)).order_by("-stars", "name")
+        
+        queryset = self.search(queryset)
+        queryset = self.filter(queryset)
+
+        return queryset
 
     def search(self, queryset):
         """
@@ -50,9 +60,31 @@ class RTMBaseListView(SmartListView):
             queryset = queryset.select_related(*related)
 
         return queryset
+    
+    def filter(self, queryset):
+        sort_field = self.request.GET.get('sort')
+        sort_direction = self.request.GET.get('dir')
+        page = self.request.GET.get('page')
+        language = self.request.GET.get('lang', '')
+        sdg = self.request.GET.get('sdg', 0)
+
+        filters = {}
+
+        sortered = "pk"
+
+        if language:
+            filters["languages__contains"] = [language]
+        
+        if sdg:
+            filters["sdgs__contains"] = [sdg]
+        
+        if sort_field:
+            sortered = "{}{}".format("-" if sort_direction == "desc" else "", sort_field)
+
+        return queryset.filter(**filters).order_by(sortered)
 
 
-class ListView(RTMBaseListView):
+class ListView(FlowBaseListView):
     template_name = "flowhub/index.html"
     # permission = 'flowhub.flow_list'
     model = Flow
@@ -67,7 +99,7 @@ class ListView(RTMBaseListView):
         return context
 
 
-class MyOrgListView(RTMBaseListView):
+class MyOrgListView(FlowBaseListView):
     template_name = "flowhub/index.html"
     # permission = 'flohub.flow_list'
     model = Flow
@@ -97,7 +129,7 @@ class CreateView(SmartTemplateView):
         form = FlowForm(request.POST, request.FILES)
 
         if form.is_valid():
-            instance = form.save(self.request)
+            form.save(self.request)
             messages.success(request, _("Flow created with success!"))
             return redirect(reverse("flowhub.flow_list"))
         else:
@@ -136,7 +168,7 @@ class EditView(SmartTemplateView):
         )
 
         if form.is_valid():
-            instance = form.save(self.request)
+            form.save(self.request)
             messages.success(request, _("Flow updated with success!"))
             return redirect(reverse("flowhub.flow_list"))
         else:
