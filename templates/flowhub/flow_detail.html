@@ -10,7 +10,7 @@
         {% if request.org == flow.org %}
           <form class="form-flowhub" action="{% url 'flowhub.flow_delete' flow.pk %}" method="POST">
             {% csrf_token %}
-            <a href="#">
+            <a href="{% url 'flowhub.flow_update' flow.pk %}">
               <img src="{% static 'svg/pencil.svg' %}" alt="pencil">
             </a>
             <button class="button-no-bg" type="submit">

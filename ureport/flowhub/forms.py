@@ -72,6 +72,13 @@ class FlowForm(forms.ModelForm):
         model = Flow
         fields = ['name', 'description', 'collected_data', 'tags', 'visible_globally', 'languages']
     
+    def __init__(self, *args, **kwargs):
+        flow_is_required = kwargs.pop("flow_is_required", True)
+        super().__init__(*args, **kwargs)
+
+        if not flow_is_required:
+            self.fields["flow"].required = False
+
     def save(self, request):
         instance = super().save(commit=False)
         file_uploaded = self.cleaned_data.get('flow')

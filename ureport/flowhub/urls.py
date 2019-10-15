@@ -9,6 +9,6 @@ urlpatterns = [
     # url(r"^uncts/", UnctsView.as_view(), name="flowhub.flow_uncts"),
     # url(r"^(?P<flow>[0-9]+)/$", InfoView.as_view(), name="flowhub.flow_info"),
     url(r"^(?P<flow>[0-9]+)/download/$", views.DownloadView.as_view(), name="flowhub.flow_download"),
-    # url(r"^(?P<flow>[0-9]+)/update/$", EditView.as_view(), name="flowhub.flow_update"),
+    url(r"^(?P<flow>[0-9]+)/update/$", views.EditView.as_view(), name="flowhub.flow_update"),
     url(r"^(?P<flow>[0-9]+)/delete/$", views.DeleteView.as_view(), name="flowhub.flow_delete"),
 ]

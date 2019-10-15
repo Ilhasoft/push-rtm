@@ -3,7 +3,7 @@ import operator
 from functools import reduce
 
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
@@ -110,10 +110,6 @@ class MyOrgListView(RTMBaseListView):
 
 class CreateView(SmartTemplateView):
     template_name = 'flowhub/form.html'
-    #permission = 'flowhub.flow_create'
-    #model = Flow
-    #form_class = FlowForm
-    #fields = ['name', 'description', 'collected_data', 'sdgs', 'visible_globally', 'languages']
     success_url = reverse_lazy("flowhub.flow_list")
 
     def get_context_data(self, **kwargs):
@@ -132,6 +128,44 @@ class CreateView(SmartTemplateView):
         else:
             context = self.get_context_data()
             context['form'] = form
+            messages.error(request, _("Sorry, you did not complete the registration."))
+            messages.error(request, form.non_field_errors())
+            return render(request, self.template_name, context)
+
+
+class EditView(SmartTemplateView):
+    template_name = 'flowhub/form.html'
+    #permission = "flowhub.flow_update"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        flow = get_object_or_404(Flow, pk=self.kwargs["flow"])
+        data = {
+            "name": flow.name,
+            "languages": flow.languages,
+            "description": flow.description,
+            "collected_data": flow.collected_data,
+            "tags": list(flow.tags.values_list("name", flat=True)),
+            "sdgs": flow.sdgs,
+            "visible_globally": flow.visible_globally,
+        }
+
+        context["form"] = FlowForm(data=data, flow_is_required=False)
+        context["page_subtitle"] = _("Edit")
+        return context
+
+    def post(self, request, *args, **kwargs):
+        flow = get_object_or_404(Flow, pk=self.kwargs["flow"])
+        form = FlowForm(request.POST, request.FILES, instance=flow, flow_is_required=False)
+
+        if form.is_valid():
+            instance = form.save(self.request)
+            
+            messages.success(request, _("Flow updated with success!"))
+            return redirect(reverse("flowhub.flow_list"))
+        else:
+            context = self.get_context_data()
+            context["form"] = form
             messages.error(request, _("Sorry, you did not complete the registration."))
             messages.error(request, form.non_field_errors())
             return render(request, self.template_name, context)
