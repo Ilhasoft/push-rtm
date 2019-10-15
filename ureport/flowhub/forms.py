@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from taggit.models import Tag
 
 from .models import Flow
+from .validators import MimetypeValidator
 
 
 class FlowForm(forms.ModelForm):
@@ -58,7 +59,10 @@ class FlowForm(forms.ModelForm):
         ),
     )
 
-    flow = forms.FileField(widget=forms.FileInput())
+    flow = forms.FileField(
+        validators=[MimetypeValidator('application/json')],
+        help_text = _("Upload a JSON file")
+    )
 
     sdgs = forms.MultipleChoiceField(
         label=_("SDG's"), choices=settings.SDG_LIST, widget=forms.CheckboxSelectMultiple(attrs={"required": True})
@@ -66,25 +70,25 @@ class FlowForm(forms.ModelForm):
 
     class Meta:
         model = Flow
-        fields = ['name', 'description', 'collected_data', 'tags', 'sdgs', 'flow', 'visible_globally', 'languages']
+        fields = ['name', 'description', 'collected_data', 'tags', 'visible_globally', 'languages']
     
     def save(self, request):
         instance = super().save(commit=False)
         file_uploaded = self.cleaned_data.get('flow')
-        instance.sdgs = self.collected_data('sdgs')
+        instance.sdgs = self.cleaned_data.get('sdgs')
 
         if file_uploaded:
             with file_uploaded.open():
-                instance.flow = json.loads(file_uploaded.read().decode('utf-8'))
+                instance.flow = json.loads(file_uploaded.read().decode("utf-8"))
         
         instance.created_by = request.user
-        instance.modifield_by = request.user
+        instance.modified_by = request.user
         instance.org = request.org
         instance.save()
 
         instance.tags.remove(*instance.tags.all())
-        if self.collected_data.get('tags'):
-            tags = dict([tags for tag in self.collected_data.get('tags')])
-            instance.tags.add(tags)
-        
+        if self.cleaned_data.get('tags'):
+            instance.tags.add(*[tag for tag in self.cleaned_data.get("tags")])
+        #instance.save_m2m()
+
         return instance

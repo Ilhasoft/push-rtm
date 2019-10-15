@@ -3,10 +3,12 @@ import operator
 from functools import reduce
 
 from django.http import HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
+from django.views.generic import CreateView
+from django.contrib import messages
 
 from smartmin.views import SmartCreateView, SmartListView, SmartTemplateView
 
@@ -15,6 +17,36 @@ from .forms import FlowForm
 
 class RTMBaseListView(SmartListView):
     search_query_name = 'search'
+
+    def get_queryset(self):
+        queryset = self.model.objects.filter(is_active=True)
+        return self.search(queryset)
+
+    """
+    def filter(self, queryset):
+        sort_field = self.request.GET.get('sort')
+        sort_direction = self.request.GET.get('dir')
+        page = self.request.GET.get('page')
+        #language = self.request.GET.get('lang', '')
+        #sdg = self.request.GET.get('sdg', 0)
+
+        filters = {}
+        sortered = "pk"
+
+        #if language: filters['languages__contains'] = list(language)
+        #if sdg: filters['sdgs__contains'] = list(sdg)
+       if 
+    
+    
+        
+        
+        
+        if sort_field:
+            sortered = "{}{}".format("-" if sort_direction == "desc" else "", sort_field)
+        
+        queryset.filter
+    """
+
 
     def search(self, queryset):
         '''
@@ -51,11 +83,8 @@ class ListView(RTMBaseListView):
     model = Flow
     context_object_name = 'flows'
     search_fields = ['name__icontains','description__icontains']
+    filter_fields = ['name__icontains','description__icontains']
     search_query_name = 'search'
-    
-    def get_queryset(self):
-        queryset = Flow.objects.filter(is_active=True)
-        return self.search(queryset)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -71,27 +100,41 @@ class MyOrgListView(RTMBaseListView):
     search_fields = ['name__icontains','description__icontains']
 
     def get_queryset(self):
-        queryset = Flow.objects.filter(is_active=True, org=self.request.org)
-        return self.search(queryset)
+        return super().get_queryset().filter(org=self.request.org)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["subtitle"] = "{} {}".format(self.request.org.name, _('flows'))
-        return context
-    
+        return context   
 
 
-class CreateView(SmartCreateView):
+class CreateView(SmartTemplateView):
     template_name = 'flowhub/form.html'
     #permission = 'flowhub.flow_create'
-    model = Flow
-    form_class = FlowForm
+    #model = Flow
+    #form_class = FlowForm
+    #fields = ['name', 'description', 'collected_data', 'sdgs', 'visible_globally', 'languages']
     success_url = reverse_lazy("flowhub.flow_list")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["subtitle"] = _("Upload New Flow")
+        context["form"] = FlowForm()
         return context
+    
+    def post(self, request, *args, **kwargs):
+        form  = FlowForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            instance = form.save(self.request)
+            messages.success(request, _('Flow created with success!'))
+            return redirect(reverse('flowhub.flow_list'))
+        else:
+            context = self.get_context_data()
+            context['form'] = form
+            messages.error(request, _("Sorry, you did not complete the registration."))
+            messages.error(request, form.non_field_errors())
+            return render(request, self.template_name, context)
 
 
 class DownloadView(SmartTemplateView):

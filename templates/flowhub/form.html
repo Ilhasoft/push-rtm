@@ -15,7 +15,7 @@
 
 {% block flow_content %}
 <div class="column auto">
-  <form class="generic-form box" method="post" enctype="multipart/form-data">
+  <form class="generic-form box" action="#" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="files-form">
       <div class="file has-name is-info field">
@@ -70,6 +70,7 @@
         {{ form.collected_data.errors }}
       </div>
     </div>
+    
     <div class="field">
       <label class="label">{% trans "Add tag" %}</label>
       <div class="control">
@@ -77,6 +78,7 @@
         {{ form.tags.errors }}
       </div>
     </div>
+    
     <div class="field">
       <label class="label">{% trans "SDGs" %}</label>
       <div class="control">
