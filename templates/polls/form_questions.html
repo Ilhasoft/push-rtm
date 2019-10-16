@@ -50,7 +50,7 @@
             {% endif %}
 
             <div class="{% if field.field.widget.input_type == 'select' %}is-fullwidth{% else %}control{% endif %}">
-              {{ field }} dddd
+              {{ field }}
               {% if field.field.widget.input_type == 'checkbox' %}
               <label class="label" for="{{ field.auto_id }}">{{ field.label }}</label>
               {% endif %}
