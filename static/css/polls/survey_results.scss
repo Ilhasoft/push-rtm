@@ -37,12 +37,9 @@
 
   .survey-question {
     display: grid;
-    grid-template-columns: 3rem 1fr 70px;
+    grid-template-columns: 3rem 1fr;
     grid-template-rows: auto;
     padding: 25px 30px;
-    grid-template-areas:
-      "survey-question-number survey-question accordion-btn"
-      "question-details question-details question-details";
 
     &__number {
       color: #707070;
@@ -54,50 +51,14 @@
       font-weight: bold;
       align-items: center;
       background-color: #f2f6f9;
-      grid-area: survey-question-number;
     }
 
     &__info {
-      grid-area: survey-question;
       &__title {
         font-weight: bold;
         font-size: 18px;
         color: #3e3e3e;
       }
-    }
-
-    &__details {
-      display: none;
-      overflow: hidden;
-      grid-area: question-details;
-    }
-
-    &__accordion-btn  {
-      align-self: flex-end;
-      cursor: pointer;
-      grid-area: accordion-btn;
-      position: relative;
-    }
-
-    &__accordion-btn:before {
-      content: "More";
-    }
-
-    &__accordion-btn:after {
-      content: "\2304";
-    }
-
-    .btn-active:before {
-      content: "Less";
-    }
-
-    .btn-active:after {
-      content: "\2303";
-      position: absolute;
-    }
-
-    &__accordion-btn:after, .btn-active:after {
-      font-size: 25px;
     }
   }
 
@@ -109,9 +70,23 @@
     justify-content: flex-end;
   }
 
+  #wordCloud {
+    text-align: center;
+  }
+
   @media(max-width: 995px) {
     .survey-filters>div {
       padding: 20px 15px;
+    }
+  }
+
+  @media (min-width: 1087px) and (max-width: 1279px) {
+    .survey-question {
+      .tag {
+        max-width: 230px;
+        justify-content: end;
+        overflow: hidden;
+      }
     }
   }
 }

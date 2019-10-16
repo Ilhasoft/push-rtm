@@ -105,26 +105,29 @@
             </div>
           </div>
         </div>
-        {% for question in poll.get_questions %}
-        <div class="box is-paddingless" data-question-sdgs="{{ question.sdgs|join:"," }}">
-          <div class="survey-question border-bottom">
-            <div class="survey-question__number">{{ forloop.counter }}</div>
-            <div class="survey-question__info">
-              <span class="survey-question__info__title">{{ question.title }}</span>
-              <div class="top-m-20">
-                <span class="right-m-30">{% trans 'Answered:'%} {{ question.get_responded|intcomma }}</span>
-                <span>{% trans 'Polled:'%} {{ question.get_polled|intcomma }}</span>
+
+        <div class="columns is-multiline">
+          {% for question in poll.get_questions %}
+          <div class="column is-half-desktop">
+            <div class="box is-paddingless" data-question-sdgs="{{ question.sdgs|join:"," }}">
+              <div class="survey-question">
+                <div class="survey-question__number">{{ forloop.counter }}</div>
+                <div class="survey-question__info">
+                  <span class="survey-question__info__title">{{ question.title }}</span>
+                  <div class="top-m-20">
+                    <span class="right-m-30">{% trans 'Answered:'%} {{ question.get_responded|intcomma }}</span>
+                    <span>{% trans 'Polled:'%} {{ question.get_polled|intcomma }}</span>
+                  </div>
+                  <div class="top-m-30">
+                    {% for sdg in question.sdgs %}
+                    <span class="tag sdg-{{ sdg }} is-medium right-m-5 bottom-m-5">{{ sdg }} {{ sdg|get_sdg }}</span>
+                    {% endfor %}
+                  </div>
+                </div>
               </div>
-              <div class="top-m-30">
-                {% for sdg in question.sdgs %}
-                <span class="tag sdg-{{ sdg }} is-medium right-m-5 bottom-m-5">{{ sdg }} {{ sdg|get_sdg }}</span>
-                {% endfor %}
-              </div>
-            </div>
-            <div class="survey-question__accordion-btn"></div>
-            <div class="survey-question__details top-m-40">
-              <div class="is-flex flex-end right-m-20">
+              <div class="survey-chart">
                 {% if not question.is_open_ended %}
+                <div class="is-flex flex-end right-m-20">
                   <div class="dropdown is-hoverable is-right bottom-m-10">
                     <div class="dropdown-trigger">
                       <div aria-haspopup="true" aria-controls="dropdown-menu">
@@ -134,43 +137,44 @@
                         </span>
                       </div>
                     </div>
-
                     <div class="dropdown-menu" id="dropdown-menu" role="menu">
                       <div class="dropdown-content">
                         <a href="javascript:showChart('statistics', {{ question.pk }});" class="dropdown-item statistics">{% trans "All" %}</a>
                         {% if not is_iorg and show_gender_stats %} 
-                          <a href="javascript:showChart('gender', {{ question.pk }});" class="dropdown-item gender">{% trans "Gender" %}</a>
+                        <a href="javascript:showChart('gender', {{ question.pk }});" class="dropdown-item gender">{% trans "Gender" %}</a>
                         {% endif %}
-
                         {% if not is_iorg and show_age_stats %} 
-                          <a href="javascript:showChart('age', {{ question.pk }});" class="dropdown-item age">{% trans "Age" %}</a>
+                        <a href="javascript:showChart('age', {{ question.pk }});" class="dropdown-item age">{% trans "Age" %}</a>
                         {% endif %}
                       </div>
                     </div>
                   </div>
+                </div>
+                {% endif %}
+
+                {% if not question.is_open_ended %}
+                  {% for tab in tabs %}
+                  <div
+                    class="has-text-centered"
+                    id="chart-question-{{ question.pk }}"
+                    data-question="{{ question.pk }}"
+                    data-question-type="chart">
+                  </div>
+                  {% endfor %}
+                {% else %}
+                  <div
+                    class="has-text-centered"
+                    id="chart-question-cloud-{{ question.pk }}"
+                    data-question="{{ question.pk }}"
+                    data-question-type="cloud">
+                  </div>
                 {% endif %}
               </div>
-              {% if not question.is_open_ended %}
-                {% for tab in tabs %}
-                <div
-                  class="has-text-centered"
-                  id="chart-question-{{ question.pk }}"
-                  data-question="{{ question.pk }}"
-                  data-question-type="chart">
-                </div>
-                {% endfor %}
-              {% else %}
-                <div
-                  class="has-text-centered"
-                  id="chart-question-cloud-{{ question.pk }}"
-                  data-question="{{ question.pk }}"
-                  data-question-type="cloud">
-                </div>
-              {% endif %}
             </div>
-          </div>    
+          </div>
+          {% endfor %}
+        </div>
       </div>
-      {% endfor %}
     </div>
   </section>
 {% endblock %}
@@ -182,19 +186,6 @@
   <script src="{% static 'plugins/wordcloud/d3.layout.cloud.js' %}"></script>
 
   <script type="text/javascript">
-    let acc = document.getElementsByClassName("survey-question__accordion-btn");
-    for (let i = 0; i < acc.length; i++) {
-      acc[i].addEventListener("click", function() {
-        this.classList.toggle("btn-active");
-        let panel = this.nextElementSibling;
-        if (panel.style.display === "block") {
-          panel.style.display = "none";
-        } else {
-          panel.style.display = "block";
-        }
-      });
-    }
-
     $("input:checkbox").click(function() {
       let isChecked = $("input:checkbox").filter(":checked");
       
@@ -215,28 +206,6 @@
         });
       }
     });
-
-    // let lineOptions = {
-    //   chart: { type: 'line', toolbar: { show: false }},
-    //   legend: { position: 'top', horizontalAlign: 'center', fontSize: '16px', onItemClick: { toggleDataSeries: true }, itemMargin: { horizontal: 10, vertical: 10 }},
-    //   grid: { row: { colors: ['transparent'], opacity: 0.5 }},
-    //   stroke: { curve: 'smooth' },
-    //   colors: ['#89e7ff', '#03aeef', '#0054e2', '#0400a4'],
-    //   xaxis: { categories: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
-    //   series: [
-    //     { name: "14 or less", data: [10, 22, 35, 45, 30, 42, 40, 45, 60, 65] },
-    //     { name: "15 - 25", data: [5, 10, 22, 35, 26, 40, 45, 30, 52, 46] },
-    //     { name: "26-40", data: [22, 36, 18, 28, 48, 62, 10, 51, 49, 30] },
-    //     { name: "41 or more", data: [10, 41, 35, 51, 49, 62, 69, 28, 68, 39] }
-    //   ],
-    // };
-
-    // let lineChart = new ApexCharts(
-    //   document.querySelector("#lineChart"),
-    //   lineOptions
-    // );
-
-    // lineChart.render();
 
     const availableColors = [
       "#0CD7F0",
@@ -334,7 +303,7 @@
       let apex = new ApexCharts(
         document.querySelector("#chart-question-" + question),
         {
-          chart: { height: 600, type: "donut", id: "chart-question-" + question },
+          chart: { height: 350, type: "donut", id: "chart-question-" + question },
           legend: {
             position: "top",
             horizontalAlign: "center",
@@ -353,7 +322,7 @@
       let updateOptions = {};
       if (tab == "statistics") {
         updateOptions = {
-          chart: { height: 600, type: "donut", id: "chart-question-" + question },
+          chart: { height: 350, type: "donut", id: "chart-question-" + question },
           legend: {
             position: "top",
             horizontalAlign: "center",
