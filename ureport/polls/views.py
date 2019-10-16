@@ -107,7 +107,18 @@ class PollFlowForm(forms.ModelForm):
         required=False,
         widget=forms.DateTimeInput(
             attrs={
-                "placeholder": _("Registration date or leave this field empty to keep the date flow creation date"),
+                "placeholder": _("Please set the date"),
+                "class": "input",
+            }
+        ),
+    )
+
+    poll_end_date = forms.DateTimeField(
+        label=_("End Date"),
+        required=False,
+        widget=forms.DateTimeInput(
+            attrs={
+                "placeholder": _("The date this survey was finished"),
                 "class": "input",
             }
         ),
@@ -124,6 +135,7 @@ class PollFlowForm(forms.ModelForm):
     def clean(self):
         cleaned_data = self.cleaned_data
         poll_date = cleaned_data.get("poll_date")
+        poll_end_date = cleaned_data.get("poll_end_date")
 
         flows = self.org.get_flows(self.flow.backend)
         flow = flows.get(self.flow.flow_uuid)
@@ -136,12 +148,16 @@ class PollFlowForm(forms.ModelForm):
         if not poll_date:
             poll_date = timezone.now()
 
+        if not poll_end_date:
+            poll_end_date = poll_date
+
         cleaned_data["poll_date"] = poll_date
+        cleaned_data["poll_end_date"] = poll_end_date
         return cleaned_data
 
     class Meta:
         model = Poll
-        fields = ("poll_date",)
+        fields = ("poll_date", "poll_end_date",)
 
 
 class QuestionForm(ModelForm):
@@ -198,7 +214,7 @@ class PollCRUDL(SmartCRUDL):
         form_class = PollFlowForm
         title = _("Adjust poll date")
         success_url = "id@polls.poll_questions"
-        fields = ("poll_date",)
+        fields = ("poll_date", "poll_end_date",)
         default_template = "polls/form_date.html"
         success_message = _("Your survey has been updated, now pick which questions to include.")
 
