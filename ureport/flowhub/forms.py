@@ -63,7 +63,7 @@ class FlowForm(forms.ModelForm):
     sdgs = forms.MultipleChoiceField(
         label=_("SDG's"),
         choices=settings.SDG_LIST,
-        widget=forms.CheckboxSelectMultiple(attrs={"required": True}),
+        widget=forms.SelectMultiple(attrs={"required": True}),
     )
 
     class Meta:
@@ -75,6 +75,7 @@ class FlowForm(forms.ModelForm):
             "tags",
             "visible_globally",
             "languages",
+            #"sdgs"
         ]
 
     def __init__(self, *args, **kwargs):

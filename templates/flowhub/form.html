@@ -75,7 +75,20 @@
         {{ form.tags.errors }}
       </div>
     </div>
+
+
+
+    <div class="field">
+      <label class="label">{% trans "SDGs" %}</label>
+      <div class="choices__list choices__list--multiple">
+        {{ form.sdgs|add_class:"choices__input choices__input--cloned"|attr:"multiple:True"|attr:"required:True" }}
+        {{ form.sdgs.errors }}
+      </div>
+    </div>
     
+
+
+    {% comment '' %}
     <div class="field">
       <label class="label">{% trans "SDGs" %}</label>
       <div class="control">
@@ -100,6 +113,8 @@
       </div>
       {{ form.sdgs.errors }}
     </div>
+    {% endcomment %}
+
     <div class="columns wrapper-buttons">
       <div class="column">
         <button type="submit" class="button is-primary">{% trans "OK" %}</button>
@@ -122,6 +137,7 @@
     removeItemButton: true,
     listItems: "choices__list--multiple"
   });
+  
   document.getElementById("id_flow").onchange = ((e) => {
     if (e.srcElement.files.length > 0) {
       document.getElementById("file_name").innerText = e.srcElement.files.item(0).name;
