@@ -4,7 +4,7 @@
 {% block content %}
 <section class="section">
   <h1 class="title">{% trans "Repository" %}</h1>
-  <h2 class="subtitle">{% block flow_section %}{% endblock %}</h2>
+  <h2 class="subtitle">{% block flow_section %}{{ subtitle }}{% endblock %}</h2>
 </section>
 
 <section class="section" id="{% block flow_section_id %}{{ flow_section_id }}{% endblock %}">
@@ -15,7 +15,7 @@
           <aside class="menu">
             <ul class="menu-list">
               <li><a class="all" href="{% url 'flowhub.flow_list' %}">{% trans "All flows" %}</a></li>
-              <li><a class="uncts" href="#">{% trans "UNCTs" %}</a></li>
+              <li><a class="uncts" href="{% url 'flowhub.flow_uncts' %}">{% trans "UNCTs" %}</a></li>
               <li><a class="my-org" href="{% url 'flowhub.my_org_flow_list' %}">{% trans "My UNCT" %}</a></li>
               <li><a class="upload" href="{% url 'flowhub.flow_create' %}">{% trans "Upload Flow" %}</a></li>
             </ul>

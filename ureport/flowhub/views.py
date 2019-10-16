@@ -5,33 +5,20 @@ from functools import reduce
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
 from django.conf import settings
 
+from dash.orgs.models import Org
 from smartmin.views import SmartListView, SmartTemplateView
 
 from .models import Flow
 from .forms import FlowForm
 
 
-class FlowBaseListView(SmartListView):
+class SearchSmartListViewMixin(SmartListView):
     search_query_name = "search"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["languages"] = settings.LANGUAGES
-        context["sdgs"] = settings.SDG_LIST
-        return context
-
-    def get_queryset(self):
-        queryset = self.model.objects.filter(is_active=True).filter(Q(org=self.request.org) | Q(visible_globally=True)).order_by("-stars", "name")
-        
-        queryset = self.search(queryset)
-        queryset = self.filter(queryset)
-
-        return queryset
 
     def search(self, queryset):
         """
@@ -58,6 +45,24 @@ class FlowBaseListView(SmartListView):
         related = self.derive_select_related()
         if related:
             queryset = queryset.select_related(*related)
+
+        return queryset
+
+
+class FlowBaseListView(SearchSmartListViewMixin):
+    search_query_name = "search"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["languages"] = settings.LANGUAGES
+        context["sdgs"] = settings.SDG_LIST
+        return context
+
+    def get_queryset(self):
+        queryset = self.model.objects.filter(is_active=True).filter(Q(org=self.request.org) | Q(visible_globally=True)).order_by("-stars", "name")
+        
+        queryset = self.search(queryset)
+        queryset = self.filter(queryset)
 
         return queryset
     
@@ -97,6 +102,35 @@ class ListView(FlowBaseListView):
         context = super().get_context_data(**kwargs)
         context["subtitle"] = _("All flows")
         context['flow_section_id'] = 'flowhub-all'
+        return context
+
+
+class UnctsView(SearchSmartListViewMixin):
+    template_name = 'flowhub/uncts.html'
+    model = Org
+    context_object_name = "uncts"
+    search_fields = ["name__icontains"]
+
+    def get_queryset(self):
+        sort_field = self.request.GET.get("sort")
+        sort_direction = self.request.GET.get("dir")
+        sortered = "name"
+
+        if sort_field:
+            sortered = "{}{}".format("-" if sort_direction == "desc" else "", sort_field)
+
+        queryset = self.model.objects.filter(is_active=True).order_by(sortered)
+        queryset = self.search(queryset)
+
+        for org in queryset:
+            org.total_stars = org.flows.filter(is_active=True).aggregate(Sum('stars'))['stars__sum']
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["subtitle"] = _("UNCTs")
+        context['flow_section_id'] = 'flowhub-uncts'
         return context
 
 

@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     url(r"^$", views.ListView.as_view(), name="flowhub.flow_list"),
+    url(r"^uncts/", views.UnctsView.as_view(), name="flowhub.flow_uncts"),
     url(r"^my-org/$", views.MyOrgListView.as_view(), name="flowhub.my_org_flow_list"),
     url(r"^create/", views.CreateView.as_view(), name="flowhub.flow_create"),
     url(
