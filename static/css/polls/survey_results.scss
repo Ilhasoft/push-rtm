@@ -35,29 +35,32 @@
     font-size: 30px;
   }
 
-  .survey-question {
-    display: grid;
-    grid-template-columns: 3rem 1fr;
-    grid-template-rows: auto;
-    padding: 25px 30px;
+  .survey-card {
+    min-height: 65vh;
+    .survey-question {
+      display: grid;
+      grid-template-columns: 3rem 1fr;
+      grid-template-rows: auto;
+      padding: 25px 30px;
 
-    &__number {
-      color: #707070;
-      border-radius: 50%;
-      justify-content: center;
-      display: flex;
-      width: 32px;
-      height: 32px;
-      font-weight: bold;
-      align-items: center;
-      background-color: #f2f6f9;
-    }
-
-    &__info {
-      &__title {
+      &__number {
+        color: #707070;
+        border-radius: 50%;
+        justify-content: center;
+        display: flex;
+        width: 32px;
+        height: 32px;
         font-weight: bold;
-        font-size: 18px;
-        color: #3e3e3e;
+        align-items: center;
+        background-color: #f2f6f9;
+      }
+
+      &__info {
+        &__title {
+          font-weight: bold;
+          font-size: 18px;
+          color: #3e3e3e;
+        }
       }
     }
   }
