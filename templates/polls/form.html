@@ -6,6 +6,7 @@
 {% block css_extra %}
   <link rel="stylesheet" href="{% sass_src 'css/polls/survey_form.scss' %}">
   <link rel="stylesheet" href="{% sass_src 'plugins/choices/choices.scss' %}">
+  <link rel="stylesheet" href="{% static 'plugins/checkbox/checkbox.min.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -29,11 +30,14 @@
 
         {% if form.flow_uuid %}
         <div class="field">
-          <label class="label">{% trans "Survey selection" %}</label>
+          <label class="label">{{ form.flow_uuid.label }}</label>
           <div class="select is-fullwidth">
             {{ form.flow_uuid }}
             {{ form.flow_uuid.errors }}
           </div>
+          <p>
+            <a href="https://rapidpro.ilhasoft.mobi" target="_blank" rel="noopener noreferrer">{% trans "Create a new flow on RapidPro" %}</a>
+          </p>
         </div>
         {% endif %}
 
@@ -54,17 +58,16 @@
         </div>
 
         {% if form.is_active %}
-        <div class="field">
           <div class="control">
             {{ form.is_active }}
             <label class="label" for="{{ form.is_active.auto_id }}">{{ form.is_active.label }}</label>
           </div>
           <p class="help">{{ field.help_text }}</p>
-        </div>
         {% endif %}
+
         <div class="columns wrapper-buttons">
           <div class="column">
-            <button type="submit" class="button is-primary">{% trans "OK" %}</button>
+            <button type="submit" class="button is-primary is-pulled-right">{% trans "Save" %}</button>
           </div>
         </div>
       </form>

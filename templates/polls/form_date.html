@@ -5,43 +5,56 @@
 
 {% block css_extra %}
 <link rel="stylesheet" href="{% sass_src 'css/polls/form.scss' %}">
+<link rel="stylesheet" href="{% sass_src 'plugins/tooltip/tooltip.scss' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.css">
 {% endblock %}
 
 {% block content %}
 <section class="section">
   <div class="columns">
-    <div class="column is-three-fifths is-offset-one-fifth">
+    <div class="column is-four-fifths is-offset-1">
       <div class="columns tabs">
         <div class="column tab">{% trans "1 Poll for flow" %}</div>
         <div class="column tab is-active">{% trans "2 Date Setting" %}</div>
         <div class="column tab">{% trans "3 Survey Questions" %}</div>
-        <!-- <div class="column tab">{% trans "4 What inspired you?" %}</div> -->
       </div>
     </div>
   </div>
   <div class="columns">
-    <div class="column box is-three-fifths is-offset-one-fifth">
+    <div class="column box is-four-fifths is-offset-1">
       <form class="generic-form" method="post">
         {% csrf_token %}
         <h1 class="title">{% trans "Date Setting" %}</h1>
         <div class="field">
-          <label class="label">{{ form.poll_date.label }}</label>
-          <div class="control">
+          <label class="label">
+            {{ form.poll_date.label }}
+            <span class="tooltip top left-m-10">
+              <i class="material-icons info-icon">info</i>
+              <span class="tooltip-content">{% trans "Registration date or leave this field empty to keep the date flow creation date" %}</span>
+            </span>
+          </label>
+          <div class="control has-icons-right">
             {{ form.poll_date }}
+            <span class="icon is-small is-right">
+              <i class="material-icons">calendar_today</i>
+            </span>
             {{ form.poll_date.errors }}
           </div>
         </div>
         <div class="field">
-        
-        <label class="label">{{ form.end_date.label }}</label>
-          <div class="control">
-            {{ form.end_date }}
-            {{ form.end_date.errors }}
+          <label class="label">{{ form.poll_end_date.label }}</label>
+          <div class="control has-icons-right">
+            {{ form.poll_end_date }}
+            <span class="icon is-small is-right">
+              <i class="material-icons">calendar_today</i>
+            </span>
+            {{ form.poll_end_date.errors }}
           </div>
         </div>
         <div class="columns wrapper-buttons">
           <div class="column">
-            <button type="submit" class="button is-primary">{% trans "OK" %}</button>
+            <a href="{% url 'polls.poll_update' poll.id %}" class="button primary-reverse">{% trans "Back" %}</a>
+            <button type="submit" class="button is-primary is-pulled-right">{% trans "Save" %}</button>
           </div>
         </div>
       </form>
@@ -51,8 +64,13 @@
 {% endblock %}
 
 {% block js_extra %}
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.js"></script>
 <script src="{% static 'js/forms/errors.js' %}"></script>
 <script type="text/javascript">
+$('#id_poll_date, #id_poll_end_date').datepicker({
+  format: 'yyyy-mm-dd'
+});
 {% for field in form.errors %}
   setErrors('{{field}}');
 {% endfor %}

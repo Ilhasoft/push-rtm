@@ -91,6 +91,15 @@ $sdgs-colors: (
     background-color: $color !important;
     font-weight: bold;
   }
+
+  .tag-sdg-#{$id} {
+    background-color: $color !important;
+    border-color: $color !important;
+    color: #FFFFFF !important;
+    font-family: Roboto !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+  }
 }
 
 // Box

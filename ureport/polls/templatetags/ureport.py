@@ -10,8 +10,12 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.staticfiles.templatetags.staticfiles import static
+from django.core.cache import cache
+from django.utils.timesince import timesince
 
-from ureport.utils import get_linked_orgs
+from ureport.utils import get_linked_orgs, json_date_to_datetime
+from ureport.polls.models import Poll
+
 
 register = template.Library()
 logger = logging.getLogger(__name__)
@@ -346,3 +350,17 @@ def get_value_in_qs(queryset, key):
 @register.filter(name="get_sdg")
 def get_sdg(key):
     return dict(settings.SDG_LIST).get(key)
+
+
+@register.filter(name="get_poll_sync_status")
+def get_poll_sync_status(obj):
+    if obj.has_synced:
+        last_synced = cache.get(Poll.POLL_RESULTS_LAST_SYNC_TIME_CACHE_KEY % (obj.org.pk, obj.flow_uuid), None)
+        if last_synced:
+            return "Last synced %s ago" % timesince(json_date_to_datetime(last_synced))
+
+        # we know we synced do not check the the progress since that is slow
+        return "Synced 100%"
+
+    sync_progress = obj.get_sync_progress()
+    return "Syncing... {0:.1f}%".format(sync_progress)

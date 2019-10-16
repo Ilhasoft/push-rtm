@@ -36,17 +36,24 @@ from .models import Poll, PollImage, PollQuestion
 
 class PollForm(forms.ModelForm):
     is_active = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={"class": "is-checkradio"}))
+
     title = forms.CharField(
         max_length=255, widget=forms.TextInput(attrs={"placeholder": _("Insert the survey name"), "class": "input"})
     )
-    flow_uuid = forms.ChoiceField(choices=[])
+
+    flow_uuid = forms.ChoiceField(
+        label=_("Select a flow on RapidPro"),
+        help_text=_("Select a flow on RapidPro"),
+        choices=[],
+    )
 
     response_content = forms.CharField(
         required=False,
-        help_text=_("Insert the survey description "),
+        label=_("Description"),
+        help_text=_("Description"),
         widget=forms.Textarea(
             attrs={
-                "placeholder": _("Insert the survey description "),
+                "placeholder": _("Insert the survey description"),
                 "class": "textarea",
                 "rows": 6,
             }
@@ -96,10 +103,22 @@ class PollResponseForm(forms.ModelForm):
 
 class PollFlowForm(forms.ModelForm):
     poll_date = forms.DateTimeField(
+        label=_("Start Date"),
         required=False,
         widget=forms.DateTimeInput(
             attrs={
-                "placeholder": _("Registration date or leave this field empty to keep the date flow creation date"),
+                "placeholder": _("Please set the date"),
+                "class": "input",
+            }
+        ),
+    )
+
+    poll_end_date = forms.DateTimeField(
+        label=_("End Date"),
+        required=False,
+        widget=forms.DateTimeInput(
+            attrs={
+                "placeholder": _("The date this survey was finished"),
                 "class": "input",
             }
         ),
@@ -116,6 +135,7 @@ class PollFlowForm(forms.ModelForm):
     def clean(self):
         cleaned_data = self.cleaned_data
         poll_date = cleaned_data.get("poll_date")
+        poll_end_date = cleaned_data.get("poll_end_date")
 
         flows = self.org.get_flows(self.flow.backend)
         flow = flows.get(self.flow.flow_uuid)
@@ -128,12 +148,16 @@ class PollFlowForm(forms.ModelForm):
         if not poll_date:
             poll_date = timezone.now()
 
+        if not poll_end_date:
+            poll_end_date = poll_date
+
         cleaned_data["poll_date"] = poll_date
+        cleaned_data["poll_end_date"] = poll_end_date
         return cleaned_data
 
     class Meta:
         model = Poll
-        fields = ("poll_date",)
+        fields = ("poll_date", "poll_end_date",)
 
 
 class QuestionForm(ModelForm):
@@ -190,9 +214,9 @@ class PollCRUDL(SmartCRUDL):
         form_class = PollFlowForm
         title = _("Adjust poll date")
         success_url = "id@polls.poll_questions"
-        fields = ("poll_date",)
+        fields = ("poll_date", "poll_end_date",)
         default_template = "polls/form_date.html"
-        success_message = _("Your poll has been updated, now pick which questions to include.")
+        success_message = _("Your survey has been updated, now pick which questions to include.")
 
         def get_form_kwargs(self):
             kwargs = super(PollCRUDL.PollDate, self).get_form_kwargs()
@@ -205,7 +229,7 @@ class PollCRUDL(SmartCRUDL):
         title = _("Configure flow")
         success_url = "id@polls.poll_poll_date"
         fields = ("flow_uuid",)
-        success_message = _("Your poll has been configured, now adjust the poll date.")
+        success_message = _("Your survey has been configured, now adjust the poll date.")
 
         def get_form_kwargs(self):
             kwargs = super(PollCRUDL.PollFlow, self).get_form_kwargs()
@@ -260,7 +284,7 @@ class PollCRUDL(SmartCRUDL):
         permission = "polls.poll_create"
         default_template = "polls/form.html"
         fields = ("title", "flow_uuid", "response_content",)
-        success_message = _("Your poll has been created, now configure its flow.")
+        success_message = _("Your survey has been created, now adjust the poll date.")
         title = _("Create Survey")
 
         def get_context_data(self, **kwargs):
@@ -386,7 +410,7 @@ class PollCRUDL(SmartCRUDL):
         success_url = "@polls.poll_list"
         title = _("Poll Questions")
         form_class = QuestionForm
-        success_message = _("Your poll has been updated.")
+        success_message = _("Your survey has been updated.")
         default_template = "polls/form_questions.html"
 
         def derive_fields(self):
@@ -394,7 +418,6 @@ class PollCRUDL(SmartCRUDL):
 
             fields = []
             for question in questions:
-                fields.append("ruleset_%s_priority" % question.ruleset_uuid)
                 fields.append("ruleset_%s_label" % question.ruleset_uuid)
                 fields.append("ruleset_%s_title" % question.ruleset_uuid)
                 fields.append("ruleset_%s_include" % question.ruleset_uuid)
@@ -413,6 +436,7 @@ class PollCRUDL(SmartCRUDL):
             questions = self.get_questions()
 
             initial = self.derive_initial()
+            counter = 1
 
             for question in questions:
                 include_field_name = "ruleset_%s_include" % question.ruleset_uuid
@@ -425,21 +449,11 @@ class PollCRUDL(SmartCRUDL):
                     widget=forms.CheckboxInput(attrs={"class": "is-checkradio"}),
                 )
 
-                priority_field_name = "ruleset_%s_priority" % question.ruleset_uuid
-                priority_field_initial = initial.get(priority_field_name, None)
-                priority_field = forms.ChoiceField(
-                    label=_("Position inside survey"),
-                    required=False,
-                    initial=priority_field_initial,
-                    choices=list(map(lambda x: (x, x), range(1, 11))),
-                    help_text=_("The priority of this question on the poll page, higher priority comes first"),
-                )
-
                 label_field_name = "ruleset_%s_label" % question.ruleset_uuid
                 label_field_initial = initial.get(label_field_name, "")
                 label_field = forms.CharField(
-                    label=_("Ruleset Name"),
-                    widget=forms.TextInput(attrs={"readonly": "readonly", "class": "input"}),
+                    label=counter,
+                    widget=forms.HiddenInput(attrs={"readonly": "readonly", "class": "input"}),
                     required=False,
                     initial=label_field_initial,
                     help_text=_("The label of the ruleset from RapidPro"),
@@ -448,7 +462,7 @@ class PollCRUDL(SmartCRUDL):
                 title_field_name = "ruleset_%s_title" % question.ruleset_uuid
                 title_field_initial = initial.get(title_field_name, "")
                 title_field = forms.CharField(
-                    label=_("Title"),
+                    label=_("Question"),
                     widget=forms.Textarea(
                         attrs={"class": "textarea", "rows": 3, "placeholder": _("Put a title here for your question")}
                     ),
@@ -460,12 +474,12 @@ class PollCRUDL(SmartCRUDL):
                 sdgs_field_name = "ruleset_%s_sdgs" % question.ruleset_uuid
                 sdgs_field_initial = initial.get(sdgs_field_name, "")
                 sdgs_field = forms.MultipleChoiceField(
-                    label=_("SDG's"),
+                    label=_("SDGs"),
                     choices=settings.SDG_LIST,
                     initial=sdgs_field_initial,
+                    required=False,
                     widget=forms.SelectMultiple(
                         attrs={
-                            "required": True,
                             "multiple": True,
                             "class": "chosen-select form-control",
                             "data-placeholder": _("Select one or more Tags."),
@@ -473,10 +487,10 @@ class PollCRUDL(SmartCRUDL):
                     ),
                 )
 
-                self.form.fields[sdgs_field_name] = sdgs_field
-                self.form.fields[priority_field_name] = priority_field
+                counter += 1
                 self.form.fields[label_field_name] = label_field
                 self.form.fields[title_field_name] = title_field
+                self.form.fields[sdgs_field_name] = sdgs_field
                 self.form.fields[include_field_name] = include_field
 
             return self.form
@@ -491,15 +505,12 @@ class PollCRUDL(SmartCRUDL):
                 r_uuid = question.ruleset_uuid
 
                 included = data.get("ruleset_%s_include" % r_uuid, False)
-                priority = data.get("ruleset_%s_priority" % r_uuid, None)
-                if not priority:
-                    priority = 0
 
                 title = data["ruleset_%s_title" % r_uuid]
                 sdgs = data["ruleset_%s_sdgs" % r_uuid]
 
                 PollQuestion.objects.filter(poll=poll, ruleset_uuid=r_uuid).update(
-                    is_active=included, title=title, priority=priority, sdgs=sdgs
+                    is_active=included, title=title, priority=0, sdgs=sdgs
                 )
 
             return self.object
@@ -518,7 +529,6 @@ class PollCRUDL(SmartCRUDL):
 
             for question in questions:
                 initial["ruleset_%s_include" % question.ruleset_uuid] = question.is_active
-                initial["ruleset_%s_priority" % question.ruleset_uuid] = question.priority
                 initial["ruleset_%s_label" % question.ruleset_uuid] = question.ruleset_label
                 initial["ruleset_%s_title" % question.ruleset_uuid] = question.title
                 initial["ruleset_%s_sdgs" % question.ruleset_uuid] = question.sdgs
@@ -598,6 +608,7 @@ class PollCRUDL(SmartCRUDL):
         fields = ("is_active", "title", "response_content",)
         success_url = "id@polls.poll_poll_date"
         default_template = "polls/form.html"
+        success_message = _("Your survey has been updated, now adjust the poll date.")
 
         def derive_title(self):
             obj = self.get_object()

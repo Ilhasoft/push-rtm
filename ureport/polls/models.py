@@ -119,6 +119,10 @@ class Poll(SmartModel):
         help_text=_("The date to display for this poll. " "Leave empty to use flow creation date.")
     )
 
+    poll_end_date = models.DateTimeField(
+        null=True, help_text=_("The date to display for this poll. " "Leave empty to use flow creation date.")
+    )
+
     flow_archived = models.BooleanField(
         default=False, help_text=_("Whether the flow for this poll is archived on RapidPro")
     )
