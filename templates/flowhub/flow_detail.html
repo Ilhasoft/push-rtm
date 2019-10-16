@@ -20,7 +20,7 @@
         {% endif %}
       </div>
       <div class="column stars">
-        <img src="{% static 'svg/star.svg' %}" alt="stars">
+        <a href="{% url 'flowhub.flow_star' flow.pk %}"><img src="{% static 'svg/star.svg' %}" alt="stars"></a>
         <span>{{ flow.stars }}</span>
       </div>
     </div>
