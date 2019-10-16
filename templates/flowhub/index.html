@@ -9,7 +9,6 @@
 {% endblock %}
 
 {% block flow_section %}{{ subtitle }}{% endblock %}
-{% block flow_section_id %}flowhub-all{% endblock %}
 
 {% block flow_content %}
 <div class="column auto">
@@ -70,9 +69,9 @@
           </div>
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
-              <a href="#" class="dropdown-item">{% trans "Alphabetical" %}</a>
-              <a href="#" class="dropdown-item">{% trans "Most stars" %}</a>
-              <a href="#" class="dropdown-item">{% trans "Newest" %}</a>
+              <a href="{% autosort name '' true %}" class="dropdown-item">{% trans "Alphabetical" %}</a>
+              <a href="{% autosort stars '' true %}" class="dropdown-item">{% trans "Most stars" %}</a>
+              <a href="{% autosort created_on '' true %}" class="dropdown-item">{% trans "Newest" %}</a>
             </div>
           </div>
         </div>

@@ -7,7 +7,7 @@
   <h2 class="subtitle">{% block flow_section %}{% endblock %}</h2>
 </section>
 
-<section class="section" id="{% block flow_section_id %}{% endblock %}">
+<section class="section" id="{% block flow_section_id %}{{ flow_section_id }}{% endblock %}">
   <div class="columns is-desktop">
     <div class="column is-one-quarter">
       <div class="columns">

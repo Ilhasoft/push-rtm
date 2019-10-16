@@ -70,7 +70,7 @@ class FlowBaseListView(SmartListView):
 
         filters = {}
 
-        sortered = "pk"
+        sortered = "-stars"
 
         if language:
             filters["languages__contains"] = [language]
@@ -96,6 +96,7 @@ class ListView(FlowBaseListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["subtitle"] = _("All flows")
+        context['flow_section_id'] = 'flowhub-all'
         return context
 
 
@@ -112,6 +113,7 @@ class MyOrgListView(FlowBaseListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["subtitle"] = "{} {}".format(self.request.org.name, _("flows"))
+        context['flow_section_id'] = 'flowhub-my-org'
         return context
 
 
@@ -122,6 +124,8 @@ class CreateView(SmartTemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["subtitle"] = _("Upload New Flow")
+        context['flow_section_id'] = 'flowhub-upload'
+
         context["form"] = FlowForm()
         return context
 
