@@ -109,7 +109,7 @@
         <div class="columns is-multiline">
           {% for question in poll.get_questions %}
           <div class="column is-half-desktop">
-            <div class="box is-paddingless" data-question-sdgs="{{ question.sdgs|join:"," }}">
+            <div class="survey-card box is-paddingless" data-question-sdgs="{{ question.sdgs|join:"," }}">
               <div class="survey-question">
                 <div class="survey-question__number">{{ forloop.counter }}</div>
                 <div class="survey-question__info">
@@ -303,7 +303,7 @@
       let apex = new ApexCharts(
         document.querySelector("#chart-question-" + question),
         {
-          chart: { height: 350, type: "donut", id: "chart-question-" + question },
+          chart: { height: 250, type: "donut", id: "chart-question-" + question },
           legend: {
             position: "top",
             horizontalAlign: "center",
@@ -322,7 +322,7 @@
       let updateOptions = {};
       if (tab == "statistics") {
         updateOptions = {
-          chart: { height: 350, type: "donut", id: "chart-question-" + question },
+          chart: { height: 250, type: "donut", id: "chart-question-" + question },
           legend: {
             position: "top",
             horizontalAlign: "center",
@@ -342,7 +342,7 @@
 
       if (tab == "gender") {
         updateOptions = {
-          chart: { height: 350, type: "bar", stacked: true, toolbar: { show: false }},
+          chart: { type: "bar", stacked: true, toolbar: { show: false }},
           plotOptions: { bar: { horizontal: true }},
           legend: {
             position: "top",
