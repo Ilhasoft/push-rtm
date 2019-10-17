@@ -246,7 +246,7 @@
         {% with results=question|question_results %}
           {% with categories=results.categories %}
             {% for category in categories %}
-              results_statistics[question]["labels"].push("{{ category.label }}");
+              results_statistics[question]["labels"].push("{{ category.label|safe }}");
               results_statistics[question]["series"].push(parseInt("{% widthratio category.count results.set 100 %}"));
             {% endfor %}
           {% endwith %}
@@ -265,14 +265,12 @@
               {% with categories=results.categories %}
                 {% for category in categories %}
                   results_age[question]["series"]["{{ forloop.counter0 }}"] = (typeof results_age[question]["series"]["{{ forloop.counter0 }}"] != "undefined") ? results_age[question]["series"]["{{ forloop.counter0 }}"] : {
-                    label: "{{ category.label }}",
+                    label: "{{ category.label|safe }}",
                     data: [],
                     backgroundColor: availableColors[{{ forloop.counter0 }}],
                     borderColor: "rgba(255, 255, 255, 0.1)",
                   };
-                  results_age[question]["series"]["{{ forloop.counter0 }}"].data.push(
-                    {% widthratio category.count results.set 100 %}
-                  );
+                  results_age[question]["series"]["{{ forloop.counter0 }}"].data.push({{ category.count }});
                 {% endfor %}
               {% endwith %}              
             {% endfor %}
@@ -292,14 +290,12 @@
               {% with categories=results.categories %}
                 {% for category in categories %}
                   results_gender[question]["series"]["{{ forloop.counter0 }}"] = (typeof results_gender[question]["series"]["{{ forloop.counter0 }}"] != "undefined") ? results_gender[question]["series"]["{{ forloop.counter0 }}"] : {
-                      label: "{{ category.label }}",
+                      label: "{{ category.label|safe }}",
                       data: [],
                       backgroundColor: availableColors[{{ forloop.counter0 }}],
                       borderColor: "rgba(255, 255, 255, 0.1)",
                     };
-                  results_gender[question]["series"]["{{ forloop.counter0 }}"].data.push(
-                    {% widthratio category.count results.set 100 %}
-                  );
+                  results_gender[question]["series"]["{{ forloop.counter0 }}"].data.push({{ category.count }});
                 {% endfor %}
               {% endwith %}
             {% endfor %}
@@ -325,6 +321,10 @@
               usePointStyle: true,
             }
           },
+          tooltips: {
+            bodyFontSize: 16,
+            titleFontSize: 16,
+          },
           plugins: {
             datalabels: {
               formatter:(value, ctx) => {
@@ -333,8 +333,8 @@
                 dataArr.map(data => {
                   sum += data;
                 });
-                let percentage = parseInt((value * 100 / sum)) + "%";
-                return percentage;
+                let percentage = parseInt((value * 100 / sum));
+                return percentage > 0 ? percentage + "%" : "";
               },
               color: "#fff",
             }
@@ -367,6 +367,10 @@
               labels: {
                 usePointStyle: true,
               }
+            },
+            tooltips: {
+              bodyFontSize: 16,
+              titleFontSize: 16,
             },
             plugins: {
               datalabels: {
@@ -406,15 +410,22 @@
                 display: false,
               }
             },
+            tooltips: {
+              bodyFontSize: 16,
+              titleFontSize: 16,
+            },
             scales: {
               xAxes: [{
                 stacked: true,
+                ticks: {
+                  stepSize: 20,
+                },
               }],
               yAxes: [{
                 stacked: true,
                 gridLines: {
                   color: "rgba(0, 0, 0, 0)",
-                }
+                },
               }]
             }
           }
@@ -441,9 +452,16 @@
                 display: false,
               }
             },
+            tooltips: {
+              bodyFontSize: 16,
+              titleFontSize: 16,
+            },
             scales: {
               xAxes: [{
                 stacked: true,
+                ticks: {
+                  stepSize: 20,
+                },
               }],
               yAxes: [{
                 stacked: true,
