@@ -6,14 +6,34 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('flowhub', '0001_initial'),
-    ]
+    dependencies = [("flowhub", "0001_initial")]
 
     operations = [
         migrations.AlterField(
-            model_name='flow',
-            name='languages',
-            field=django.contrib.postgres.fields.ArrayField(base_field=models.CharField(choices=[('bs', 'Bosnian'), ('en', 'English'), ('fr', 'French'), ('es', 'Spanish'), ('ar', 'Arabic'), ('pt', 'Portuguese'), ('pt-br', 'Brazilian Portuguese'), ('uk', 'Ukrainian'), ('uz', 'Uzbek'), ('my', 'Burmese'), ('id', 'Indonesian'), ('it', 'Italian'), ('ro', 'Romanian'), ('vi', 'Vietnamese'), ('sr-latn', 'Latin Serbian')], max_length=5), size=None),
-        ),
+            model_name="flow",
+            name="languages",
+            field=django.contrib.postgres.fields.ArrayField(
+                base_field=models.CharField(
+                    choices=[
+                        ("bs", "Bosnian"),
+                        ("en", "English"),
+                        ("fr", "French"),
+                        ("es", "Spanish"),
+                        ("ar", "Arabic"),
+                        ("pt", "Portuguese"),
+                        ("pt-br", "Brazilian Portuguese"),
+                        ("uk", "Ukrainian"),
+                        ("uz", "Uzbek"),
+                        ("my", "Burmese"),
+                        ("id", "Indonesian"),
+                        ("it", "Italian"),
+                        ("ro", "Romanian"),
+                        ("vi", "Vietnamese"),
+                        ("sr-latn", "Latin Serbian"),
+                    ],
+                    max_length=5,
+                ),
+                size=None,
+            ),
+        )
     ]

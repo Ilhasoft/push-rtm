@@ -42,9 +42,7 @@ class FlowForm(forms.ModelForm):
         label=_("Tags"),
         required=True,
         widget=forms.SelectMultiple(
-            attrs={
-                 "data-placeholder": _("Select one or more Tags."),
-            }
+            attrs={"data-placeholder": _("Select one or more Tags.")}
         ),
     )
 
@@ -53,25 +51,33 @@ class FlowForm(forms.ModelForm):
         label=_("Languages"),
         required=True,
         widget=forms.SelectMultiple(
-            attrs={
-                "data-placeholder": _("Select one or more Languages."),
-            }
+            attrs={"data-placeholder": _("Select one or more Languages.")}
         ),
     )
 
     flow = forms.FileField(
-        validators=[MimetypeValidator('application/json')],
-        help_text = _("Upload a JSON file")
+        validators=[MimetypeValidator("application/json")],
+        help_text=_("Upload a JSON file"),
     )
 
     sdgs = forms.MultipleChoiceField(
-        label=_("SDG's"), choices=settings.SDG_LIST, widget=forms.CheckboxSelectMultiple(attrs={"required": True})
+        label=_("SDG's"),
+        choices=settings.SDG_LIST,
+        widget=forms.SelectMultiple(attrs={"required": True}),
     )
 
     class Meta:
         model = Flow
-        fields = ['name', 'description', 'collected_data', 'tags', 'visible_globally', 'languages']
-    
+        fields = [
+            "name",
+            "description",
+            "collected_data",
+            "tags",
+            "visible_globally",
+            "languages",
+            # "sdgs"
+        ]
+
     def __init__(self, *args, **kwargs):
         flow_is_required = kwargs.pop("flow_is_required", True)
         super().__init__(*args, **kwargs)
@@ -81,21 +87,21 @@ class FlowForm(forms.ModelForm):
 
     def save(self, request):
         instance = super().save(commit=False)
-        file_uploaded = self.cleaned_data.get('flow')
-        instance.sdgs = self.cleaned_data.get('sdgs')
+        file_uploaded = self.cleaned_data.get("flow")
+        instance.sdgs = self.cleaned_data.get("sdgs")
 
         if file_uploaded:
             with file_uploaded.open():
                 instance.flow = json.loads(file_uploaded.read().decode("utf-8"))
-        
+
         instance.created_by = request.user
         instance.modified_by = request.user
         instance.org = request.org
         instance.save()
 
         instance.tags.remove(*instance.tags.all())
-        if self.cleaned_data.get('tags'):
+        if self.cleaned_data.get("tags"):
             instance.tags.add(*[tag for tag in self.cleaned_data.get("tags")])
-        #instance.save_m2m()
+        # instance.save_m2m()
 
         return instance
