@@ -1,5 +1,5 @@
 {% extends "flowhub/base.html" %}
-{% load i18n static sass_tags rtm humanize flowhub %}
+{% load i18n static sass_tags humanize ureport %}
 
 {% block nav_item %}page-flowhub{% endblock %}
 
@@ -8,16 +8,13 @@
 <link rel="stylesheet" href="{% sass_src 'css/flowhub/detail.scss' %}"/>
 {% endblock %}
 
-{% block flow_section %}{% trans "UNCTs" %}{% endblock %}
-{% block flow_section_id %}flowhub-uncts{% endblock %}
-
 {% block flow_content %}
 <div class="column auto">
   <div class="columns">
     <div class="column">
       <div class="control has-icons-left">
         <form>
-          <input class="input is-medium search" name="query" placeholder="Search" value="{{ query }}">
+          <input class="input is-medium search" name="search" placeholder="Search" value="{{ query }}">
           <span class="icon is-left">
             <i class="material-icons">search</i>
           </span>
@@ -36,11 +33,11 @@
           </div>
         </div>
         <div class="dropdown-menu" id="dropdown-menu" role="menu">
-          <div class="dropdown-content">
-            <a href="{% autosort name '' true %}" class="dropdown-item">{% trans "Alphabetical" %}</a>
-            <a href="{% autosort flows__stars '' true %}" class="dropdown-item">{% trans "Most stars" %}</a>
-            <a href="{% autosort created_on '' true %}" class="dropdown-item">{% trans "Newest" %}</a>
-          </div>
+            <div class="dropdown-content">
+              <a href="{% autosort name '' true %}" class="dropdown-item">{% trans "Alphabetical" %}</a>
+              
+              <a href="{% autosort created_on '' true %}" class="dropdown-item">{% trans "Newest" %}</a>
+            </div>
         </div>
       </div>
     </div>
@@ -61,13 +58,14 @@
         <td class="has-text-centered">
           <div class="stars">
             <img src="{% static 'svg/star-solid.svg' %}" alt="stars">
-            <span>{{ unct|sum_stars }}</span>
+            <span>{{unct.total_stars}}</span>
           </div>
         </td>
       </tr>
       {% endfor %}
       </tbody>
     </table>
+
     <div class="is-pulled-right">
       {% include "paginator.html" with paginator=uncts %}
     </div>
