@@ -80,7 +80,7 @@
 
     <div class="field">
       <label class="label">{% trans "SDGs" %}</label>
-      <div class="choices__list choices__list--multiple">
+      <div class="choices__item choices__item--choice choices__item--selectable is-highlighted">
         {{ form.sdgs|add_class:"choices__input choices__input--cloned"|attr:"multiple:True"|attr:"required:True" }}
         {{ form.sdgs.errors }}
       </div>
@@ -129,6 +129,21 @@
 <script src="{% static 'js/forms/errors.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <script type="text/javascript">
+  
+  new Choices("#id_sdgs", {
+    removeItemButton: true,
+
+    callbackOnCreateTemplates: function (template) {
+      return {
+        item: (classNames, data) => {
+          return template(`
+            <div class="${classNames.item} tag-sdg-${data.value} ${data.highlighted ? classNames.highlightedState : classNames.itemSelectable}" data-item data-id="${data.id}" data-value="${data.value}" ${data.active ? 'aria-selected="true"' : ''} ${data.disabled ? 'aria-disabled="true"' : ''}>${data.value} ${data.label}<button type="button" class="choices-button-close" data-button="" aria-label="Remove item: '${data.value}'">X</button>
+          `);
+        },
+      };
+    }
+  });
+  
   new Choices("#id_languages", {
     removeItemButton: true,
     listItems: "choices__list--multiple"

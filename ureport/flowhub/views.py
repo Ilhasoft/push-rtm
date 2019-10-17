@@ -51,6 +51,7 @@ class SearchSmartListViewMixin(SmartListView):
 
 class FlowBaseListView(SearchSmartListViewMixin):
     search_query_name = "search"
+    #paginate_by = 4
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -63,7 +64,6 @@ class FlowBaseListView(SearchSmartListViewMixin):
         
         queryset = self.search(queryset)
         queryset = self.filter(queryset)
-
         return queryset
     
     def filter(self, queryset):
