@@ -303,9 +303,16 @@
       let apex = new ApexCharts(
         document.querySelector("#chart-question-" + question),
         {
-          chart: { height: 250, type: "donut", id: "chart-question-" + question },
+          chart: { type: "donut", id: "chart-question-" + question },
           legend: {
             position: "top",
+            itemMargin: {
+              horizontal: 20,
+              vertical: 50
+            },
+            containerMargin: {
+              bottom: 10,
+            },
             horizontalAlign: "center",
             fontSize: "16px",
             onItemClick: { toggleDataSeries: true },
@@ -322,16 +329,19 @@
       let updateOptions = {};
       if (tab == "statistics") {
         updateOptions = {
-          chart: { height: 250, type: "donut", id: "chart-question-" + question },
+          chart: { type: "donut", id: "chart-question-" + question },
           legend: {
             position: "top",
+            itemMargin: {
+              horizontal: 20,
+              vertical: 50
+            },
+            containerMargin: {
+              bottom: 10,
+            },
             horizontalAlign: "center",
             fontSize: "16px",
-            show: true,
             onItemClick: { toggleDataSeries: true },
-          },
-          dataLabels: {
-            enabled: true,
           },
           colors: availableColors,
           series: results_statistics[question].series,
@@ -347,9 +357,15 @@
           legend: {
             position: "top",
             horizontalAlign: "center",
+            itemMargin: {
+              horizontal: 20,
+              vertical: 50
+            },
+            containerMargin: {
+              bottom: 10,
+            },
             fontSize: "16px",
             onItemClick: { toggleDataSeries: true },
-            itemMargin: { horizontal: 10, vertical: 60 },
           },
           grid: { row: { colors: ["transparent"], opacity: 0.5 }},
           dataLabels: { enabled: true },
@@ -363,14 +379,20 @@
 
       if (tab == "age") {
         updateOptions = {
-          chart: { height: 350, type: "bar", stacked: true, toolbar: { show: false }},
+          chart: { type: "bar", stacked: true, toolbar: { show: false }},
           plotOptions: { bar: { horizontal: true }},
           legend: {
             position: "top",
             horizontalAlign: "center",
+            itemMargin: {
+              horizontal: 20,
+              vertical: 50
+            },
+            containerMargin: {
+              bottom: 10,
+            },
             fontSize: "16px",
             onItemClick: { toggleDataSeries: true },
-            itemMargin: { horizontal: 10, vertical: 60 },
           },
           grid: { row: { colors: ["transparent"], opacity: 0.5 }},
           dataLabels: { enabled: true },

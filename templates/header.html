@@ -22,7 +22,7 @@
       <!-- <a class="navbar-item summary">Summary</a> -->
       <a class="navbar-item uncts" href="">{{ request.org }}</a>
       {% endif %}
-      <a class="navbar-item users" href="">Users</a>
+      <a class="navbar-item users" href="#">Users</a>
       <a class="navbar-item flowhub" href="{% url 'flowhub.flow_list' %}">Repository</a>
       {% if request.user.is_superuser %}
       <!-- <a class="navbar-item surveys" href="">Global Surveys</a> -->

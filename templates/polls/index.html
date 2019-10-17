@@ -5,6 +5,7 @@
 
 {% block css_extra %}
   <link rel="stylesheet" href="{% sass_src 'plugins/tooltip/tooltip.scss' %}">
+  <link rel="stylesheet" href="{% sass_src 'css/polls/survey_list.scss' %}"/>
 {% endblock %}
 
 {% block content %}
@@ -66,7 +67,7 @@
 
                 <span class="tooltip-content">
                   {% for sdg in poll.questions.distinct|get_value_in_qs:'sdgs' %}
-                    <span class="tag sdg-{{ sdg }}">SDG {{ sdg }}</span>
+                    <span class="tag sdg-{{ sdg }} bottom-m-5">SDG {{ sdg }}</span>
                   {% endfor %}
                 </span>
               </span>
