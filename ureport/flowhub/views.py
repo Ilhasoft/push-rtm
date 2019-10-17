@@ -51,7 +51,7 @@ class SearchSmartListViewMixin(SmartListView):
 
 class FlowBaseListView(SearchSmartListViewMixin):
     search_query_name = "search"
-    #paginate_by = 4
+    # paginate_by = 4
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -60,18 +60,22 @@ class FlowBaseListView(SearchSmartListViewMixin):
         return context
 
     def get_queryset(self):
-        queryset = self.model.objects.filter(is_active=True).filter(Q(org=self.request.org) | Q(visible_globally=True)).order_by("-stars", "name")
-        
+        queryset = (
+            self.model.objects.filter(is_active=True)
+            .filter(Q(org=self.request.org) | Q(visible_globally=True))
+            .order_by("-stars", "name")
+        )
+
         queryset = self.search(queryset)
         queryset = self.filter(queryset)
         return queryset
-    
+
     def filter(self, queryset):
-        sort_field = self.request.GET.get('sort')
-        sort_direction = self.request.GET.get('dir')
-        page = self.request.GET.get('page')
-        language = self.request.GET.get('lang', '')
-        sdg = self.request.GET.get('sdg', 0)
+        sort_field = self.request.GET.get("sort")
+        sort_direction = self.request.GET.get("dir")
+        page = self.request.GET.get("page")
+        language = self.request.GET.get("lang", "")
+        sdg = self.request.GET.get("sdg", 0)
 
         filters = {}
 
@@ -79,12 +83,14 @@ class FlowBaseListView(SearchSmartListViewMixin):
 
         if language:
             filters["languages__contains"] = [language]
-        
+
         if sdg:
             filters["sdgs__contains"] = [sdg]
-        
+
         if sort_field:
-            sortered = "{}{}".format("-" if sort_direction == "desc" else "", sort_field)
+            sortered = "{}{}".format(
+                "-" if sort_direction == "desc" else "", sort_field
+            )
 
         return queryset.filter(**filters).order_by(sortered)
 
@@ -101,12 +107,12 @@ class ListView(FlowBaseListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["subtitle"] = _("All flows")
-        context['flow_section_id'] = 'flowhub-all'
+        context["flow_section_id"] = "flowhub-all"
         return context
 
 
 class UnctsView(SearchSmartListViewMixin):
-    template_name = 'flowhub/uncts.html'
+    template_name = "flowhub/uncts.html"
     model = Org
     context_object_name = "uncts"
     search_fields = ["name__icontains"]
@@ -117,20 +123,24 @@ class UnctsView(SearchSmartListViewMixin):
         sortered = "name"
 
         if sort_field:
-            sortered = "{}{}".format("-" if sort_direction == "desc" else "", sort_field)
+            sortered = "{}{}".format(
+                "-" if sort_direction == "desc" else "", sort_field
+            )
 
         queryset = self.model.objects.filter(is_active=True).order_by(sortered)
         queryset = self.search(queryset)
 
         for org in queryset:
-            org.total_stars = org.flows.filter(is_active=True).aggregate(Sum('stars'))['stars__sum']
+            org.total_stars = org.flows.filter(is_active=True).aggregate(Sum("stars"))[
+                "stars__sum"
+            ]
 
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["subtitle"] = _("UNCTs")
-        context['flow_section_id'] = 'flowhub-uncts'
+        context["flow_section_id"] = "flowhub-uncts"
         return context
 
 
@@ -147,7 +157,7 @@ class MyOrgListView(FlowBaseListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["subtitle"] = "{} {}".format(self.request.org.name, _("flows"))
-        context['flow_section_id'] = 'flowhub-my-org'
+        context["flow_section_id"] = "flowhub-my-org"
         return context
 
 
@@ -158,7 +168,7 @@ class CreateView(SmartTemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["subtitle"] = _("Upload New Flow")
-        context['flow_section_id'] = 'flowhub-upload'
+        context["flow_section_id"] = "flowhub-upload"
 
         context["form"] = FlowForm()
         return context

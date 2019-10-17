@@ -75,7 +75,7 @@ class FlowForm(forms.ModelForm):
             "tags",
             "visible_globally",
             "languages",
-            #"sdgs"
+            # "sdgs"
         ]
 
     def __init__(self, *args, **kwargs):
