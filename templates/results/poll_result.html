@@ -108,8 +108,8 @@
 
         <div class="columns is-multiline">
           {% for question in poll.get_questions %}
-          <div class="column is-half-desktop">
-            <div class="survey-card box is-paddingless" data-question-sdgs="{{ question.sdgs|join:"," }}">
+          <div class="column is-half-desktop" data-question-sdgs="{{ question.sdgs|join:"," }}">
+            <div class="survey-card box is-paddingless">
               <div class="survey-question">
                 <div class="survey-question__number">{{ forloop.counter }}</div>
                 <div class="survey-question__info">
@@ -307,11 +307,8 @@
           legend: {
             position: "top",
             itemMargin: {
-              horizontal: 20,
-              vertical: 50
-            },
-            containerMargin: {
-              bottom: 10,
+              horizontal: 10,
+              vertical: 10
             },
             horizontalAlign: "center",
             fontSize: "16px",
@@ -333,11 +330,8 @@
           legend: {
             position: "top",
             itemMargin: {
-              horizontal: 20,
-              vertical: 50
-            },
-            containerMargin: {
-              bottom: 10,
+              horizontal: 10,
+              vertical: 10
             },
             horizontalAlign: "center",
             fontSize: "16px",
@@ -358,11 +352,8 @@
             position: "top",
             horizontalAlign: "center",
             itemMargin: {
-              horizontal: 20,
-              vertical: 50
-            },
-            containerMargin: {
-              bottom: 10,
+              horizontal: 10,
+              vertical: 10
             },
             fontSize: "16px",
             onItemClick: { toggleDataSeries: true },
@@ -385,11 +376,8 @@
             position: "top",
             horizontalAlign: "center",
             itemMargin: {
-              horizontal: 20,
-              vertical: 50
-            },
-            containerMargin: {
-              bottom: 10,
+              horizontal: 10,
+              vertical: 10
             },
             fontSize: "16px",
             onItemClick: { toggleDataSeries: true },
