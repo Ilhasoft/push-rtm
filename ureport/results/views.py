@@ -17,7 +17,6 @@ class PollReadView(SmartReadView):
         context = super().get_context_data(**kwargs)
         context["org"] = self.request.org
         context["poll"] = self.get_object()
-        context["tabs"] = ["statistics", "gender", "age"]
         context["sdgs"] = settings.SDG_LIST
         return context
 
