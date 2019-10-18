@@ -1,5 +1,5 @@
 {% extends "flowhub/base.html" %}
-{% load i18n static sass_tags ureport widget_tweaks %}
+{% load i18n static sass_tags ureport %}
 
 {% block nav_item %}page-flowhub{% endblock %}
 
@@ -17,7 +17,7 @@
     <div class="files-form">
       <div class="file has-name is-info field">
         <label class="file-label">
-          {{ form.flow|add_class:"file-input" }}
+          {{ form.flow }}
           <span class="file-cta">
             <span class="file-label">
               Search file
@@ -42,79 +42,45 @@
     <div class="field">
       <label class="label">{% trans "Name" %}</label>
       <div class="control">
-        {{ form.name|add_class:"input is-medium" }}
+        {{ form.name }}
         {{ form.name.errors }}
       </div>
     </div>
     <div class="field">
       <label class="label">{% trans "Languages" %}</label>
       <div class="control">
-        {{ form.languages|add_class:"chosen-select form-control"|attr:"multiple:True"|attr:"required:True" }}
+        {{ form.languages}}
         {{ form.languages.errors }}
       </div>
     </div>
     <div class="field">
       <label class="label">{% trans "Description" %}</label>
       <div class="control">
-        {{ form.description|add_class:"textarea"|attr:"rows:5" }}
+        {{ form.description }}
         {{ form.description.errors }}
       </div>
     </div>
     <div class="field">
       <label class="label">{{ form.collected_data.label }}</label>
       <div class="control">
-        {{ form.collected_data|add_class:"textarea"|attr:"rows:5" }}
+        {{ form.collected_data }}
         {{ form.collected_data.errors }}
       </div>
     </div>
-    
     <div class="field">
       <label class="label">{% trans "Add tag" %}</label>
       <div class="control">
-        {{ form.tags|add_class:"chosen-select form-control"|attr:"multiple:True"|attr:"required:True" }}
+        {{ form.tags }}
         {{ form.tags.errors }}
       </div>
     </div>
-
-
-
     <div class="field">
       <label class="label">{% trans "SDGs" %}</label>
       <div class="choices__item choices__item--choice choices__item--selectable is-highlighted">
-        {{ form.sdgs|add_class:"choices__input choices__input--cloned"|attr:"multiple:True"|attr:"required:True" }}
+        {{ form.sdgs }}
         {{ form.sdgs.errors }}
       </div>
     </div>
-    
-
-
-    {% comment '' %}
-    <div class="field">
-      <label class="label">{% trans "SDGs" %}</label>
-      <div class="control">
-        {% for choice in form.sdgs.field.choices %}
-          {% cycle 'row' '' as row silent %}
-          {% if row %}<div class="columns">{% endif %}
-            <div class="column badge-space">
-              <div class="field choice-padding{% if choice.0 in form.sdgs.data|items_to_list %} badge-sdg-{{choice.0}}{% endif %}" id="div_choice_{{choice.0}}">
-                <input
-                  class="is-checkradio flowhub-checkbox"
-                  id="id_choice_{{choice.0}}"
-                  value="{{choice.0}}"
-                  type="checkbox"
-                  name="sdgs"
-                  onchange="checkSdg(this)"
-                  {% if choice.0 in form.sdgs.data|items_to_list %} checked="checked"{% endif %}>
-                <label for="id_choice_{{choice.0}}">{{choice.0}} - {{choice.1}}</label>
-              </div>
-            </div>
-          {% if not row %}</div>{% endif %}
-        {% endfor %}
-      </div>
-      {{ form.sdgs.errors }}
-    </div>
-    {% endcomment %}
-
     <div class="columns wrapper-buttons">
       <div class="column">
         <button type="submit" class="button is-primary">{% trans "OK" %}</button>
@@ -158,16 +124,6 @@
       document.getElementById("file_name").innerText = e.srcElement.files.item(0).name;
     }
   });
-  function checkSdg(choice) {
-    const sdg = document.getElementById(`div_choice_${choice.value}`);
-    const choiceClass = `badge-sdg-${choice.value}`;
-
-    if (choice.checked) {
-      sdg.classList.add(choiceClass);
-    } else {
-      sdg.classList.remove(choiceClass);
-    }
-  }
   {% for field in form.errors %}
     setErrors('{{field}}');
   {% endfor %}

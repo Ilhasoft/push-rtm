@@ -14,7 +14,12 @@ class FlowForm(forms.ModelForm):
         label=_("Name"),
         required=True,
         max_length=255,
-        widget=forms.TextInput(attrs={"placeholder": _("Flow Name"), "required": True}),
+        widget=forms.TextInput(
+            attrs={
+                "class": "input is-medium",
+                "placeholder": _("Flow Name"),
+                "required": True}
+        ),
     )
 
     description = forms.CharField(
@@ -22,7 +27,11 @@ class FlowForm(forms.ModelForm):
         required=True,
         max_length=255,
         widget=forms.Textarea(
-            attrs={"placeholder": _("Flow Description"), "required": True}
+            attrs={
+                "placeholder": _("Flow Description"),
+                "required": True,
+                "class": "textarea",
+                "rows": 5}
         ),
     )
 
@@ -33,7 +42,11 @@ class FlowForm(forms.ModelForm):
         required=True,
         max_length=255,
         widget=forms.Textarea(
-            attrs={"placeholder": _("Collected Data"), "required": True}
+            attrs={
+                "placeholder": _("Collected Data"),
+                "rows": 5,
+                "class": "textarea",
+                "required": True}
         ),
     )
 
@@ -42,7 +55,8 @@ class FlowForm(forms.ModelForm):
         label=_("Tags"),
         required=True,
         widget=forms.SelectMultiple(
-            attrs={"data-placeholder": _("Select one or more Tags.")}
+            attrs={
+                "data-placeholder": _("Select one or more Tags.")}
         ),
     )
 
@@ -51,19 +65,36 @@ class FlowForm(forms.ModelForm):
         label=_("Languages"),
         required=True,
         widget=forms.SelectMultiple(
-            attrs={"data-placeholder": _("Select one or more Languages.")}
+            attrs={
+                "multiple": True,
+                "required": True,
+                "data-placeholder": _("Select one or more Languages."),
+                "class": "chosen-select form-control",
+            }
         ),
     )
 
     flow = forms.FileField(
         validators=[MimetypeValidator("application/json")],
         help_text=_("Upload a JSON file"),
+        widget=forms.ClearableFileInput(
+            attrs={
+                "class": "file-input",
+            }
+        )
     )
 
     sdgs = forms.MultipleChoiceField(
         label=_("SDG's"),
         choices=settings.SDG_LIST,
-        widget=forms.SelectMultiple(attrs={"required": True}),
+        widget=forms.SelectMultiple(
+            attrs={
+                "multiple": True,
+                "required": True,
+                "class": "choices__input choices__input--cloned",
+                "data-placeholder": _("Select one or more Tags."),
+            }
+        ),
     )
 
     class Meta:

@@ -16,6 +16,7 @@ from smartmin.views import (
     SmartCSVImportView,
     SmartListView,
     SmartUpdateView,
+    SmartTemplateView,
 )
 
 from django import forms
@@ -535,12 +536,13 @@ class PollCRUDL(SmartCRUDL):
 
             return initial
 
-    class List(OrgPermsMixin, SmartListView):
-        search_fields = ("title__icontains",)
+    class List(OrgPermsMixin, SmartTemplateView):
         fields = ("title", "poll_date", "category", "questions", "opinion_response", "sync_status", "created_on")
-        link_fields = ("title", "poll_date", "questions", "opinion_response", "images")
         default_order = ("-created_on", "id")
         default_template = "polls/index.html"
+
+        def derive_url_pattern(path, action):
+            return "poll/"
 
         def get_queryset(self):
             queryset = super(PollCRUDL.List, self).get_queryset().filter(org=self.request.org)
@@ -599,8 +601,7 @@ class PollCRUDL(SmartCRUDL):
                 sortered = "{}{}".format("-" if sort_direction == "desc" else "", sort_field)
 
             context["polls"] = get_paginator(
-                Poll.objects.filter(**filters, is_active=True).filter(org=self.request.org).order_by(sortered), page
-            )
+                Poll.objects.filter(**filters, is_active=True).filter(org=self.request.org).order_by(sortered), page)
             return context
 
     class Update(OrgObjPermsMixin, SmartUpdateView):
