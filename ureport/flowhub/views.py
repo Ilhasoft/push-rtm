@@ -13,11 +13,13 @@ from django.conf import settings
 from dash.orgs.models import Org
 from smartmin.views import SmartListView, SmartTemplateView
 
+from ureport.utils import get_paginator
+
 from .models import Flow
 from .forms import FlowForm
 
 
-class SearchSmartListViewMixin(SmartListView):
+class SearchSmartListViewMixin(SmartTemplateView):
     search_query_name = "search"
 
     def search(self, queryset):
@@ -48,16 +50,26 @@ class SearchSmartListViewMixin(SmartListView):
 
         return queryset
 
+    def derive_search_fields(self):
+        """
+        Derives our search fields, by default just returning what was set
+        """
+        return self.search_fields
 
 class FlowBaseListView(SearchSmartListViewMixin):
     search_query_name = "search"
-    # paginate_by = 4
+    select_related = None
+    fields = '__all__'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["languages"] = settings.LANGUAGES
         context["sdgs"] = settings.SDG_LIST
         return context
+    
+    
+    def derive_select_related(self):
+        return self.select_related
 
     def get_queryset(self):
         queryset = (
@@ -68,12 +80,12 @@ class FlowBaseListView(SearchSmartListViewMixin):
 
         queryset = self.search(queryset)
         queryset = self.filter(queryset)
+
         return queryset
 
     def filter(self, queryset):
         sort_field = self.request.GET.get("sort")
         sort_direction = self.request.GET.get("dir")
-        page = self.request.GET.get("page")
         language = self.request.GET.get("lang", "")
         sdg = self.request.GET.get("sdg", 0)
 
@@ -104,10 +116,17 @@ class ListView(FlowBaseListView):
     filter_fields = ["name__icontains", "description__icontains"]
     search_query_name = "search"
 
+    def derive_url_pattern(path, action):
+        return "flowhub/"
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["subtitle"] = _("All flows")
         context["flow_section_id"] = "flowhub-all"
+
+        page = self.request.GET.get("page", 1)
+        context["flows"] = get_paginator(self.get_queryset(), page=page)
+
         return context
 
 
@@ -116,6 +135,10 @@ class UnctsView(SearchSmartListViewMixin):
     model = Org
     context_object_name = "uncts"
     search_fields = ["name__icontains"]
+    select_related = None
+
+    def derive_select_related(self):
+        return self.select_related
 
     def get_queryset(self):
         sort_field = self.request.GET.get("sort")
@@ -141,6 +164,9 @@ class UnctsView(SearchSmartListViewMixin):
         context = super().get_context_data(**kwargs)
         context["subtitle"] = _("UNCTs")
         context["flow_section_id"] = "flowhub-uncts"
+        print('qs: ', self.get_queryset())
+        page = self.request.GET.get("page", 1)
+        context["uncts"] = get_paginator(self.get_queryset(), page=page)
         return context
 
 
@@ -158,6 +184,10 @@ class MyOrgListView(FlowBaseListView):
         context = super().get_context_data(**kwargs)
         context["subtitle"] = "{} {}".format(self.request.org.name, _("flows"))
         context["flow_section_id"] = "flowhub-my-org"
+
+        page = self.request.GET.get("page", 1)
+        context["flows"] = get_paginator(self.get_queryset(), page=page)
+
         return context
 
 
