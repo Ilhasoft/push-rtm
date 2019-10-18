@@ -60,7 +60,7 @@ class SearchSmartListViewMixin(SmartTemplateView):
 class FlowBaseListView(SearchSmartListViewMixin):
     search_query_name = "search"
     select_related = None
-    fields = '__all__'
+    fields = "__all__"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -111,7 +111,7 @@ class ListView(FlowBaseListView):
     template_name = "flowhub/index.html"
     # permission = 'flowhub.flow_list'
     model = Flow
-    #context_object_name = "flows"
+    # context_object_name = "flows"
     search_fields = ["name__icontains", "description__icontains"]
     filter_fields = ["name__icontains", "description__icontains"]
     search_query_name = "search"
@@ -157,7 +157,9 @@ class UnctsView(SearchSmartListViewMixin):
             # org.total_stars = org.flows.filter(is_active=True).aggregate(Sum("stars_count"))[
             #     "stars__sum"
             # ]
-            org.total_stars = sum([f.stars.all().count() for f in org.flows.filter(is_active=True)])
+            org.total_stars = sum(
+                [f.stars.all().count() for f in org.flows.filter(is_active=True)]
+            )
 
         return queryset
 
@@ -291,7 +293,9 @@ class StarView(SmartTemplateView):
         flow = Flow.objects.filter(pk=self.kwargs["flow"], is_active=True).first()
 
         if flow:
-            flow.decrease_stars(request.user) if request.user in flow.stars.all() else flow.increase_stars(request.user)
+            flow.decrease_stars(
+                request.user
+            ) if request.user in flow.stars.all() else flow.increase_stars(request.user)
 
         return redirect(self.request.META.get("HTTP_REFERER"))
 
