@@ -20,8 +20,13 @@
         {% endif %}
       </div>
       <div class="column stars">
-        <a href="{% url 'flowhub.flow_star' flow.pk %}"><img src="{% static 'svg/star.svg' %}" alt="stars"></a>
-        <span>{{ flow.stars }}</span>
+        <a href="{% url 'flowhub.flow_star' flow.pk %}">
+          {% if request.user in flow.stars.all %}
+            <img src="{% static 'svg/star-solid.svg' %}" alt="stars"></a>
+          {% else %}
+            <img src="{% static 'svg/star.svg' %}" alt="stars"></a>
+          {% endif %}
+        <span>{{ flow.stars_count }}</span>
       </div>
     </div>
     <div class="columns">
