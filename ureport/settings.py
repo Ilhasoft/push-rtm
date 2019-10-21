@@ -110,6 +110,7 @@ INSTALLED_APPS += (
     "ureport.accounts",
     "ureport.results",
     "ureport.flowhub",
+    "ureport.dashboard",
 )
 
 SITE_ALLOW_NO_ORG += (
