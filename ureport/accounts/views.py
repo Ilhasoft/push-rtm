@@ -44,9 +44,11 @@ class ListView(OrgObjPermsMixin, SmartTemplateView):
         )
 
         if not self.request.user.is_superuser:
-            queryset = queryset.filter(
-                Q(org_admins=self.request.org) | Q(org_editors=self.request.org) | Q(org_viewers=self.request.org)
-            )
+            org = self.request.org
+
+        queryset = queryset.filter(
+            Q(org_admins=org) | Q(org_editors=org) | Q(org_viewers=org)
+        )
 
         context["users"] = get_paginator(queryset.filter(**filters, is_active=True).order_by(sortered), page)
 
