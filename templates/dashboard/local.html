@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n static sass_tags %}
+{% load i18n static sass_tags ureport %}
 
 {% block nav_item %}page-dashboard{% endblock %}
 
@@ -21,15 +21,19 @@
           <i class="material-icons info-icon">info</i>
           <span class="tooltip-content">{% trans 'Number of total messages received addressing each SDG'%}</span>
         </span>
-      </div>
+      </div>     
       <canvas id="bubbleChart" height="20vh" width="40vw"></canvas>
     </div>
   </section>
 {% endblock %}
 
 {% block js_extra %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 
+{% for key, value in bublle_data.items %}
+  {{ value|json_script:key }}
+{% endfor %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
   <script>
     let bubbleCtx = document.getElementById('bubbleChart').getContext('2d');
     let bubbleChart = new Chart(bubbleCtx, {
@@ -50,103 +54,103 @@
         datasets: [
           {
             label: '1 NO POVERTY',
-            data: [{x: 244, y: 20, r: 30}],
+            data: [JSON.parse(document.getElementById('1').textContent)],
             backgroundColor:"#e3263b",
             borderColor: '#FFFFFF',
           },
           {
             label: '2 ZERO HUNGER',
-            data: [{x: 203, y: 13, r: 20}],
+            data: [JSON.parse(document.getElementById('2').textContent)],
             backgroundColor:"#dfa739",
             borderColor: '#FFFFFF',
           },
           {
             label: '3 GOOD HEALTH AND WELL-BEING',
-            data: [{x: 120, y: 10, r: 14}],
+            data: [JSON.parse(document.getElementById('3').textContent)],
             backgroundColor:"#4d9f45",
             borderColor: '#FFFFFF',
           },
           {
             label: '4 QUALITY EDUCATION',
-            data: [{x: 120, y: 2, r: 38}],
+            data: [JSON.parse(document.getElementById('4').textContent)],
             backgroundColor:"#c5202e",
             borderColor: '#FFFFFF',
           },
           {
             label: '5 GENDER EQUALITY',
-            data: [{x: 130, y: 12, r: 29}],
+            data: [JSON.parse(document.getElementById('5').textContent)],
             backgroundColor:"#ef402c",
             borderColor: '#FFFFFF',
           },
           {
             label: '6 CLEAN WATER AND SANITATION',
-            data: [{x: 349, y: 20, r: 14}],
+            data: [JSON.parse(document.getElementById('6').textContent)],
             backgroundColor:"#29bee2",
             borderColor: '#FFFFFF',
           },
           {
             label: '7 AFFORDABLE AND CLEAN ENERGY',
-            data: [{x: 230, y: 12, r: 40}],
+            data: [JSON.parse(document.getElementById('7').textContent)],
             backgroundColor:"#f9c316",
             borderColor: '#FFFFFF',
           },
           {
             label: '8 DECENT WORK AND ECONOMIC GROWTH',
-            data: [{x: 243, y: 10, r: 34}],
+            data: [JSON.parse(document.getElementById('8').textContent)],
             backgroundColor:"#a21b45",
             borderColor: '#FFFFFF',
           },
           {
             label: '9 INDUSTRY, INNOVATION AND INFRASTRUCTURE',
-            data: [{x: 239, y: 42, r: 0}],
+            data: [JSON.parse(document.getElementById('9').textContent)],
             backgroundColor:"#f3692c",
             borderColor: '#FFFFFF',
           },
           {
             label: '10 REDUCED INEQUALITY',
-            data: [{x: 245, y: 29, r: 20}],
+            data: [JSON.parse(document.getElementById('10').textContent)],
             backgroundColor:"#dd2467",
             borderColor: '#FFFFFF',
           },
           {
             label: '11 SUSTAINABLE CITIES AND COMMUNITIES',
-            data: [{x: 289, y: 30, r: 25}],
+            data: [JSON.parse(document.getElementById('11').textContent)],
             backgroundColor:"#f99d28",
             borderColor: '#FFFFFF',
           },
           {
             label: '12 RESPONSIBLE COMSUMPTION AND PRODUCTION',
-            data: [{x: 150, y: 12, r: 27}],
+            data: [JSON.parse(document.getElementById('12').textContent)],
             backgroundColor:"#be8b2d",
             borderColor: '#FFFFFF',
           },
           {
             label: '13 CLIMATE ACTION',
-            data: [{x: 341, y: 26, r: 37}],
+            data: [JSON.parse(document.getElementById('13').textContent)],
             backgroundColor:"#407f45",
             borderColor: '#FFFFFF',
           },
           {
             label: '14 LIFE BELOW WATER',
-            data: [{x: 239, y: 25, r: 30}],
+            data: [JSON.parse(document.getElementById('14').textContent)],
             backgroundColor:"#1c97d3",
             borderColor: '#FFFFFF',
           },
           {
             label: '15 LIFE ON LAND',
-            data: [{x: 139, y: 20, r: 39}],
+            data: [JSON.parse(document.getElementById('15').textContent)],
             backgroundColor:"#5ebb47",
             borderColor: '#FFFFFF',
           },
           {
             label: '16 PEACE AND JUSTICE STRONG INSTITUTIONS',
-            data: [{x: 200, y: 17, r: 15}],
+            data: [JSON.parse(document.getElementById('16').textContent)],
             backgroundColor:"#056a9d",
             borderColor: '#FFFFFF',
           },
           {
             label: '17 PARTNERSHIPS TO ACHIEVE THE GOAL',
-            data: [{x: 139, y: 25, r: 25}],
+            data: [JSON.parse(document.getElementById('17').textContent)],
             backgroundColor:"#18486a",
             borderColor: '#FFFFFF',
           },
