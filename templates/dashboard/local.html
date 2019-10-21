@@ -22,13 +22,78 @@
           <span class="tooltip-content">{% trans 'Number of total messages received addressing each SDG'%}</span>
         </span>
       </div>
-      <canvas id="bubbleChart" height="20vh" width="40vw"></canvas>
+      <canvas id="bubbleChart"></canvas>
+    </div>
+    <div class="box is-shadowless is-paddingless">
+      <div class="columns is-marginless">
+        <div class="column is-three-fifths border-right p-30">
+          <span class="has-text-weight-bold">Surveys Partial Results</span>
+          <span class="tooltip top left-m-10">
+            <i class="material-icons info-icon">info</i>
+            <span class="tooltip-content">{% trans 'Partial SDG results for the lastest ongoing surveys'%}</span>
+          </span>
+          <div class="selected-question top-m-30">
+            <div class="selected-question__title bottom-m-30">
+              How often have you had problems accessing clean drinking water at home? Rarely, sometimes, often or always?
+            </div>
+            <div class="selected-question__chart">
+              <canvas id="questionChart"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="column is-paddingless">
+          <div class="questions-header has-text-weight-bold p-30">
+            <div>34 Questions</div>
+            <div class="dropdown is-hoverable">
+              <div class="dropdown-trigger">
+                <div aria-haspopup="true" aria-controls="dropdown-menu">
+                  <span>SDG 1</span>
+                  <span class="icon is-small">
+                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                  <a href="#" class="dropdown-item">SDG1</a>
+                  <a href="#" class="dropdown-item">SDG2</a>
+                  <a href="#" class="dropdown-item">SDG3</a>
+                  <a href="#" class="dropdown-item">SDG4</a>
+                  <a href="#" class="dropdown-item">SDG5</a>
+                  <a href="#" class="dropdown-item">SDG6</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="questions-list">
+            <div class="questions-list__item p-30 border-bottom">
+              How often have you had problems accessing clean drinking water at home? Rarely, sometimes, often or always?
+            </div>
+            <div class="questions-list__item p-30 border-bottom">
+              Who collects and disposes  your household waste? The city, your landlord, a group of people, you or other person?
+            </div>
+            <div class="questions-list__item p-30 border-bottom">
+              Is there a service available for someone to collect plastic bottles separately from the general waste, either for free or for a payment?
+            </div>
+            <div class="questions-list__item p-30 border-bottom">
+              How often have you had problems accessing clean drinking water at home? Rarely, sometimes, often or always?
+            </div>
+            <div class="questions-list__item p-30 border-bottom">
+              Who collects and disposes  your household waste? The city, your landlord, a group of people, you or other person?
+            </div>
+            <div class="questions-list__item p-30 border-bottom">
+              Is there a service available for someone to collect plastic bottles separately from the general waste, either for free or for a payment?
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 {% endblock %}
 
 {% block js_extra %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
 
   <script>
     let bubbleCtx = document.getElementById('bubbleChart').getContext('2d');
@@ -37,13 +102,17 @@
       options: {
         responsive: true,
         legend: {
-          display: true,
           labels: {
             fontSize: 14,
             padding: 18,
             usePointStyle: true,
           },
           position: 'left',
+        },
+        plugins: {
+          datalabels: {
+            display: false,
+          }
         },
       },
       data: {
@@ -152,6 +221,53 @@
           },
         ]
       }
+    });
+
+    let donutCtx = document.getElementById('questionChart').getContext('2d');
+    let questionChart = new Chart(donutCtx, {
+      type: 'doughnut',
+        data: {
+          labels: [
+            'Never',
+            'Always',
+            'Sometimes',
+            'Don’t know',
+          ],
+          datasets: [{
+            data: [12, 23, 50, 15],
+            backgroundColor: [
+                '#89e7ff',
+                '#03aeef',
+                '#0054e2',
+                '#0400a4',
+            ],
+            borderColor: "rgba(255, 255, 255, 0.1)",
+          }],
+        },
+        options: {
+          legend: {
+            labels: {
+              fontSize: 14,
+              padding: 18,
+              usePointStyle: true,
+            },
+            position: 'left',
+          },
+          plugins: {
+            datalabels: {
+              formatter: (value, ctx) => {
+                let sum = 0;
+                let dataArr = ctx.chart.data.datasets[0].data;
+                dataArr.map(data => {
+                  sum += data;
+                });
+                let percentage = parseInt((value * 100 / sum));
+                return percentage > 0 ? percentage + "%" : "";
+              },
+              color: '#fff',
+            }
+          }
+        },
     });
   </script>
 
