@@ -15,17 +15,12 @@
   {% if request.user.is_authenticated and request.org in request.user.get_user_orgs or request.user.is_superuser %}
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
-      {% if request.org and request.user.is_superuser %}
-        <a class="navbar-item uncts" href="{% url 'dashboard.local' %}">Dashboard</a>
-      {% else %}
-        <a class="navbar-item uncts" href="{% url 'dashboard.global2' %}">dDashboard</a>
-      {% endif %}
-      {% if request.user.is_superuser %}
-      <!-- <a class="navbar-item summary">Global Summary</a> -->
-      <a class="navbar-item uncts" href="{% url 'uncts.unct_list' %}">UNCTs</a>
+      {% if request.user.is_superuser and not request.org %}
+        <a class="navbar-item summary" href="{% url 'dashboard.global' %}">Global Summary</a>
+        <a class="navbar-item uncts" href="{% url 'uncts.unct_list' %}">UNCTs</a>
       {%  else %}
-      <!-- <a class="navbar-item summary">Summary</a> -->
-      <a class="navbar-item uncts" href="">{{ request.org }}</a>
+        <a class="navbar-item summary" href="{% url 'dashboard.local' %}">Summary</a>
+        <a class="navbar-item uncts" href="">{{ request.org }}</a>
       {% endif %}
       <a class="navbar-item users" href="#">Users</a>
       <a class="navbar-item flowhub" href="{% url 'flowhub.flow_list' %}">Repository</a>
