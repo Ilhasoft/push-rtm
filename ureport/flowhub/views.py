@@ -11,13 +11,15 @@ from django.contrib import messages
 from django.conf import settings
 
 from dash.orgs.models import Org
-from smartmin.views import SmartListView, SmartTemplateView
+from smartmin.views import SmartTemplateView
+
+from ureport.utils import get_paginator
 
 from .models import Flow
 from .forms import FlowForm
 
 
-class SearchSmartListViewMixin(SmartListView):
+class SearchSmartListViewMixin(SmartTemplateView):
     search_query_name = "search"
 
     def search(self, queryset):
@@ -48,10 +50,17 @@ class SearchSmartListViewMixin(SmartListView):
 
         return queryset
 
+    def derive_search_fields(self):
+        """
+        Derives our search fields, by default just returning what was set
+        """
+        return self.search_fields
+
 
 class FlowBaseListView(SearchSmartListViewMixin):
     search_query_name = "search"
-    # paginate_by = 4
+    select_related = None
+    fields = "__all__"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -59,27 +68,30 @@ class FlowBaseListView(SearchSmartListViewMixin):
         context["sdgs"] = settings.SDG_LIST
         return context
 
+    def derive_select_related(self):
+        return self.select_related
+
     def get_queryset(self):
         queryset = (
             self.model.objects.filter(is_active=True)
             .filter(Q(org=self.request.org) | Q(visible_globally=True))
-            .order_by("-stars", "name")
+            .order_by("name")
         )
 
         queryset = self.search(queryset)
         queryset = self.filter(queryset)
+
         return queryset
 
     def filter(self, queryset):
         sort_field = self.request.GET.get("sort")
         sort_direction = self.request.GET.get("dir")
-        page = self.request.GET.get("page")
         language = self.request.GET.get("lang", "")
         sdg = self.request.GET.get("sdg", 0)
 
         filters = {}
 
-        sortered = "-stars"
+        sortered = "stars"
 
         if language:
             filters["languages__contains"] = [language]
@@ -99,15 +111,22 @@ class ListView(FlowBaseListView):
     template_name = "flowhub/index.html"
     # permission = 'flowhub.flow_list'
     model = Flow
-    context_object_name = "flows"
+    # context_object_name = "flows"
     search_fields = ["name__icontains", "description__icontains"]
     filter_fields = ["name__icontains", "description__icontains"]
     search_query_name = "search"
+
+    def derive_url_pattern(path, action):
+        return "flowhub/"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["subtitle"] = _("All flows")
         context["flow_section_id"] = "flowhub-all"
+
+        page = self.request.GET.get("page", 1)
+        context["flows"] = get_paginator(list(set(self.get_queryset())), page)
+
         return context
 
 
@@ -116,6 +135,10 @@ class UnctsView(SearchSmartListViewMixin):
     model = Org
     context_object_name = "uncts"
     search_fields = ["name__icontains"]
+    select_related = None
+
+    def derive_select_related(self):
+        return self.select_related
 
     def get_queryset(self):
         sort_field = self.request.GET.get("sort")
@@ -131,9 +154,12 @@ class UnctsView(SearchSmartListViewMixin):
         queryset = self.search(queryset)
 
         for org in queryset:
-            org.total_stars = org.flows.filter(is_active=True).aggregate(Sum("stars"))[
-                "stars__sum"
-            ]
+            # org.total_stars = org.flows.filter(is_active=True).aggregate(Sum("stars_count"))[
+            #     "stars__sum"
+            # ]
+            org.total_stars = sum(
+                [f.stars.all().count() for f in org.flows.filter(is_active=True)]
+            )
 
         return queryset
 
@@ -141,6 +167,8 @@ class UnctsView(SearchSmartListViewMixin):
         context = super().get_context_data(**kwargs)
         context["subtitle"] = _("UNCTs")
         context["flow_section_id"] = "flowhub-uncts"
+        page = self.request.GET.get("page", 1)
+        context["uncts"] = get_paginator(self.get_queryset(), page)
         return context
 
 
@@ -158,6 +186,10 @@ class MyOrgListView(FlowBaseListView):
         context = super().get_context_data(**kwargs)
         context["subtitle"] = "{} {}".format(self.request.org.name, _("flows"))
         context["flow_section_id"] = "flowhub-my-org"
+
+        page = self.request.GET.get("page", 1)
+        context["flows"] = get_paginator(list(set(self.get_queryset())), page)
+
         return context
 
 
@@ -261,7 +293,9 @@ class StarView(SmartTemplateView):
         flow = Flow.objects.filter(pk=self.kwargs["flow"], is_active=True).first()
 
         if flow:
-            flow.increase_stars()
+            flow.decrease_stars(
+                request.user
+            ) if request.user in flow.stars.all() else flow.increase_stars(request.user)
 
         return redirect(self.request.META.get("HTTP_REFERER"))
 

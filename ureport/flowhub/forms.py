@@ -18,7 +18,8 @@ class FlowForm(forms.ModelForm):
             attrs={
                 "class": "input is-medium",
                 "placeholder": _("Flow Name"),
-                "required": True}
+                "required": True,
+            }
         ),
     )
 
@@ -31,7 +32,8 @@ class FlowForm(forms.ModelForm):
                 "placeholder": _("Flow Description"),
                 "required": True,
                 "class": "textarea",
-                "rows": 5}
+                "rows": 5,
+            }
         ),
     )
 
@@ -46,7 +48,8 @@ class FlowForm(forms.ModelForm):
                 "placeholder": _("Collected Data"),
                 "rows": 5,
                 "class": "textarea",
-                "required": True}
+                "required": True,
+            }
         ),
     )
 
@@ -55,8 +58,7 @@ class FlowForm(forms.ModelForm):
         label=_("Tags"),
         required=True,
         widget=forms.SelectMultiple(
-            attrs={
-                "data-placeholder": _("Select one or more Tags.")}
+            attrs={"data-placeholder": _("Select one or more Tags.")}
         ),
     )
 
@@ -77,11 +79,7 @@ class FlowForm(forms.ModelForm):
     flow = forms.FileField(
         validators=[MimetypeValidator("application/json")],
         help_text=_("Upload a JSON file"),
-        widget=forms.ClearableFileInput(
-            attrs={
-                "class": "file-input",
-            }
-        )
+        widget=forms.ClearableFileInput(attrs={"class": "file-input"}),
     )
 
     sdgs = forms.MultipleChoiceField(
