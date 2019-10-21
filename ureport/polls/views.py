@@ -542,7 +542,7 @@ class PollCRUDL(SmartCRUDL):
         default_template = "polls/index.html"
 
         def derive_url_pattern(path, action):
-            return "poll/"
+            return "^poll/list/"
 
         def get_queryset(self):
             queryset = super(PollCRUDL.List, self).get_queryset().filter(org=self.request.org)
