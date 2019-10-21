@@ -16,11 +16,10 @@
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
       {% if request.user.is_superuser and not request.org %}
-        <a class="navbar-item summary" href="{% url 'dashboard.global' %}">Global Summary</a>
+        <a class="navbar-item dashboard" href="{% url 'dashboard.global' %}">Dashboard</a>
         <a class="navbar-item uncts" href="{% url 'uncts.unct_list' %}">UNCTs</a>
       {%  else %}
-        <a class="navbar-item summary" href="{% url 'dashboard.local' %}">Summary</a>
-        <a class="navbar-item uncts" href="">{{ request.org }}</a>
+        <a class="navbar-item dashboard" href="{% url 'dashboard.local' %}">{{ request.org }}</a>
       {% endif %}
       <a class="navbar-item users" href="#">Users</a>
       <a class="navbar-item flowhub" href="{% url 'flowhub.flow_list' %}">Repository</a>
