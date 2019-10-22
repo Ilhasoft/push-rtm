@@ -15,8 +15,8 @@
 
   <section class="section">
     <div class="box is-shadowless">
-      <div class="left-p-20">
-        <span class="has-text-weight-bold">SDGs being tracked</span>
+      <div class="left-p-20 top-p-20">
+        <span class="card-title has-text-weight-bold">SDGs being tracked</span>
         <span class="tooltip top left-m-10">
           <i class="material-icons info-icon">info</i>
           <span class="tooltip-content">{% trans 'Number of total messages received addressing each SDG'%}</span>
@@ -27,7 +27,7 @@
     <div class="box is-shadowless is-paddingless">
       <div class="columns is-marginless">
         <div class="column is-three-fifths border-right p-30">
-          <span class="has-text-weight-bold">Surveys Partial Results</span>
+          <span class="card-title has-text-weight-bold">Surveys Partial Results</span>
           <span class="tooltip top left-m-10">
             <i class="material-icons info-icon">info</i>
             <span class="tooltip-content">{% trans 'Partial SDG results for the lastest ongoing surveys'%}</span>
@@ -43,7 +43,7 @@
         </div>
         <div class="column is-paddingless">
           <div class="questions-header has-text-weight-bold p-30">
-            <div>34 Questions</div>
+            <div class="card-title">34 Questions</div>
             <div class="dropdown is-hoverable">
               <div class="dropdown-trigger">
                 <div aria-haspopup="true" aria-controls="dropdown-menu">
@@ -85,6 +85,19 @@
               Is there a service available for someone to collect plastic bottles separately from the general waste, either for free or for a payment?
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+    <div class="box is-shadowless">
+      <div class="card-title p-20 has-text-weight-bold">RapidPro Contacts</div>
+      <div class="columns p-20">
+        <div class="column is-three-fifths">
+          <div class="has-text-weight-bold bottom-m-20">Contacts growth over time</div>
+          <canvas id="contactsChart"></canvas>
+        </div>
+        <div class="column">
+          <div class="has-text-weight-bold bottom-m-20">Portion of Global Total Contacts</div>
+          <canvas id="pieChart"></canvas>
         </div>
       </div>
     </div>
@@ -273,6 +286,92 @@
             }
           }
         },
+    });
+
+    let pieCtx = document.getElementById('pieChart').getContext('2d');
+    let pieChart = new Chart(pieCtx, {
+      type: 'pie',
+      data: {
+        labels: [
+          'Other UNCTs',
+          'Brasil',
+        ],
+        datasets: [{
+          data: [75, 25],
+          backgroundColor: [
+            '#03aeef',
+            '#0054e2',
+          ],
+          borderColor: "rgba(255, 255, 255, 0.1)",
+        }],
+      },
+      options: {
+        aspectRatio: 1.5,
+        legend: {
+          labels: {
+            padding: 18,
+            usePointStyle: true,
+          },
+          position: 'top',
+        },
+        plugins: {
+          datalabels: {
+            formatter: (value, ctx) => {
+              let sum = 0;
+              let dataArr = ctx.chart.data.datasets[0].data;
+              dataArr.map(data => {
+                sum += data;
+              });
+              let percentage = parseInt((value * 100 / sum));
+              return percentage > 0 ? percentage + "%" : "";
+            },
+            color: '#fff',
+          }
+        }
+      },
+    });
+
+    let contactsCtx = document.getElementById('contactsChart').getContext('2d');
+    let contactsChart = new Chart(contactsCtx, {
+      type: 'line',
+      data: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [{
+          label: 'Global Average',
+          borderColor: '#00adf3',
+          backgroundColor: '#00adf3',
+          data: [15, 20, 30, 35, 39, 42, 56],
+        }, {
+          label: 'Brasil',
+          borderColor: '#0400a4',
+          backgroundColor: '#0400a4',
+          data: [9, 12, 20, 22, 14, 12, 19],
+        }]
+      },
+      options: {
+        legend: {
+          labels: {
+            padding: 18,
+            usePointStyle: true,
+          },
+          position: 'top',
+        },
+        scales: {
+          xAxes: [{
+            gridLines: {
+              color: "rgba(0, 0, 0, 0)",
+            }
+          }],
+          yAxes: [{
+            stacked: true,
+          }]
+        },
+        plugins: {
+          datalabels: {
+            display: false,
+          }
+        }
+      }
     });
   </script>
 
