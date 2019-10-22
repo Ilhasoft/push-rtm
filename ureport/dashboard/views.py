@@ -20,7 +20,7 @@ class Dashboard:
             fake_data = {}
             for i in range(17):
                 values = [random.randint(7, 70) for n in range(4)]
-                fake_data[i + 1] = {"x": values[0], "y": values[1], "r": values[2]}
+                fake_data["bubble-sdg-{}".format(i+1)] = {"x": values[0], "y": values[1], "r": values[2]}
             return fake_data
 
         def get_bubble_chart_data(self, questions):
@@ -52,13 +52,16 @@ class Dashboard:
                     "y": len(sdg_with_data.get("questions", [])),
                     "r": sdg_with_data.get("percentage_in_questions", 0),
                 }
+            
+            # for use data mock uncommented below line
+            # data = self.get_bubble_chart_data_mock()
 
             return data
 
         def get_context_data(self, **kwargs):
             context = super().get_context_data(**kwargs)
 
-            questions = PollQuestion.objects.filter(poll__org=self.request.org)
+            questions = PollQuestion.objects.filter(is_active=True, poll__org=self.request.org, poll__is_active=True)
             context["bublle_data"] = self.get_bubble_chart_data(questions)
 
             return context
