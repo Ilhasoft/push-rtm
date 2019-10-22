@@ -1,12 +1,16 @@
 #page-dashboard {
+  .card-title {
+    font-size: 18px;
+  }
+
   .info-icon {
     font-size: 18px;
     color: #b3b3b3;
     cursor: default;
-    vertical-align: text-bottom;
+    vertical-align: sub;
   }
 
-  .questions-header {
+  .flex-space-between {
     display: flex;
     justify-content: space-between;
   }
@@ -14,5 +18,18 @@
   .questions-list {
     height: 400px;
     overflow: auto;
+  }
+
+  .surveys-info {
+    color: #4c4c4c;
+
+    &__number {
+      font-size: 25px;
+      font-weight: bold;
+    }
+  }
+
+  .surveys-card {
+    height: 100%;
   }
 }
