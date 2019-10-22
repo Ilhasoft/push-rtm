@@ -15,35 +15,48 @@
 
   <section class="section">
     <div class="box is-shadowless">
-      <div class="left-p-20 top-p-20">
-        <div class="p-20 flex-space-between">
-          <div>
-            <span class="card-title has-text-weight-bold">SDGs being tracked</span>
-            <span class="tooltip top left-m-10">
+      <div class="p-20 flex-space-between">
+        <div>
+          <span class="card-title has-text-weight-bold">SDGs being tracked</span>
+          <span class="tooltip top left-m-10">
               <i class="material-icons info-icon">info</i>
               <span class="tooltip-content">{% trans 'Number of total messages received addressing each SDG'%}</span>
             </span>
-          </div>
-          <div class="dropdown is-hoverable">
-            <div class="dropdown-trigger">
-              <div aria-haspopup="true" aria-controls="dropdown-menu">
-                <span>Last Year</span>
-                <span class="icon is-small">
+        </div>
+        <div class="dropdown is-hoverable">
+          <div class="dropdown-trigger">
+            <div aria-haspopup="true" aria-controls="dropdown-menu">
+              <span>Last Year</span>
+              <span class="icon is-small">
                   <i class="fas fa-angle-down" aria-hidden="true"></i>
                 </span>
-              </div>
             </div>
-            <div class="dropdown-menu" id="dropdown-menu" role="menu">
-              <div class="dropdown-content">
-                <a href="#" class="dropdown-item">Last Month</a>
-                <a href="#" class="dropdown-item">Last Week</a>
-                <a href="#" class="dropdown-item">Since Inception</a>
-              </div>
+          </div>
+          <div class="dropdown-menu" id="dropdown-menu" role="menu">
+            <div class="dropdown-content">
+              <a href="#" class="dropdown-item">Last Month</a>
+              <a href="#" class="dropdown-item">Last Week</a>
+              <a href="#" class="dropdown-item">Since Inception</a>
             </div>
           </div>
         </div>
       </div>
       <canvas id="bubbleChart"></canvas>
+      <div class="card-title has-text-weight-bold p-20">SDGs not being tracked</div>
+      <ul class="untracked-sgd">
+        <li class="untracked-sgd__item">
+          <div class="untracked-sgd__item__color sdg-11"></div>
+          <div class="untracked-sgd__item__label">11 SUSTAINABLE CITIES AND COMMUNITIES</div>
+        </li>
+        <li class="untracked-sgd__item">
+          <div class="untracked-sgd__item__color sdg-16"></div>
+          <div class="untracked-sgd__item__label">16 PEACE, JUSTICE AND STRONG INSTITUTIONS</div>
+        </li>
+        <li class="untracked-sgd__item">
+          <div class="untracked-sgd__item__color sdg-17"></div>
+          <div class="untracked-sgd__item__label">17 PARTNERSHIPS FOR THE GOALS</div>
+        </li>
+      </ul>
     </div>
     <div class="box is-shadowless is-paddingless">
       <div class="columns is-marginless">

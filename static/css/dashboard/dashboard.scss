@@ -32,4 +32,27 @@
   .surveys-card {
     height: 100%;
   }
+
+  .untracked-sgd {
+    padding-left: 1rem;
+
+    &__item {
+      display: flex;
+      align-items: center;
+      padding-bottom: 10px;
+
+      &__color {
+        width: 17px;
+        height: 17px;
+        border-radius: 50%;
+        margin-right: 6px;
+      }
+
+      &__label {
+        font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+        font-size: 14px;
+        color: #666;
+      }
+    }
+  }
 }
