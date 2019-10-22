@@ -5,10 +5,12 @@
     overflow: visible;
     .tooltip-content {
       opacity: 1;
+      display: block;
     }
   }
 
   .tooltip-content {
+    display: none;
     background: #ffffff;
     box-shadow: 0 5px 25px 5px rgba(205,210,214,.8);
     box-sizing: border-box;
@@ -17,7 +19,7 @@
     line-height: 1.2;
     letter-spacing: 1px;
     max-width: 200px;
-    min-width: 158px;
+    min-width: 170px;
     padding: 1em;
     position: absolute;
     opacity: 0;
