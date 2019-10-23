@@ -167,22 +167,48 @@
       <div class="columns is-multiline top-m-30">
         <div class="column is-one-fifth">
           <div class="flex">
-            <div class="tooltip top">
+            <div class="tooltip top flex align-center">
+              <div class="right-m-10">
+                {% if channel_type == 'telegram' %}
+                  <span class="channel-icon icon-telegram"></span>
+                {% else %}
+                  <span class="channel-icon icon-phone"></span>
+                {% endif %}
+              </div>
               <div>
                 <div class="flex align-center">
-                  <span class="is-size-5 has-text-weight-bold">894.789</span>
-                  <i class="material-icons has-text-success">trending_up</i>
-                </div>
-                <div>Facebook</div>
-              </div>
-              <div class="tooltip-content flex flex-center p-20">
-                <div>
-                  <div class="is-size-6 bottom-p-20">Global Average</div>
-                  <div class="flex align-center">
-                    <span class="is-size-5 has-text-weight-bold">894.789</span>
+                  <span class="channel-number is-size-5 has-text-weight-bold">894.789</span>
+<!--                  se cresceu -->
                     <i class="material-icons has-text-success">trending_up</i>
+<!--                  senão -->
+                    <i class="material-icons has-text-danger">trending_down</i>
+                </div>
+                <div>Telegram</div>
+              </div>
+              <div class="tooltip-content channel-tooltip flex flex-center p-20">
+                <div class="flex">
+                  <div class="right-m-10">
+                    {% if channel_type == 'telegram' %}
+                      <span class="channel-icon icon-telegram"></span>
+                    {% else %}
+                      <span class="channel-icon icon-phone"></span>
+                    {% endif %}
                   </div>
-                  <div class="is-size-6">Facebook</div>
+                  <div>
+                    <div class="is-size-6 bottom-p-20">Global Average</div>
+                    <div class="flex">
+                      <div>
+                        <div class="flex align-center">
+                          <span class="channel-number is-size-5 has-text-weight-bold">894.789</span>
+<!--                          se cresceu -->
+                            <i class="material-icons has-text-success">trending_up</i>
+<!--                          senão -->
+                            <i class="material-icons has-text-danger">trending_down</i>
+                        </div>
+                        <div class="is-size-6">Telegram</div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
