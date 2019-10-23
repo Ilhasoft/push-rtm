@@ -14,8 +14,8 @@
   </section>
 
   <section class="section">
-    <div class="box is-shadowless">
-      <div class="p-20 flex-space-between">
+    <div class="box is-shadowless p-40">
+      <div class="flex space-between">
         <div>
           <span class="card-title has-text-weight-bold">SDGs being tracked</span>
           <span class="tooltip top left-m-10">
@@ -42,7 +42,7 @@
         </div>
       </div>
       <canvas id="bubbleChart"></canvas>
-      <div class="card-title has-text-weight-bold p-20">SDGs not being tracked</div>
+      <div class="card-title has-text-weight-bold bottom-p-20">SDGs not being tracked</div>
       <ul class="untracked-sgd">
         {% for key, value in sdgs_bubble_data.not_tracked_sdgs %}
           <li class="untracked-sgd__item">
@@ -54,7 +54,7 @@
     </div>
     <div class="box is-shadowless is-paddingless">
       <div class="columns is-marginless">
-        <div class="column is-three-fifths border-right p-30">
+        <div class="column is-three-fifths border-right p-40">
           <span class="card-title has-text-weight-bold">Surveys Partial Results</span>
           <span class="tooltip top left-m-10">
             <i class="material-icons info-icon">info</i>
@@ -65,12 +65,15 @@
               How often have you had problems accessing clean drinking water at home? Rarely, sometimes, often or always?
             </div>
             <div class="selected-question__chart">
+<!--              perguntas fechadas-->
               <canvas id="questionChart"></canvas>
+<!--              perguntas abertas-->
+<!--              <div id="wordCloud"></div>-->
             </div>
           </div>
         </div>
         <div class="column is-paddingless">
-          <div class="flex-space-between has-text-weight-bold p-30">
+          <div class="flex space-between has-text-weight-bold p-40">
             <div class="card-title">34 Questions</div>
             <div class="dropdown is-hoverable">
               <div class="dropdown-trigger">
@@ -116,10 +119,81 @@
         </div>
       </div>
     </div>
+    <div class="box is-shadowless p-40">
+      <div class="flex space-between">
+        <div class="card-title has-text-weight-bold">Message Metrics</div>
+        <div class="dropdown is-hoverable">
+          <div class="dropdown-trigger">
+            <div aria-haspopup="true" aria-controls="dropdown-menu">
+              <span>Last Year</span>
+              <span class="icon is-small">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+              </span>
+            </div>
+          </div>
+          <div class="dropdown-menu" id="dropdown-menu" role="menu">
+            <div class="dropdown-content">
+              <a href="#" class="dropdown-item">Last Month</a>
+              <a href="#" class="dropdown-item">Last Week</a>
+              <a href="#" class="dropdown-item">Since Inception</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-end top-m-20">
+        <div class="dropdown is-hoverable">
+          <div class="dropdown-trigger">
+            <div aria-haspopup="true" aria-controls="dropdown-menu">
+              <span>All channels</span>
+              <span class="icon is-small">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+              </span>
+            </div>
+          </div>
+          <!--          As opções do dropdown serão os canais q a org possui -->
+          <div class="dropdown-menu" id="dropdown-menu" role="menu">
+            <div class="dropdown-content">
+              <a href="#" class="dropdown-item">Channel 1</a>
+              <a href="#" class="dropdown-item">Channel 2</a>
+              <a href="#" class="dropdown-item">Channel 3</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <canvas id="channelsChart" height="100"></canvas>
+      <div class="card-title has-text-weight-bold top-m-50">Messages by Channel</div>
+      <!--      Tempo selecionado no dropdown-->
+      <div class="has-text-grey-light">Last Year</div>
+      <div class="columns is-multiline top-m-30">
+        <div class="column is-one-fifth">
+          <div class="flex">
+            <div class="tooltip top">
+              <div>
+                <div class="flex align-center">
+                  <span class="is-size-5 has-text-weight-bold">894.789</span>
+                  <i class="material-icons has-text-success">trending_up</i>
+                </div>
+                <div>Facebook</div>
+              </div>
+              <div class="tooltip-content flex flex-center p-20">
+                <div>
+                  <div class="is-size-6 bottom-p-20">Global Average</div>
+                  <div class="flex align-center">
+                    <span class="is-size-5 has-text-weight-bold">894.789</span>
+                    <i class="material-icons has-text-success">trending_up</i>
+                  </div>
+                  <div class="is-size-6">Facebook</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="columns">
       <div class="column">
         <div class="box is-shadowless">
-          <div class="p-20 flex-space-between">
+          <div class="p-20 flex space-between">
             <div class="card-title has-text-weight-bold">Most used Channels</div>
             <div class="dropdown is-hoverable">
               <div class="dropdown-trigger">
@@ -188,6 +262,8 @@
 {% block js_extra %}
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+  <script src="{% static 'plugins/wordcloud/d3.js' %}"></script>
+  <script src="{% static 'plugins/wordcloud/d3.layout.cloud.js' %}"></script>
 
 {{ sdgs_bubble_data.datasets|json_script:'SDGSBubbleChartDataDatasets' }}
 
@@ -229,10 +305,10 @@
           datasets: [{
             data: [12, 23, 50, 15],
             backgroundColor: [
-                '#89e7ff',
-                '#03aeef',
-                '#0054e2',
-                '#0400a4',
+              '#89e7ff',
+              '#03aeef',
+              '#0054e2',
+              '#0400a4',
             ],
             borderColor: "rgba(255, 255, 255, 0.1)",
           }],
@@ -261,6 +337,51 @@
             }
           }
         },
+    });
+
+    let channelsCtx = document.getElementById('channelsChart').getContext('2d');
+    let channelsChart = new Chart(channelsCtx, {
+      type: 'line',
+      data: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        datasets: [{
+          label: 'Sent',
+          borderColor: '#c9f4ff',
+          backgroundColor: '#c9f4ff',
+          data: [5, 10, 4, 14, 7, 6, 8, 9, 3, 10, 8, 7],
+        }, {
+          label: 'Received',
+          borderColor: '#03aeef',
+          backgroundColor: '#03aeef',
+          data: [9, 6, 8, 13, 5, 12, 10, 11, 12, 9, 16, 8],
+        }, {
+          label: 'Fail',
+          borderColor: '#0400a4',
+          backgroundColor: '#0400a4',
+          data: [10, 7, 16, 19, 15, 8, 12, 13, 15, 12, 10, 7],
+        }],
+      },
+      options: {
+        legend: {
+          labels: {
+            padding: 18,
+            usePointStyle: true,
+          },
+          position: 'top',
+        },
+        scales: {
+          xAxes: [{
+            gridLines: {
+              color: "rgba(0, 0, 0, 0)",
+            }
+          }],
+        },
+        plugins: {
+          datalabels: {
+            display: false,
+          }
+        }
+      }
     });
 
     let localMostUsedCtx = document.getElementById('localMostUsedChannels').getContext('2d');
@@ -411,16 +532,17 @@
       type: 'line',
       data: {
         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [{
-          label: 'Global Average',
-          borderColor: '#00adf3',
-          backgroundColor: '#00adf3',
-          data: [15, 20, 30, 35, 39, 42, 56],
-        }, {
-          label: 'Brasil',
-          borderColor: '#0400a4',
-          backgroundColor: '#0400a4',
-          data: [9, 12, 20, 22, 14, 12, 19],
+        datasets: [
+          {
+            label: 'Brasil',
+            borderColor: '#0400a4',
+            backgroundColor: '#0400a4',
+            data: [9, 12, 20, 22, 14, 12, 19],
+          }, {
+            label: 'Global Average',
+            borderColor: '#00adf3',
+            backgroundColor: '#00adf3',
+            data: [15, 20, 30, 35, 39, 42, 56],
         }]
       },
       options: {
@@ -437,9 +559,6 @@
               color: "rgba(0, 0, 0, 0)",
             }
           }],
-          yAxes: [{
-            stacked: true,
-          }]
         },
         plugins: {
           datalabels: {
@@ -448,6 +567,56 @@
         }
       }
     });
+
+    const availableWordCloudColors = ['#89e7ff', '#03aeef', '#0054e2', '#0400a4'];
+    const words = ["water", "climate", "life", "rights", "industry", "work", "words"].map(function (word, index) {
+      return {
+        text: word,
+        size: 10 + Math.random() * 90,
+      };
+    });
+
+    function fillWordColor(d,i){
+      return availableWordCloudColors[i % availableWordCloudColors.length];
+    }
+
+    let width = 250, height = 250;
+
+    let wordCloud = d3.scale.category20();
+    d3.layout.cloud()
+      .words(words)
+      .rotate(function() { return ~~(Math.random() * 2) * 90; })
+      .font("Impact")
+      .fontSize(function(d) { return d.size; })
+      .on("end", draw)
+      .start();
+    function draw(words) {
+      d3.select("#wordCloud").append("svg")
+        .attr("width", '60%')
+        .attr("height", '60%')
+        .attr('viewBox','0 0 ' + Math.min(width,height) + ' ' + Math.min(width,height))
+        .attr('preserveAspectRatio','xMinYMin')
+        .append("g")
+        .attr("transform", "translate(" + Math.min(width,height) / 2 + "," + Math.min(width,height) / 2 + ")")
+        .selectAll("text")
+        .data(words)
+        .enter().append("text")
+        .style("font-size", function (d) {
+          return d.size + "px";
+        })
+        .style("font-family", "Impact")
+        .style("fill", function (d, i) {
+          return wordCloud(i);
+        })
+        .attr("text-anchor", "middle")
+        .attr("transform", function (d) {
+          return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+        })
+        .style('fill', fillWordColor)
+        .text(function (d) {
+          return d.text;
+        });
+    }
   </script>
 
 {% endblock %}
