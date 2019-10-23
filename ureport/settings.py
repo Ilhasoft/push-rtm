@@ -143,6 +143,26 @@ SDG_LIST = (
     (17, "Partnerships for the Goals"),
 )
 
+SDG_COLOR = {
+    1: "#e3263b",
+    2: "#dfa739",
+    3: "#4d9f45",
+    4: "#c5202e",
+    5: "#ef402c",
+    6: "#29bee2",
+    7: "#f9c316",
+    8: "#a21b45",
+    9: "#f3692c",
+    10: "#dd2467",
+    11: "#f99d28",
+    12: "#be8b2d",
+    13: "#407f45",
+    14: "#1c97d3",
+    15: "#5ebb47",
+    16: "#056a9d",
+    17: "#18486a",
+}
+
 STATICFILES_FINDERS += (
     "sass_processor.finders.CssFinder",
 )

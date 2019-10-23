@@ -44,18 +44,12 @@
       <canvas id="bubbleChart"></canvas>
       <div class="card-title has-text-weight-bold p-20">SDGs not being tracked</div>
       <ul class="untracked-sgd">
-        <li class="untracked-sgd__item">
-          <div class="untracked-sgd__item__color sdg-11"></div>
-          <div class="untracked-sgd__item__label">11 SUSTAINABLE CITIES AND COMMUNITIES</div>
-        </li>
-        <li class="untracked-sgd__item">
-          <div class="untracked-sgd__item__color sdg-16"></div>
-          <div class="untracked-sgd__item__label">16 PEACE, JUSTICE AND STRONG INSTITUTIONS</div>
-        </li>
-        <li class="untracked-sgd__item">
-          <div class="untracked-sgd__item__color sdg-17"></div>
-          <div class="untracked-sgd__item__label">17 PARTNERSHIPS FOR THE GOALS</div>
-        </li>
+        {% for key, value in sdgs_bublle_data.not_tracked_sdgs %}
+          <li class="untracked-sgd__item">
+            <div class="untracked-sgd__item__color sdg-{{key}}"></div>
+            <div class="untracked-sgd__item__label">{{key}} {{value}}</div>
+          </li>
+        {% endfor %}
       </ul>
     </div>
     <div class="box is-shadowless is-paddingless">
@@ -195,9 +189,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
 
-{% for key, value in bublle_data.items %}
-  {{ value|json_script:key }}
-{% endfor %}
+{{ sdgs_bublle_data.datasets|json_script:'SDGSBubbleChartDataDatasets' }}
 
   <script>
     let bubbleCtx = document.getElementById('bubbleChart').getContext('2d');
@@ -220,110 +212,7 @@
         },
       },
       data: {
-        datasets: [
-          {
-            label: '1 NO POVERTY',
-            data: [JSON.parse(document.getElementById('bubble-sdg-1').textContent)],
-            backgroundColor:"#e3263b",
-            borderColor: '#FFFFFF',
-          },
-          {
-            label: '2 ZERO HUNGER',
-            data: [JSON.parse(document.getElementById('bubble-sdg-2').textContent)],
-            backgroundColor:"#dfa739",
-            borderColor: '#FFFFFF',
-          },
-          {
-            label: '3 GOOD HEALTH AND WELL-BEING',
-            data: [JSON.parse(document.getElementById('bubble-sdg-3').textContent)],
-            backgroundColor:"#4d9f45",
-            borderColor: '#FFFFFF',
-          },
-          {
-            label: '4 QUALITY EDUCATION',
-            data: [JSON.parse(document.getElementById('bubble-sdg-4').textContent)],
-            backgroundColor:"#c5202e",
-            borderColor: '#FFFFFF',
-          },
-          {
-            label: '5 GENDER EQUALITY',
-            data: [JSON.parse(document.getElementById('bubble-sdg-5').textContent)],
-            backgroundColor:"#ef402c",
-            borderColor: '#FFFFFF',
-          },
-          {
-            label: '6 CLEAN WATER AND SANITATION',
-            data: [JSON.parse(document.getElementById('bubble-sdg-6').textContent)],
-            backgroundColor:"#29bee2",
-            borderColor: '#FFFFFF',
-          },
-          {
-            label: '7 AFFORDABLE AND CLEAN ENERGY',
-            data: [JSON.parse(document.getElementById('bubble-sdg-7').textContent)],
-            backgroundColor:"#f9c316",
-            borderColor: '#FFFFFF',
-          },
-          {
-            label: '8 DECENT WORK AND ECONOMIC GROWTH',
-            data: [JSON.parse(document.getElementById('bubble-sdg-8').textContent)],
-            backgroundColor:"#a21b45",
-            borderColor: '#FFFFFF',
-          },
-          {
-            label: '9 INDUSTRY, INNOVATION AND INFRASTRUCTURE',
-            data: [JSON.parse(document.getElementById('bubble-sdg-9').textContent)],
-            backgroundColor:"#f3692c",
-            borderColor: '#FFFFFF',
-          },
-          {
-            label: '10 REDUCED INEQUALITY',
-            data: [JSON.parse(document.getElementById('bubble-sdg-10').textContent)],
-            backgroundColor:"#dd2467",
-            borderColor: '#FFFFFF',
-          },
-          {
-            label: '11 SUSTAINABLE CITIES AND COMMUNITIES',
-            data: [JSON.parse(document.getElementById('bubble-sdg-11').textContent)],
-            backgroundColor:"#f99d28",
-            borderColor: '#FFFFFF',
-          },
-          {
-            label: '12 RESPONSIBLE COMSUMPTION AND PRODUCTION',
-            data: [JSON.parse(document.getElementById('bubble-sdg-12').textContent)],
-            backgroundColor:"#be8b2d",
-            borderColor: '#FFFFFF',
-          },
-          {
-            label: '13 CLIMATE ACTION',
-            data: [JSON.parse(document.getElementById('bubble-sdg-13').textContent)],
-            backgroundColor:"#407f45",
-            borderColor: '#FFFFFF',
-          },
-          {
-            label: '14 LIFE BELOW WATER',
-            data: [JSON.parse(document.getElementById('bubble-sdg-14').textContent)],
-            backgroundColor:"#1c97d3",
-            borderColor: '#FFFFFF',
-          },
-          {
-            label: '15 LIFE ON LAND',
-            data: [JSON.parse(document.getElementById('bubble-sdg-15').textContent)],
-            backgroundColor:"#5ebb47",
-            borderColor: '#FFFFFF',
-          },
-          {
-            label: '16 PEACE AND JUSTICE STRONG INSTITUTIONS',
-            data: [JSON.parse(document.getElementById('bubble-sdg-16').textContent)],
-            backgroundColor:"#056a9d",
-            borderColor: '#FFFFFF',
-          },
-          {
-            label: '17 PARTNERSHIPS TO ACHIEVE THE GOAL',
-            data: [JSON.parse(document.getElementById('bubble-sdg-17').textContent)],
-            backgroundColor:"#18486a",
-            borderColor: '#FFFFFF',
-          },
-        ]
+        datasets: JSON.parse(document.getElementById('SDGSBubbleChartDataDatasets').textContent)
       }
     });
 
