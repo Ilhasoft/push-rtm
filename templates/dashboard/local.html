@@ -65,7 +65,10 @@
               How often have you had problems accessing clean drinking water at home? Rarely, sometimes, often or always?
             </div>
             <div class="selected-question__chart">
+<!--              perguntas fechadas-->
               <canvas id="questionChart"></canvas>
+<!--              perguntas abertas-->
+<!--              <div id="wordCloud"></div>-->
             </div>
           </div>
         </div>
@@ -259,6 +262,8 @@
 {% block js_extra %}
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+  <script src="{% static 'plugins/wordcloud/d3.js' %}"></script>
+  <script src="{% static 'plugins/wordcloud/d3.layout.cloud.js' %}"></script>
 
 {{ sdgs_bublle_data.datasets|json_script:'SDGSBubbleChartDataDatasets' }}
 
@@ -562,6 +567,56 @@
         }
       }
     });
+
+    const availableWordCloudColors = ['#89e7ff', '#03aeef', '#0054e2', '#0400a4'];
+    const words = ["water", "climate", "life", "rights", "industry", "work", "words"].map(function (word, index) {
+      return {
+        text: word,
+        size: 10 + Math.random() * 90,
+      };
+    });
+
+    function fillWordColor(d,i){
+      return availableWordCloudColors[i % availableWordCloudColors.length];
+    }
+
+    let width = 250, height = 250;
+
+    let wordCloud = d3.scale.category20();
+    d3.layout.cloud()
+      .words(words)
+      .rotate(function() { return ~~(Math.random() * 2) * 90; })
+      .font("Impact")
+      .fontSize(function(d) { return d.size; })
+      .on("end", draw)
+      .start();
+    function draw(words) {
+      d3.select("#wordCloud").append("svg")
+        .attr("width", '60%')
+        .attr("height", '60%')
+        .attr('viewBox','0 0 ' + Math.min(width,height) + ' ' + Math.min(width,height))
+        .attr('preserveAspectRatio','xMinYMin')
+        .append("g")
+        .attr("transform", "translate(" + Math.min(width,height) / 2 + "," + Math.min(width,height) / 2 + ")")
+        .selectAll("text")
+        .data(words)
+        .enter().append("text")
+        .style("font-size", function (d) {
+          return d.size + "px";
+        })
+        .style("font-family", "Impact")
+        .style("fill", function (d, i) {
+          return wordCloud(i);
+        })
+        .attr("text-anchor", "middle")
+        .attr("transform", function (d) {
+          return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+        })
+        .style('fill', fillWordColor)
+        .text(function (d) {
+          return d.text;
+        });
+    }
   </script>
 
 {% endblock %}
