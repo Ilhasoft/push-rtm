@@ -10,11 +10,6 @@
     vertical-align: sub;
   }
 
-  .flex-space-between {
-    display: flex;
-    justify-content: space-between;
-  }
-
   .questions-list {
     height: 400px;
     overflow: auto;
@@ -54,5 +49,10 @@
         color: #666;
       }
     }
+  }
+
+  .tooltip-content {
+    line-height: normal;
+    letter-spacing: normal;
   }
 }
