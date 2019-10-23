@@ -26,7 +26,7 @@
         <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
             <div aria-haspopup="true" aria-controls="dropdown-menu">
-              <span>Last Year</span>
+              <span>{% trans "Last Year" %}</span>
               <span class="icon is-small">
                   <i class="fas fa-angle-down" aria-hidden="true"></i>
                 </span>
@@ -34,9 +34,9 @@
           </div>
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
-              <a href="#" class="dropdown-item">Last Month</a>
-              <a href="#" class="dropdown-item">Last Week</a>
-              <a href="#" class="dropdown-item">Since Inception</a>
+              <a href="{% autosort sdg_track_last_month '' true %}" class="dropdown-item">{% trans "Last Month" %}</a>
+              <a href="{% autosort sdg_track_last_week '' true %}" class="dropdown-item">{% trans "Last Week" %}</a>
+              <a href="{% autosort sdg_track_since_inception '' true %}" class="dropdown-item">{% trans "Since Inception" %}</a>
             </div>
           </div>
         </div>
@@ -44,7 +44,7 @@
       <canvas id="bubbleChart"></canvas>
       <div class="card-title has-text-weight-bold p-20">SDGs not being tracked</div>
       <ul class="untracked-sgd">
-        {% for key, value in sdgs_bublle_data.not_tracked_sdgs %}
+        {% for key, value in sdgs_bubble_data.not_tracked_sdgs %}
           <li class="untracked-sgd__item">
             <div class="untracked-sgd__item__color sdg-{{key}}"></div>
             <div class="untracked-sgd__item__label">{{key}} {{value}}</div>
@@ -132,9 +132,9 @@
               </div>
               <div class="dropdown-menu" id="dropdown-menu" role="menu">
                 <div class="dropdown-content">
-                  <a href="#" class="dropdown-item">Last Month</a>
-                  <a href="#" class="dropdown-item">Last Week</a>
-                  <a href="#" class="dropdown-item">Since Inception</a>
+                  <a href="#" class="dropdown-item"> {% trans "Last Month" %} </a>
+                  <a href="#" class="dropdown-item"> {% trans "Last Week" %} </a>
+                  <a href="#" class="dropdown-item"> {% trans "Since Inception" %} </a>
                 </div>
               </div>
             </div>
@@ -189,7 +189,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
 
-{{ sdgs_bublle_data.datasets|json_script:'SDGSBubbleChartDataDatasets' }}
+{{ sdgs_bubble_data.datasets|json_script:'SDGSBubbleChartDataDatasets' }}
 
   <script>
     let bubbleCtx = document.getElementById('bubbleChart').getContext('2d');
