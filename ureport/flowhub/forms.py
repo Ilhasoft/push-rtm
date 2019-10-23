@@ -54,7 +54,7 @@ class FlowForm(forms.ModelForm):
     )
 
     tags = forms.MultipleChoiceField(
-        choices=Tag.objects.all().order_by("name").values_list("name", "name"),
+        choices=[],
         label=_("Tags"),
         required=True,
         widget=forms.SelectMultiple(
@@ -113,6 +113,8 @@ class FlowForm(forms.ModelForm):
 
         if not flow_is_required:
             self.fields["flow"].required = False
+
+        self.fields["tags"].choices = Tag.objects.all().order_by("name").values_list("name", "name")
 
     def save(self, request):
         instance = super().save(commit=False)
