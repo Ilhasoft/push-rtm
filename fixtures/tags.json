@@ -1,0 +1,26 @@
+[
+    {
+        "model": "taggit.tag",
+        "pk": 1,
+        "fields": {
+            "name": "Clean Energy",
+            "slug": "clean-energy"
+        }
+    },
+    {
+        "model": "taggit.tag",
+        "pk": 2,
+        "fields": {
+            "name": "Equality",
+            "slug": "equality"
+        }
+    },
+    {
+        "model": "taggit.tag",
+        "pk": 3,
+        "fields": {
+            "name": "Education",
+            "slug": "education"
+        }
+    }
+]
