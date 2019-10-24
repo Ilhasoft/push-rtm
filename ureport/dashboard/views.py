@@ -49,12 +49,8 @@ class Dashboard:
             # add keys total_responded and percentage_in_questions to sdgs_with_data
             for key, value in sdgs_with_data.items():
                 if len(value["questions"]) > 0:
-                    sdgs_with_data[key]["total_responded"] = value["questions"][
-                        0
-                    ].get_responded()
-                    sdgs_with_data[key]["percentage_in_questions"] = (
-                        len(value["questions"]) / questions.count()
-                    ) * 100  # (part / total) * 100
+                    sdgs_with_data[key]["total_responded"] = value["questions"][0].get_responded()
+                    sdgs_with_data[key]["percentage_in_questions"] = int((len(value["questions"]) / questions.count()) * 100)  # (part / total) * 100
                     tracked_sdg.append(settings.SDG_LIST[key - 1])
                 else:
                     not_tracked_sdg.append(settings.SDG_LIST[key - 1])
