@@ -89,4 +89,14 @@
       color: #D0D0D0;
     }
   }
+
+  select {
+    border-color: #ffffff;
+    text-align: right;
+
+    &:active,
+    &:focus {
+      box-shadow: none;
+    }
+  }
 }
