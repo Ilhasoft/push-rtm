@@ -364,3 +364,13 @@ def get_poll_sync_status(obj):
 
     sync_progress = obj.get_sync_progress()
     return "Syncing... {0:.1f}%".format(sync_progress)
+
+
+from urllib.parse import urlencode
+
+@register.simple_tag
+def urlparams(*_, **kwargs):
+    safe_args = {k: v for k, v, in kwargs.items() if v is not None}
+    if safe_args:
+        return "?{}".format(urlencode(safe_args))
+    return ''
