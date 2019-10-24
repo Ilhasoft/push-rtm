@@ -2,7 +2,6 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.postgres.fields import JSONField, ArrayField
 from django.conf import settings
-from django.apps import apps
 
 from dash.orgs.models import Org
 from taggit.managers import TaggableManager

@@ -54,7 +54,7 @@ DATABASES["default"] = dj_database_url.parse(config("DEFAULT_DATABASE"))
 DATABASES["default"]["CONN_MAX_AGE"] = 0
 
 MIDDLEWARE = MIDDLEWARE + ("whitenoise.middleware.WhiteNoiseMiddleware",)
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "HTTPS")
@@ -111,6 +111,7 @@ INSTALLED_APPS += (
     "ureport.results",
     "ureport.flowhub",
     "ureport.dashboard",
+    "ureport.channels",
 )
 
 SITE_ALLOW_NO_ORG += (
@@ -171,7 +172,7 @@ SASS_PROCESSOR_INCLUDE_FILE_PATTERN = r"^.+\.scss$"
 
 LOGIN_URL = "/users/login/"
 LOGOUT_URL = "/users/logout/"
-LOGIN_REDIRECT_URL = "/surveys/poll/"
+LOGIN_REDIRECT_URL = "/surveys/poll/list/"
 LOGOUT_REDIRECT_URL = "/"
 
 SITE_CHOOSER_TEMPLATE = "public/index.html"
@@ -231,5 +232,11 @@ if IS_DEV:
             "schedule": timedelta(minutes=1),
             "relative": True,
             "args": ("ureport.stats.tasks.refresh_engagement_data", "sync"),
+        },
+        "pull-channel-stats": {
+            "task": "dash.orgs.tasks.trigger_org_task",
+            "schedule": timedelta(minutes=30),
+            "relative": True,
+            "args": ("ureport.channels.tasks.pull_channel_stats", "sync"),
         },
     }
