@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n static sass_tags ureport %}
+{% load i18n static humanize sass_tags ureport %}
 
 {% block nav_item %}page-dashboard{% endblock %}
 
@@ -119,13 +119,14 @@
         </div>
       </div>
     </div>
-    <div class="box is-shadowless p-40">
+
+    <div class="box is-shadowless p-40" id="message_metrics">
       <div class="flex space-between">
-        <div class="card-title has-text-weight-bold">Message Metrics</div>
+        <div class="card-title has-text-weight-bold">{% trans "Message Metrics" %}</div>
         <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
             <div aria-haspopup="true" aria-controls="dropdown-menu">
-              <span>Last Year</span>
+              <span>{% trans "View by" %}</span>
               <span class="icon is-small">
                 <i class="fas fa-angle-down" aria-hidden="true"></i>
               </span>
@@ -133,9 +134,10 @@
           </div>
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
-              <a href="#" class="dropdown-item">Last Month</a>
-              <a href="#" class="dropdown-item">Last Week</a>
-              <a href="#" class="dropdown-item">Since Inception</a>
+              <a href="?message_metrics=year#message_metrics" class="dropdown-item">{% trans "Last Year" %}</a>
+              <a href="?message_metrics=month#message_metrics" class="dropdown-item">{% trans "Last Month" %}</a>
+              <a href="?message_metrics=week#message_metrics" class="dropdown-item">{% trans "Last Week" %}</a>
+              <a href="?message_metrics=#message_metrics" class="dropdown-item">{% trans "Since Inception" %}</a>
             </div>
           </div>
         </div>
@@ -150,62 +152,53 @@
               </span>
             </div>
           </div>
-          <!--          As opções do dropdown serão os canais q a org possui -->
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
-              <a href="#" class="dropdown-item">Channel 1</a>
-              <a href="#" class="dropdown-item">Channel 2</a>
-              <a href="#" class="dropdown-item">Channel 3</a>
+              {% for uuid, channel in channel_messages.items %}
+                <a href="#" class="dropdown-item">{{ channel.name }}</a>
+              {% endfor %}
             </div>
           </div>
         </div>
       </div>
       <canvas id="channelsChart" height="100"></canvas>
-      <div class="card-title has-text-weight-bold top-m-50">Messages by Channel</div>
-      <!--      Tempo selecionado no dropdown-->
-      <div class="has-text-grey-light">Last Year</div>
+      <div class="card-title has-text-weight-bold top-m-50">{% trans "Messages by Channel" %}</div>
+      <div class="has-text-grey-light">{{ channel_messages_ago }}</div>
       <div class="columns is-multiline top-m-30">
+        {% for uuid, channel in channel_messages.items %}
         <div class="column is-one-fifth">
           <div class="flex">
             <div class="tooltip top flex align-center">
               <div class="right-m-10">
-                {% if channel_type == 'telegram' %}
-                  <span class="channel-icon icon-telegram"></span>
-                {% else %}
-                  <span class="channel-icon icon-phone"></span>
-                {% endif %}
+                <span class="channel-icon {{ channel.icon }}"></span>
               </div>
               <div>
                 <div class="flex align-center">
-                  <span class="channel-number is-size-5 has-text-weight-bold">894.789</span>
+                  <span class="channel-number is-size-5 has-text-weight-bold">{{ channel.total }}</span>
 <!--                  se cresceu -->
                     <i class="material-icons has-text-success">trending_up</i>
 <!--                  senão -->
                     <i class="material-icons has-text-danger">trending_down</i>
                 </div>
-                <div>Telegram</div>
+                <div>{{ channel.name }}</div>
               </div>
               <div class="tooltip-content channel-tooltip flex flex-center p-20">
                 <div class="flex">
                   <div class="right-m-10">
-                    {% if channel_type == 'telegram' %}
-                      <span class="channel-icon icon-telegram"></span>
-                    {% else %}
-                      <span class="channel-icon icon-phone"></span>
-                    {% endif %}
+                    <span class="channel-icon {{ channel.icon }}"></span>
                   </div>
                   <div>
-                    <div class="is-size-6 bottom-p-20">Global Average</div>
+                    <div class="is-size-6 bottom-p-20">{% trans "Global Average" %}</div>
                     <div class="flex">
                       <div>
                         <div class="flex align-center">
-                          <span class="channel-number is-size-5 has-text-weight-bold">894.789</span>
+                          <span class="channel-number is-size-5 has-text-weight-bold">{{ channel.total|intcomma }}</span>
 <!--                          se cresceu -->
                             <i class="material-icons has-text-success">trending_up</i>
 <!--                          senão -->
                             <i class="material-icons has-text-danger">trending_down</i>
                         </div>
-                        <div class="is-size-6">Telegram</div>
+                        <div class="is-size-6">{{ channel.name }}</div>
                       </div>
                     </div>
                   </div>
@@ -214,8 +207,10 @@
             </div>
           </div>
         </div>
+        {% endfor %}
       </div>
     </div>
+
     <div class="columns">
       <div class="column">
         <div class="box is-shadowless">
@@ -369,7 +364,7 @@
     let channelsChart = new Chart(channelsCtx, {
       type: 'line',
       data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        labels: ['1', '2', '3', '4', '5', '6', '7'],
         datasets: [{
           label: 'Sent',
           borderColor: '#c9f4ff',
@@ -382,7 +377,7 @@
           data: [9, 6, 8, 13, 5, 12, 10, 11, 12, 9, 16, 8],
         }, {
           label: 'Fail',
-          borderColor: '#0400a4',
+          // borderColor: '#0400a4',
           backgroundColor: '#0400a4',
           data: [10, 7, 16, 19, 15, 8, 12, 13, 15, 12, 10, 7],
         }],

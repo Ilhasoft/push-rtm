@@ -364,3 +364,8 @@ def get_poll_sync_status(obj):
 
     sync_progress = obj.get_sync_progress()
     return "Syncing... {0:.1f}%".format(sync_progress)
+
+
+# @register.filter(name="get_channel_info")
+# def get_channel_info(urn, field):
+#     return dict(settings.CHANNEL_TYPES).get(urn).get(field)

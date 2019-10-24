@@ -164,6 +164,33 @@ SDG_COLOR = {
     17: "#18486a",
 }
 
+CHANNEL_TYPES = {
+    "EX": {
+        "name": "External",
+        "icon": "icon-phone",
+    },
+    "TG": {
+        "name": "Telegram",
+        "icon": "icon-telegram",
+    },
+    "FB": {
+        "name": "Facebook",
+        "icon": "icon-facebook",
+    },
+    "TW": {
+        "name": "Twitter",
+        "icon": "icon-twitter",
+    },
+    "KN": {
+        "name": "Kannel",
+        "icon": "icon-phone",
+    },
+    "WA": {
+        "name": "Whatsapp",
+        "icon": "icon-whatsapp",
+    },
+}
+
 STATICFILES_FINDERS += (
     "sass_processor.finders.CssFinder",
 )
