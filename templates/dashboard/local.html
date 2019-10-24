@@ -74,7 +74,7 @@
         </div>
         <div class="column is-paddingless">
           <div class="flex space-between has-text-weight-bold p-40">
-            <div class="card-title">34 Questions</div>
+            <div class="card-title">{{ questions_by_sdg|length }} Questions</div>
             <div class="dropdown is-hoverable">
               <div class="dropdown-trigger">
                 <div aria-haspopup="true" aria-controls="dropdown-menu">
@@ -86,41 +86,24 @@
               </div>
               <div class="dropdown-menu" id="dropdown-menu" role="menu">
                 <div class="dropdown-content">
-                  <a href="#" class="dropdown-item">SDG1</a>
-                  <a href="#" class="dropdown-item">SDG2</a>
-                  <a href="#" class="dropdown-item">SDG3</a>
-                  <a href="#" class="dropdown-item">SDG4</a>
-                  <a href="#" class="dropdown-item">SDG5</a>
-                  <a href="#" class="dropdown-item">SDG6</a>
+                  {% for key, value in SDG_LIST %}
+                    {# <a href="{% autosort survey_result_sdg_{{ key }} '' true %}" class="dropdown-item">SDG {{ key }}</a> #}
+                    <a href="{% url 'dashboard.local' %}{% urlparams survey_result_sdg=key %}" class="dropdown-item">SDG {{ key }}</a>
+                  {% endfor %}
                 </div>
               </div>
             </div>
           </div>
           <div class="questions-list">
-            {% if questions %}
+            {% for question in questions_by_sdg %}
               <div class="questions-list__item p-30 border-bottom">
-                <a href="#">How often have you had problems accessing clean drinking water at home? Rarely, sometimes, often or always?</a>
+                <a href="#">{{ question}}</a>
               </div>
+            {% empty %}
               <div class="questions-list__item p-30 border-bottom">
-                <a href="#">Who collects and disposes  your household waste? The city, your landlord, a group of people, you or other person?</a>
+                {% trans 'There are no question registered with this SDG' %}
               </div>
-              <div class="questions-list__item p-30 border-bottom">
-                <a href="#">Is there a service available for someone to collect plastic bottles separately from the general waste, either for free or for a payment?</a>
-              </div>
-              <div class="questions-list__item p-30 border-bottom">
-                <a href="#">How often have you had problems accessing clean drinking water at home? Rarely, sometimes, often or always?</a>
-              </div>
-              <div class="questions-list__item p-30 border-bottom">
-                <a href="#">Who collects and disposes  your household waste? The city, your landlord, a group of people, you or other person?</a>
-              </div>
-              <div class="questions-list__item p-30 border-bottom">
-                <a href="#">Is there a service available for someone to collect plastic bottles separately from the general waste, either for free or for a payment?</a>
-              </div>
-            {% else %}
-              <div class="questions-list__item p-30 border-bottom">
-                {% trans 'Não existem perguntas cadastradas com essa SDG.' %}
-              </div>
-            {% endif %}
+            {% endfor %}
           </div>
         </div>
       </div>

@@ -49,8 +49,12 @@ class Dashboard:
             # add keys total_responded and percentage_in_questions to sdgs_with_data
             for key, value in sdgs_with_data.items():
                 if len(value["questions"]) > 0:
-                    sdgs_with_data[key]["total_responded"] = value["questions"][0].get_responded()
-                    sdgs_with_data[key]["percentage_in_questions"] = int((len(value["questions"]) / questions.count()) * 100)  # (part / total) * 100
+                    sdgs_with_data[key]["total_responded"] = value["questions"][
+                        0
+                    ].get_responded()
+                    sdgs_with_data[key]["percentage_in_questions"] = int(
+                        (len(value["questions"]) / questions.count()) * 100
+                    )  # (part / total) * 100
                     tracked_sdg.append(settings.SDG_LIST[key - 1])
                 else:
                     not_tracked_sdg.append(settings.SDG_LIST[key - 1])
@@ -108,6 +112,10 @@ class Dashboard:
             context = super().get_context_data(**kwargs)
             sorted_field = self.request.GET.get("sort")
 
+            questions = PollQuestion.objects.filter(
+                is_active=True, poll__org=self.request.org, poll__is_active=True
+            )
+
             ### SDG TRAKED BUBBLE CHART ###
             sdg_tracked_questions = PollQuestion.objects.filter(
                 is_active=True, poll__org=self.request.org, poll__is_active=True
@@ -115,7 +123,7 @@ class Dashboard:
 
             if sorted_field in [None, "sdg_track_last_month", "sdg_track_last_week"]:
                 sdg_tracked_questions = Dashboard.questions_filter(
-                    sdg_tracked_questions, sorted_field
+                    questions, sorted_field
                 )
 
             context["sdgs_bubble_data"] = Dashboard.get_sdgs_tracked_bubble_chart_data(
@@ -123,6 +131,14 @@ class Dashboard:
             )
 
             ### SURVEY PARTIAL RESULT CHART ###
+            survey_result_sdg = self.request.GET.get("survey_result_sdg")
+
+            if survey_result_sdg is None:
+                survey_result_sdg = 1
+
+            context["questions_by_sdg"] = questions.filter(
+                sdgs__contains=[survey_result_sdg]
+            )
 
             ### MOST USED CHANNELS CHARTS ###
 
