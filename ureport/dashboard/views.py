@@ -136,9 +136,17 @@ class Dashboard:
             if survey_result_sdg is None:
                 survey_result_sdg = 1
 
-            context["questions_by_sdg"] = questions.filter(
-                sdgs__contains=[survey_result_sdg]
-            )
+            survey_result_sdg_questions = questions.filter(sdgs__contains=[survey_result_sdg])
+
+            context["survey_result_sdg_questions"] = survey_result_sdg_questions
+
+            try:
+                raffled_question_position = random.randint(0, survey_result_sdg_questions.count() - 1)
+                survey_result_raffled_question = survey_result_sdg_questions[raffled_question_position]
+            except IndexError:
+                survey_result_raffled_question = survey_result_sdg_questions.none()
+
+            context["survey_result_raffled_question"] = survey_result_raffled_question
 
             ### MOST USED CHANNELS CHARTS ###
 

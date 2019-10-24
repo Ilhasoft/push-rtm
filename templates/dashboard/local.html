@@ -62,7 +62,7 @@
           </span>
           <div class="selected-question top-m-30">
             <div class="selected-question__title bottom-m-30">
-              How often have you had problems accessing clean drinking water at home? Rarely, sometimes, often or always?
+              {{ survey_result_raffled_question }}
             </div>
             <div class="selected-question__chart">
 <!--              perguntas fechadas-->
@@ -74,7 +74,7 @@
         </div>
         <div class="column is-paddingless">
           <div class="flex space-between has-text-weight-bold p-40">
-            <div class="card-title">{{ questions_by_sdg|length }} Questions</div>
+            <div class="card-title">{{ survey_result_sdg_questions|length }} Questions</div>
             <div class="control">
               <div class="select">
                 <select>
@@ -88,7 +88,7 @@
             </div>
           </div>
           <div class="questions-list">
-            {% for question in questions_by_sdg %}
+            {% for question in survey_result_sdg_questions %}
               <div class="questions-list__item p-30 border-bottom">
                 <a href="#">{{ question}}</a>
               </div>
