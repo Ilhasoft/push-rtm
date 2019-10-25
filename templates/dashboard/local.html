@@ -19,14 +19,14 @@
         <div>
           <span class="card-title has-text-weight-bold">SDGs being tracked</span>
           <span class="tooltip top left-m-10">
-              <i class="material-icons info-icon">info</i>
-              <span class="tooltip-content">{% trans 'Number of total messages received addressing each SDG'%}</span>
-            </span>
+            <i class="material-icons info-icon">info</i>
+            <span class="tooltip-content">{% trans 'Number of total messages received addressing each SDG'%}</span>
+          </span>
         </div>
         <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
             <div aria-haspopup="true" aria-controls="dropdown-menu">
-              <span>{% trans "Last 12 months" %}</span>
+              <span>{% trans "Filter by" %}</span>
               <span class="icon is-small">
                 <i class="fas fa-angle-down" aria-hidden="true"></i>
               </span>
@@ -36,11 +36,13 @@
             <div class="dropdown-content">
               <a href="{% autosort sdg_track_last_week '' true %}" class="dropdown-item">{% trans "Last 7 days" %}</a>
               <a href="{% autosort sdg_track_last_month '' true %}" class="dropdown-item">{% trans "Last 30 days" %}</a>
+              <a href="{% autosort sdg_track_last_month '' true %}" class="dropdown-item">{% trans "Last 12 months" %}</a>
               <a href="{% autosort sdg_track_since_inception '' true %}" class="dropdown-item">{% trans "Since Inception" %}</a>
             </div>
           </div>
         </div>
       </div>
+      <div class="has-text-grey-light">Last 12 months</div>
       <canvas id="bubbleChart"></canvas>
       <div class="card-title has-text-weight-bold bottom-p-20">SDGs not being tracked</div>
       <ul class="untracked-sgd">
@@ -113,7 +115,7 @@
         <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
             <div aria-haspopup="true" aria-controls="dropdown-menu">
-              <span>{% trans "Last 7 days" %}</span>
+              <span>{% trans "Filter by" %}</span>
               <span class="icon is-small">
                 <i class="fas fa-angle-down" aria-hidden="true"></i>
               </span>
@@ -121,6 +123,7 @@
           </div>
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
+              <a href="#" class="dropdown-item">{% trans "Last 7 days" %}</a>
               <a href="#" class="dropdown-item">{% trans "Last 30 days" %}</a>
               <a href="#" class="dropdown-item">{% trans "Last 12 months" %}</a>
               <a href="#" class="dropdown-item">{% trans "Since Inception" %}</a>
@@ -128,6 +131,7 @@
           </div>
         </div>
       </div>
+      <div class="bottom-p-20 has-text-grey-light">Last 12 months</div>
       <div class="flex flex-end top-m-20">
         <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
@@ -149,8 +153,6 @@
       </div>
       <canvas id="channelsChart" height="100"></canvas>
       <div class="card-title has-text-weight-bold top-m-50">Messages by Channel</div>
-      <!--      Tempo selecionado no dropdown-->
-      <div class="has-text-grey-light">Last 12 months</div>
       <div class="columns is-multiline top-m-30">
         <div class="column is-one-fifth">
           <div class="flex">
@@ -206,12 +208,12 @@
     <div class="columns">
       <div class="column">
         <div class="box is-shadowless">
-          <div class="p-20 flex space-between">
+          <div class="top-p-20 left-p-20 flex space-between">
             <div class="card-title has-text-weight-bold">Most used Channels</div>
             <div class="dropdown is-hoverable">
               <div class="dropdown-trigger">
                 <div aria-haspopup="true" aria-controls="dropdown-menu">
-                  <span>{% trans "Last 7 days" %}</span>
+                  <span>{% trans "Filter by" %}</span>
                   <span class="icon is-small">
                 <i class="fas fa-angle-down" aria-hidden="true"></i>
               </span>
@@ -219,6 +221,7 @@
               </div>
               <div class="dropdown-menu" id="dropdown-menu" role="menu">
                 <div class="dropdown-content">
+                  <a href="#" class="dropdown-item">{% trans "Last 7 days" %}</a>
                   <a href="#" class="dropdown-item">{% trans "Last 30 days" %}</a>
                   <a href="#" class="dropdown-item">{% trans "Last 12 months" %}</a>
                   <a href="#" class="dropdown-item">{% trans "Since Inception" %}</a>
@@ -226,6 +229,7 @@
               </div>
             </div>
           </div>
+          <div class="left-p-20 bottom-p-20 has-text-grey-light">Last 12 months</div>
           <div class="columns">
             <div class="column">
               <canvas id="localMostUsedChannels"></canvas>
