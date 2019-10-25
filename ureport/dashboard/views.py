@@ -11,7 +11,7 @@ from django.db.models.functions import ExtractMonth, ExtractYear, ExtractDay
 from smartmin.views import SmartTemplateView
 
 from ureport.polls.models import PollQuestion
-from ureport.channels.models import ChannelStats, ChannelMonthlyStats
+from ureport.channels.models import ChannelStats, ChannelMonthlyStats, ChannelDailyStats
 
 
 class Dashboard:
@@ -156,7 +156,8 @@ class Dashboard:
         def get_context_data(self, **kwargs):
             context = super().get_context_data(**kwargs)
             sorted_field = self.request.GET.get("sort")
-            message_metrics = self.request.GET.get("message_metrics", "year")
+            channels_metrics_by = self.request.GET.get("message_metrics_by", "week")
+            channels_metrics_uuid = self.request.GET.get("message_metrics_uuid", "")
 
             # SDG TRAKED BUBBLE CHART
             sdg_tracked_questions = PollQuestion.objects.filter(
@@ -174,45 +175,62 @@ class Dashboard:
 
             # SURVEY PARTIAL RESULT CHART
 
-            # MOST USED CHANNELS CHARTS
+            # MESSAGE METRICS
             channels = ChannelStats.objects.filter(
                 org=self.request.org).order_by("channel_type")
 
-            channel_messages = {}
+            channels_info = {}
+            channels_data = {}
+
             for channel in channels:
-                total = ChannelMonthlyStats.objects.filter(
-                    channel=channel, **Dashboard.filter_by_date("date", message_metrics)
+                channels_info[channel.uuid] = {
+                    "name": Dashboard.channel_info(channel.channel_type, "name"),
+                    "icon": Dashboard.channel_info(channel.channel_type, "icon"),
+                }
+            context["channels_info"] = channels_info
+
+            if channels_metrics_uuid:
+                channels = channels.filter(uuid=channels_metrics_uuid)
+
+            for channel in channels:
+                total = ChannelDailyStats.objects.filter(
+                    channel=channel, **Dashboard.filter_by_date("date", channels_metrics_by)
                 ).aggregate(
-                    total=Sum(F("incoming_messages_count") +
-                              F("outgoing_messages_count"))
+                    total=Sum("count")
                 )["total"]
 
-                channel_messages[channel.uuid] = {
+                global_total = ChannelDailyStats.objects.exclude(
+                    channel__org=self.request.org,
+                ).filter(
+                    channel__channel_type=channel.channel_type,
+                    **Dashboard.filter_by_date("date", channels_metrics_by)
+                ).aggregate(
+                    total=Sum("count")
+                )["total"]
+
+                channels_data[channel.uuid] = {
                     "name": Dashboard.channel_info(channel.channel_type, "name"),
                     "icon": Dashboard.channel_info(channel.channel_type, "icon"),
                     "total": total if total is not None else 0,
+                    "global": global_total if global_total is not None else 0,
                 }
 
-            a = ChannelMonthlyStats.objects.filter(
+            channels_chart_stats = ChannelDailyStats.objects.filter(
                 channel__org=self.request.org,
-                **Dashboard.filter_by_date("date", message_metrics),
-            ).annotate(
-                month=ExtractMonth("date"),
-                year=ExtractYear("date"),
-                day=ExtractDay("date"),
-            ).annotate(
-                total_sent=Sum("outgoing_messages_count"),
-                total_received=Sum("incoming_messages_count"),
-            ).values("month", "year", "day", "total_sent", "total_received")
+                channel__in=channels,
+                msg_direction__in=["I", "O", "E"],
+                msg_type__in=["M", "I", "E"],
+                **Dashboard.filter_by_date("date", channels_metrics_by),
+            ).order_by("date")
 
-            for c in a:
-                print(c)
-                # print(c.total_received)
-                print("----")
+            context["channels_chart_stats"] = channels_chart_stats
+            context["channels_data"] = channels_data
+            context["channels_metrics_uuid"] = channels_metrics_uuid
+            context["channels_metrics_by"] = channels_metrics_by
+            context["channels_messages_ago"] = Dashboard.get_text_time_ago(
+                channels_metrics_by)
 
-            context["channel_messages"] = channel_messages
-            context["channel_messages_ago"] = Dashboard.get_text_time_ago(
-                message_metrics)
+            # MOST USED CHANNELS CHARTS
 
             # RAPIDPRO CONTACTS
 

@@ -70,7 +70,7 @@ class ChannelDailyStats(models.Model):
             msg_type = "E"
 
         existing = cls.objects.filter(
-            channel=channel, msg_type=msg_type, date=date)
+            channel=channel, msg_type=msg_type, date=date, msg_direction=msg_direction)
 
         if existing:
             existing.update(count=count)

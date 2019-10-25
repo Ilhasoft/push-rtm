@@ -134,19 +134,20 @@
           </div>
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
-              <a href="?message_metrics=year#message_metrics" class="dropdown-item">{% trans "Last Year" %}</a>
-              <a href="?message_metrics=month#message_metrics" class="dropdown-item">{% trans "Last Month" %}</a>
-              <a href="?message_metrics=week#message_metrics" class="dropdown-item">{% trans "Last Week" %}</a>
-              <a href="?message_metrics=#message_metrics" class="dropdown-item">{% trans "Since Inception" %}</a>
+              <a href="?message_metrics_by=week&message_metrics_uuid={{ channels_metrics_uuid }}#message_metrics" class="dropdown-item">{% trans "Last 7 days" %}</a>
+              <a href="?message_metrics_by=month&message_metrics_uuid={{ channels_metrics_uuid }}#message_metrics" class="dropdown-item">{% trans "Last 30 days" %}</a>
+              <a href="?message_metrics_by=year&message_metrics_uuid={{ channels_metrics_uuid }}#message_metrics" class="dropdown-item">{% trans "Last 12 months" %}</a>
+              <a href="?message_metrics_by=&message_metrics_uuid={{ channels_metrics_uuid }}#message_metrics" class="dropdown-item">{% trans "Since Inception" %}</a>
             </div>
           </div>
         </div>
       </div>
+      <div class="bottom-p-20 has-text-grey-light">{{ channels_messages_ago }}</div>
       <div class="flex flex-end top-m-20">
         <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
             <div aria-haspopup="true" aria-controls="dropdown-menu">
-              <span>All channels</span>
+              <span>{% trans "Filter by" %}</span>
               <span class="icon is-small">
                 <i class="fas fa-angle-down" aria-hidden="true"></i>
               </span>
@@ -154,8 +155,9 @@
           </div>
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
-              {% for uuid, channel in channel_messages.items %}
-                <a href="#" class="dropdown-item">{{ channel.name }}</a>
+                <a href="?message_metrics_by={{ channels_metrics_by }}#message_metrics" class="dropdown-item">{% trans "All channels" %}</a>
+              {% for uuid, channel in channels_info.items %}
+                <a href="?message_metrics_uuid={{ uuid }}&message_metrics_by={{ channels_metrics_by }}#message_metrics" class="dropdown-item">{{ channel.name }}</a>
               {% endfor %}
             </div>
           </div>
@@ -163,9 +165,8 @@
       </div>
       <canvas id="channelsChart" height="100"></canvas>
       <div class="card-title has-text-weight-bold top-m-50">{% trans "Messages by Channel" %}</div>
-      <div class="has-text-grey-light">{{ channel_messages_ago }}</div>
       <div class="columns is-multiline top-m-30">
-        {% for uuid, channel in channel_messages.items %}
+        {% for uuid, channel in channels_data.items %}
         <div class="column is-one-fifth">
           <div class="flex">
             <div class="tooltip top flex align-center">
@@ -174,11 +175,12 @@
               </div>
               <div>
                 <div class="flex align-center">
-                  <span class="channel-number is-size-5 has-text-weight-bold">{{ channel.total }}</span>
-<!--                  se cresceu -->
-                    <i class="material-icons has-text-success">trending_up</i>
-<!--                  senão -->
-                    <i class="material-icons has-text-danger">trending_down</i>
+                  <span class="channel-number is-size-5 has-text-weight-bold">{{ channel.total|intcomma }}</span>
+                    {% if channel.global|intcomma > channel.total|intcomma %}
+                      <i class="material-icons has-text-danger">trending_down</i>
+                    {% else %}
+                      <i class="material-icons has-text-success">trending_up</i>
+                    {% endif %}
                 </div>
                 <div>{{ channel.name }}</div>
               </div>
@@ -192,11 +194,7 @@
                     <div class="flex">
                       <div>
                         <div class="flex align-center">
-                          <span class="channel-number is-size-5 has-text-weight-bold">{{ channel.total|intcomma }}</span>
-<!--                          se cresceu -->
-                            <i class="material-icons has-text-success">trending_up</i>
-<!--                          senão -->
-                            <i class="material-icons has-text-danger">trending_down</i>
+                          <span class="channel-number is-size-5 has-text-weight-bold">{{ channel.global|intcomma }}</span>
                         </div>
                         <div class="is-size-6">{{ channel.name }}</div>
                       </div>
@@ -360,26 +358,47 @@
         },
     });
 
+    const channel_results_labels = [];
+    const channel_results_data = {
+      O: [],
+      I: [],
+      E: [],
+    };
+    let channel_metrics_key = "";
+    {% for stats in channels_chart_stats %}
+      {% if channels_metrics_by == "year" or channels_metrics_by == "" %}
+        channel_metrics_key = "{{ stats.date|date:'F/Y' }}";
+      {% else %}
+        channel_metrics_key = "{{ stats.date|date:'d/m' }}";
+      {% endif %}
+
+      channel_results_data["I"][channel_metrics_key] = (typeof channel_results_data["I"][channel_metrics_key] != "undefined") ? channel_results_data["I"][channel_metrics_key] : 0;
+      channel_results_data["O"][channel_metrics_key] = (typeof channel_results_data["O"][channel_metrics_key] != "undefined") ? channel_results_data["O"][channel_metrics_key] : 0;
+      channel_results_data["E"][channel_metrics_key] = (typeof channel_results_data["E"][channel_metrics_key] != "undefined") ? channel_results_data["E"][channel_metrics_key] : 0;
+      channel_results_data["{{ stats.msg_direction }}"][channel_metrics_key] += {{ stats.count }};
+      channel_results_labels.push(channel_metrics_key);
+    {% endfor %}
+    
     let channelsCtx = document.getElementById('channelsChart').getContext('2d');
     let channelsChart = new Chart(channelsCtx, {
       type: 'line',
       data: {
-        labels: ['1', '2', '3', '4', '5', '6', '7'],
+        labels: [...new Set(channel_results_labels)],
         datasets: [{
           label: 'Sent',
           borderColor: '#c9f4ff',
           backgroundColor: '#c9f4ff',
-          data: [5, 10, 4, 14, 7, 6, 8, 9, 3, 10, 8, 7],
+          data: Object.values(channel_results_data.O),
         }, {
           label: 'Received',
           borderColor: '#03aeef',
           backgroundColor: '#03aeef',
-          data: [9, 6, 8, 13, 5, 12, 10, 11, 12, 9, 16, 8],
+          data: Object.values(channel_results_data.I),
         }, {
           label: 'Fail',
           // borderColor: '#0400a4',
           backgroundColor: '#0400a4',
-          data: [10, 7, 16, 19, 15, 8, 12, 13, 15, 12, 10, 7],
+          data: Object.values(channel_results_data.E),
         }],
       },
       options: {
