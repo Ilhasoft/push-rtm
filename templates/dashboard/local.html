@@ -62,7 +62,7 @@
           </span>
           <div class="selected-question top-m-30">
             <div class="selected-question__title bottom-m-30">
-              {{ survey_result_raffled_question }}
+''              How often have you had problems accessing clean drinking water at home? Rarely, sometimes, often or always?
             </div>
             <div class="selected-question__chart">
 <!--              perguntas fechadas-->
@@ -74,16 +74,22 @@
         </div>
         <div class="column is-paddingless">
           <div class="flex space-between has-text-weight-bold p-40">
-            <div class="card-title">{{ survey_result_sdg_questions|length }} Questions</div>
-            <div class="control">
-              <div class="select">
-                <select>
-                  {% for key, value in SDG_LIST %}
-                    <option>
-                      <a href="{% url 'dashboard.local' %}{% urlparams survey_result_sdg=key %}" class="dropdown-item">SDG {{ key }}</a>
-                    </option>
-                  {% endfor %}
-                </select>
+            <div class="card-title">34 Questions</div>
+            <div class="dropdown is-hoverable">
+              <div class="dropdown-trigger">
+                <div aria-haspopup="true" aria-controls="dropdown-menu">
+                  <span>Filter by</span>
+                  <span class="icon is-small">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+              </span>
+                </div>
+              </div>
+              <div class="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                  <a href="#" class="dropdown-item">SDG 1</a>
+                  <a href="#" class="dropdown-item">SDG 2</a>
+                  <a href="#" class="dropdown-item">SDG 3</a>
+                </div>
               </div>
             </div>
           </div>
@@ -104,27 +110,40 @@
     <div class="box is-shadowless p-40">
       <div class="flex space-between">
         <div class="card-title has-text-weight-bold">Message Metrics</div>
-        <div class="control">
-          <div class="select">
-            <select>
-              <option>{% trans "Last Year" %}</option>
-              <option>{% trans "Last Month" %}</option>
-              <option>{% trans "Last Week" %}</option>
-              <option>{% trans "Since Inception" %}</option>
-            </select>
+        <div class="dropdown is-hoverable">
+          <div class="dropdown-trigger">
+            <div aria-haspopup="true" aria-controls="dropdown-menu">
+              <span>{% trans "Last Week" %}</span>
+              <span class="icon is-small">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+              </span>
+            </div>
+          </div>
+          <div class="dropdown-menu" id="dropdown-menu" role="menu">
+            <div class="dropdown-content">
+              <a href="#" class="dropdown-item">{% trans "Last Month" %}</a>
+              <a href="#" class="dropdown-item">{% trans "Last Year" %}</a>
+              <a href="#" class="dropdown-item">{% trans "Since Inception" %}</a>
+            </div>
           </div>
         </div>
       </div>
       <div class="flex flex-end top-m-20">
-        <div class="control">
-          <div class="select">
-            <select>
-              <option>All Channels</option>
-              <option>Channel 1</option>
-              <option>Channel 2</option>
-              <option>Channel 3</option>
-              <option>Channel 4</option>
-            </select>
+        <div class="dropdown is-hoverable">
+          <div class="dropdown-trigger">
+            <div aria-haspopup="true" aria-controls="dropdown-menu">
+              <span>{% trans "All channels" %}</span>
+              <span class="icon is-small">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+              </span>
+            </div>
+          </div>
+          <div class="dropdown-menu" id="dropdown-menu" role="menu">
+            <div class="dropdown-content">
+              <a href="#" class="dropdown-item">Channel 1</a>
+              <a href="#" class="dropdown-item">Channel 2</a>
+              <a href="#" class="dropdown-item">Channel 3</a>
+            </div>
           </div>
         </div>
       </div>
@@ -189,14 +208,21 @@
         <div class="box is-shadowless">
           <div class="p-20 flex space-between">
             <div class="card-title has-text-weight-bold">Most used Channels</div>
-            <div class="control">
-              <div class="select">
-                <select>
-                  <option>{% trans "Last Year" %}</option>
-                  <option>{% trans "Last Month" %}</option>
-                  <option>{% trans "Last Week" %}</option>
-                  <option>{% trans "Since Inception" %}</option>
-                </select>
+            <div class="dropdown is-hoverable">
+              <div class="dropdown-trigger">
+                <div aria-haspopup="true" aria-controls="dropdown-menu">
+                  <span>{% trans "Last Week" %}</span>
+                  <span class="icon is-small">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+              </span>
+                </div>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                  <a href="#" class="dropdown-item">{% trans "Last Month" %}</a>
+                  <a href="#" class="dropdown-item">{% trans "Last Year" %}</a>
+                  <a href="#" class="dropdown-item">{% trans "Since Inception" %}</a>
+                </div>
               </div>
             </div>
           </div>
