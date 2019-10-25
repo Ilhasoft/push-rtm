@@ -15,10 +15,6 @@
     }
   }
 
-  .is-marginless-bottom {
-    margin-bottom: 0px;
-  }
-
   .stars {
     display: flex;
     justify-content: flex-start;
@@ -85,5 +81,9 @@
   .dropdown-content {
     max-height: 25rem;
     overflow: auto;
+  }
+
+  input.search {
+    border-color: transparent !important;
   }
 }

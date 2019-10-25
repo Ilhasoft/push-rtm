@@ -10,15 +10,33 @@
 
 {% block flow_content %}
 <div class="column auto">
-  <div class="columns">
-    <div class="column">
-      <div class="control has-icons-left">
-        <form>
-          <input type="text" class="input is-medium search" name="search" value="" placeholder="Search">
-          <span class="icon is-left">
-            <i class="material-icons">search</i>
-          </span>
-        </form>
+  <div class="box is-shadowless is-paddingless">
+    <div class="p-30 border-bottom">
+      <div class="has-text-weight-bold is-size-5 bottom-p-5">
+        {% if flow_section_id == "flowhub-all" %}
+          {{ subtitle }}
+        {% elif flow_section_id == "flowhub-my-org" %}
+          {{ org.name }}
+        {% endif %}
+      </div>
+      <div class="has-text-grey-light">
+        {% if flow_section_id == "flowhub-all" %}
+          View all survey questions/polls used by all UNCTs. You can download a particular poll and use it.
+        {% elif flow_section_id == "flowhub-my-org" %}
+          View all survey questions/polls used by your UNCT. You can download a particular poll and use it.
+        {% endif %}
+      </div>
+    </div>
+    <div class="columns">
+      <div class="column bottom-p-0">
+        <div class="control has-icons-left">
+          <form>
+            <input type="text" class="input is-medium search" name="search" value="" placeholder="Search">
+            <span class="icon is-left">
+              <i class="material-icons">search</i>
+            </span>
+          </form>
+        </div>
       </div>
     </div>
   </div>
