@@ -64,7 +64,10 @@
           </span>
           <div class="selected-question top-m-30">
             <div class="selected-question__title bottom-m-30">
-''              How often have you had problems accessing clean drinking water at home? Rarely, sometimes, often or always?
+              {{ survey_result_raffled_question }}</br>
+               <!-- Nome da Survey, Falta tag HTML 
+               {{ survey_result_raffled_question.poll }}
+               -->
             </div>
             <div class="selected-question__chart">
 <!--              perguntas fechadas-->
@@ -76,7 +79,7 @@
         </div>
         <div class="column is-paddingless">
           <div class="flex space-between has-text-weight-bold p-40">
-            <div class="card-title">34 Questions</div>
+            <div class="card-title">{{ survey_result_sdg_questions|length }} Questions</div>
             <div class="dropdown is-hoverable">
               <div class="dropdown-trigger">
                 <div aria-haspopup="true" aria-controls="dropdown-menu">
@@ -88,9 +91,9 @@
               </div>
               <div class="dropdown-menu" role="menu">
                 <div class="dropdown-content">
-                  <a href="#" class="dropdown-item">SDG 1</a>
-                  <a href="#" class="dropdown-item">SDG 2</a>
-                  <a href="#" class="dropdown-item">SDG 3</a>
+                  {% for key, value in SDG_LIST %}
+                    <a href="{% url 'dashboard.local' %}{% urlparams survey_result_sdg=key %}" class="dropdown-item">SDG {{ key }}</a>
+                  {% endfor %}
                 </div>
               </div>
             </div>
@@ -102,7 +105,7 @@
               </div>
             {% empty %}
               <div class="questions-list__item p-30 border-bottom">
-                {% trans 'There are no question registered with this SDG' %}
+                {% trans 'There are no question registered with SDG ' %} {{ survey_result_sdg.0 }} - {{ survey_result_sdg.1 }}
               </div>
             {% endfor %}
           </div>
@@ -323,14 +326,16 @@
             'Always',
             'Sometimes',
             'Don’t know',
+            'other'
           ],
           datasets: [{
-            data: [12, 23, 50, 15],
+            data: [12, 23, 50, 10, 5],
             backgroundColor: [
               '#89e7ff',
               '#03aeef',
               '#0054e2',
               '#0400a4',
+              '#046259',
             ],
             borderColor: "rgba(255, 255, 255, 0.1)",
           }],
