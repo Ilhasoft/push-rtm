@@ -26,7 +26,7 @@
         <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
             <div aria-haspopup="true" aria-controls="dropdown-menu">
-              <span>{% trans "Last Year" %}</span>
+              <span>{% trans "Last 12 months" %}</span>
               <span class="icon is-small">
                 <i class="fas fa-angle-down" aria-hidden="true"></i>
               </span>
@@ -34,8 +34,8 @@
           </div>
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
-              <a href="{% autosort sdg_track_last_month '' true %}" class="dropdown-item">{% trans "Last Month" %}</a>
-              <a href="{% autosort sdg_track_last_week '' true %}" class="dropdown-item">{% trans "Last Week" %}</a>
+              <a href="{% autosort sdg_track_last_week '' true %}" class="dropdown-item">{% trans "Last 7 days" %}</a>
+              <a href="{% autosort sdg_track_last_month '' true %}" class="dropdown-item">{% trans "Last 30 days" %}</a>
               <a href="{% autosort sdg_track_since_inception '' true %}" class="dropdown-item">{% trans "Since Inception" %}</a>
             </div>
           </div>
@@ -113,7 +113,7 @@
         <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
             <div aria-haspopup="true" aria-controls="dropdown-menu">
-              <span>{% trans "Last Week" %}</span>
+              <span>{% trans "Last 7 days" %}</span>
               <span class="icon is-small">
                 <i class="fas fa-angle-down" aria-hidden="true"></i>
               </span>
@@ -121,8 +121,8 @@
           </div>
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
-              <a href="#" class="dropdown-item">{% trans "Last Month" %}</a>
-              <a href="#" class="dropdown-item">{% trans "Last Year" %}</a>
+              <a href="#" class="dropdown-item">{% trans "Last 30 days" %}</a>
+              <a href="#" class="dropdown-item">{% trans "Last 12 months" %}</a>
               <a href="#" class="dropdown-item">{% trans "Since Inception" %}</a>
             </div>
           </div>
@@ -150,7 +150,7 @@
       <canvas id="channelsChart" height="100"></canvas>
       <div class="card-title has-text-weight-bold top-m-50">Messages by Channel</div>
       <!--      Tempo selecionado no dropdown-->
-      <div class="has-text-grey-light">Last Year</div>
+      <div class="has-text-grey-light">Last 12 months</div>
       <div class="columns is-multiline top-m-30">
         <div class="column is-one-fifth">
           <div class="flex">
@@ -211,7 +211,7 @@
             <div class="dropdown is-hoverable">
               <div class="dropdown-trigger">
                 <div aria-haspopup="true" aria-controls="dropdown-menu">
-                  <span>{% trans "Last Week" %}</span>
+                  <span>{% trans "Last 7 days" %}</span>
                   <span class="icon is-small">
                 <i class="fas fa-angle-down" aria-hidden="true"></i>
               </span>
@@ -219,8 +219,8 @@
               </div>
               <div class="dropdown-menu" id="dropdown-menu" role="menu">
                 <div class="dropdown-content">
-                  <a href="#" class="dropdown-item">{% trans "Last Month" %}</a>
-                  <a href="#" class="dropdown-item">{% trans "Last Year" %}</a>
+                  <a href="#" class="dropdown-item">{% trans "Last 30 days" %}</a>
+                  <a href="#" class="dropdown-item">{% trans "Last 12 months" %}</a>
                   <a href="#" class="dropdown-item">{% trans "Since Inception" %}</a>
                 </div>
               </div>
