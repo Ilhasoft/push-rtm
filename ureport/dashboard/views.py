@@ -131,22 +131,46 @@ class Dashboard:
             )
 
             ### SURVEY PARTIAL RESULT CHART ###
+            
+            # filter only surveys opened
+            survey_result_sdg_questions = questions.filter(poll__poll_end_date=datetime.date.today())
+
             survey_result_sdg = self.request.GET.get("survey_result_sdg")
-
+            
             if survey_result_sdg is None:
-                survey_result_sdg = 1
+                survey_result_sdg_questions = questions
+            else:
+                survey_result_sdg = int(survey_result_sdg)
+                survey_result_sdg_questions = questions.filter(sdgs__contains=[survey_result_sdg])
+                context['survey_result_sdg'] = settings.SDG_LIST[survey_result_sdg - 1]
+            
+            # shuffled questions
+            survey_result_sdg_questions = list(survey_result_sdg_questions)
+            random.shuffle(survey_result_sdg_questions)
 
-            survey_result_sdg_questions = questions.filter(sdgs__contains=[survey_result_sdg])
-
+            # max 20 questions
+            survey_result_sdg_questions = survey_result_sdg_questions[:20]
+            
             context["survey_result_sdg_questions"] = survey_result_sdg_questions
+            
+            if len(survey_result_sdg_questions) > 0:
+                survey_result_raffled_question = survey_result_sdg_questions[0]
+                context["survey_result_raffled_question"] = survey_result_raffled_question
 
-            try:
-                raffled_question_position = random.randint(0, survey_result_sdg_questions.count() - 1)
-                survey_result_raffled_question = survey_result_sdg_questions[raffled_question_position]
-            except IndexError:
-                survey_result_raffled_question = survey_result_sdg_questions.none()
+                categories = survey_result_raffled_question.get_total_summary_data()['categories']
+                total = sum([q['count'] for q in categories])
+                
+                if total > 0:
+                    survey_result_doughnut_data = {
+                        'labels': [q['label'] for q in categories],
+                        'datasets': [{
+                            'data': [round((q['count'] / total) * 100, 2) for q in categories],
+                            'backgroundColor': ["#%06x" % random.randint(0, 0xFFFFFF) for i in categories],
+                            'borderColor': "rgba(255, 255, 255, 0.1)",
+                        }],
+                    }
 
-            context["survey_result_raffled_question"] = survey_result_raffled_question
+                    context['survey_result_doughnut_data'] = survey_result_doughnut_data
 
             ### MOST USED CHANNELS CHARTS ###
 
