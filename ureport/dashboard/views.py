@@ -136,30 +136,46 @@ class Dashboard:
             survey_result_sdg_questions = questions.filter(poll__poll_end_date=datetime.date.today())
 
             survey_result_sdg = self.request.GET.get("survey_result_sdg")
-            
+
             if survey_result_sdg is None:
                 survey_result_sdg_questions = questions
             else:
                 survey_result_sdg = int(survey_result_sdg)
                 survey_result_sdg_questions = questions.filter(sdgs__contains=[survey_result_sdg])
                 context['survey_result_sdg'] = settings.SDG_LIST[survey_result_sdg - 1]
-            
+
+            #survey_result_sdg_questions = [q for q in survey_result_sdg_questions if q.get_responded() > 0]
+
             # shuffled questions
             survey_result_sdg_questions = list(survey_result_sdg_questions)
             random.shuffle(survey_result_sdg_questions)
 
+            survey_result_choice_question = self.request.GET.get('survey_result_choice_question')
+            try:
+                survey_result_choice_question = PollQuestion.objects.get(pk=survey_result_choice_question)
+            except PollQuestion.DoesNotExist:
+                survey_result_choice_question = None
+            
             # max 20 questions
             survey_result_sdg_questions = survey_result_sdg_questions[:20]
             
             context["survey_result_sdg_questions"] = survey_result_sdg_questions
             
-            if len(survey_result_sdg_questions) > 0:
-                survey_result_raffled_question = survey_result_sdg_questions[0]
+            if survey_result_choice_question:
+                survey_result_raffled_question = survey_result_choice_question
+            else:
+                if len(survey_result_sdg_questions) > 0:
+                    survey_result_raffled_question = survey_result_sdg_questions[0]
+                else:
+                    survey_result_raffled_question = None
+                
+            print('>>>>>>>>>>: ', survey_result_raffled_question)
+            if survey_result_raffled_question:
                 context["survey_result_raffled_question"] = survey_result_raffled_question
 
                 categories = survey_result_raffled_question.get_total_summary_data()['categories']
                 total = sum([q['count'] for q in categories])
-                
+
                 if total > 0:
                     survey_result_doughnut_data = {
                         'labels': [q['label'] for q in categories],

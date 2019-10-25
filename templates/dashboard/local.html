@@ -104,7 +104,7 @@
           <div class="questions-list">
             {% for question in survey_result_sdg_questions %}
               <div class="questions-list__item p-30 border-bottom">
-                <a href="#">{{ question}}</a>
+                <a href="{% url 'dashboard.local' %}{% urlparams survey_result_choice_question=question.pk %}">{{ question }}</a>
               </div>
             {% empty %}
               <div class="questions-list__item p-30 border-bottom">
