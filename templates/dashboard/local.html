@@ -209,15 +209,15 @@
       </div>
     </div>
 
-    <div class="columns">
+    <div class="columns" id="most_used">
       <div class="column">
         <div class="box is-shadowless">
           <div class="p-20 flex space-between">
-            <div class="card-title has-text-weight-bold">Most used Channels</div>
+            <div class="card-title has-text-weight-bold">{% trans "Most used Channels" %}</div>
             <div class="dropdown is-hoverable">
               <div class="dropdown-trigger">
                 <div aria-haspopup="true" aria-controls="dropdown-menu">
-                  <span>Last Year</span>
+                  <span>{% trans "Filter by" %}</span>
                   <span class="icon is-small">
                     <i class="fas fa-angle-down" aria-hidden="true"></i>
                   </span>
@@ -225,13 +225,15 @@
               </div>
               <div class="dropdown-menu" id="dropdown-menu" role="menu">
                 <div class="dropdown-content">
-                  <a href="#" class="dropdown-item"> {% trans "Last Month" %} </a>
-                  <a href="#" class="dropdown-item"> {% trans "Last Week" %} </a>
-                  <a href="#" class="dropdown-item"> {% trans "Since Inception" %} </a>
+                  <a href="?most_used_by=week#most_used" class="dropdown-item">{% trans "Last 7 days" %}</a>
+                  <a href="?most_used_by=month#most_used" class="dropdown-item">{% trans "Last 30 days" %}</a>
+                  <a href="?most_used_by=year#most_used" class="dropdown-item">{% trans "Last 12 months" %}</a>
+                  <a href="?most_used_by=#most_used" class="dropdown-item">{% trans "Since Inception" %}</a>
                 </div>
               </div>
             </div>
           </div>
+          <div class="left-p-20 bottom-p-20 has-text-grey-light">{{ channels_most_used_ago }}</div>
           <div class="columns">
             <div class="column">
               <canvas id="localMostUsedChannels"></canvas>
@@ -257,7 +259,7 @@
           </div>
           <div class="surveys-info has-text-centered top-p-30 bottom-p-30">
             <div class="surveys-info__number">--</div>
-            <div class="surveys-info_unct">Global</div>
+            <div class="surveys-info_unct">{% trans "Global" %}</div>
           </div>
         </div>
       </div>
@@ -424,17 +426,23 @@
       }
     });
 
+    const localMostUsedResults = {
+      labels: [],
+      data: [],
+    };
+
+    {% for most_used in channels_most_used %}
+      localMostUsedResults.labels.push("{{ most_used.name }}");
+      localMostUsedResults.data.push("{{ most_used.total }}");
+    {% endfor %}
+
     let localMostUsedCtx = document.getElementById('localMostUsedChannels').getContext('2d');
     let localMostUsedChannels = new Chart(localMostUsedCtx, {
       type: 'doughnut',
       data: {
-        labels: [
-          'Facebook',
-          'Whatsapp',
-          'SMS'
-        ],
+        labels: localMostUsedResults.labels,
         datasets: [{
-          data: [30, 25, 45],
+          data: localMostUsedResults.data,
           backgroundColor: [
             '#97d9f6',
             '#03aeef',
@@ -474,17 +482,23 @@
       },
     });
 
+    const globalMostUsedResults = {
+      labels: [],
+      data: [],
+    };
+
+    {% for most_used in channels_most_used_global %}
+      globalMostUsedResults.labels.push("{{ most_used.name }}");
+      globalMostUsedResults.data.push("{{ most_used.total }}");
+    {% endfor %}
+
     let globalMostUsedCtx = document.getElementById('globalMostUsedChannels').getContext('2d');
     let globalMostUsedChannels = new Chart(globalMostUsedCtx, {
       type: 'doughnut',
       data: {
-        labels: [
-          'Facebook',
-          'Whatsapp',
-          'SMS'
-        ],
+        labels: globalMostUsedResults.labels,
         datasets: [{
-          data: [30, 25, 45],
+          data: globalMostUsedResults.data,
           backgroundColor: [
             '#97d9f6',
             '#03aeef',

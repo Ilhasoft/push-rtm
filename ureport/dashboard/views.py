@@ -5,7 +5,7 @@ from django.conf import settings
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
-from django.db.models import Sum
+from django.db.models import Sum, Count
 
 from smartmin.views import SmartTemplateView
 
@@ -160,6 +160,9 @@ class Dashboard:
             channels_metrics_uuid = self.request.GET.get(
                 "message_metrics_uuid", "")
 
+            most_used_by = self.request.GET.get(
+                "most_used_by", "week")
+
             # SDG TRAKED BUBBLE CHART
             sdg_tracked_questions = PollQuestion.objects.filter(
                 is_active=True, poll__org=self.request.org, poll__is_active=True
@@ -233,6 +236,52 @@ class Dashboard:
 
             # MOST USED CHANNELS CHARTS
             context["surveys_total"] = Poll.objects.filter(org=self.request.org, is_active=True).count()
+
+            most_used = ChannelDailyStats.objects.filter(
+                channel__org=self.request.org,
+                msg_direction__in=["I", "O"],
+                msg_type__in=["M", "I"],
+                **Dashboard.filter_by_date("date", most_used_by),
+            ).values(
+                "channel__channel_type"
+            ).annotate(
+                total=Sum("count")
+            ).order_by("-total")[:3]
+
+            most_used_global = ChannelDailyStats.objects.exclude(
+                channel__org=self.request.org,
+            ).filter(
+                msg_direction__in=["I", "O"],
+                msg_type__in=["M", "I"],
+                **Dashboard.filter_by_date("date", most_used_by),
+            ).values(
+                "channel__channel_type"
+            ).annotate(
+                total=Sum("count")
+            ).order_by("-total")[:3]
+
+            channels_most_used = []
+            channels_most_used_global = []
+
+            for channel in most_used:
+                channels_most_used.append(
+                    {
+                        "name": Dashboard.channel_info(channel.get("channel__channel_type"), "name"),
+                        "total": channel.get("total", 0),
+                    }
+                )
+
+            for channel in most_used_global:
+                channels_most_used_global.append(
+                    {
+                        "name": Dashboard.channel_info(channel.get("channel__channel_type"), "name"),
+                        "total": channel.get("total", 0),
+                    }
+                )
+
+            context["channels_most_used_ago"] = Dashboard.get_text_time_ago(most_used_by)
+            context["channels_most_used"] = channels_most_used
+            context["channels_most_used_global"] = channels_most_used_global
 
             # RAPIDPRO CONTACTS
 
