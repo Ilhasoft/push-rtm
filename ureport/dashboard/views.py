@@ -5,13 +5,12 @@ from django.conf import settings
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
-from django.db.models import Count, Sum, F
-from django.db.models.functions import ExtractMonth, ExtractYear, ExtractDay
+from django.db.models import Sum
 
 from smartmin.views import SmartTemplateView
 
-from ureport.polls.models import PollQuestion
-from ureport.channels.models import ChannelStats, ChannelMonthlyStats, ChannelDailyStats
+from ureport.polls.models import PollQuestion, Poll
+from ureport.channels.models import ChannelStats, ChannelDailyStats
 
 
 class Dashboard:
@@ -156,8 +155,10 @@ class Dashboard:
         def get_context_data(self, **kwargs):
             context = super().get_context_data(**kwargs)
             sorted_field = self.request.GET.get("sort")
-            channels_metrics_by = self.request.GET.get("message_metrics_by", "week")
-            channels_metrics_uuid = self.request.GET.get("message_metrics_uuid", "")
+            channels_metrics_by = self.request.GET.get(
+                "message_metrics_by", "week")
+            channels_metrics_uuid = self.request.GET.get(
+                "message_metrics_uuid", "")
 
             # SDG TRAKED BUBBLE CHART
             sdg_tracked_questions = PollQuestion.objects.filter(
@@ -231,6 +232,7 @@ class Dashboard:
                 channels_metrics_by)
 
             # MOST USED CHANNELS CHARTS
+            context["surveys_total"] = Poll.objects.filter(org=self.request.org, is_active=True).count()
 
             # RAPIDPRO CONTACTS
 
