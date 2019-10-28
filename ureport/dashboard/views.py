@@ -189,9 +189,6 @@ class Dashboard:
                 }
             context["channels_info"] = channels_info
 
-            if channels_metrics_uuid:
-                channels = channels.filter(uuid=channels_metrics_uuid)
-
             for channel in channels:
                 total = ChannelDailyStats.objects.filter(
                     channel=channel, **Dashboard.filter_by_date("date", channels_metrics_by)
@@ -214,6 +211,9 @@ class Dashboard:
                     "total": total if total is not None else 0,
                     "global": global_total if global_total is not None else 0,
                 }
+
+            if channels_metrics_uuid:
+                channels = channels.filter(uuid=channels_metrics_uuid)
 
             channels_chart_stats = ChannelDailyStats.objects.filter(
                 channel__org=self.request.org,
