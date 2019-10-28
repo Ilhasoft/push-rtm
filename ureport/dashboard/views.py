@@ -88,44 +88,45 @@ class Dashboard:
 
     @classmethod
     def get_doughnut_chart_data(self, labels, data, **kwargs):
-        '''
+        """
         return doughnut chart data dict
         get labels string list parameters
         get data double list parameters.
         optional: backgroundColor string list parameters
         optional: borderColor string parameters
-        '''
+        """
 
         if len(labels) != len(data):
-            raise AssertionError('len(labels) must be equal to len(data)')
+            raise AssertionError("len(labels) must be equal to len(data)")
 
-        doughnut_data = {
-            'labels': [],
-            'datasets': []
-        }
+        doughnut_data = {"labels": [], "datasets": []}
 
-        doughnut_data['labels'] = labels
-        doughnut_data['datasets'] = [{
-            'data': data,
-            'backgroundColor': kwargs.get('backgroundColor', ["#%06x" % random.randint(0, 0xFFFFFF) for i in labels]),
-            'borderColor': kwargs.get('borderColor', "rgba(255, 255, 255, 0.1)"),
-        }]
+        doughnut_data["labels"] = labels
+        doughnut_data["datasets"] = [
+            {
+                "data": data,
+                "backgroundColor": kwargs.get(
+                    "backgroundColor",
+                    ["#%06x" % random.randint(0, 0xFFFFFF) for i in labels],
+                ),
+                "borderColor": kwargs.get("borderColor", "rgba(255, 255, 255, 0.1)"),
+            }
+        ]
 
         return doughnut_data
-
 
     @classmethod
     def questions_filter(self, questions, **kwargs):
         filters = {}
-        created_on = kwargs.get('created_on')
-        
+        created_on = kwargs.get("created_on")
+
         # created_on filter
         if created_on:
             one_year_ago = datetime.date.today() - datetime.timedelta(days=365)
             one_moth_ago = datetime.date.today() - datetime.timedelta(days=30)
             one_week_ago = datetime.date.today() - datetime.timedelta(days=7)
 
-            if created_on == 'year':
+            if created_on == "year":
                 filters["created_on__gte"] = one_year_ago
             elif created_on == "month":
                 filters["created_on__gte"] = one_moth_ago
@@ -148,20 +149,26 @@ class Dashboard:
 
             ### SDG TRAKED BUBBLE CHART ###
             sdg_tracked_filter = self.request.GET.get("sdg_tracked_filter")
-            if sdg_tracked_filter is None: sdg_tracked_filter = 'year'
-            print('sdg_tracked_filter: ', sdg_tracked_filter)
+            if sdg_tracked_filter is None:
+                sdg_tracked_filter = "year"
 
             sdg_tracked_questions = questions
 
-            if sdg_tracked_filter in ["week", 'month', 'year']:
-                sdg_tracked_questions = Dashboard.questions_filter(questions, created_on=sdg_tracked_filter)
+            if sdg_tracked_filter in ["week", "month", "year"]:
+                sdg_tracked_questions = Dashboard.questions_filter(
+                    questions, created_on=sdg_tracked_filter
+                )
 
-            context["sdgs_bubble_data"] = Dashboard.get_sdgs_tracked_bubble_chart_data(sdg_tracked_questions)
+            context["sdgs_bubble_data"] = Dashboard.get_sdgs_tracked_bubble_chart_data(
+                sdg_tracked_questions
+            )
 
             ### SURVEY PARTIAL RESULT CHART ###
 
             # filter only surveys opened
-            survey_result_sdg_questions = questions.filter(poll__poll_end_date=datetime.date.today())
+            survey_result_sdg_questions = questions.filter(
+                poll__poll_end_date=datetime.date.today()
+            )
 
             survey_result_sdg = self.request.GET.get("survey_result_sdg")
 
@@ -169,27 +176,33 @@ class Dashboard:
                 survey_result_sdg_questions = questions
             else:
                 survey_result_sdg = int(survey_result_sdg)
-                survey_result_sdg_questions = questions.filter(sdgs__contains=[survey_result_sdg])
-                context['survey_result_sdg'] = settings.SDG_LIST[survey_result_sdg - 1]
+                survey_result_sdg_questions = questions.filter(
+                    sdgs__contains=[survey_result_sdg]
+                )
+                context["survey_result_sdg"] = settings.SDG_LIST[survey_result_sdg - 1]
 
             # show only question with data chart
-            #survey_result_sdg_questions = [q for q in survey_result_sdg_questions if q.get_responded() > 0]
+            # survey_result_sdg_questions = [q for q in survey_result_sdg_questions if q.get_responded() > 0]
 
             # shuffled questions
             survey_result_sdg_questions = list(survey_result_sdg_questions)
             random.shuffle(survey_result_sdg_questions)
 
-            survey_result_choice_question = self.request.GET.get('survey_result_choice_question')
+            survey_result_choice_question = self.request.GET.get(
+                "survey_result_choice_question"
+            )
             try:
-                survey_result_choice_question = PollQuestion.objects.get(pk=survey_result_choice_question)
+                survey_result_choice_question = PollQuestion.objects.get(
+                    pk=survey_result_choice_question
+                )
             except PollQuestion.DoesNotExist:
                 survey_result_choice_question = None
-            
+
             # max 20 questions
             survey_result_sdg_questions = survey_result_sdg_questions[:20]
-            
+
             context["survey_result_sdg_questions"] = survey_result_sdg_questions
-            
+
             if survey_result_choice_question:
                 survey_result_raffled_question = survey_result_choice_question
             else:
@@ -199,15 +212,25 @@ class Dashboard:
                     survey_result_raffled_question = None
 
             if survey_result_raffled_question:
-                context["survey_result_raffled_question"] = survey_result_raffled_question
+                context[
+                    "survey_result_raffled_question"
+                ] = survey_result_raffled_question
 
-                categories = survey_result_raffled_question.get_total_summary_data()['categories']
-                total = sum([q['count'] for q in categories])
+                categories = survey_result_raffled_question.get_total_summary_data()[
+                    "categories"
+                ]
+                total = sum([q["count"] for q in categories])
 
                 if total > 0:
-                    doughnut_labels = [q['label'] for q in categories]
-                    doughnut_data = [round((q['count'] / total) * 100, 2) for q in categories]
-                    context['survey_result_doughnut_data'] = Dashboard.get_doughnut_chart_data(doughnut_labels, doughnut_data)
+                    doughnut_labels = [q["label"] for q in categories]
+                    doughnut_data = [
+                        round((q["count"] / total) * 100, 2) for q in categories
+                    ]
+                    context[
+                        "survey_result_doughnut_data"
+                    ] = Dashboard.get_doughnut_chart_data(
+                        doughnut_labels, doughnut_data
+                    )
 
             ### MOST USED CHANNELS CHARTS ###
 
