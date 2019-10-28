@@ -87,19 +87,50 @@ class Dashboard:
         return data
 
     @classmethod
-    def questions_filter(self, questions, sorted_field):
-        one_year_ago = datetime.date.today() - datetime.timedelta(days=365)
-        one_moth_ago = datetime.date.today() - datetime.timedelta(days=30)
-        one_week_ago = datetime.date.today() - datetime.timedelta(days=7)
+    def get_doughnut_chart_data(self, labels, data, **kwargs):
+        '''
+        return doughnut chart data dict
+        get labels string list parameters
+        get data double list parameters.
+        optional: backgroundColor string list parameters
+        optional: borderColor string parameters
+        '''
 
+        if len(labels) != len(data):
+            raise AssertionError('len(labels) must be equal to len(data)')
+
+        doughnut_data = {
+            'labels': [],
+            'datasets': []
+        }
+
+        doughnut_data['labels'] = labels
+        doughnut_data['datasets'] = [{
+            'data': data,
+            'backgroundColor': kwargs.get('backgroundColor', ["#%06x" % random.randint(0, 0xFFFFFF) for i in labels]),
+            'borderColor': kwargs.get('borderColor', "rgba(255, 255, 255, 0.1)"),
+        }]
+
+        return doughnut_data
+
+
+    @classmethod
+    def questions_filter(self, questions, **kwargs):
         filters = {}
+        created_on = kwargs.get('created_on')
+        
+        # created_on filter
+        if created_on:
+            one_year_ago = datetime.date.today() - datetime.timedelta(days=365)
+            one_moth_ago = datetime.date.today() - datetime.timedelta(days=30)
+            one_week_ago = datetime.date.today() - datetime.timedelta(days=7)
 
-        if sorted_field is None:
-            filters["created_on__gte"] = one_year_ago
-        elif sorted_field == "sdg_track_last_month":
-            filters["created_on__gte"] = one_moth_ago
-        elif sorted_field == "sdg_track_last_week":
-            filters["created_on__gte"] = one_week_ago
+            if created_on == 'year':
+                filters["created_on__gte"] = one_year_ago
+            elif created_on == "month":
+                filters["created_on__gte"] = one_moth_ago
+            elif created_on == "week":
+                filters["created_on__gte"] = one_week_ago
 
         questions = questions.filter(**filters)
 
@@ -110,28 +141,25 @@ class Dashboard:
 
         def get_context_data(self, **kwargs):
             context = super().get_context_data(**kwargs)
-            sorted_field = self.request.GET.get("sort")
 
             questions = PollQuestion.objects.filter(
                 is_active=True, poll__org=self.request.org, poll__is_active=True
             )
 
             ### SDG TRAKED BUBBLE CHART ###
-            sdg_tracked_questions = PollQuestion.objects.filter(
-                is_active=True, poll__org=self.request.org, poll__is_active=True
-            )
+            sdg_tracked_filter = self.request.GET.get("sdg_tracked_filter")
+            if sdg_tracked_filter is None: sdg_tracked_filter = 'year'
+            print('sdg_tracked_filter: ', sdg_tracked_filter)
 
-            if sorted_field in [None, "sdg_track_last_month", "sdg_track_last_week"]:
-                sdg_tracked_questions = Dashboard.questions_filter(
-                    questions, sorted_field
-                )
+            sdg_tracked_questions = questions
 
-            context["sdgs_bubble_data"] = Dashboard.get_sdgs_tracked_bubble_chart_data(
-                sdg_tracked_questions
-            )
+            if sdg_tracked_filter in ["week", 'month', 'year']:
+                sdg_tracked_questions = Dashboard.questions_filter(questions, created_on=sdg_tracked_filter)
+
+            context["sdgs_bubble_data"] = Dashboard.get_sdgs_tracked_bubble_chart_data(sdg_tracked_questions)
 
             ### SURVEY PARTIAL RESULT CHART ###
-            
+
             # filter only surveys opened
             survey_result_sdg_questions = questions.filter(poll__poll_end_date=datetime.date.today())
 
@@ -144,6 +172,7 @@ class Dashboard:
                 survey_result_sdg_questions = questions.filter(sdgs__contains=[survey_result_sdg])
                 context['survey_result_sdg'] = settings.SDG_LIST[survey_result_sdg - 1]
 
+            # show only question with data chart
             #survey_result_sdg_questions = [q for q in survey_result_sdg_questions if q.get_responded() > 0]
 
             # shuffled questions
@@ -168,8 +197,7 @@ class Dashboard:
                     survey_result_raffled_question = survey_result_sdg_questions[0]
                 else:
                     survey_result_raffled_question = None
-                
-            print('>>>>>>>>>>: ', survey_result_raffled_question)
+
             if survey_result_raffled_question:
                 context["survey_result_raffled_question"] = survey_result_raffled_question
 
@@ -177,16 +205,9 @@ class Dashboard:
                 total = sum([q['count'] for q in categories])
 
                 if total > 0:
-                    survey_result_doughnut_data = {
-                        'labels': [q['label'] for q in categories],
-                        'datasets': [{
-                            'data': [round((q['count'] / total) * 100, 2) for q in categories],
-                            'backgroundColor': ["#%06x" % random.randint(0, 0xFFFFFF) for i in categories],
-                            'borderColor': "rgba(255, 255, 255, 0.1)",
-                        }],
-                    }
-
-                    context['survey_result_doughnut_data'] = survey_result_doughnut_data
+                    doughnut_labels = [q['label'] for q in categories]
+                    doughnut_data = [round((q['count'] / total) * 100, 2) for q in categories]
+                    context['survey_result_doughnut_data'] = Dashboard.get_doughnut_chart_data(doughnut_labels, doughnut_data)
 
             ### MOST USED CHANNELS CHARTS ###
 

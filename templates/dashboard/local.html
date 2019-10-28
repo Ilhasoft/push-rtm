@@ -34,10 +34,10 @@
           </div>
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
-              <a href="{% autosort sdg_track_last_week '' true %}" class="dropdown-item">{% trans "Last 7 days" %}</a>
-              <a href="{% autosort sdg_track_last_month '' true %}" class="dropdown-item">{% trans "Last 30 days" %}</a>
-              <a href="{% autosort sdg_track_last_month '' true %}" class="dropdown-item">{% trans "Last 12 months" %}</a>
-              <a href="{% autosort sdg_track_since_inception '' true %}" class="dropdown-item">{% trans "Since Inception" %}</a>
+              <a href="{% url 'dashboard.local' %}{% urlparams sdg_tracked_filter='week' %}" class="dropdown-item">{% trans "Last 7 days" %}</a>
+              <a href="{% url 'dashboard.local' %}{% urlparams sdg_tracked_filter='month' %}" class="dropdown-item">{% trans "Last 30 days" %}</a>
+              <a href="{% url 'dashboard.local' %}{% urlparams sdg_tracked_filter='year' %}" class="dropdown-item">{% trans "Last 12 months" %}</a>
+              <a href="{% url 'dashboard.local' %}{% urlparams sdg_tracked_filter='inception' %}" class="dropdown-item">{% trans "Since Inception" %}</a>
             </div>
           </div>
         </div>
