@@ -447,7 +447,7 @@ class PollCRUDL(SmartCRUDL):
                     required=False,
                     initial=include_field_initial,
                     help_text=_("Whether to include this question in your public results"),
-                    widget=forms.CheckboxInput(attrs={"class": "is-checkradio", "checked": "checked"}),
+                    widget=forms.CheckboxInput(attrs={"class": "is-checkradio"}),
                 )
 
                 label_field_name = "ruleset_%s_label" % question.ruleset_uuid

@@ -110,10 +110,15 @@ INSTALLED_APPS += (
     "ureport.accounts",
     "ureport.results",
     "ureport.flowhub",
+    "ureport.dashboard",
     "ureport.channels",
 )
 
 SITE_ALLOW_NO_ORG += (
+    "dashboard.global",
+    "flowhub.flow_list",
+    "flowhub.flow_uncts",
+    "flowhub.flow_create",
     "uncts.unct_create",
     "uncts.unct_list",
     "uncts.unct_update",
@@ -142,6 +147,53 @@ SDG_LIST = (
     (16, "Peace, Justice and Strong Institutions"),
     (17, "Partnerships for the Goals"),
 )
+
+SDG_COLOR = {
+    1: "#e3263b",
+    2: "#dfa739",
+    3: "#4d9f45",
+    4: "#c5202e",
+    5: "#ef402c",
+    6: "#29bee2",
+    7: "#f9c316",
+    8: "#a21b45",
+    9: "#f3692c",
+    10: "#dd2467",
+    11: "#f99d28",
+    12: "#be8b2d",
+    13: "#407f45",
+    14: "#1c97d3",
+    15: "#5ebb47",
+    16: "#056a9d",
+    17: "#18486a",
+}
+
+CHANNEL_TYPES = {
+    "EX": {
+        "name": "External",
+        "icon": "icon-phone",
+    },
+    "TG": {
+        "name": "Telegram",
+        "icon": "icon-telegram",
+    },
+    "FB": {
+        "name": "Facebook",
+        "icon": "icon-facebook",
+    },
+    "TW": {
+        "name": "Twitter",
+        "icon": "icon-twitter",
+    },
+    "KN": {
+        "name": "Kannel",
+        "icon": "icon-phone",
+    },
+    "WA": {
+        "name": "Whatsapp",
+        "icon": "icon-whatsapp",
+    },
+}
 
 STATICFILES_FINDERS += (
     "sass_processor.finders.CssFinder",

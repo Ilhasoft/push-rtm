@@ -24,7 +24,8 @@ class ChannelStats(models.Model):
         existing = cls.objects.filter(uuid=uuid, org=org)
 
         if existing:
-            existing.update(msg_count=msg_count, ivr_count=ivr_count, error_count=error_count)
+            existing.update(msg_count=msg_count,
+                            ivr_count=ivr_count, error_count=error_count)
             channel = existing.first()
         else:
             channel = ChannelStats.objects.create(
@@ -53,10 +54,23 @@ class ChannelDailyStats(models.Model):
     count = models.PositiveIntegerField()
 
     @classmethod
-    def update_or_create(cls, channel, direction, msg_type, date, count):
-        direction = "I" if direction == "Incoming" else "O"
-        msg_type = "M" if msg_type == "msg" else "I"
-        existing = cls.objects.filter(channel=channel, msg_type=msg_type, date=date)
+    def update_or_create(cls, channel, direction, type, date, count):
+        if direction == "Incoming":
+            msg_direction = "I"
+        elif direction == "Outgoing":
+            msg_direction = "O"
+        elif direction == "Errors":
+            msg_direction = "E"
+
+        if type == "msg":
+            msg_type = "M"
+        elif type == "ivr":
+            msg_type = "I"
+        elif type == "error":
+            msg_type = "E"
+
+        existing = cls.objects.filter(
+            channel=channel, msg_type=msg_type, date=date, msg_direction=msg_direction)
 
         if existing:
             existing.update(count=count)
@@ -64,7 +78,7 @@ class ChannelDailyStats(models.Model):
             ChannelDailyStats.objects.create(
                 channel=channel,
                 msg_type=msg_type,
-                msg_direction=direction,
+                msg_direction=msg_direction,
                 date=date,
                 count=count,
             )
@@ -81,9 +95,10 @@ class ChannelMonthlyStats(models.Model):
     outgoing_messages_count = models.PositiveIntegerField()
     incoming_ivr_count = models.PositiveIntegerField()
     outgoing_ivr_count = models.PositiveIntegerField()
+    error_count = models.PositiveIntegerField()
 
     @classmethod
-    def update_or_create(cls, channel, date, incoming_messages, outgoing_messages, incoming_ivr, outgoing_ivr):
+    def update_or_create(cls, channel, date, incoming_messages, outgoing_messages, incoming_ivr, outgoing_ivr, error_count):
         existing = cls.objects.filter(channel=channel, date=date)
 
         if existing:
@@ -92,6 +107,7 @@ class ChannelMonthlyStats(models.Model):
                 outgoing_messages_count=outgoing_messages,
                 incoming_ivr_count=incoming_ivr,
                 outgoing_ivr_count=outgoing_ivr,
+                error_count=error_count,
             )
         else:
             ChannelMonthlyStats.objects.create(
@@ -101,4 +117,5 @@ class ChannelMonthlyStats(models.Model):
                 outgoing_messages_count=outgoing_messages,
                 incoming_ivr_count=incoming_ivr,
                 outgoing_ivr_count=outgoing_ivr,
+                error_count=error_count,
             )

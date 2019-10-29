@@ -22,13 +22,13 @@
     </div>
   </div>
   <div class="columns">
-    <div class="column box is-four-fifths is-offset-1">
-      <form class="generic-form questions" method="post">
+    <div class="column box is-four-fifths is-offset-1 is-paddingless">
+      <form class="generic-form questions is-paddingless" method="post">
         {% csrf_token %}
-        <h1 class="title is-4">{% trans "Survey Questions" %}</h1>
+        <h1 class="title p-30 bottom-m-0">{% trans "Survey Questions" %}</h1>
         {% for field in form %}
           {% if field.field.widget.input_type == "hidden" %}
-            <div class="question">
+            <div class="question left-p-30 right-p-30 top-p-20 bottom-p-20">
               <div class="question__number">{{ field.label }}</div>
               <div class="question__title">{{ field.value }}</div>
               {{ field }}
@@ -36,7 +36,7 @@
           {% endif %}
 
           {% if field.field.widget.input_type != "hidden" %}
-          <div class="field top-m-40">
+          <div class="field left-p-30 right-p-30 top-p-20">
             {% if field.field.widget.input_type != 'checkbox' %}
             <label class="label" for="{{ field.auto_id }}">
               {{ field.label }}
@@ -61,7 +61,7 @@
             <hr class="top-m-40 bottom-m-40">
           {% endif %}
         {% endfor %}
-        <div class="columns wrapper-buttons">
+        <div class="columns wrapper-buttons left-p-30 right-p-30 bottom-p-30">
           <div class="column">
             <a href="{% url 'polls.poll_poll_date' poll.id %}" class="button primary-reverse">{% trans "Back" %}</a>
             <button type="submit" class="button is-primary is-pulled-right">{% trans "Save" %}</button>

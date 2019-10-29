@@ -2,7 +2,9 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import logging
+import calendar
 
+from urllib.parse import urlencode
 from django import forms, template
 from django.conf import settings
 from django.template import TemplateSyntaxError
@@ -39,7 +41,8 @@ def question_results(question):
     except Exception:
         if getattr(settings, "PROD", False):
             logger.error(
-                "Question get results without segment in template tag raised exception", extra={"stack": True}
+                "Question get results without segment in template tag raised exception",
+                extra={"stack": True},
             )
         return None
 
@@ -61,7 +64,10 @@ def question_segmented_results(question, field):
             return results
     except Exception:
         if getattr(settings, "PROD", False):
-            logger.error("Question get results with segment in template tag raised exception", extra={"stack": True})
+            logger.error(
+                "Question get results with segment in template tag raised exception",
+                extra={"stack": True},
+            )
         return None
 
 
@@ -99,7 +105,9 @@ def org_color(org, index):
     if org_colors:
         org_colors = org_colors.split(",")
     else:
-        if org.get_config("common.primary_color") and org.get_config("common.secondary_color"):
+        if org.get_config("common.primary_color") and org.get_config(
+            "common.secondary_color"
+        ):
             org_colors = [
                 org.get_config("common.primary_color").strip(),
                 org.get_config("common.secondary_color").strip(),
@@ -122,7 +130,9 @@ def transparency(color, alpha):
         color = color[1:]
 
     if len(color) != 6:
-        raise TemplateSyntaxError("add_transparency expect a long hexadecimal color, got: [%s]" % color)
+        raise TemplateSyntaxError(
+            "add_transparency expect a long hexadecimal color, got: [%s]" % color
+        )
 
     rgb_color = [int(c) for c in bytearray.fromhex(color)]
     rgb_color.append(alpha)
@@ -133,7 +143,9 @@ def transparency(color, alpha):
 def lessblock(parser, token):
     args = token.split_contents()
     if len(args) != 1:
-        raise TemplateSyntaxError("lessblock tag takes no arguments, got: [%s]" % ",".join(args))
+        raise TemplateSyntaxError(
+            "lessblock tag takes no arguments, got: [%s]" % ",".join(args)
+        )
 
     nodelist = parser.parse(("endlessblock",))
     parser.delete_first_token()
@@ -167,7 +179,14 @@ def show_org_flags(context):
 
 
 @register.inclusion_tag("v2/public/edit_content.html", takes_context=True)
-def edit_content(context, reverse_name, reverse_arg=None, anchor_id="", extra_css_classes="", icon_color="dark"):
+def edit_content(
+    context,
+    reverse_name,
+    reverse_arg=None,
+    anchor_id="",
+    extra_css_classes="",
+    icon_color="dark",
+):
     request = context["request"]
 
     url_args = []
@@ -213,7 +232,14 @@ def is_textarea(field):
 @register.filter
 def is_input(field):
     return isinstance(
-        field.field.widget, (forms.TextInput, forms.NumberInput, forms.EmailInput, forms.PasswordInput, forms.URLInput)
+        field.field.widget,
+        (
+            forms.TextInput,
+            forms.NumberInput,
+            forms.EmailInput,
+            forms.PasswordInput,
+            forms.URLInput,
+        ),
     )
 
 
@@ -332,6 +358,7 @@ def items_to_list(items_list):
 def get_language(language):
     if language and language != "base":
         import pycountry
+
         return pycountry.languages.get(alpha_3=language).name
     return None
 
@@ -355,7 +382,10 @@ def get_sdg(key):
 @register.filter(name="get_poll_sync_status")
 def get_poll_sync_status(obj):
     if obj.has_synced:
-        last_synced = cache.get(Poll.POLL_RESULTS_LAST_SYNC_TIME_CACHE_KEY % (obj.org.pk, obj.flow_uuid), None)
+        last_synced = cache.get(
+            Poll.POLL_RESULTS_LAST_SYNC_TIME_CACHE_KEY % (obj.org.pk, obj.flow_uuid),
+            None,
+        )
         if last_synced:
             return "Last synced %s ago" % timesince(json_date_to_datetime(last_synced))
 
@@ -364,3 +394,16 @@ def get_poll_sync_status(obj):
 
     sync_progress = obj.get_sync_progress()
     return "Syncing... {0:.1f}%".format(sync_progress)
+
+
+@register.filter(name="get_month_name")
+def get_month_name(index):
+    return calendar.month_name[index]
+
+
+@register.simple_tag
+def urlparams(*_, **kwargs):
+    safe_args = {k: v for k, v, in kwargs.items() if v is not None}
+    if safe_args:
+        return "?{}".format(urlencode(safe_args))
+    return ""

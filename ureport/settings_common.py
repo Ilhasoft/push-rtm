@@ -650,6 +650,7 @@ TEMPLATES = [
                 "ureport.public.context_processors.set_config_display_flags",
                 "ureport.public.context_processors.set_org_lang_params",
                 "ureport.public.context_processors.set_story_widget_url",
+                'ureport.dashboard.context_processors.sdg_list',
             ],
             "loaders": [
                 "dash.utils.haml.HamlFilesystemLoader",

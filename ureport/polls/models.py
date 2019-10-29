@@ -873,7 +873,7 @@ class PollQuestion(SmartModel):
                 title=ruleset_label,
                 ruleset_type=ruleset_type,
                 ruleset_label=ruleset_label,
-                is_active=False,
+                is_active=True,
                 created_by=user,
                 modified_by=user,
                 sdgs=[],

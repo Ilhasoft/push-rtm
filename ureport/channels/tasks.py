@@ -35,7 +35,7 @@ def pull_channel_stats(org):
                     ChannelDailyStats.update_or_create(
                         channel=channel,
                         direction=direction,
-                        msg_type=msg_type,
+                        type=msg_type,
                         date=data.get("date"),
                         count=data.get("count"),
                     )
@@ -50,6 +50,7 @@ def pull_channel_stats(org):
                     outgoing_messages=monthly.get("outgoing_messages_count"),
                     incoming_ivr=monthly.get("incoming_ivr_count"),
                     outgoing_ivr=monthly.get("outgoing_ivr_count"),
+                    error_count=monthly.get("error_count"),
                 )
 
     logger.info("Task: pull_channel_stats took %ss" % (time.time() - start))
