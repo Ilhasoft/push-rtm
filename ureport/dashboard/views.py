@@ -237,7 +237,7 @@ class Dashboard:
                     survey_result_sdg - 1]
 
             # show only question with data chart
-            # survey_result_sdg_questions = [q for q in survey_result_sdg_questions if q.get_responded() > 0]
+            survey_result_sdg_questions = [q for q in survey_result_sdg_questions if q.get_responded() > 0]
 
             # shuffled questions
             survey_result_sdg_questions = list(survey_result_sdg_questions)
