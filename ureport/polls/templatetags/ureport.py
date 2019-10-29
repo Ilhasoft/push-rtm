@@ -2,6 +2,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import logging
+import calendar
 
 from django import forms, template
 from django.conf import settings
@@ -366,6 +367,6 @@ def get_poll_sync_status(obj):
     return "Syncing... {0:.1f}%".format(sync_progress)
 
 
-# @register.filter(name="get_channel_info")
-# def get_channel_info(urn, field):
-#     return dict(settings.CHANNEL_TYPES).get(urn).get(field)
+@register.filter(name="get_month_name")
+def get_month_name(index):
+    return calendar.month_name[index]

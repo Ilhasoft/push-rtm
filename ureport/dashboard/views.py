@@ -6,11 +6,13 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import Sum, Count
+from django.db.models.functions import ExtractMonth, ExtractYear
 
 from smartmin.views import SmartTemplateView
 
 from ureport.polls.models import PollQuestion, Poll
 from ureport.channels.models import ChannelStats, ChannelDailyStats
+from ureport.contacts.models import Contact
 
 
 class Dashboard:
@@ -115,7 +117,7 @@ class Dashboard:
     @classmethod
     def filter_by_date(self, date_field, time_ago):
         one_year_ago = datetime.date.today() - datetime.timedelta(days=365)
-        one_moth_ago = datetime.date.today() - datetime.timedelta(days=30)
+        one_month_ago = datetime.date.today() - datetime.timedelta(days=30)
         one_week_ago = datetime.date.today() - datetime.timedelta(days=7)
 
         filters = {}
@@ -123,7 +125,7 @@ class Dashboard:
         if time_ago == "year":
             filters[f"{date_field}__gte"] = one_year_ago
         elif time_ago == "month":
-            filters[f"{date_field}__gte"] = one_moth_ago
+            filters[f"{date_field}__gte"] = one_month_ago
         elif time_ago == "week":
             filters[f"{date_field}__gte"] = one_week_ago
 
@@ -235,7 +237,8 @@ class Dashboard:
                 channels_metrics_by)
 
             # MOST USED CHANNELS CHARTS
-            context["surveys_total"] = Poll.objects.filter(org=self.request.org, is_active=True).count()
+            context["surveys_total"] = Poll.objects.filter(
+                org=self.request.org, is_active=True).count()
 
             most_used = ChannelDailyStats.objects.filter(
                 channel__org=self.request.org,
@@ -279,12 +282,30 @@ class Dashboard:
                     }
                 )
 
-            context["channels_most_used_ago"] = Dashboard.get_text_time_ago(most_used_by)
+            context["channels_most_used_ago"] = Dashboard.get_text_time_ago(
+                most_used_by)
             context["channels_most_used"] = channels_most_used
             context["channels_most_used_global"] = channels_most_used_global
 
             # RAPIDPRO CONTACTS
+            context["contacts_over_time"] = Contact.objects.filter(
+                registered_on__gte=datetime.date.today() - datetime.timedelta(days=180),
+            ).annotate(
+                month=ExtractMonth("registered_on"),
+                year=ExtractYear("registered_on")).order_by("month").values(
+                "month",
+                "year"
+            ).annotate(total=Count("*")).values(
+                "month",
+                "year",
+                "total",
+                "org",
+            )
 
+            context["global_total_contacts"] = {
+                "local": Contact.objects.filter(org=self.request.org).count(),
+                "global": Contact.objects.exclude(org=self.request.org).count(),
+            }
             return context
 
     class Global(SmartTemplateView):

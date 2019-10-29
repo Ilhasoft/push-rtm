@@ -544,10 +544,10 @@
       data: {
         labels: [
           'Other UNCTs',
-          'Brasil',
+          '{{ request.org.name }}',
         ],
         datasets: [{
-          data: [75, 25],
+          data: [{{ global_total_contacts.global }}, {{ global_total_contacts.local }}],
           backgroundColor: [
             '#03aeef',
             '#0054e2',
@@ -581,22 +581,38 @@
       },
     });
 
+    const overtime_results_labels = [];
+    const overtime_results_data = {
+      local: [],
+      global: [],
+    };
+    let overtime_results_key = "";
+
+    {% for stats in contacts_over_time %}
+      overtime_results_key = "{{ stats.month|get_month_name }}";
+      overtime_results_data["local"][overtime_results_key] = (typeof overtime_results_data["local"][overtime_results_key] != "undefined") ? overtime_results_data["local"][overtime_results_key] : 0;
+      overtime_results_data["global"][overtime_results_key] = (typeof overtime_results_data["global"][overtime_results_key] != "undefined") ? overtime_results_data["global"][overtime_results_key] : 0;
+      
+      overtime_results_data[{% if stats.org == request.org.id %}"local"{% else %}"global"{% endif %}][overtime_results_key] = {{ stats.total }};
+      overtime_results_labels.push(overtime_results_key);
+    {% endfor %}
+
     let contactsCtx = document.getElementById('contactsChart').getContext('2d');
     let contactsChart = new Chart(contactsCtx, {
       type: 'line',
       data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        labels: [...new Set(overtime_results_labels)],
         datasets: [
           {
-            label: 'Brasil',
+            label: '{{ request.org.name }}',
             borderColor: '#0400a4',
             backgroundColor: '#0400a4',
-            data: [9, 12, 20, 22, 14, 12, 19],
+            data: Object.values(overtime_results_data.local),
           }, {
             label: 'Global Average',
             borderColor: '#00adf3',
             backgroundColor: '#00adf3',
-            data: [15, 20, 30, 35, 39, 42, 56],
+            data: Object.values(overtime_results_data.global),
         }]
       },
       options: {
