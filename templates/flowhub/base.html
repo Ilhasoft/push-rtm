@@ -4,19 +4,19 @@
 {% block content %}
 <section class="section">
   <h1 class="title">{% trans "Repository" %}</h1>
-  <h2 class="subtitle">{% block flow_section %}{{ subtitle }}{% endblock %}</h2>
+  <h2 class="subtitle top-p-5">Survey library for finding and sharing questions or polls among UNCTs</h2>
 </section>
 
-<section class="section" id="{% block flow_section_id %}{{ flow_section_id }}{% endblock %}">
+<section class="section top-p-0" id="{% block flow_section_id %}{{ flow_section_id }}{% endblock %}">
   <div class="columns is-desktop">
     <div class="column is-one-quarter">
       <div class="columns">
-        <div class="column">
+        <div class="column right-p-0">
           <aside class="menu">
             <ul class="menu-list">
               <li><a class="all" href="{% url 'flowhub.flow_list' %}">{% trans "All flows" %}</a></li>
               <li><a class="uncts" href="{% url 'flowhub.flow_uncts' %}">{% trans "UNCTs" %}</a></li>
-              <li><a class="my-org" href="{% url 'flowhub.my_org_flow_list' %}">{% trans "My UNCT" %}</a></li>
+              <li><a class="my-org" href="{% url 'flowhub.my_org_flow_list' %}">{{ org.name }}</a></li>
               <li><a class="upload" href="{% url 'flowhub.flow_create' %}">{% trans "Upload Flow" %}</a></li>
             </ul>
           </aside>

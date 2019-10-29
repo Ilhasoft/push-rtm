@@ -10,19 +10,24 @@
 
 {% block flow_content %}
 <div class="column auto">
-  <div class="columns">
-    <div class="column">
-      <div class="control has-icons-left">
-        <form>
-          <input class="input is-medium search" name="search" placeholder="Search" value="{{ query }}">
-          <span class="icon is-left">
-            <i class="material-icons">search</i>
-          </span>
-        </form>
+    <div class="box is-shadowless is-paddingless">
+      <div class="p-30 border-bottom">
+        <div class="has-text-weight-bold is-size-5 bottom-p-5">{{ subtitle }}</div>
+        <div class="has-text-grey-light">A list of all UNCTs that have uploaded flows to the repository.</div>
+      </div>
+      <div class="columns">
+        <div class="column bottom-p-0">
+          <div class="control has-icons-left">
+            <form>
+              <input type="text" class="input is-medium search" name="search" placeholder="Search" value="{{ query }}">
+              <span class="icon is-left">
+                <i class="material-icons">search</i>
+              </span>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-
   <div>
     <div class="flowhub-table-header">
       <div class="dropdown is-right">

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% load smartmin i18n %}
+
+{% block content %}
+  <div class="section">
+    <h1 class="title">{% trans "Sign in" %}</h1>
+  </div>
+
+  <form id="login-form" class="generic-form left-p-10 top-p-0" method="post">
+    {% for field, errors in form.errors.items %}
+      {% if field == '__all__' %}
+        <article class="message is-danger left-m-10">
+          <div class="message-body">
+            <h3>Error</h3>
+            {{ errors }}
+          </div>
+        </article>
+      {% endif %}
+    {% endfor %}
+
+    <div class="column is-5 center-form">
+      <fieldset>
+        {% for field in form %}
+          <div class="field {% if field.error %}has-error{% endif %}">
+            <label class="label" for="{{ field.name }}">
+              {{ field.label }}
+              {{ field|add_css:"input" }}
+            </label>
+            {% if field.error %}
+              <span class="help-block">
+                {{ field.error }}
+              </span>
+            {% endif %}
+          </div>
+        {% endfor %}
+
+        {% csrf_token %}
+
+        <button class="button is-primary login-btn" type="submit">
+          {% trans "Login" %}
+        </button>
+
+        {% if allow_email_recovery%}
+        <span class="is-pulled-right">
+          <a href="{% url 'users.user_forget' %}">{% trans "Forgot Password?" %}</a>
+        </span>
+        {% endif %}
+      </fieldset>
+    </div>
+  </form>
+{% endblock %}

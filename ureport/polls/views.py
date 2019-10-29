@@ -441,13 +441,13 @@ class PollCRUDL(SmartCRUDL):
 
             for question in questions:
                 include_field_name = "ruleset_%s_include" % question.ruleset_uuid
-                include_field_initial = initial.get(include_field_name, False)
+                include_field_initial = initial.get(include_field_name, True)
                 include_field = forms.BooleanField(
                     label=_("Display"),
                     required=False,
                     initial=include_field_initial,
                     help_text=_("Whether to include this question in your public results"),
-                    widget=forms.CheckboxInput(attrs={"class": "is-checkradio"}),
+                    widget=forms.CheckboxInput(attrs={"class": "is-checkradio", "checked": "checked"}),
                 )
 
                 label_field_name = "ruleset_%s_label" % question.ruleset_uuid

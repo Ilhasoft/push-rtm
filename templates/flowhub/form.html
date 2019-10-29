@@ -12,7 +12,15 @@
 
 {% block flow_content %}
 <div class="column auto">
-  <form class="generic-form box" action="#" method="POST" enctype="multipart/form-data">
+  <div class="box is-shadowless is-paddingless bottom-m-10">
+    <div class="p-30">
+      <div class="has-text-weight-bold is-size-5 bottom-p-5">{{ subtitle }}</div>
+      <div class="has-text-grey-light">
+        Add polls you have used to the global repository. Other UNCTs will be able to see the questions you used. The results are not included on the files and will not be shared.
+      </div>
+    </div>
+  </div>
+  <form class="generic-form box is-shadowless" action="#" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="files-form">
       <div class="file has-name is-info field">
@@ -99,11 +107,30 @@
   new Choices("#id_sdgs", {
     removeItemButton: true,
 
+    sortFn: function(a, b) {
+      return a.id > b.id;
+    },
+
     callbackOnCreateTemplates: function (template) {
       return {
         item: (classNames, data) => {
           return template(`
             <div class="${classNames.item} tag-sdg-${data.value} ${data.highlighted ? classNames.highlightedState : classNames.itemSelectable}" data-item data-id="${data.id}" data-value="${data.value}" ${data.active ? 'aria-selected="true"' : ''} ${data.disabled ? 'aria-disabled="true"' : ''}>${data.value} ${data.label}<button type="button" class="choices-button-close" data-button="" aria-label="Remove item: '${data.value}'">X</button>
+          `);
+        },
+        choice: (classNames, data) => {
+          return template(`
+            <div class="${classNames.item} ${classNames.itemChoice} ${
+              data.disabled ? classNames.itemDisabled : classNames.itemSelectable
+            }" data-select-text="${this.config.itemSelectText}" data-choice ${
+              data.disabled
+                ? 'data-choice-disabled aria-disabled="true"'
+                : 'data-choice-selectable'
+            } data-id="${data.id}" data-value="${data.value}" ${
+              data.groupId > 0 ? 'role="treeitem"' : 'role="option"'
+            }>
+              ${data.value} - ${data.label}
+            </div>
           `);
         },
       };
