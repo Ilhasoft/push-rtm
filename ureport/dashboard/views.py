@@ -159,6 +159,7 @@ class Dashboard:
                     questions, created_on=sdg_tracked_filter
                 )
 
+            context["sdg_tracked_filter"] = sdg_tracked_filter
             context["sdgs_bubble_data"] = Dashboard.get_sdgs_tracked_bubble_chart_data(
                 sdg_tracked_questions
             )

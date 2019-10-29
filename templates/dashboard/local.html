@@ -42,7 +42,17 @@
           </div>
         </div>
       </div>
-      <div class="has-text-grey-light">Last 12 months</div>
+      <div class="has-text-grey-light">
+        {% if sdg_tracked_filter == 'week' %}
+          {% trans "Last 7 days" %}
+        {% elif sdg_tracked_filter == 'month' %}
+          {% trans "Last 30 days" %}
+        {% elif sdg_tracked_filter == 'inception' %}
+          {% trans "Since inception" %}
+        {% else %}
+          {% trans "Last 12 months" %}
+        {% endif %}
+      </div>
       <canvas id="bubbleChart"></canvas>
       <div class="card-title has-text-weight-bold bottom-p-20">SDGs not being tracked</div>
       <ul class="untracked-sgd">
@@ -62,6 +72,13 @@
             <i class="material-icons info-icon">info</i>
             <span class="tooltip-content">{% trans 'Partial SDG results for the lastest ongoing surveys'%}</span>
           </span>
+              <div class="has-text-grey-light">
+                {% if survey_result_sdg %}
+                  {% trans "SDG" %} {{ survey_result_sdg.0 }} - {{ survey_result_sdg.1 }}
+                {% else %}
+                  {% trans "All SDGs" %}
+                {% endif %}
+              </div>
           <div class="selected-question top-m-30">
             <div class="selected-question__title bottom-m-30">
               {{ survey_result_raffled_question }}</br>
