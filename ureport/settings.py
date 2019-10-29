@@ -115,6 +115,10 @@ INSTALLED_APPS += (
 )
 
 SITE_ALLOW_NO_ORG += (
+    "dashboard.global",
+    "flowhub.flow_list",
+    "flowhub.flow_uncts",
+    "flowhub.flow_create",
     "uncts.unct_create",
     "uncts.unct_list",
     "uncts.unct_update",

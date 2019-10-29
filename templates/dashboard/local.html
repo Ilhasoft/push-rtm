@@ -19,28 +19,30 @@
         <div>
           <span class="card-title has-text-weight-bold">SDGs being tracked</span>
           <span class="tooltip top left-m-10">
-              <i class="material-icons info-icon">info</i>
-              <span class="tooltip-content">{% trans 'Number of total messages received addressing each SDG'%}</span>
-            </span>
+            <i class="material-icons info-icon">info</i>
+            <span class="tooltip-content">{% trans 'Number of total messages received addressing each SDG'%}</span>
+          </span>
         </div>
         <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
             <div aria-haspopup="true" aria-controls="dropdown-menu">
-              <span>{% trans "Last Year" %}</span>
+              <span>{% trans "Filter by" %}</span>
               <span class="icon is-small">
-                  <i class="fas fa-angle-down" aria-hidden="true"></i>
-                </span>
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+              </span>
             </div>
           </div>
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
-              <a href="{% autosort sdg_track_last_month '' true %}" class="dropdown-item">{% trans "Last Month" %}</a>
-              <a href="{% autosort sdg_track_last_week '' true %}" class="dropdown-item">{% trans "Last Week" %}</a>
-              <a href="{% autosort sdg_track_since_inception '' true %}" class="dropdown-item">{% trans "Since Inception" %}</a>
+              <a href="{% url 'dashboard.local' %}{% urlparams sdg_tracked_filter='week' %}" class="dropdown-item">{% trans "Last 7 days" %}</a>
+              <a href="{% url 'dashboard.local' %}{% urlparams sdg_tracked_filter='month' %}" class="dropdown-item">{% trans "Last 30 days" %}</a>
+              <a href="{% url 'dashboard.local' %}{% urlparams sdg_tracked_filter='year' %}" class="dropdown-item">{% trans "Last 12 months" %}</a>
+              <a href="{% url 'dashboard.local' %}{% urlparams sdg_tracked_filter='inception' %}" class="dropdown-item">{% trans "Since Inception" %}</a>
             </div>
           </div>
         </div>
       </div>
+      <div class="has-text-grey-light">Last 12 months</div>
       <canvas id="bubbleChart"></canvas>
       <div class="card-title has-text-weight-bold bottom-p-20">SDGs not being tracked</div>
       <ul class="untracked-sgd">
@@ -62,7 +64,13 @@
           </span>
           <div class="selected-question top-m-30">
             <div class="selected-question__title bottom-m-30">
-              How often have you had problems accessing clean drinking water at home? Rarely, sometimes, often or always?
+              {{ survey_result_raffled_question }}</br>
+               <!-- Nome da Survey, Falta tag HTML 
+               {{ survey_result_raffled_question.poll }}
+               -->
+               {% if not survey_result_doughnut_data %}
+                {% trans "No date for chart yet" %}
+               {% endif %}
             </div>
             <div class="selected-question__chart">
 <!--              perguntas fechadas-->
@@ -74,47 +82,35 @@
         </div>
         <div class="column is-paddingless">
           <div class="flex space-between has-text-weight-bold p-40">
-            <div class="card-title">34 Questions</div>
+            <div class="card-title">{{ survey_result_sdg_questions|length }} Questions</div>
             <div class="dropdown is-hoverable">
               <div class="dropdown-trigger">
                 <div aria-haspopup="true" aria-controls="dropdown-menu">
-                  <span>SDG 1</span>
+                  <span>Filter by</span>
                   <span class="icon is-small">
-                    <i class="fas fa-angle-down" aria-hidden="true"></i>
-                  </span>
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+              </span>
                 </div>
               </div>
-              <div class="dropdown-menu" id="dropdown-menu" role="menu">
+              <div class="dropdown-menu" role="menu">
                 <div class="dropdown-content">
-                  <a href="#" class="dropdown-item">SDG1</a>
-                  <a href="#" class="dropdown-item">SDG2</a>
-                  <a href="#" class="dropdown-item">SDG3</a>
-                  <a href="#" class="dropdown-item">SDG4</a>
-                  <a href="#" class="dropdown-item">SDG5</a>
-                  <a href="#" class="dropdown-item">SDG6</a>
+                  {% for key, value in SDG_LIST %}
+                    <a href="{% url 'dashboard.local' %}{% urlparams survey_result_sdg=key %}" class="dropdown-item">SDG {{ key }}</a>
+                  {% endfor %}
                 </div>
               </div>
             </div>
           </div>
           <div class="questions-list">
-            <div class="questions-list__item p-30 border-bottom">
-              <a href="#">How often have you had problems accessing clean drinking water at home? Rarely, sometimes, often or always?</a>
-            </div>
-            <div class="questions-list__item p-30 border-bottom">
-              <a href="#">Who collects and disposes  your household waste? The city, your landlord, a group of people, you or other person?</a>
-            </div>
-            <div class="questions-list__item p-30 border-bottom">
-              <a href="#">Is there a service available for someone to collect plastic bottles separately from the general waste, either for free or for a payment?</a>
-            </div>
-            <div class="questions-list__item p-30 border-bottom">
-              <a href="#">How often have you had problems accessing clean drinking water at home? Rarely, sometimes, often or always?</a>
-            </div>
-            <div class="questions-list__item p-30 border-bottom">
-              <a href="#">Who collects and disposes  your household waste? The city, your landlord, a group of people, you or other person?</a>
-            </div>
-            <div class="questions-list__item p-30 border-bottom">
-              <a href="#">Is there a service available for someone to collect plastic bottles separately from the general waste, either for free or for a payment?</a>
-            </div>
+            {% for question in survey_result_sdg_questions %}
+              <div class="questions-list__item p-30 border-bottom">
+                <a href="{% url 'dashboard.local' %}{% urlparams survey_result_choice_question=question.pk %}">{{ question }}</a>
+              </div>
+            {% empty %}
+              <div class="questions-list__item p-30 border-bottom">
+                {% trans 'There are no question registered with SDG ' %} {{ survey_result_sdg.0 }} - {{ survey_result_sdg.1 }}
+              </div>
+            {% endfor %}
           </div>
         </div>
       </div>
@@ -219,8 +215,8 @@
                 <div aria-haspopup="true" aria-controls="dropdown-menu">
                   <span>{% trans "Filter by" %}</span>
                   <span class="icon is-small">
-                    <i class="fas fa-angle-down" aria-hidden="true"></i>
-                  </span>
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+              </span>
                 </div>
               </div>
               <div class="dropdown-menu" id="dropdown-menu" role="menu">
@@ -287,6 +283,7 @@
   <script src="{% static 'plugins/wordcloud/d3.layout.cloud.js' %}"></script>
 
 {{ sdgs_bubble_data.datasets|json_script:'SDGSBubbleChartDataDatasets' }}
+{{ survey_result_doughnut_data|json_script:'SurveyResultDoughnutData' }}
 
   <script>
     let bubbleCtx = document.getElementById('bubbleChart').getContext('2d');
@@ -302,6 +299,11 @@
           },
           position: 'left',
         },
+        layout: {
+          padding: {
+            top: 50,
+          }
+        },
         plugins: {
           datalabels: {
             display: false,
@@ -316,24 +318,7 @@
     let donutCtx = document.getElementById('questionChart').getContext('2d');
     let questionChart = new Chart(donutCtx, {
       type: 'doughnut',
-        data: {
-          labels: [
-            'Never',
-            'Always',
-            'Sometimes',
-            'Don’t know',
-          ],
-          datasets: [{
-            data: [12, 23, 50, 15],
-            backgroundColor: [
-              '#89e7ff',
-              '#03aeef',
-              '#0054e2',
-              '#0400a4',
-            ],
-            borderColor: "rgba(255, 255, 255, 0.1)",
-          }],
-        },
+        data: JSON.parse(document.getElementById('SurveyResultDoughnutData').textContent),
         options: {
           legend: {
             labels: {
