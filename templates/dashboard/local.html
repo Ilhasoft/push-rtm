@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n static sass_tags ureport %}
+{% load i18n static humanize sass_tags ureport %}
 
 {% block nav_item %}page-dashboard{% endblock %}
 
@@ -132,9 +132,31 @@
         </div>
       </div>
     </div>
-    <div class="box is-shadowless p-40">
+
+    <div class="box is-shadowless p-40" id="message_metrics">
       <div class="flex space-between">
-        <div class="card-title has-text-weight-bold">Message Metrics</div>
+        <div class="card-title has-text-weight-bold">{% trans "Message Metrics" %}</div>
+        <div class="dropdown is-hoverable">
+          <div class="dropdown-trigger">
+            <div aria-haspopup="true" aria-controls="dropdown-menu">
+              <span>{% trans "View by" %}</span>
+              <span class="icon is-small">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+              </span>
+            </div>
+          </div>
+          <div class="dropdown-menu" id="dropdown-menu" role="menu">
+            <div class="dropdown-content">
+              <a href="?message_metrics_by=week&message_metrics_uuid={{ channels_metrics_uuid }}#message_metrics" class="dropdown-item">{% trans "Last 7 days" %}</a>
+              <a href="?message_metrics_by=month&message_metrics_uuid={{ channels_metrics_uuid }}#message_metrics" class="dropdown-item">{% trans "Last 30 days" %}</a>
+              <a href="?message_metrics_by=year&message_metrics_uuid={{ channels_metrics_uuid }}#message_metrics" class="dropdown-item">{% trans "Last 12 months" %}</a>
+              <a href="?message_metrics_by=&message_metrics_uuid={{ channels_metrics_uuid }}#message_metrics" class="dropdown-item">{% trans "Since Inception" %}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-p-20 has-text-grey-light">{{ channels_messages_ago }}</div>
+      <div class="flex flex-end top-m-20">
         <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
             <div aria-haspopup="true" aria-controls="dropdown-menu">
@@ -146,78 +168,48 @@
           </div>
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
-              <a href="#" class="dropdown-item">{% trans "Last 7 days" %}</a>
-              <a href="#" class="dropdown-item">{% trans "Last 30 days" %}</a>
-              <a href="#" class="dropdown-item">{% trans "Last 12 months" %}</a>
-              <a href="#" class="dropdown-item">{% trans "Since Inception" %}</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="bottom-p-20 has-text-grey-light">Last 12 months</div>
-      <div class="flex flex-end top-m-20">
-        <div class="dropdown is-hoverable">
-          <div class="dropdown-trigger">
-            <div aria-haspopup="true" aria-controls="dropdown-menu">
-              <span>{% trans "All channels" %}</span>
-              <span class="icon is-small">
-                <i class="fas fa-angle-down" aria-hidden="true"></i>
-              </span>
-            </div>
-          </div>
-          <div class="dropdown-menu" id="dropdown-menu" role="menu">
-            <div class="dropdown-content">
-              <a href="#" class="dropdown-item">Channel 1</a>
-              <a href="#" class="dropdown-item">Channel 2</a>
-              <a href="#" class="dropdown-item">Channel 3</a>
+                <a href="?message_metrics_by={{ channels_metrics_by }}#message_metrics" class="dropdown-item">{% trans "All channels" %}</a>
+              {% for uuid, channel in channels_info.items %}
+                <a href="?message_metrics_uuid={{ uuid }}&message_metrics_by={{ channels_metrics_by }}#message_metrics" class="dropdown-item">{{ channel.name }}</a>
+              {% endfor %}
             </div>
           </div>
         </div>
       </div>
       <canvas id="channelsChart" height="100"></canvas>
-      <div class="card-title has-text-weight-bold top-m-50">Messages by Channel</div>
+      <div class="card-title has-text-weight-bold top-m-50">{% trans "Messages by Channel" %}</div>
       <div class="columns is-multiline top-m-30">
+        {% for uuid, channel in channels_data.items %}
         <div class="column is-one-fifth">
           <div class="flex">
             <div class="tooltip top flex align-center">
               <div class="right-m-10">
-                {% if channel_type == 'telegram' %}
-                  <span class="channel-icon icon-telegram"></span>
-                {% else %}
-                  <span class="channel-icon icon-phone"></span>
-                {% endif %}
+                <span class="channel-icon {{ channel.icon }}"></span>
               </div>
               <div>
                 <div class="flex align-center">
-                  <span class="channel-number is-size-5 has-text-weight-bold">894.789</span>
-<!--                  se cresceu -->
-                    <i class="material-icons has-text-success">trending_up</i>
-<!--                  senão -->
-                    <i class="material-icons has-text-danger">trending_down</i>
+                  <span class="channel-number is-size-5 has-text-weight-bold">{{ channel.total|intcomma }}</span>
+                    {% if channel.global|intcomma > channel.total|intcomma %}
+                      <i class="material-icons has-text-danger">trending_down</i>
+                    {% else %}
+                      <i class="material-icons has-text-success">trending_up</i>
+                    {% endif %}
                 </div>
-                <div>Telegram</div>
+                <div>{{ channel.name }}</div>
               </div>
               <div class="tooltip-content channel-tooltip flex flex-center p-20">
                 <div class="flex">
                   <div class="right-m-10">
-                    {% if channel_type == 'telegram' %}
-                      <span class="channel-icon icon-telegram"></span>
-                    {% else %}
-                      <span class="channel-icon icon-phone"></span>
-                    {% endif %}
+                    <span class="channel-icon {{ channel.icon }}"></span>
                   </div>
                   <div>
-                    <div class="is-size-6 bottom-p-20">Global Average</div>
+                    <div class="is-size-6 bottom-p-20">{% trans "Global Average" %}</div>
                     <div class="flex">
                       <div>
                         <div class="flex align-center">
-                          <span class="channel-number is-size-5 has-text-weight-bold">894.789</span>
-<!--                          se cresceu -->
-                            <i class="material-icons has-text-success">trending_up</i>
-<!--                          senão -->
-                            <i class="material-icons has-text-danger">trending_down</i>
+                          <span class="channel-number is-size-5 has-text-weight-bold">{{ channel.global|intcomma }}</span>
                         </div>
-                        <div class="is-size-6">Telegram</div>
+                        <div class="is-size-6">{{ channel.name }}</div>
                       </div>
                     </div>
                   </div>
@@ -226,13 +218,15 @@
             </div>
           </div>
         </div>
+        {% endfor %}
       </div>
     </div>
-    <div class="columns">
+
+    <div class="columns" id="most_used">
       <div class="column">
         <div class="box is-shadowless">
-          <div class="top-p-20 left-p-20 flex space-between">
-            <div class="card-title has-text-weight-bold">Most used Channels</div>
+          <div class="p-20 flex space-between">
+            <div class="card-title has-text-weight-bold">{% trans "Most used Channels" %}</div>
             <div class="dropdown is-hoverable">
               <div class="dropdown-trigger">
                 <div aria-haspopup="true" aria-controls="dropdown-menu">
@@ -244,15 +238,15 @@
               </div>
               <div class="dropdown-menu" id="dropdown-menu" role="menu">
                 <div class="dropdown-content">
-                  <a href="#" class="dropdown-item">{% trans "Last 7 days" %}</a>
-                  <a href="#" class="dropdown-item">{% trans "Last 30 days" %}</a>
-                  <a href="#" class="dropdown-item">{% trans "Last 12 months" %}</a>
-                  <a href="#" class="dropdown-item">{% trans "Since Inception" %}</a>
+                  <a href="?most_used_by=week#most_used" class="dropdown-item">{% trans "Last 7 days" %}</a>
+                  <a href="?most_used_by=month#most_used" class="dropdown-item">{% trans "Last 30 days" %}</a>
+                  <a href="?most_used_by=year#most_used" class="dropdown-item">{% trans "Last 12 months" %}</a>
+                  <a href="?most_used_by=#most_used" class="dropdown-item">{% trans "Since Inception" %}</a>
                 </div>
               </div>
             </div>
           </div>
-          <div class="left-p-20 bottom-p-20 has-text-grey-light">Last 12 months</div>
+          <div class="left-p-20 bottom-p-20 has-text-grey-light">{{ channels_most_used_ago }}</div>
           <div class="columns">
             <div class="column">
               <canvas id="localMostUsedChannels"></canvas>
@@ -266,19 +260,19 @@
       <div class="column is-one-fifth">
         <div class="surveys-card box is-shadowless">
           <div class="card-title left-p-10 top-p-10 bottom-p-20">
-            <span class="has-text-weight-bold">Surveys</span>
+            <span class="has-text-weight-bold">{% trans "Surveys" %}</span>
             <span class="tooltip top left-m-10">
               <i class="material-icons info-icon">info</i>
               <span class="tooltip-content">{% trans 'Surveys being conducted through the RTM'%}</span>
             </span>
           </div>
           <div class="surveys-info has-text-centered bottom-p-30 border-bottom">
-            <div class="surveys-info__number">175</div>
-            <div class="surveys-info_unct">Brasil</div>
+            <div class="surveys-info__number">{{ surveys_total }}</div>
+            <div class="surveys-info_unct">{{ request.org.name }}</div>
           </div>
           <div class="surveys-info has-text-centered top-p-30 bottom-p-30">
             <div class="surveys-info__number">--</div>
-            <div class="surveys-info_unct">Global</div>
+            <div class="surveys-info_unct">{% trans "Global" %}</div>
           </div>
         </div>
       </div>
@@ -368,26 +362,47 @@
         },
     });
 
+    const channel_results_labels = [];
+    const channel_results_data = {
+      O: [],
+      I: [],
+      E: [],
+    };
+    let channel_metrics_key = "";
+    {% for stats in channels_chart_stats %}
+      {% if channels_metrics_by == "year" or channels_metrics_by == "" %}
+        channel_metrics_key = "{{ stats.date|date:'F/Y' }}";
+      {% else %}
+        channel_metrics_key = "{{ stats.date|date:'d/m' }}";
+      {% endif %}
+
+      channel_results_data["I"][channel_metrics_key] = (typeof channel_results_data["I"][channel_metrics_key] != "undefined") ? channel_results_data["I"][channel_metrics_key] : 0;
+      channel_results_data["O"][channel_metrics_key] = (typeof channel_results_data["O"][channel_metrics_key] != "undefined") ? channel_results_data["O"][channel_metrics_key] : 0;
+      channel_results_data["E"][channel_metrics_key] = (typeof channel_results_data["E"][channel_metrics_key] != "undefined") ? channel_results_data["E"][channel_metrics_key] : 0;
+      channel_results_data["{{ stats.msg_direction }}"][channel_metrics_key] += {{ stats.count }};
+      channel_results_labels.push(channel_metrics_key);
+    {% endfor %}
+    
     let channelsCtx = document.getElementById('channelsChart').getContext('2d');
     let channelsChart = new Chart(channelsCtx, {
       type: 'line',
       data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        labels: [...new Set(channel_results_labels)],
         datasets: [{
           label: 'Sent',
           borderColor: '#c9f4ff',
           backgroundColor: '#c9f4ff',
-          data: [5, 10, 4, 14, 7, 6, 8, 9, 3, 10, 8, 7],
+          data: Object.values(channel_results_data.O),
         }, {
           label: 'Received',
           borderColor: '#03aeef',
           backgroundColor: '#03aeef',
-          data: [9, 6, 8, 13, 5, 12, 10, 11, 12, 9, 16, 8],
+          data: Object.values(channel_results_data.I),
         }, {
           label: 'Fail',
-          borderColor: '#0400a4',
+          // borderColor: '#0400a4',
           backgroundColor: '#0400a4',
-          data: [10, 7, 16, 19, 15, 8, 12, 13, 15, 12, 10, 7],
+          data: Object.values(channel_results_data.E),
         }],
       },
       options: {
@@ -413,17 +428,23 @@
       }
     });
 
+    const localMostUsedResults = {
+      labels: [],
+      data: [],
+    };
+
+    {% for most_used in channels_most_used %}
+      localMostUsedResults.labels.push("{{ most_used.name }}");
+      localMostUsedResults.data.push("{{ most_used.total }}");
+    {% endfor %}
+
     let localMostUsedCtx = document.getElementById('localMostUsedChannels').getContext('2d');
     let localMostUsedChannels = new Chart(localMostUsedCtx, {
       type: 'doughnut',
       data: {
-        labels: [
-          'Facebook',
-          'Whatsapp',
-          'SMS'
-        ],
+        labels: localMostUsedResults.labels,
         datasets: [{
-          data: [30, 25, 45],
+          data: localMostUsedResults.data,
           backgroundColor: [
             '#97d9f6',
             '#03aeef',
@@ -436,7 +457,7 @@
         title: {
           fontSize: '16',
           display: true,
-          text: 'Brasil',
+          text: '{{ request.org.name }}',
           position: 'top',
         },
         legend: {
@@ -463,17 +484,23 @@
       },
     });
 
+    const globalMostUsedResults = {
+      labels: [],
+      data: [],
+    };
+
+    {% for most_used in channels_most_used_global %}
+      globalMostUsedResults.labels.push("{{ most_used.name }}");
+      globalMostUsedResults.data.push("{{ most_used.total }}");
+    {% endfor %}
+
     let globalMostUsedCtx = document.getElementById('globalMostUsedChannels').getContext('2d');
     let globalMostUsedChannels = new Chart(globalMostUsedCtx, {
       type: 'doughnut',
       data: {
-        labels: [
-          'Facebook',
-          'Whatsapp',
-          'SMS'
-        ],
+        labels: globalMostUsedResults.labels,
         datasets: [{
-          data: [30, 25, 45],
+          data: globalMostUsedResults.data,
           backgroundColor: [
             '#97d9f6',
             '#03aeef',
@@ -519,10 +546,10 @@
       data: {
         labels: [
           'Other UNCTs',
-          'Brasil',
+          '{{ request.org.name }}',
         ],
         datasets: [{
-          data: [75, 25],
+          data: [{{ global_total_contacts.global }}, {{ global_total_contacts.local }}],
           backgroundColor: [
             '#03aeef',
             '#0054e2',
@@ -556,22 +583,38 @@
       },
     });
 
+    const overtime_results_labels = [];
+    const overtime_results_data = {
+      local: [],
+      global: [],
+    };
+    let overtime_results_key = "";
+
+    {% for stats in contacts_over_time %}
+      overtime_results_key = "{{ stats.month|get_month_name }}";
+      overtime_results_data["local"][overtime_results_key] = (typeof overtime_results_data["local"][overtime_results_key] != "undefined") ? overtime_results_data["local"][overtime_results_key] : 0;
+      overtime_results_data["global"][overtime_results_key] = (typeof overtime_results_data["global"][overtime_results_key] != "undefined") ? overtime_results_data["global"][overtime_results_key] : 0;
+      
+      overtime_results_data[{% if stats.org == request.org.id %}"local"{% else %}"global"{% endif %}][overtime_results_key] = {{ stats.total }};
+      overtime_results_labels.push(overtime_results_key);
+    {% endfor %}
+
     let contactsCtx = document.getElementById('contactsChart').getContext('2d');
     let contactsChart = new Chart(contactsCtx, {
       type: 'line',
       data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        labels: [...new Set(overtime_results_labels)],
         datasets: [
           {
-            label: 'Brasil',
+            label: '{{ request.org.name }}',
             borderColor: '#0400a4',
             backgroundColor: '#0400a4',
-            data: [9, 12, 20, 22, 14, 12, 19],
+            data: Object.values(overtime_results_data.local),
           }, {
             label: 'Global Average',
             borderColor: '#00adf3',
             backgroundColor: '#00adf3',
-            data: [15, 20, 30, 35, 39, 42, 56],
+            data: Object.values(overtime_results_data.global),
         }]
       },
       options: {

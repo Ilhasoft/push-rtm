@@ -2,7 +2,9 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import logging
+import calendar
 
+from urllib.parse import urlencode
 from django import forms, template
 from django.conf import settings
 from django.template import TemplateSyntaxError
@@ -394,7 +396,9 @@ def get_poll_sync_status(obj):
     return "Syncing... {0:.1f}%".format(sync_progress)
 
 
-from urllib.parse import urlencode
+@register.filter(name="get_month_name")
+def get_month_name(index):
+    return calendar.month_name[index]
 
 
 @register.simple_tag

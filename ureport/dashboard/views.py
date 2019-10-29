@@ -1,15 +1,22 @@
-import json
 import random
 import datetime
 
 from django.conf import settings
+from django.shortcuts import redirect
+from django.urls import reverse
+from django.utils.translation import ugettext_lazy as _
+from django.db.models import Sum, Count
+from django.db.models.functions import ExtractMonth, ExtractYear
 
 from smartmin.views import SmartTemplateView
 
-from ureport.polls.models import PollQuestion
+from ureport.polls.models import PollQuestion, Poll
+from ureport.channels.models import ChannelStats, ChannelDailyStats
+from ureport.contacts.models import Contact
 
 
 class Dashboard:
+
     @classmethod
     def get_sdgs_tracked_bubble_chart_data(self, questions, mock=False):
         """
@@ -40,13 +47,15 @@ class Dashboard:
                     not_tracked_sdg.append(settings.SDG_LIST[key - 1])
 
         else:  # USE REAL DATA
-            # create dict with sdgs and yours questions. eg: {1: {'questions': []}}
+            # create dict with sdgs and yours questions. eg: {1: {'questions':
+            # []}}
             sdgs_with_data = {
                 sdg[0]: {"questions": [q for q in questions if sdg[0] in q.sdgs]}
                 for sdg in settings.SDG_LIST
             }
 
-            # add keys total_responded and percentage_in_questions to sdgs_with_data
+            # add keys total_responded and percentage_in_questions to
+            # sdgs_with_data
             for key, value in sdgs_with_data.items():
                 if len(value["questions"]) > 0:
                     sdgs_with_data[key]["total_responded"] = value["questions"][
@@ -137,17 +146,61 @@ class Dashboard:
 
         return questions
 
+    @classmethod
+    def filter_by_date(self, date_field, time_ago):
+        one_year_ago = datetime.date.today() - datetime.timedelta(days=365)
+        one_month_ago = datetime.date.today() - datetime.timedelta(days=30)
+        one_week_ago = datetime.date.today() - datetime.timedelta(days=7)
+
+        filters = {}
+
+        if time_ago == "year":
+            filters[f"{date_field}__gte"] = one_year_ago
+        elif time_ago == "month":
+            filters[f"{date_field}__gte"] = one_month_ago
+        elif time_ago == "week":
+            filters[f"{date_field}__gte"] = one_week_ago
+
+        return filters
+
+    @classmethod
+    def get_text_time_ago(self, time_ago):
+        if time_ago == "year":
+            return _("Last Year")
+        elif time_ago == "month":
+            return _("Last Month")
+        elif time_ago == "week":
+            return _("Last Week")
+        return _("Since Inception")
+
+    @classmethod
+    def channel_info(self, urn, field):
+        return dict(settings.CHANNEL_TYPES).get(urn).get(field)
+
     class Local(SmartTemplateView):
         template_name = "dashboard/local.html"
 
+        def get(self, request, *args, **kwargs):
+            context = self.get_context_data(**kwargs)
+            if not self.request.user.is_authenticated:
+                return redirect(reverse("users.user_login"))
+            return self.render_to_response(context)
+
         def get_context_data(self, **kwargs):
             context = super().get_context_data(**kwargs)
+            channels_metrics_by = self.request.GET.get(
+                "message_metrics_by", "week")
+            channels_metrics_uuid = self.request.GET.get(
+                "message_metrics_uuid", "")
+
+            most_used_by = self.request.GET.get(
+                "most_used_by", "week")
 
             questions = PollQuestion.objects.filter(
                 is_active=True, poll__org=self.request.org, poll__is_active=True
             )
 
-            ### SDG TRAKED BUBBLE CHART ###
+            # SDG TRAKED BUBBLE CHART ###
             sdg_tracked_filter = self.request.GET.get("sdg_tracked_filter")
             if sdg_tracked_filter is None:
                 sdg_tracked_filter = "year"
@@ -164,7 +217,7 @@ class Dashboard:
                 sdg_tracked_questions
             )
 
-            ### SURVEY PARTIAL RESULT CHART ###
+            # SURVEY PARTIAL RESULT CHART ###
 
             # filter only surveys opened
             survey_result_sdg_questions = questions.filter(
@@ -180,7 +233,8 @@ class Dashboard:
                 survey_result_sdg_questions = questions.filter(
                     sdgs__contains=[survey_result_sdg]
                 )
-                context["survey_result_sdg"] = settings.SDG_LIST[survey_result_sdg - 1]
+                context["survey_result_sdg"] = settings.SDG_LIST[
+                    survey_result_sdg - 1]
 
             # show only question with data chart
             # survey_result_sdg_questions = [q for q in survey_result_sdg_questions if q.get_responded() > 0]
@@ -208,7 +262,8 @@ class Dashboard:
                 survey_result_raffled_question = survey_result_choice_question
             else:
                 if len(survey_result_sdg_questions) > 0:
-                    survey_result_raffled_question = survey_result_sdg_questions[0]
+                    survey_result_raffled_question = survey_result_sdg_questions[
+                        0]
                 else:
                     survey_result_raffled_question = None
 
@@ -233,9 +288,131 @@ class Dashboard:
                         doughnut_labels, doughnut_data
                     )
 
-            ### MOST USED CHANNELS CHARTS ###
+            # MESSAGE METRICS
+            channels = ChannelStats.objects.filter(
+                org=self.request.org).order_by("channel_type")
 
-            ### RAPIDPRO CONTACTS ###
+            channels_info = {}
+            channels_data = {}
+
+            for channel in channels:
+                channels_info[channel.uuid] = {
+                    "name": Dashboard.channel_info(channel.channel_type, "name"),
+                    "icon": Dashboard.channel_info(channel.channel_type, "icon"),
+                }
+            context["channels_info"] = channels_info
+
+            for channel in channels:
+                total = ChannelDailyStats.objects.filter(
+                    channel=channel, **Dashboard.filter_by_date("date", channels_metrics_by)
+                ).aggregate(
+                    total=Sum("count")
+                )["total"]
+
+                global_total = ChannelDailyStats.objects.exclude(
+                    channel__org=self.request.org,
+                ).filter(
+                    channel__channel_type=channel.channel_type,
+                    **Dashboard.filter_by_date("date", channels_metrics_by)
+                ).aggregate(
+                    total=Sum("count")
+                )["total"]
+
+                channels_data[channel.uuid] = {
+                    "name": Dashboard.channel_info(channel.channel_type, "name"),
+                    "icon": Dashboard.channel_info(channel.channel_type, "icon"),
+                    "total": total if total is not None else 0,
+                    "global": global_total if global_total is not None else 0,
+                }
+
+            if channels_metrics_uuid:
+                channels = channels.filter(uuid=channels_metrics_uuid)
+
+            channels_chart_stats = ChannelDailyStats.objects.filter(
+                channel__org=self.request.org,
+                channel__in=channels,
+                msg_direction__in=["I", "O", "E"],
+                msg_type__in=["M", "I", "E"],
+                **Dashboard.filter_by_date("date", channels_metrics_by),
+            ).order_by("date")
+
+            context["channels_chart_stats"] = channels_chart_stats
+            context["channels_data"] = channels_data
+            context["channels_metrics_uuid"] = channels_metrics_uuid
+            context["channels_metrics_by"] = channels_metrics_by
+            context["channels_messages_ago"] = Dashboard.get_text_time_ago(
+                channels_metrics_by)
+
+            # MOST USED CHANNELS CHARTS
+            context["surveys_total"] = Poll.objects.filter(
+                org=self.request.org, is_active=True).count()
+
+            most_used = ChannelDailyStats.objects.filter(
+                channel__org=self.request.org,
+                msg_direction__in=["I", "O"],
+                msg_type__in=["M", "I"],
+                **Dashboard.filter_by_date("date", most_used_by),
+            ).values(
+                "channel__channel_type"
+            ).annotate(
+                total=Sum("count")
+            ).order_by("-total")[:3]
+
+            most_used_global = ChannelDailyStats.objects.exclude(
+                channel__org=self.request.org,
+            ).filter(
+                msg_direction__in=["I", "O"],
+                msg_type__in=["M", "I"],
+                **Dashboard.filter_by_date("date", most_used_by),
+            ).values(
+                "channel__channel_type"
+            ).annotate(
+                total=Sum("count")
+            ).order_by("-total")[:3]
+
+            channels_most_used = []
+            channels_most_used_global = []
+
+            for channel in most_used:
+                channels_most_used.append(
+                    {
+                        "name": Dashboard.channel_info(channel.get("channel__channel_type"), "name"),
+                        "total": channel.get("total", 0),
+                    }
+                )
+
+            for channel in most_used_global:
+                channels_most_used_global.append(
+                    {
+                        "name": Dashboard.channel_info(channel.get("channel__channel_type"), "name"),
+                        "total": channel.get("total", 0),
+                    }
+                )
+
+            context["channels_most_used_ago"] = Dashboard.get_text_time_ago(
+                most_used_by)
+            context["channels_most_used"] = channels_most_used
+            context["channels_most_used_global"] = channels_most_used_global
+
+            # RAPIDPRO CONTACTS
+            context["contacts_over_time"] = Contact.objects.filter(
+                registered_on__gte=datetime.date.today() - datetime.timedelta(days=180),
+            ).annotate(
+                month=ExtractMonth("registered_on"),
+                year=ExtractYear("registered_on")).order_by("month").values(
+                "month",
+                "year"
+            ).annotate(total=Count("*")).values(
+                "month",
+                "year",
+                "total",
+                "org",
+            )
+
+            context["global_total_contacts"] = {
+                "local": Contact.objects.filter(org=self.request.org).count(),
+                "global": Contact.objects.exclude(org=self.request.org).count(),
+            }
 
             return context
 

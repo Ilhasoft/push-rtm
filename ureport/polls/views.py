@@ -441,7 +441,7 @@ class PollCRUDL(SmartCRUDL):
 
             for question in questions:
                 include_field_name = "ruleset_%s_include" % question.ruleset_uuid
-                include_field_initial = initial.get(include_field_name, False)
+                include_field_initial = initial.get(include_field_name, True)
                 include_field = forms.BooleanField(
                     label=_("Display"),
                     required=False,
