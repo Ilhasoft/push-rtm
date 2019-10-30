@@ -72,13 +72,6 @@
             <i class="material-icons info-icon">info</i>
             <span class="tooltip-content">{% trans 'Partial SDG results for the lastest ongoing surveys'%}</span>
           </span>
-              <div class="has-text-grey-light">
-                {% if survey_result_sdg %}
-                  {% trans "SDG" %} {{ survey_result_sdg.0 }} - {{ survey_result_sdg.1 }}
-                {% else %}
-                  {% trans "All SDGs" %}
-                {% endif %}
-              </div>
           <div class="selected-question top-m-30">
             <div
                 class="selected-question__title bottom-m-30"
@@ -95,7 +88,7 @@
             </div>
           </div>
         </div>
-        <div class="column is-paddingless">
+        <div class="column is-paddingless" id="sdgQuestions">
           <div class="flex space-between has-text-weight-bold p-40">
             <div class="card-title">{{ survey_result_sdg_questions|length }} Questions</div>
             <div class="dropdown is-hoverable">
@@ -109,8 +102,9 @@
               </div>
               <div class="dropdown-menu" role="menu">
                 <div class="dropdown-content">
+                  <a href="{% url 'dashboard.local' %}" class="dropdown-item sdgLink">None</a>
                   {% for key, value in SDG_LIST %}
-                    <a href="{% url 'dashboard.local' %}{% urlparams survey_result_sdg=key %}" class="dropdown-item">SDG {{ key }}</a>
+                    <a href="{% url 'dashboard.local' %}{% urlparams survey_result_sdg=key %}" class="dropdown-item sdgLink">SDG {{ key }}</a>
                   {% endfor %}
                 </div>
               </div>
@@ -301,6 +295,7 @@
 {{ sdgs_bubble_data.datasets|json_script:'SDGSBubbleChartDataDatasets' }}
 {{ survey_result_doughnut_data|json_script:'SurveyResultDoughnutData' }}
 {{ survey_result_wordcloud_data|json_script:'SurveyResultWordcloudData' }}
+{{ survey_result_raffled_question.type_chart|json_script:'ChartType' }}
 
   <script>
     let bubbleCtx = document.getElementById('bubbleChart').getContext('2d');
@@ -381,13 +376,20 @@
     }
 
     $(document).ready(function () {
-      $('.question-link').on('click', function (e) {
+      $('#sdgQuestions').on('click', '.question-link', function (e) {
         e.preventDefault();
 
         $('#SurveyResultDoughnutData').load(e.target.href + ' #SurveyResultDoughnutData', function (result) {
             window.history.pushState({}, document.title, e.target.href);
             renderDonutChart($(result).find('.selected-question__title').first().data('question-title'));
         });
+      });
+
+      $('#sdgQuestions').on('click', '.sdgLink', function (e) {
+        e.preventDefault();
+
+        window.history.pushState({}, document.title, e.target.href);
+        $('#sdgQuestions').load(e.target.href + ' #sdgQuestions');
       });
 
       renderDonutChart($('.selected-question__title').data('question-title'));
