@@ -211,23 +211,6 @@
       }
     });
 
-    const availableColors = [
-      "#0CD7F0",
-      "#0CA2FA",
-      "#016AF5",
-      "#003CFA",
-      "#1F00F5",
-      "#02008A",
-      "#0300B0",
-      "#0400A4",
-      "#0400F0",
-      "#020063",
-      "#2709BD",
-      "#1C0B70",
-      "#320CF0",
-      "#4927F2",
-      "#170670",
-    ];
     const results_age = [];
     const results_gender = [];
     const results_statistics = [];
@@ -267,7 +250,7 @@
                   results_age[question]["series"]["{{ forloop.counter0 }}"] = (typeof results_age[question]["series"]["{{ forloop.counter0 }}"] != "undefined") ? results_age[question]["series"]["{{ forloop.counter0 }}"] : {
                     label: "{{ category.label|safe }}",
                     data: [],
-                    backgroundColor: availableColors[{{ forloop.counter0 }}],
+                    backgroundColor: RTMConfigs.availableColors[{{ forloop.counter0 }}],
                     borderColor: "rgba(255, 255, 255, 0.1)",
                   };
                   results_age[question]["series"]["{{ forloop.counter0 }}"].data.push({{ category.count }});
@@ -292,7 +275,7 @@
                   results_gender[question]["series"]["{{ forloop.counter0 }}"] = (typeof results_gender[question]["series"]["{{ forloop.counter0 }}"] != "undefined") ? results_gender[question]["series"]["{{ forloop.counter0 }}"] : {
                       label: "{{ category.label|safe }}",
                       data: [],
-                      backgroundColor: availableColors[{{ forloop.counter0 }}],
+                      backgroundColor: RTMConfigs.availableColors[{{ forloop.counter0 }}],
                       borderColor: "rgba(255, 255, 255, 0.1)",
                     };
                   results_gender[question]["series"]["{{ forloop.counter0 }}"].data.push({{ category.count }});
@@ -310,7 +293,7 @@
         data: {
           datasets: [{
             data: result.series,
-            backgroundColor: availableColors,
+            backgroundColor: RTMConfigs.availableColors,
             borderColor: "rgba(255, 255, 255, 0.1)",
           }],
           labels: result.labels
@@ -357,7 +340,7 @@
           data: {
             datasets: [{
               data: results_statistics[question].series,
-              backgroundColor: availableColors,
+              backgroundColor: RTMConfigs.availableColors,
               borderColor: "rgba(255, 255, 255, 0.1)",
             }],
             labels: results_statistics[question].labels
@@ -477,7 +460,7 @@
     }
 
     const fillWordColor = function(d, i) {
-      return availableColors[i % availableColors.length];
+      return RTMConfigs.availableColors[i % RTMConfigs.availableColors.length];
     }
 
     $("div[data-question-type=\"cloud\"]").each(function() {
