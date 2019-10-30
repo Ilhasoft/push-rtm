@@ -80,14 +80,12 @@
                 {% endif %}
               </div>
           <div class="selected-question top-m-30">
-            <div class="selected-question__title bottom-m-30">
-              {{ survey_result_raffled_question }}</br>
-               <!-- Nome da Survey, Falta tag HTML 
-               {{ survey_result_raffled_question.poll }}
-               -->
-               {% if not survey_result_doughnut_data %}
-                {% trans "No date for chart yet" %}
-               {% endif %}
+            <div
+                class="selected-question__title bottom-m-30"
+                data-empty-msg="{% trans "No data for chart yet" %}"
+                data-question-title="{{ survey_result_raffled_question }}"
+            >
+              {{ survey_result_raffled_question }}
             </div>
             <div class="selected-question__chart">
 <!--              perguntas fechadas-->
@@ -121,7 +119,7 @@
           <div class="questions-list">
             {% for question in survey_result_sdg_questions %}
               <div class="questions-list__item p-30 border-bottom">
-                <a href="{% url 'dashboard.local' %}{% urlparams survey_result_choice_question=question.pk %}">{{ question }}</a>
+                <a href="{% url 'dashboard.local' %}{% urlparams survey_result_choice_question=question.pk %}" class="question-link">{{ question }}</a>
               </div>
             {% empty %}
               <div class="questions-list__item p-30 border-bottom">
@@ -294,6 +292,7 @@
 {% endblock %}
 
 {% block js_extra %}
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
   <script src="{% static 'plugins/wordcloud/d3.js' %}"></script>
@@ -333,9 +332,26 @@
     });
 
     let donutCtx = document.getElementById('questionChart').getContext('2d');
-    let questionChart = new Chart(donutCtx, {
-      type: 'doughnut',
-        data: JSON.parse(document.getElementById('SurveyResultDoughnutData').textContent),
+    let donutChart;
+    function renderDonutChart(questionTitle = '') {
+      if (donutChart) {
+        donutChart.destroy();
+      }
+
+      const dataset = JSON.parse($('#SurveyResultDoughnutData').text());
+
+      if (dataset === "") {
+        $('.selected-question__title').html(questionTitle + '<br>' + $('.selected-question__title').data('empty-msg'));
+        return;
+      }
+
+      $('.selected-question__title').text(questionTitle);
+
+      dataset.datasets[0].backgroundColor = RTMConfigs.availableColors;
+
+      donutChart = new Chart(donutCtx, {
+        type: 'doughnut',
+        data: dataset,
         options: {
           legend: {
             labels: {
@@ -359,7 +375,21 @@
               color: '#fff',
             }
           }
-        },
+        }
+      });
+    }
+
+    $(document).ready(function () {
+      $('.question-link').on('click', function (e) {
+        e.preventDefault();
+
+        $('#SurveyResultDoughnutData').load(e.target.href + ' #SurveyResultDoughnutData', function (result) {
+            window.history.pushState({}, document.title, e.target.href);
+            renderDonutChart($(result).find('.selected-question__title').first().data('question-title'));
+        });
+      });
+
+      renderDonutChart($('.selected-question__title').data('question-title'));
     });
 
     const channel_results_labels = [];
