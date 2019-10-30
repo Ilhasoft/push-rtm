@@ -212,6 +212,7 @@ class Dashboard:
                     questions, created_on=sdg_tracked_filter
                 )
 
+            context["sdg_tracked_filter"] = sdg_tracked_filter
             context["sdgs_bubble_data"] = Dashboard.get_sdgs_tracked_bubble_chart_data(
                 sdg_tracked_questions
             )
@@ -236,7 +237,7 @@ class Dashboard:
                     survey_result_sdg - 1]
 
             # show only question with data chart
-            # survey_result_sdg_questions = [q for q in survey_result_sdg_questions if q.get_responded() > 0]
+            survey_result_sdg_questions = [q for q in survey_result_sdg_questions if q.get_responded() > 0]
 
             # shuffled questions
             survey_result_sdg_questions = list(survey_result_sdg_questions)
@@ -267,6 +268,7 @@ class Dashboard:
                     survey_result_raffled_question = None
 
             if survey_result_raffled_question:
+                survey_result_raffled_question.chart_type = 'wordcloud' # wordcloud / doughnut
                 context[
                     "survey_result_raffled_question"
                 ] = survey_result_raffled_question
@@ -286,6 +288,16 @@ class Dashboard:
                     ] = Dashboard.get_doughnut_chart_data(
                         doughnut_labels, doughnut_data
                     )
+
+                # word cloud chart
+                words = [
+                    {'text': "Alagoas", 'size': 25},
+                    {'text': "Teresina", 'size': 27},
+                    {'text': "Fortaleza", 'size': 23},
+                    {'text': "Natal", 'size': 29},
+                ]
+
+                context['survey_result_wordcloud_data'] = words
 
             # MESSAGE METRICS
             channels = ChannelStats.objects.filter(

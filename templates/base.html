@@ -22,6 +22,8 @@
   {% compress js %}
   <script src="{% static 'plugins/toast/toast.js' %}"></script>
   <script type="text/javascript">
+    window.RTMConfigs = {};
+
     const $dropdowns = getAll('.dropdown:not(.is-hoverable)');
 
     if ($dropdowns.length > 0) {
@@ -49,6 +51,8 @@
     }
   </script>
   {% endcompress %}
+
+  <script src="{% static 'js/availableColors.js' %}"></script>
 
   {% block js_extra %} {% endblock %}
 
