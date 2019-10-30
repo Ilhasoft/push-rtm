@@ -300,6 +300,7 @@
 
 {{ sdgs_bubble_data.datasets|json_script:'SDGSBubbleChartDataDatasets' }}
 {{ survey_result_doughnut_data|json_script:'SurveyResultDoughnutData' }}
+{{ survey_result_wordcloud_data|json_script:'SurveyResultWordcloudData' }}
 
   <script>
     let bubbleCtx = document.getElementById('bubbleChart').getContext('2d');

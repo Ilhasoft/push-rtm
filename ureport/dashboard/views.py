@@ -268,6 +268,7 @@ class Dashboard:
                     survey_result_raffled_question = None
 
             if survey_result_raffled_question:
+                survey_result_raffled_question.chart_type = 'wordcloud' # wordcloud / doughnut
                 context[
                     "survey_result_raffled_question"
                 ] = survey_result_raffled_question
@@ -287,6 +288,16 @@ class Dashboard:
                     ] = Dashboard.get_doughnut_chart_data(
                         doughnut_labels, doughnut_data
                     )
+
+                # word cloud chart
+                words = [
+                    {'text': "Alagoas", 'size': 25},
+                    {'text': "Teresina", 'size': 27},
+                    {'text': "Fortaleza", 'size': 23},
+                    {'text': "Natal", 'size': 29},
+                ]
+
+                context['survey_result_wordcloud_data'] = words
 
             # MESSAGE METRICS
             channels = ChannelStats.objects.filter(
