@@ -107,7 +107,7 @@
           <div class="questions-list">
             {% for question in survey_result_sdg_questions %}
               <div class="questions-list__item p-30 border-bottom">
-                <a href="javascript:showChart('{{ question.pk }}', '{{ question.is_open_ended }}');" class="question-link">{{ question.title }}</a>
+                <a href="javascript:showChart('{{ question.pk }}', '{{ question.title }}', '{{ question.is_open_ended }}');" class="question-link">{{ question.title }}</a>
               </div>
             {% empty %}
               <div class="questions-list__item p-30 border-bottom">
@@ -353,7 +353,7 @@
     let svg;
     let lastQuestion = 0;
 
-    function showChart(question, is_open_ended) {
+    function showChart(question, title, is_open_ended) {
       if (question == lastQuestion) {
         return;
       }
@@ -363,6 +363,7 @@
         donutChart.destroy();
       }
       d3.select("svg").remove();
+      $('.selected-question__title').html(title);
 
       if (is_open_ended === "False") {
         $('#questionChart').show();
@@ -449,7 +450,7 @@
       lastQuestion = question;
     }
 
-    showChart({{ survey_result_sdg_questions.0.pk }}, "{{ survey_result_sdg_questions.0.is_open_ended }}");
+    showChart({{ survey_result_sdg_questions.0.pk }}, "{{ survey_result_sdg_questions.0.title }}", "{{ survey_result_sdg_questions.0.is_open_ended }}");
 
     const channel_results_labels = [];
     const channel_results_data = {
