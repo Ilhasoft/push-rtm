@@ -17,10 +17,10 @@
     <div class="box is-shadowless p-40">
       <div class="flex space-between">
         <div>
-          <span class="card-title has-text-weight-bold">SDGs being tracked</span>
+          <span class="card-title has-text-weight-bold">{% trans "SDGs being tracked" %}</span>
           <span class="tooltip top left-m-10">
             <i class="material-icons info-icon">info</i>
-            <span class="tooltip-content">{% trans 'Number of total messages received addressing each SDG'%}</span>
+            <span class="tooltip-content">{% trans "Number of total messages received addressing each SDG" %}</span>
           </span>
         </div>
         <div class="dropdown is-hoverable">
@@ -54,7 +54,7 @@
         {% endif %}
       </div>
       <canvas id="bubbleChart"></canvas>
-      <div class="card-title has-text-weight-bold bottom-p-20">SDGs not being tracked</div>
+      <div class="card-title has-text-weight-bold bottom-p-20">{% trans "SDGs not being tracked" %}</div>
       <ul class="untracked-sgd">
         {% for key, value in sdgs_bubble_data.not_tracked_sdgs %}
           <li class="untracked-sgd__item">
@@ -67,10 +67,10 @@
     <div class="box is-shadowless is-paddingless">
       <div class="columns is-marginless">
         <div class="column is-three-fifths border-right p-40">
-          <span class="card-title has-text-weight-bold">Surveys Partial Results</span>
+          <span class="card-title has-text-weight-bold">{% trans "Surveys Partial Results" %}</span>
           <span class="tooltip top left-m-10">
             <i class="material-icons info-icon">info</i>
-            <span class="tooltip-content">{% trans 'Partial SDG results for the lastest ongoing surveys'%}</span>
+            <span class="tooltip-content">{% trans "Partial SDG results for the lastest ongoing surveys" %}</span>
           </span>
           <div class="selected-question top-m-30">
             <div class="selected-question__title bottom-m-30">
@@ -96,9 +96,9 @@
               </div>
               <div class="dropdown-menu" role="menu">
                 <div class="dropdown-content">
-                  <a href="{% url 'dashboard.local' %}" class="dropdown-item sdgLink">None</a>
+                  <a href="{% url 'dashboard.local' %}#sdgQuestions" class="dropdown-item sdgLink">{% trans "None" %}</a>
                   {% for key, value in SDG_LIST %}
-                    <a href="{% url 'dashboard.local' %}{% urlparams survey_result_sdg=key %}" class="dropdown-item sdgLink">SDG {{ key }}</a>
+                    <a href="{% url 'dashboard.local' %}{% urlparams survey_result_sdg=key %}#sdgQuestions" class="dropdown-item sdgLink">{% trans "SDG" %} {{ key }}</a>
                   {% endfor %}
                 </div>
               </div>
@@ -111,7 +111,7 @@
               </div>
             {% empty %}
               <div class="questions-list__item p-30 border-bottom">
-                {% trans 'There are no question registered with SDG ' %} {{ survey_result_sdg.0 }} - {{ survey_result_sdg.1 }}
+                {% trans "There are no question registered with SDG" %} {{ survey_result_sdg.0 }} - {{ survey_result_sdg.1 }}
               </div>
             {% endfor %}
           </div>
@@ -249,7 +249,7 @@
             <span class="has-text-weight-bold">{% trans "Surveys" %}</span>
             <span class="tooltip top left-m-10">
               <i class="material-icons info-icon">info</i>
-              <span class="tooltip-content">{% trans 'Surveys being conducted through the RTM'%}</span>
+              <span class="tooltip-content">{% trans "Surveys being conducted through the RTM" %}</span>
             </span>
           </div>
           <div class="surveys-info has-text-centered bottom-p-30 border-bottom">
@@ -264,14 +264,14 @@
       </div>
     </div>
     <div class="box is-shadowless">
-      <div class="card-title p-20 has-text-weight-bold">RapidPro Contacts</div>
+      <div class="card-title p-20 has-text-weight-bold">{% trans "RapidPro Contacts" %}</div>
       <div class="columns p-20">
         <div class="column is-three-fifths">
-          <div class="has-text-weight-bold bottom-m-20">Contacts growth over time</div>
+          <div class="has-text-weight-bold bottom-m-20">{% trans "Contacts growth over time" %}</div>
           <canvas id="contactsChart"></canvas>
         </div>
         <div class="column">
-          <div class="has-text-weight-bold bottom-m-20">Portion of Global Total Contacts</div>
+          <div class="has-text-weight-bold bottom-m-20">{% trans "Portion of Global Total Contacts" %}</div>
           <canvas id="pieChart"></canvas>
         </div>
       </div>
@@ -448,6 +448,8 @@
 
       lastQuestion = question;
     }
+
+    showChart({{ survey_result_sdg_questions.0.pk }}, "{{ survey_result_sdg_questions.0.is_open_ended }}");
 
     const channel_results_labels = [];
     const channel_results_data = {
