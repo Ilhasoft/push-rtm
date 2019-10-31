@@ -77,8 +77,8 @@
               {{ survey_result_sdg_questions.0.title }}
             </div>
             <div class="selected-question__chart">
-              <canvas id="questionChart"></canvas>
               <div id="wordCloud"></div>
+              <canvas id="questionChart"></canvas>
             </div>
           </div>
         </div>
@@ -341,7 +341,7 @@
         {% for category in question.get_results.0.categories %}
           surveys_results_words[question].push({
             text: "{{ category.label|upper }}",
-            size: {{ category.count }},
+            size: {% if category.count < 10 %}20 +{% endif %}{{ category.count }},
           });
         {% endfor %}
 
@@ -350,17 +350,22 @@
 
     let donutChart;
     let wordCloud;
+    let svg;
+    let lastQuestion = 0;
 
     function showChart(question, is_open_ended) {
+      if (question == lastQuestion) {
+        return;
+      }
+
       let donutCtx = document.getElementById('questionChart');
-      
       if (donutChart) {
         donutChart.destroy();
       }
-
-      console.log(donutChart);
+      d3.select("svg").remove();
 
       if (is_open_ended === "False") {
+        $('#questionChart').show();
         donutChart = new Chart(donutCtx.getContext("2d"), {
           type: "doughnut",
           data: {
@@ -398,55 +403,50 @@
         });
       } else {
         let words = surveys_results_words[question];
-        let width = 250, height = 250;
-
+        $('#questionChart').hide();
         const fillWordColor = function(d, i) {
           return RTMConfigs.availableColors[i % RTMConfigs.availableColors.length];
         }
 
-        console.log(wordCloud);
+        let margin = {top: 0, right: 10, bottom: 10, left: 10},
+          width = 350 - margin.left - margin.right,
+          height = 290 - margin.top - margin.bottom;
 
-        if (wordCloud) {
-          d3.selectAll("#wordCloud").exit();
-        }
+        svg = d3.select("#wordCloud").append("svg")
+          .attr("width", width)
+          .attr("height", height)
+          .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        wordCloud = d3.scale.category20();
-        d3.layout.cloud()
+        d3.scale.category20();
+        var layout = d3.layout.cloud()
+          .size([width, height])
           .words(words)
+          .padding(5)
           .rotate(function() { return ~~(Math.random() * 2) * 90; })
-          .font("Impact")
-          .fontSize(function(d) { return d.size; })
-          .on("end", draw)
-          .start();
+          .fontSize(function(d) { return d.size; })      // font size of words
+          .on("end", draw);
+        layout.start();
 
         function draw(words) {
-          d3.select("#wordCloud").append("svg")
-            .attr("width", '60%')
-            .attr("height", '60%')
-            .attr('viewBox','0 0 ' + Math.min(width,height) + ' ' + Math.min(width,height))
-            .attr('preserveAspectRatio','xMinYMin')
+          svg
             .append("g")
-            .attr("transform", "translate(" + Math.min(width,height) / 2 + "," + Math.min(width,height) / 2 + ")")
+            .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
             .selectAll("text")
             .data(words)
             .enter().append("text")
-            .style("font-size", function (d) {
-              return d.size + "px";
-            })
-            .style("font-family", "Impact")
-            .style("fill", function (d, i) {
-              return wordCloud(i);
-            })
+            .style("font-size", function(d) { return d.size; })
+            .style("fill", fillWordColor)
             .attr("text-anchor", "middle")
-            .attr("transform", function (d) {
+            .style("font-family", "Impact")
+            .attr("transform", function(d) {
               return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
             })
-            .style('fill', fillWordColor)
-            .text(function (d) {
-              return d.text;
-            });
+            .text(function(d) { return d.text; });
         }
       }
+
+      lastQuestion = question;
     }
 
     const channel_results_labels = [];
