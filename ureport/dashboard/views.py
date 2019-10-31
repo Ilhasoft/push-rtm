@@ -96,33 +96,44 @@ class Dashboard:
         return data
 
     @classmethod
-    def get_doughnut_chart_data(self, labels, data, **kwargs):
-        """
-        return doughnut chart data dict
-        get labels string list parameters
-        get data double list parameters.
-        optional: backgroundColor string list parameters
-        optional: borderColor string parameters
-        """
+    def get_chart_data(self, question, **kwargs):
+        if question.is_open_ended():
+            wordcloud_data = {"type": "wordcloud", "datasets": []}
+            results = question.get_results()[0]
+            for result in results.get("categories"):
+                wordcloud_data["datasets"].append({
+                    "text": result.get("label").upper(),
+                    "size": 20 + result.get("count"),
+                })
+            return wordcloud_data
+        else:
+            doughnut_data = {}
+            categories = question.get_total_summary_data()["categories"]
+            total = sum([q["count"] for q in categories])
 
-        if len(labels) != len(data):
-            raise AssertionError("len(labels) must be equal to len(data)")
+            if total > 0:
+                labels = [q["label"] for q in categories]
+                data = [
+                    round((q["count"] / total) * 100, 2) for q in categories
+                ]
 
-        doughnut_data = {"labels": [], "datasets": []}
+            if len(labels) != len(data):
+                raise AssertionError("len(labels) must be equal to len(data)")
 
-        doughnut_data["labels"] = labels
-        doughnut_data["datasets"] = [
-            {
-                "data": data,
-                "backgroundColor": kwargs.get(
-                    "backgroundColor",
-                    ["#%06x" % random.randint(0, 0xFFFFFF) for i in labels],
-                ),
-                "borderColor": kwargs.get("borderColor", "rgba(255, 255, 255, 0.1)"),
-            }
-        ]
+            doughnut_data = {"type": "doughnut", "labels": [], "datasets": []}
 
-        return doughnut_data
+            doughnut_data["labels"] = labels
+            doughnut_data["datasets"] = [
+                {
+                    "data": data,
+                    "backgroundColor": kwargs.get(
+                        "backgroundColor",
+                        ["#%06x" % random.randint(0, 0xFFFFFF) for i in labels],
+                    ),
+                    "borderColor": kwargs.get("borderColor", "rgba(255, 255, 255, 0.1)"),
+                }
+            ]
+            return doughnut_data
 
     @classmethod
     def questions_filter(self, questions, **kwargs):
@@ -254,50 +265,25 @@ class Dashboard:
                 survey_result_choice_question = None
 
             # max 20 questions
-            survey_result_sdg_questions = survey_result_sdg_questions[:20]
+            context["survey_result_sdg_questions"] = survey_result_sdg_questions[:20]
 
-            context["survey_result_sdg_questions"] = survey_result_sdg_questions
+            # if survey_result_choice_question:
+            #     survey_result_raffled_question = survey_result_choice_question
+            # else:
+            #     if len(survey_result_sdg_questions) > 0:
+            #         survey_result_raffled_question = survey_result_sdg_questions[
+            #             0]
+            #     else:
+            #         survey_result_raffled_question = None
 
-            if survey_result_choice_question:
-                survey_result_raffled_question = survey_result_choice_question
-            else:
-                if len(survey_result_sdg_questions) > 0:
-                    survey_result_raffled_question = survey_result_sdg_questions[
-                        0]
-                else:
-                    survey_result_raffled_question = None
+            # if survey_result_raffled_question:
+            #     context[
+            #         "survey_result_raffled_question"
+            #     ] = survey_result_raffled_question
 
-            if survey_result_raffled_question:
-                survey_result_raffled_question.chart_type = 'wordcloud' # wordcloud / doughnut
-                context[
-                    "survey_result_raffled_question"
-                ] = survey_result_raffled_question
-
-                categories = survey_result_raffled_question.get_total_summary_data()[
-                    "categories"
-                ]
-                total = sum([q["count"] for q in categories])
-
-                if total > 0:
-                    doughnut_labels = [q["label"] for q in categories]
-                    doughnut_data = [
-                        round((q["count"] / total) * 100, 2) for q in categories
-                    ]
-                    context[
-                        "survey_result_doughnut_data"
-                    ] = Dashboard.get_doughnut_chart_data(
-                        doughnut_labels, doughnut_data
-                    )
-
-                # word cloud chart
-                words = [
-                    {'text': "Alagoas", 'size': 25},
-                    {'text': "Teresina", 'size': 27},
-                    {'text': "Fortaleza", 'size': 23},
-                    {'text': "Natal", 'size': 29},
-                ]
-
-                context['survey_result_wordcloud_data'] = words
+            #     context[
+            #         "survey_result_data"
+            #     ] = Dashboard.get_chart_data(survey_result_raffled_question)
 
             # MESSAGE METRICS
             channels = ChannelStats.objects.filter(
