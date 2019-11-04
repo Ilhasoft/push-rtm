@@ -1,0 +1,36 @@
+{% load i18n static humanize sass_tags ureport %}
+<div class="columns">
+    <div class="column is-two-fifths">
+        <div class="box is-shadowless">
+            <div class="p-20 flex space-between">
+            <div class="card-title has-text-weight-bold">{% trans "Most used Channels" %}</div>            
+            <div class="dropdown is-hoverable">
+                <div class="dropdown-trigger">
+                <div aria-haspopup="true" aria-controls="dropdown-menu">
+                    <span>{% trans "Filter by" %}</span>
+                    <span class="icon is-small">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                </span>
+                </div>
+                </div>
+                <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                    <a href="?most_used_by=week#most_used" class="dropdown-item">{% trans "Last 7 days" %}</a>
+                    <a href="?most_used_by=month#most_used" class="dropdown-item">{% trans "Last 30 days" %}</a>
+                    <a href="?most_used_by=year#most_used" class="dropdown-item">{% trans "Last 12 months" %}</a>
+                    <a href="?most_used_by=#most_used" class="dropdown-item">{% trans "Since Inception" %}</a>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="left-p-20 bottom-p-20 has-text-grey-light">{{ channels_most_used_ago }}</div>        
+        <canvas id="globalMostUsedChannels"></canvas>
+        </div>
+        <div class="column">
+        <div class="box is-shadowless">
+            <div class="card-title has-text-weight-bold p-20">{% trans "RapidPro Contacts" %}</div>
+            <canvas id="contactsChart"></canvas>
+        </div>
+    </div>
+</div>

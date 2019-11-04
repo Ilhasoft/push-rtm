@@ -98,46 +98,6 @@ class Dashboard(SmartTemplateView):
         return data
 
     @classmethod
-    def get_chart_data(self, question, **kwargs):
-        if question.is_open_ended():
-            wordcloud_data = {"type": "wordcloud", "datasets": []}
-            results = question.get_results()[0]
-            for result in results.get("categories"):
-                wordcloud_data["datasets"].append({
-                    "text": result.get("label").upper(),
-                    "size": 20 + result.get("count"),
-                })
-            return wordcloud_data
-        else:
-            doughnut_data = {}
-            categories = question.get_total_summary_data()["categories"]
-            total = sum([q["count"] for q in categories])
-
-            if total > 0:
-                labels = [q["label"] for q in categories]
-                data = [
-                    round((q["count"] / total) * 100, 2) for q in categories
-                ]
-
-            if len(labels) != len(data):
-                raise AssertionError("len(labels) must be equal to len(data)")
-
-            doughnut_data = {"type": "doughnut", "labels": [], "datasets": []}
-
-            doughnut_data["labels"] = labels
-            doughnut_data["datasets"] = [
-                {
-                    "data": data,
-                    "backgroundColor": kwargs.get(
-                        "backgroundColor",
-                        ["#%06x" % random.randint(0, 0xFFFFFF) for i in labels],
-                    ),
-                    "borderColor": kwargs.get("borderColor", "rgba(255, 255, 255, 0.1)"),
-                }
-            ]
-            return doughnut_data
-
-    @classmethod
     def questions_filter(self, questions, **kwargs):
         filters = {}
         created_on = kwargs.get("created_on")
