@@ -1,5 +1,4 @@
 // flexbox
-
 .flex {
   display: flex !important;
 
@@ -17,5 +16,14 @@
 
   &.align-center {
     align-items: center;
+  }
+}
+
+// CSS grid
+.grid {
+  display: grid !important;
+
+  &.align-center {
+    align-self: center;
   }
 }
