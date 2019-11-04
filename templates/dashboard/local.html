@@ -244,7 +244,7 @@
         </div>
       </div>
       <div class="column is-one-fifth">
-        <div class="surveys-card box is-shadowless">
+        <div class="surveys-card grid box is-shadowless">
           <div class="card-title left-p-10 top-p-10 bottom-p-20">
             <span class="has-text-weight-bold">{% trans "Surveys" %}</span>
             <span class="tooltip top left-m-10">
@@ -252,13 +252,15 @@
               <span class="tooltip-content">{% trans "Surveys being conducted through the RTM" %}</span>
             </span>
           </div>
-          <div class="surveys-info has-text-centered bottom-p-30 border-bottom">
-            <div class="surveys-info__number">{{ surveys_total }}</div>
-            <div class="surveys-info_unct">{{ request.org.name }}</div>
-          </div>
-          <div class="surveys-info has-text-centered top-p-30 bottom-p-30">
-            <div class="surveys-info__number">--</div>
-            <div class="surveys-info_unct">{% trans "Global" %}</div>
+          <div class="grid align-center">
+            <div class="surveys-info has-text-centered bottom-p-30 border-bottom">
+              <div class="surveys-info__number">{{ surveys_total }}</div>
+              <div class="surveys-info_unct">{{ request.org.name }}</div>
+            </div>
+            <div class="surveys-info has-text-centered top-p-30 bottom-p-30">
+              <div class="surveys-info__number">--</div>
+              <div class="surveys-info_unct">{% trans "Global" %}</div>
+            </div>
           </div>
         </div>
       </div>
