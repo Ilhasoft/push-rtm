@@ -83,7 +83,7 @@
           </div>
         </div>
         <div class="column is-paddingless" id="sdgQuestions">
-          <div class="flex space-between has-text-weight-bold p-40">
+          <div class="flex space-between has-text-weight-bold p-30">
             <div class="card-title">{{ survey_result_sdg_questions|length }} {% trans "Questions" %}</div>
             <div class="dropdown is-hoverable">
               <div class="dropdown-trigger">
@@ -347,6 +347,18 @@
 
       {% endif %}
     {% endfor %}
+
+    (function ($) {
+      let $questionList = $('.questions-list'),
+        $questionsItems = $questionList.find('.questions-list__item');
+
+      $questionsItems.first().addClass('active');
+
+      $questionList.on('click', '.questions-list__item', function (e) {
+        $questionsItems.removeClass('active');
+        $(this).addClass('active');
+      });
+    })(jQuery);
 
     let donutChart;
     let wordCloud;
