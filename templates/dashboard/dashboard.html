@@ -10,7 +10,9 @@
 
 {% block content %}
   <section class="section">
-    <h1 class="title">{{ request.org }}</h1>
+    <h1 class="title">
+        {% if access_log == 'local' %}{{ request.org }} {% else %} Dashboard {% endif %}
+    </h1>
   </section>
 
   <section class="section">
