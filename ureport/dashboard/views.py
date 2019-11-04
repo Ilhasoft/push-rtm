@@ -5,6 +5,7 @@ from django.conf import settings
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
+from django.utils.timezone import utc
 from django.db.models import Sum, Count
 from django.db.models.functions import ExtractMonth, ExtractYear
 
@@ -142,9 +143,10 @@ class Dashboard:
 
         # created_on filter
         if created_on:
-            one_year_ago = datetime.date.today() - datetime.timedelta(days=365)
-            one_moth_ago = datetime.date.today() - datetime.timedelta(days=30)
-            one_week_ago = datetime.date.today() - datetime.timedelta(days=7)
+            now = datetime.datetime.utcnow().replace(tzinfo=utc)
+            one_year_ago = now - datetime.timedelta(days=365)
+            one_moth_ago = now - datetime.timedelta(days=30)
+            one_week_ago = now - datetime.timedelta(days=7)
 
             if created_on == "year":
                 filters["created_on__gte"] = one_year_ago
@@ -159,9 +161,10 @@ class Dashboard:
 
     @classmethod
     def filter_by_date(self, date_field, time_ago):
-        one_year_ago = datetime.date.today() - datetime.timedelta(days=365)
-        one_month_ago = datetime.date.today() - datetime.timedelta(days=30)
-        one_week_ago = datetime.date.today() - datetime.timedelta(days=7)
+        now = datetime.datetime.utcnow().replace(tzinfo=utc)
+        one_year_ago = now - datetime.timedelta(days=365)
+        one_month_ago = now - datetime.timedelta(days=30)
+        one_week_ago = now - datetime.timedelta(days=7)
 
         filters = {}
 
@@ -232,7 +235,7 @@ class Dashboard:
 
             # filter only surveys opened
             survey_result_sdg_questions = questions.filter(
-                poll__poll_end_date=datetime.date.today()
+                poll__poll_end_date=datetime.datetime.utcnow().replace(tzinfo=utc)
             )
 
             survey_result_sdg = self.request.GET.get("survey_result_sdg")
@@ -266,24 +269,6 @@ class Dashboard:
 
             # max 20 questions
             context["survey_result_sdg_questions"] = survey_result_sdg_questions[:20]
-
-            # if survey_result_choice_question:
-            #     survey_result_raffled_question = survey_result_choice_question
-            # else:
-            #     if len(survey_result_sdg_questions) > 0:
-            #         survey_result_raffled_question = survey_result_sdg_questions[
-            #             0]
-            #     else:
-            #         survey_result_raffled_question = None
-
-            # if survey_result_raffled_question:
-            #     context[
-            #         "survey_result_raffled_question"
-            #     ] = survey_result_raffled_question
-
-            #     context[
-            #         "survey_result_data"
-            #     ] = Dashboard.get_chart_data(survey_result_raffled_question)
 
             # MESSAGE METRICS
             channels = ChannelStats.objects.filter(
@@ -393,7 +378,7 @@ class Dashboard:
 
             # RAPIDPRO CONTACTS
             context["contacts_over_time"] = Contact.objects.filter(
-                registered_on__gte=datetime.date.today() - datetime.timedelta(days=180),
+                registered_on__gte=datetime.datetime.utcnow().replace(tzinfo=utc) - datetime.timedelta(days=180),
             ).annotate(
                 month=ExtractMonth("registered_on"),
                 year=ExtractYear("registered_on")).order_by("month").values(
