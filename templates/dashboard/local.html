@@ -17,10 +17,10 @@
     <div class="box is-shadowless p-40">
       <div class="flex space-between">
         <div>
-          <span class="card-title has-text-weight-bold">SDGs being tracked</span>
+          <span class="card-title has-text-weight-bold">{% trans "SDGs being tracked" %}</span>
           <span class="tooltip top left-m-10">
             <i class="material-icons info-icon">info</i>
-            <span class="tooltip-content">{% trans 'Number of total messages received addressing each SDG'%}</span>
+            <span class="tooltip-content">{% trans "Number of total messages received addressing each SDG" %}</span>
           </span>
         </div>
         <div class="dropdown is-hoverable">
@@ -54,7 +54,7 @@
         {% endif %}
       </div>
       <canvas id="bubbleChart"></canvas>
-      <div class="card-title has-text-weight-bold bottom-p-20">SDGs not being tracked</div>
+      <div class="card-title has-text-weight-bold bottom-p-20">{% trans "SDGs not being tracked" %}</div>
       <ul class="untracked-sgd">
         {% for key, value in sdgs_bubble_data.not_tracked_sdgs %}
           <li class="untracked-sgd__item">
@@ -67,34 +67,28 @@
     <div class="box is-shadowless is-paddingless">
       <div class="columns is-marginless">
         <div class="column is-three-fifths border-right p-40">
-          <span class="card-title has-text-weight-bold">Surveys Partial Results</span>
+          <span class="card-title has-text-weight-bold">{% trans "Surveys Partial Results" %}</span>
           <span class="tooltip top left-m-10">
             <i class="material-icons info-icon">info</i>
-            <span class="tooltip-content">{% trans 'Partial SDG results for the lastest ongoing surveys'%}</span>
+            <span class="tooltip-content">{% trans "Partial SDG results for the lastest ongoing surveys" %}</span>
           </span>
           <div class="selected-question top-m-30">
-            <div
-                class="selected-question__title bottom-m-30"
-                data-empty-msg="{% trans "No data for chart yet" %}"
-                data-question-title="{{ survey_result_raffled_question }}"
-            >
-              {{ survey_result_raffled_question }}
+            <div class="selected-question__title bottom-m-30">
+              {{ survey_result_sdg_questions.0.title }}
             </div>
             <div class="selected-question__chart">
-<!--              perguntas fechadas-->
+              <div id="wordCloud"></div>
               <canvas id="questionChart"></canvas>
-<!--              perguntas abertas-->
-<!--              <div id="wordCloud"></div>-->
             </div>
           </div>
         </div>
         <div class="column is-paddingless" id="sdgQuestions">
           <div class="flex space-between has-text-weight-bold p-40">
-            <div class="card-title">{{ survey_result_sdg_questions|length }} Questions</div>
+            <div class="card-title">{{ survey_result_sdg_questions|length }} {% trans "Questions" %}</div>
             <div class="dropdown is-hoverable">
               <div class="dropdown-trigger">
                 <div aria-haspopup="true" aria-controls="dropdown-menu">
-                  <span>Filter by</span>
+                  <span>{% trans "Filter by" %}</span>
                   <span class="icon is-small">
                 <i class="fas fa-angle-down" aria-hidden="true"></i>
               </span>
@@ -102,9 +96,9 @@
               </div>
               <div class="dropdown-menu" role="menu">
                 <div class="dropdown-content">
-                  <a href="{% url 'dashboard.local' %}" class="dropdown-item sdgLink">None</a>
+                  <a href="{% url 'dashboard.local' %}#sdgQuestions" class="dropdown-item sdgLink">{% trans "None" %}</a>
                   {% for key, value in SDG_LIST %}
-                    <a href="{% url 'dashboard.local' %}{% urlparams survey_result_sdg=key %}" class="dropdown-item sdgLink">SDG {{ key }}</a>
+                    <a href="{% url 'dashboard.local' %}{% urlparams survey_result_sdg=key %}#sdgQuestions" class="dropdown-item sdgLink">{% trans "SDG" %} {{ key }}</a>
                   {% endfor %}
                 </div>
               </div>
@@ -113,11 +107,11 @@
           <div class="questions-list">
             {% for question in survey_result_sdg_questions %}
               <div class="questions-list__item p-30 border-bottom">
-                <a href="{% url 'dashboard.local' %}{% urlparams survey_result_choice_question=question.pk %}" class="question-link">{{ question }}</a>
+                <a href="javascript:showChart('{{ question.pk }}', '{{ question.title }}', '{{ question.is_open_ended }}');" class="question-link">{{ question.title }}</a>
               </div>
             {% empty %}
               <div class="questions-list__item p-30 border-bottom">
-                {% trans 'There are no question registered with SDG ' %} {{ survey_result_sdg.0 }} - {{ survey_result_sdg.1 }}
+                {% trans "There are no question registered with SDG" %} {{ survey_result_sdg.0 }} - {{ survey_result_sdg.1 }}
               </div>
             {% endfor %}
           </div>
@@ -255,7 +249,7 @@
             <span class="has-text-weight-bold">{% trans "Surveys" %}</span>
             <span class="tooltip top left-m-10">
               <i class="material-icons info-icon">info</i>
-              <span class="tooltip-content">{% trans 'Surveys being conducted through the RTM'%}</span>
+              <span class="tooltip-content">{% trans "Surveys being conducted through the RTM" %}</span>
             </span>
           </div>
           <div class="surveys-info has-text-centered bottom-p-30 border-bottom">
@@ -270,14 +264,14 @@
       </div>
     </div>
     <div class="box is-shadowless">
-      <div class="card-title p-20 has-text-weight-bold">RapidPro Contacts</div>
+      <div class="card-title p-20 has-text-weight-bold">{% trans "RapidPro Contacts" %}</div>
       <div class="columns p-20">
         <div class="column is-three-fifths">
-          <div class="has-text-weight-bold bottom-m-20">Contacts growth over time</div>
+          <div class="has-text-weight-bold bottom-m-20">{% trans "Contacts growth over time" %}</div>
           <canvas id="contactsChart"></canvas>
         </div>
         <div class="column">
-          <div class="has-text-weight-bold bottom-m-20">Portion of Global Total Contacts</div>
+          <div class="has-text-weight-bold bottom-m-20">{% trans "Portion of Global Total Contacts" %}</div>
           <canvas id="pieChart"></canvas>
         </div>
       </div>
@@ -293,9 +287,6 @@
   <script src="{% static 'plugins/wordcloud/d3.layout.cloud.js' %}"></script>
 
 {{ sdgs_bubble_data.datasets|json_script:'SDGSBubbleChartDataDatasets' }}
-{{ survey_result_doughnut_data|json_script:'SurveyResultDoughnutData' }}
-{{ survey_result_wordcloud_data|json_script:'SurveyResultWordcloudData' }}
-{{ survey_result_raffled_question.type_chart|json_script:'ChartType' }}
 
   <script>
     let bubbleCtx = document.getElementById('bubbleChart').getContext('2d');
@@ -327,73 +318,139 @@
       }
     });
 
-    let donutCtx = document.getElementById('questionChart').getContext('2d');
+    const surveys_results_statistics = [];
+    const surveys_results_words = [];
+
+    {% for question in survey_result_sdg_questions %}
+      question = {{ question.pk }};
+      {% if not question.is_open_ended %}
+        surveys_results_statistics[question] = {
+          labels: [],
+          series: [],
+        };
+        {% with results=question|question_results %}
+          {% with categories=results.categories %}
+            {% for category in categories %}
+              surveys_results_statistics[question]["labels"].push("{{ category.label|safe }}");
+              surveys_results_statistics[question]["series"].push(parseInt("{% widthratio category.count results.set 100 %}"));
+            {% endfor %}
+          {% endwith %}
+        {% endwith %}
+      {% else %}        
+        surveys_results_words[question] = [];
+        {% for category in question.get_results.0.categories %}
+          surveys_results_words[question].push({
+            text: "{{ category.label|upper }}",
+            size: {% if category.count < 10 %}20 +{% endif %}{{ category.count }},
+          });
+        {% endfor %}
+
+      {% endif %}
+    {% endfor %}
+
     let donutChart;
-    function renderDonutChart(questionTitle = '') {
-      if (donutChart) {
-        donutChart.destroy();
-      }
+    let wordCloud;
+    let svg;
+    let lastQuestion = 0;
 
-      const dataset = JSON.parse($('#SurveyResultDoughnutData').text());
-
-      if (dataset === "") {
-        $('.selected-question__title').html(questionTitle + '<br>' + $('.selected-question__title').data('empty-msg'));
+    function showChart(question, title, is_open_ended) {
+      if (question == lastQuestion) {
         return;
       }
 
-      $('.selected-question__title').text(questionTitle);
+      let donutCtx = document.getElementById('questionChart');
+      if (donutChart) {
+        donutChart.destroy();
+      }
+      d3.select("svg").remove();
+      $('.selected-question__title').html(title);
 
-      dataset.datasets[0].backgroundColor = RTMConfigs.availableColors;
-
-      donutChart = new Chart(donutCtx, {
-        type: 'doughnut',
-        data: dataset,
-        options: {
-          legend: {
-            labels: {
-              fontSize: 14,
-              padding: 18,
-              usePointStyle: true,
-            },
-            position: 'left',
+      if (is_open_ended === "False") {
+        $('#questionChart').show();
+        donutChart = new Chart(donutCtx.getContext("2d"), {
+          type: "doughnut",
+          data: {
+            datasets: [{
+              data: surveys_results_statistics[question].series,
+              backgroundColor: RTMConfigs.availableColors,
+              borderColor: "rgba(255, 255, 255, 0.1)",
+            }],
+            labels: surveys_results_statistics[question].labels
           },
-          plugins: {
-            datalabels: {
-              formatter: (value, ctx) => {
-                let sum = 0;
-                let dataArr = ctx.chart.data.datasets[0].data;
-                dataArr.map(data => {
-                  sum += data;
-                });
-                let percentage = parseInt((value * 100 / sum));
-                return percentage > 0 ? percentage + "%" : "";
+          options: {
+            legend: {
+              labels: {
+                fontSize: 14,
+                padding: 18,
+                usePointStyle: true,
               },
-              color: '#fff',
+              position: 'left',
+            },
+            plugins: {
+              datalabels: {
+                formatter: (value, ctx) => {
+                  let sum = 0;
+                  let dataArr = ctx.chart.data.datasets[0].data;
+                  dataArr.map(data => {
+                    sum += data;
+                  });
+                  let percentage = parseInt((value * 100 / sum));
+                  return percentage > 0 ? percentage + "%" : "";
+                },
+                color: '#fff',
+              }
             }
           }
+        });
+      } else {
+        let words = surveys_results_words[question];
+        $('#questionChart').hide();
+        const fillWordColor = function(d, i) {
+          return RTMConfigs.availableColors[i % RTMConfigs.availableColors.length];
         }
-      });
+
+        let margin = {top: 0, right: 10, bottom: 10, left: 10},
+          width = 350 - margin.left - margin.right,
+          height = 290 - margin.top - margin.bottom;
+
+        svg = d3.select("#wordCloud").append("svg")
+          .attr("width", width)
+          .attr("height", height)
+          .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        d3.scale.category20();
+        var layout = d3.layout.cloud()
+          .size([width, height])
+          .words(words)
+          .padding(5)
+          .rotate(function() { return ~~(Math.random() * 2) * 90; })
+          .fontSize(function(d) { return d.size; })      // font size of words
+          .on("end", draw);
+        layout.start();
+
+        function draw(words) {
+          svg
+            .append("g")
+            .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
+            .selectAll("text")
+            .data(words)
+            .enter().append("text")
+            .style("font-size", function(d) { return d.size; })
+            .style("fill", fillWordColor)
+            .attr("text-anchor", "middle")
+            .style("font-family", "Impact")
+            .attr("transform", function(d) {
+              return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+            })
+            .text(function(d) { return d.text; });
+        }
+      }
+
+      lastQuestion = question;
     }
 
-    $(document).ready(function () {
-      $('#sdgQuestions').on('click', '.question-link', function (e) {
-        e.preventDefault();
-
-        $('#SurveyResultDoughnutData').load(e.target.href + ' #SurveyResultDoughnutData', function (result) {
-            window.history.pushState({}, document.title, e.target.href);
-            renderDonutChart($(result).find('.selected-question__title').first().data('question-title'));
-        });
-      });
-
-      $('#sdgQuestions').on('click', '.sdgLink', function (e) {
-        e.preventDefault();
-
-        window.history.pushState({}, document.title, e.target.href);
-        $('#sdgQuestions').load(e.target.href + ' #sdgQuestions');
-      });
-
-      renderDonutChart($('.selected-question__title').data('question-title'));
-    });
+    showChart({{ survey_result_sdg_questions.0.pk }}, "{{ survey_result_sdg_questions.0.title }}", "{{ survey_result_sdg_questions.0.is_open_ended }}");
 
     const channel_results_labels = [];
     const channel_results_data = {
@@ -672,56 +729,6 @@
         }
       }
     });
-
-    const availableWordCloudColors = ['#89e7ff', '#03aeef', '#0054e2', '#0400a4'];
-    const words = ["water", "climate", "life", "rights", "industry", "work", "words"].map(function (word, index) {
-      return {
-        text: word,
-        size: 10 + Math.random() * 90,
-      };
-    });
-
-    function fillWordColor(d,i){
-      return availableWordCloudColors[i % availableWordCloudColors.length];
-    }
-
-    let width = 250, height = 250;
-
-    let wordCloud = d3.scale.category20();
-    d3.layout.cloud()
-      .words(words)
-      .rotate(function() { return ~~(Math.random() * 2) * 90; })
-      .font("Impact")
-      .fontSize(function(d) { return d.size; })
-      .on("end", draw)
-      .start();
-    function draw(words) {
-      d3.select("#wordCloud").append("svg")
-        .attr("width", '60%')
-        .attr("height", '60%')
-        .attr('viewBox','0 0 ' + Math.min(width,height) + ' ' + Math.min(width,height))
-        .attr('preserveAspectRatio','xMinYMin')
-        .append("g")
-        .attr("transform", "translate(" + Math.min(width,height) / 2 + "," + Math.min(width,height) / 2 + ")")
-        .selectAll("text")
-        .data(words)
-        .enter().append("text")
-        .style("font-size", function (d) {
-          return d.size + "px";
-        })
-        .style("font-family", "Impact")
-        .style("fill", function (d, i) {
-          return wordCloud(i);
-        })
-        .attr("text-anchor", "middle")
-        .attr("transform", function (d) {
-          return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-        })
-        .style('fill', fillWordColor)
-        .text(function (d) {
-          return d.text;
-        });
-    }
   </script>
 
 {% endblock %}
