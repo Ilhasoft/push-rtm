@@ -154,8 +154,8 @@ class Dashboard(SmartTemplateView):
 
 
     def get(self, request, *args, **kwargs):
-        # if not self.request.user.is_authenticated:
-        #     return redirect(reverse("users.user_login"))
+        self.access_level = None
+        
         if request.user.is_authenticated:
             if request.user.is_superuser:
                 self.access_level = 'global'
