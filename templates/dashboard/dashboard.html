@@ -214,10 +214,7 @@
       {% include 'dashboard/local_channels_contacts.html' %}
     {% elif access_level == 'global' %}
       {% include 'dashboard/global_channels_contacts.html' %}
-
     {% endif %}
-
-    
   </section>
 {% endblock %}
 
@@ -486,6 +483,7 @@
       }
     });
 
+    {% if access_level == "local" %}
     const localMostUsedResults = {
       labels: [],
       data: [],
@@ -542,6 +540,51 @@
       },
     });
 
+    let pieCtx = document.getElementById('pieChart').getContext('2d');
+    let pieChart = new Chart(pieCtx, {
+      type: 'pie',
+      data: {
+        labels: [
+          'Other UNCTs',
+          '{{ request.org.name }}',
+        ],
+        datasets: [{
+          data: [{{ global_total_contacts.global }}, {{ global_total_contacts.local }}],
+          backgroundColor: [
+            '#03aeef',
+            '#0054e2',
+          ],
+          borderColor: "rgba(255, 255, 255, 0.1)",
+        }],
+      },
+      options: {
+        aspectRatio: 1.5,
+        legend: {
+          labels: {
+            padding: 18,
+            usePointStyle: true,
+          },
+          position: 'top',
+        },
+        plugins: {
+          datalabels: {
+            formatter: (value, ctx) => {
+              let sum = 0;
+              let dataArr = ctx.chart.data.datasets[0].data;
+              dataArr.map(data => {
+                sum += data;
+              });
+              let percentage = parseInt((value * 100 / sum));
+              return percentage > 0 ? percentage + "%" : "";
+            },
+            color: '#fff',
+          }
+        }
+      },
+    });
+
+    {% endif %}
+
     const globalMostUsedResults = {
       labels: [],
       data: [],
@@ -580,49 +623,6 @@
             usePointStyle: true,
           },
           position: 'left',
-        },
-        plugins: {
-          datalabels: {
-            formatter: (value, ctx) => {
-              let sum = 0;
-              let dataArr = ctx.chart.data.datasets[0].data;
-              dataArr.map(data => {
-                sum += data;
-              });
-              let percentage = parseInt((value * 100 / sum));
-              return percentage > 0 ? percentage + "%" : "";
-            },
-            color: '#fff',
-          }
-        }
-      },
-    });
-
-    let pieCtx = document.getElementById('pieChart').getContext('2d');
-    let pieChart = new Chart(pieCtx, {
-      type: 'pie',
-      data: {
-        labels: [
-          'Other UNCTs',
-          '{{ request.org.name }}',
-        ],
-        datasets: [{
-          data: [{{ global_total_contacts.global }}, {{ global_total_contacts.local }}],
-          backgroundColor: [
-            '#03aeef',
-            '#0054e2',
-          ],
-          borderColor: "rgba(255, 255, 255, 0.1)",
-        }],
-      },
-      options: {
-        aspectRatio: 1.5,
-        legend: {
-          labels: {
-            padding: 18,
-            usePointStyle: true,
-          },
-          position: 'top',
         },
         plugins: {
           datalabels: {

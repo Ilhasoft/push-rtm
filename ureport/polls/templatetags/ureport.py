@@ -346,7 +346,7 @@ class SortAnchorNode(template.Node):
 
 @register.filter(name="user_org_group")
 def user_org_group(user):
-    return ", ".join([group.name for group in user.groups.all()])
+    return ", ".join([get_group_name(group.name) for group in user.groups.all()])
 
 
 @register.filter(name="items_to_list")
@@ -407,3 +407,12 @@ def urlparams(*_, **kwargs):
     if safe_args:
         return "?{}".format(urlencode(safe_args))
     return ""
+
+
+@register.filter(name="get_group_name")
+def get_group_name(name):
+    return {
+        "Administrators": "UNCT Admin",
+        "Editors": "UNCT Editor",
+        "Viewers": "UNCT Viewer",
+    }.get(name)

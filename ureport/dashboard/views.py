@@ -152,10 +152,7 @@ class Dashboard(SmartTemplateView):
     def channel_info(self, urn, field):
         return dict(settings.CHANNEL_TYPES).get(urn).get(field)
 
-
     def get(self, request, *args, **kwargs):
-        # if not self.request.user.is_authenticated:
-        #     return redirect(reverse("users.user_login"))
         if request.user.is_authenticated:
             if request.user.is_superuser:
                 self.access_level = 'global'
@@ -163,9 +160,9 @@ class Dashboard(SmartTemplateView):
                 self.access_level = 'local'
         else:
             return redirect(reverse("users.user_login"))
-        
+
         if self.access_level is None:
-            pass  # redirect to home
+            return redirect(reverse('public.index'))
 
         context = self.get_context_data(**kwargs)
         return self.render_to_response(context)
@@ -288,7 +285,6 @@ class Dashboard(SmartTemplateView):
             channels = channels.filter(uuid=channels_metrics_uuid)
 
         channels_chart_stats = ChannelDailyStats.objects.filter(
-            #channel__org=self.request.org,
             channel__in=channels,
             msg_direction__in=["I", "O", "E"],
             msg_type__in=["M", "I", "E"],
@@ -310,17 +306,16 @@ class Dashboard(SmartTemplateView):
             org=self.request.org, is_active=True).count()
 
         most_used = ChannelDailyStats.objects.filter(
-            #channel__org=self.request.org,
             msg_direction__in=["I", "O"],
             msg_type__in=["M", "I"],
             **Dashboard.filter_by_date("date", most_used_by),
         )
-        
+
         if self.access_level == 'local':
             most_used = most_used.filter(
                 channel__org=self.request.org,
             )
-        
+
         most_used = most_used.filter().values("channel__channel_type").annotate(total=Sum("count")).order_by("-total")[:3]
 
         most_used_global = ChannelDailyStats.objects.exclude(
