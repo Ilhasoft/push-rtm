@@ -27,7 +27,7 @@ urlpatterns = [
     url(r"^v2/manage/", include("ureport.assets.urls")),
     url(r"^v2/users/", include("dash.users.urls")),
     url(r"^v2/manage/", include("smartmin.csv_imports.urls")),
-    url(r"^v1/", include("ureport.public.urls")),
+    # url(r"^v1/", include("ureport.public.urls")),
     url(r"^v1/manage/", include("ureport.admins.urls")),
     url(r"^v1/manage/", include("dash.orgs.urls")),
     url(r"^v1/manage/", include("dash.dashblocks.urls")),
