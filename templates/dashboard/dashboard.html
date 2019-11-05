@@ -16,7 +16,7 @@
   </section>
 
   <section class="section">
-    <div class="box is-shadowless p-40">
+    <div class="box is-shadowless p-40 bottom-m-20">
       <div class="flex space-between">
         <div>
           <span class="card-title has-text-weight-bold">{% trans "SDGs being tracked" %}</span>
@@ -66,7 +66,7 @@
         {% endfor %}
       </ul>
     </div>
-    <div class="box is-shadowless is-paddingless">
+    <div class="box is-shadowless is-paddingless bottom-m-20">
       <div class="columns is-marginless">
         <div class="column is-three-fifths border-right p-40">
           <span class="card-title has-text-weight-bold">{% trans "Surveys Partial Results" %}</span>
@@ -85,8 +85,8 @@
           </div>
         </div>
         <div class="column is-paddingless" id="sdgQuestions">
-          <div class="flex space-between has-text-weight-bold p-30">
-            <div class="card-title">{{ survey_result_sdg_questions|length }} {% trans "Questions" %}</div>
+          <div class="flex space-between p-30">
+            <div class="card-title has-text-weight-bold">{{ survey_result_sdg_questions|length }} {% trans "Questions" %}</div>
             <div class="dropdown is-hoverable">
               <div class="dropdown-trigger">
                 <div aria-haspopup="true" aria-controls="dropdown-menu">
@@ -121,7 +121,7 @@
       </div>
     </div>
 
-    <div class="box is-shadowless p-40" id="message_metrics">
+    <div class="box is-shadowless p-40 bottom-m-20" id="message_metrics">
       <div class="flex space-between">
         <div class="card-title has-text-weight-bold">{% trans "Message Metrics" %}</div>
         <div class="dropdown is-hoverable">
@@ -243,6 +243,7 @@
             usePointStyle: true,
           },
           position: 'left',
+          onClick: null,
         },
         layout: {
           padding: {
@@ -262,6 +263,16 @@
               labelString: 'Number of questions'
             }
           }]
+        },
+        tooltips: {
+          bodyFontSize: 16,
+          callbacks: {
+            label: function(item, data) {
+              var datasetLabel = data.datasets[item.datasetIndex].label || '';
+              var dataPoint = data.datasets[item.datasetIndex].data[item.index];
+              return ' ' + datasetLabel + ': ' + dataPoint.r + ' received';
+            }
+          }
         },
         plugins: {
           datalabels: {
@@ -356,6 +367,10 @@
             },
             plugins: {
               datalabels: {
+                font: {
+                  size: 20,
+                  weight: 'bold',
+                },
                 formatter: (value, ctx) => {
                   let sum = 0;
                   let dataArr = ctx.chart.data.datasets[0].data;
@@ -527,6 +542,10 @@
         },
         plugins: {
           datalabels: {
+            font: {
+              size: 20,
+              weight: 'bold',
+            },
             formatter: (value, ctx) => {
               let sum = 0;
               let dataArr = ctx.chart.data.datasets[0].data;
@@ -583,6 +602,10 @@
         },
         plugins: {
           datalabels: {
+            font: {
+              size: 20,
+              weight: 'bold',
+            },
             formatter: (value, ctx) => {
               let sum = 0;
               let dataArr = ctx.chart.data.datasets[0].data;
@@ -610,7 +633,7 @@
           data: [{{ global_total_contacts.global }}, {{ global_total_contacts.local }}],
           backgroundColor: [
             '#03aeef',
-            '#0054e2',
+            '#0400a4',
           ],
           borderColor: "rgba(255, 255, 255, 0.1)",
         }],
@@ -626,6 +649,10 @@
         },
         plugins: {
           datalabels: {
+            font: {
+              size: 20,
+              weight: 'bold',
+            },
             formatter: (value, ctx) => {
               let sum = 0;
               let dataArr = ctx.chart.data.datasets[0].data;
