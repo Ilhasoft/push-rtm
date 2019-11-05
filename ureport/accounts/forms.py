@@ -31,7 +31,7 @@ class AccountForm(forms.ModelForm):
     )
 
     email = forms.EmailField(
-        label=_("Groups"),
+        label=_("E-mail"),
         required=True,
         max_length=255,
         widget=forms.EmailInput(attrs={"placeholder": _("Email"), "required": True, "class": "input"}),
@@ -39,7 +39,7 @@ class AccountForm(forms.ModelForm):
 
     groups = forms.ModelChoiceField(
         widget=forms.RadioSelect,
-        queryset=Group.objects.all().exclude(name__exact="Global"),
+        queryset=Group.objects.all().exclude(name__in=["Global", "Editors"]),
         required=True,
         empty_label=None,
     )

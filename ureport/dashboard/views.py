@@ -163,8 +163,8 @@ class Dashboard(SmartTemplateView):
         else:
             return redirect(reverse("users.user_login"))
 
-        if self.access_level == None:
-            return redirect(reverse("public.index"))
+        if self.access_level is None:
+            return redirect(reverse('public.index'))
 
         context = self.get_context_data(**kwargs)
         return self.render_to_response(context)

@@ -724,6 +724,9 @@ GROUP_PERMISSIONS = {
         "stories.storyimage.*",
         "users.user_profile",
     ),
+    "Viewers": (
+        "polls.poll_list",
+    ),
     "Global": ("countries.countryalias.*",),
 }
 
