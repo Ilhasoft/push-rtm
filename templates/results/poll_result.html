@@ -99,7 +99,7 @@
               <div class="column is-2 has-text-right">{% trans 'Linked SDGs:'%}</div>
               <div class="column">
                 {% for sdg in poll.questions.distinct|get_value_in_qs:'sdgs' %}
-                  <span class="tag sdg-{{ sdg }} is-medium right-m-5 bottom-m-5">{{ sdg }} {{ sdg|get_sdg }}</span>
+                  <span class="tag sdg-{{ sdg }} right-m-5 bottom-m-5">{{ sdg }} {{ sdg|get_sdg }}</span>
                 {% endfor %}
               </div>
             </div>
