@@ -14,13 +14,7 @@ class FlowForm(forms.ModelForm):
         label=_("Name"),
         required=True,
         max_length=255,
-        widget=forms.TextInput(
-            attrs={
-                "class": "input is-medium",
-                "placeholder": _("Flow Name"),
-                "required": True,
-            }
-        ),
+        widget=forms.TextInput(attrs={"class": "input is-medium", "placeholder": _("Flow Name"), "required": True}),
     )
 
     description = forms.CharField(
@@ -28,12 +22,7 @@ class FlowForm(forms.ModelForm):
         required=True,
         max_length=255,
         widget=forms.Textarea(
-            attrs={
-                "placeholder": _("Flow Description"),
-                "required": True,
-                "class": "textarea",
-                "rows": 5,
-            }
+            attrs={"placeholder": _("Flow Description"), "required": True, "class": "textarea", "rows": 5}
         ),
     )
 
@@ -44,12 +33,7 @@ class FlowForm(forms.ModelForm):
         required=True,
         max_length=255,
         widget=forms.Textarea(
-            attrs={
-                "placeholder": _("Collected Data"),
-                "rows": 5,
-                "class": "textarea",
-                "required": True,
-            }
+            attrs={"placeholder": _("Collected Data"), "rows": 5, "class": "textarea", "required": True}
         ),
     )
 
@@ -57,9 +41,7 @@ class FlowForm(forms.ModelForm):
         choices=[],
         label=_("Tags"),
         required=True,
-        widget=forms.SelectMultiple(
-            attrs={"data-placeholder": _("Select one or more Tags.")}
-        ),
+        widget=forms.SelectMultiple(attrs={"data-placeholder": _("Select one or more Tags.")}),
     )
 
     languages = forms.MultipleChoiceField(

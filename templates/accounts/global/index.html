@@ -49,10 +49,16 @@
           <td>{{ user.first_name }} </td>
           <td>{{ user.username }} </td>
           <td>{{ user.email }} </td>
-          <td></td>
+          <td>
+            {% if user.is_superuser %}
+              {% trans "Global Admin" %}
+            {% else %}
+              {% trans "Global Viewers" %}
+            {% endif %}
+          </td>
           <td>
             <a
-              href="">
+              href="{% url 'accounts.global_user_update' user.pk %}">
               <i class="material-icons">border_color</i>
             </a>
           </td>

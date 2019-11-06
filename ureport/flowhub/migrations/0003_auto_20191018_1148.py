@@ -8,50 +8,100 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('flowhub', '0002_remove_flow_stars'),
-    ]
+    dependencies = [migrations.swappable_dependency(settings.AUTH_USER_MODEL), ("flowhub", "0002_remove_flow_stars")]
 
     operations = [
         migrations.AddField(
-            model_name='flow',
-            name='stars',
-            field=models.ManyToManyField(to=settings.AUTH_USER_MODEL, verbose_name='Stars'),
+            model_name="flow",
+            name="stars",
+            field=models.ManyToManyField(to=settings.AUTH_USER_MODEL, verbose_name="Stars"),
         ),
         migrations.AlterField(
-            model_name='flow',
-            name='collected_data',
-            field=models.TextField(help_text='What data does this data collect from contacts?', verbose_name='Collected Data'),
+            model_name="flow",
+            name="collected_data",
+            field=models.TextField(
+                help_text="What data does this data collect from contacts?", verbose_name="Collected Data"
+            ),
         ),
         migrations.AlterField(
-            model_name='flow',
-            name='description',
-            field=models.TextField(verbose_name='Description'),
+            model_name="flow", name="description", field=models.TextField(verbose_name="Description")
         ),
         migrations.AlterField(
-            model_name='flow',
-            name='languages',
-            field=django.contrib.postgres.fields.ArrayField(base_field=models.CharField(choices=[('bs', 'Bosnian'), ('en', 'English'), ('fr', 'French'), ('es', 'Spanish'), ('ar', 'Arabic'), ('pt', 'Portuguese'), ('pt-br', 'Brazilian Portuguese'), ('uk', 'Ukrainian'), ('uz', 'Uzbek'), ('my', 'Burmese'), ('id', 'Indonesian'), ('it', 'Italian'), ('ro', 'Romanian'), ('vi', 'Vietnamese'), ('sr-latn', 'Latin Serbian')], max_length=255, verbose_name='Languages'), size=None),
+            model_name="flow",
+            name="languages",
+            field=django.contrib.postgres.fields.ArrayField(
+                base_field=models.CharField(
+                    choices=[
+                        ("bs", "Bosnian"),
+                        ("en", "English"),
+                        ("fr", "French"),
+                        ("es", "Spanish"),
+                        ("ar", "Arabic"),
+                        ("pt", "Portuguese"),
+                        ("pt-br", "Brazilian Portuguese"),
+                        ("uk", "Ukrainian"),
+                        ("uz", "Uzbek"),
+                        ("my", "Burmese"),
+                        ("id", "Indonesian"),
+                        ("it", "Italian"),
+                        ("ro", "Romanian"),
+                        ("vi", "Vietnamese"),
+                        ("sr-latn", "Latin Serbian"),
+                    ],
+                    max_length=255,
+                    verbose_name="Languages",
+                ),
+                size=None,
+            ),
         ),
         migrations.AlterField(
-            model_name='flow',
-            name='name',
-            field=models.CharField(help_text='The name for flow', max_length=128, verbose_name='Name'),
+            model_name="flow",
+            name="name",
+            field=models.CharField(help_text="The name for flow", max_length=128, verbose_name="Name"),
         ),
         migrations.AlterField(
-            model_name='flow',
-            name='org',
-            field=models.ForeignKey(help_text='The organization this flow is part of', on_delete=django.db.models.deletion.CASCADE, related_name='flows', to='orgs.Org', verbose_name='UNCT'),
+            model_name="flow",
+            name="org",
+            field=models.ForeignKey(
+                help_text="The organization this flow is part of",
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="flows",
+                to="orgs.Org",
+                verbose_name="UNCT",
+            ),
         ),
         migrations.AlterField(
-            model_name='flow',
-            name='sdgs',
-            field=django.contrib.postgres.fields.ArrayField(base_field=models.IntegerField(choices=[(1, 'No Poverty'), (2, 'Zero Hunger'), (3, 'Good Health and Well-Being'), (4, 'Quality Education'), (5, 'Gender Equality'), (6, 'Clean Water and Sanitation'), (7, 'Affordable And Clean Energy'), (8, 'Decent Work and Economic Growth'), (9, 'Industry, Innovation and Infrastructure'), (10, 'Reduced Inequalities'), (11, 'Sustainable Cities and Communities'), (12, 'Responsible Production and Consumption'), (13, 'Climate Action'), (14, 'Life Below Water'), (15, 'Life On Land'), (16, 'Peace, Justice and Strong Institutions'), (17, 'Partnerships for the Goals')]), size=None, verbose_name='SDGs'),
+            model_name="flow",
+            name="sdgs",
+            field=django.contrib.postgres.fields.ArrayField(
+                base_field=models.IntegerField(
+                    choices=[
+                        (1, "No Poverty"),
+                        (2, "Zero Hunger"),
+                        (3, "Good Health and Well-Being"),
+                        (4, "Quality Education"),
+                        (5, "Gender Equality"),
+                        (6, "Clean Water and Sanitation"),
+                        (7, "Affordable And Clean Energy"),
+                        (8, "Decent Work and Economic Growth"),
+                        (9, "Industry, Innovation and Infrastructure"),
+                        (10, "Reduced Inequalities"),
+                        (11, "Sustainable Cities and Communities"),
+                        (12, "Responsible Production and Consumption"),
+                        (13, "Climate Action"),
+                        (14, "Life Below Water"),
+                        (15, "Life On Land"),
+                        (16, "Peace, Justice and Strong Institutions"),
+                        (17, "Partnerships for the Goals"),
+                    ]
+                ),
+                size=None,
+                verbose_name="SDGs",
+            ),
         ),
         migrations.AlterField(
-            model_name='flow',
-            name='visible_globally',
-            field=models.BooleanField(default=False, verbose_name='Visible Globally'),
+            model_name="flow",
+            name="visible_globally",
+            field=models.BooleanField(default=False, verbose_name="Visible Globally"),
         ),
     ]

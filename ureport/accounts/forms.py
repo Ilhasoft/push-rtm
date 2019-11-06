@@ -128,9 +128,7 @@ class GlobalAccountForm(forms.ModelForm):
     )
 
     groups = forms.ChoiceField(
-        widget=forms.RadioSelect,
-        choices=[(1, "Global Admin"), (2, "Global Viewer")],
-        required=True,
+        widget=forms.RadioSelect, choices=[(1, "Global Admin"), (2, "Global Viewer")], required=True
     )
 
     def __init__(self, *args, **kwargs):
@@ -156,18 +154,20 @@ class GlobalAccountForm(forms.ModelForm):
 
     def save(self, request):
         instance = super().save(commit=False)
-        # instance.save()
+        instance.save()
 
-        # new_password = self.cleaned_data["new_password"]
-        # if new_password:
-        #     instance.set_password(new_password)
-        #     instance.save()
+        new_password = self.cleaned_data["new_password"]
+        if new_password:
+            instance.set_password(new_password)
+            instance.save()
 
-        # instance.groups.clear()
-        # instance.groups.add(self.cleaned_data.get("groups"))
-        group = str(self.cleaned_data.get("groups")).lower()
-
-        print(group)
+        group = int(self.cleaned_data.get("groups"))
+        if group == 1:
+            instance.is_superuser = True
+            instance.save()
+        if group == 2:
+            group = Group.objects.get(name="Global Viewers")
+            instance.groups.add(group)
 
         return instance
 

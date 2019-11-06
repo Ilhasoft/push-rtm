@@ -36,6 +36,12 @@ ORG_CONTACT_COUNT_TIMEOUT = 300
 logger = logging.getLogger(__name__)
 
 
+def is_global_user(user):
+    if user.is_superuser or user.groups.filter(name="Global Viewers"):
+        return True
+    return False
+
+
 def get_paginator(queryset, page=1, items_per_page=10):
     paginator = Paginator(queryset, items_per_page)
 

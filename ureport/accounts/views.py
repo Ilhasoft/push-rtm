@@ -46,9 +46,7 @@ class ListView(OrgObjPermsMixin, SmartTemplateView):
         if not self.request.user.is_superuser:
             org = self.request.org
 
-        queryset = queryset.filter(
-            Q(org_admins=org) | Q(org_editors=org) | Q(org_viewers=org)
-        )
+        queryset = queryset.filter(Q(org_admins=org) | Q(org_editors=org) | Q(org_viewers=org))
 
         context["users"] = get_paginator(queryset.filter(**filters, is_active=True).order_by(sortered), page)
 
@@ -152,11 +150,13 @@ class DeleteView(SmartTemplateView):
         log_save(self.request.user, user, 3)
         return redirect(self.request.META.get("HTTP_REFERER"))
 
+
 # global
 
 
 class GlobalListView(OrgPermsMixin, SmartTemplateView):
     template_name = "accounts/global/index.html"
+    permission = "orgs.org_manage_accounts"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -177,8 +177,7 @@ class GlobalListView(OrgPermsMixin, SmartTemplateView):
         queryset = (
             get_user_model()
             .objects.all()
-            .filter(is_staff=True)
-            .filter(is_superuser=True)
+            .filter(Q(is_superuser=True) | Q(groups__name="Global Viewers"))
             .exclude(password=None)
             .exclude(email__exact="")
         )
@@ -199,18 +198,47 @@ class GlobalCreateView(OrgPermsMixin, SmartTemplateView):
         return context
 
     def post(self, request, *args, **kwargs):
-        print(request.POST)
         form = form = GlobalAccountForm(request.POST)
 
         if form.is_valid():
-            if request.user.is_superuser and kwargs.get("org"):
-                self.request.org = Org.objects.get(pk=kwargs.get("org"))
-            instance = form.save(self.request)
+            form.save(self.request)
             messages.success(request, _("User created with success!"))
-            log_save(self.request.user, instance, 1)
-            if request.user.is_superuser and kwargs.get("org"):
-                return redirect(reverse("accounts.user_org_list", args=[self.request.org.id]))
-            return redirect(reverse("accounts.user_list"))
+            return redirect(reverse("accounts.global_list"))
+        else:
+            context = self.get_context_data()
+            context["form"] = form
+            messages.error(request, _("Sorry, you did not complete the registration."))
+            messages.error(request, form.non_field_errors())
+            return render(request, self.template_name, context)
+
+
+class GlobalEditView(OrgObjPermsMixin, SmartTemplateView):
+    template_name = "accounts/global/form.html"
+    permission = "orgs.org_manage_accounts"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = get_object_or_404(get_user_model(), pk=self.kwargs["user"])
+
+        data = {
+            "username": user.username,
+            "first_name": user.first_name,
+            "email": user.email,
+            "groups": "1" if user.is_superuser else "2",
+        }
+
+        context["form"] = GlobalAccountForm(initial=data, password_is_required=False)
+        context["page_subtitle"] = _("Edit")
+        return context
+
+    def post(self, request, *args, **kwargs):
+        user = get_object_or_404(get_user_model(), pk=self.kwargs["user"])
+        form = GlobalAccountForm(request.POST, request.FILES, instance=user, password_is_required=False)
+
+        if form.is_valid():
+            form.save(self.request)
+            messages.success(request, _("User edited with success!"))
+            return redirect(reverse("accounts.global_list"))
         else:
             context = self.get_context_data()
             context["form"] = form

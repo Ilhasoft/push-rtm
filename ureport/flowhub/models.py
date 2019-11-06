@@ -10,12 +10,8 @@ from smartmin.models import SmartModel
 
 
 class Flow(SmartModel):
-    name = models.CharField(
-        max_length=128, verbose_name=_("Name"), help_text=_("The name for flow")
-    )
-    description = models.TextField(
-        null=False, blank=False, verbose_name=_("Description")
-    )
+    name = models.CharField(max_length=128, verbose_name=_("Name"), help_text=_("The name for flow"))
+    description = models.TextField(null=False, blank=False, verbose_name=_("Description"))
     collected_data = models.TextField(
         null=False,
         blank=False,
@@ -30,21 +26,11 @@ class Flow(SmartModel):
         help_text=_("The organization this flow is part of"),
     )
     tags = TaggableManager(verbose_name=_("Tags"))
-    sdgs = ArrayField(
-        models.IntegerField(choices=settings.SDG_LIST, blank=False),
-        verbose_name=_("SDGs"),
-    )
+    sdgs = ArrayField(models.IntegerField(choices=settings.SDG_LIST, blank=False), verbose_name=_("SDGs"))
     flow = JSONField()
-    visible_globally = models.BooleanField(
-        default=False, verbose_name=_("Visible Globally")
-    )
+    visible_globally = models.BooleanField(default=False, verbose_name=_("Visible Globally"))
     languages = ArrayField(
-        models.CharField(
-            choices=settings.LANGUAGES,
-            blank=False,
-            max_length=255,
-            verbose_name=_("Languages"),
-        )
+        models.CharField(choices=settings.LANGUAGES, blank=False, max_length=255, verbose_name=_("Languages"))
     )
     downloads = models.IntegerField(default=0)
     stars = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name=_("Stars"))
