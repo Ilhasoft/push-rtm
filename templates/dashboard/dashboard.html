@@ -16,7 +16,7 @@
   </section>
 
   <section class="section">
-    <div class="box is-shadowless p-40 bottom-m-20">
+    <div class="box is-shadowless p-40 bottom-m-20" id="sdg_tracked">
       <div class="flex space-between">
         <div>
           <span class="card-title has-text-weight-bold">{% trans "SDGs being tracked" %}</span>
@@ -36,10 +36,10 @@
           </div>
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
-              <a href="{% url 'dashboard' %}{% urlparams sdg_tracked_filter='week' %}" class="dropdown-item">{% trans "Last 7 days" %}</a>
-              <a href="{% url 'dashboard' %}{% urlparams sdg_tracked_filter='month' %}" class="dropdown-item">{% trans "Last 30 days" %}</a>
-              <a href="{% url 'dashboard' %}{% urlparams sdg_tracked_filter='year' %}" class="dropdown-item">{% trans "Last 12 months" %}</a>
-              <a href="{% url 'dashboard' %}{% urlparams sdg_tracked_filter='inception' %}" class="dropdown-item">{% trans "Since Inception" %}</a>
+              <a href="{% url 'dashboard' %}{% urlparams sdg_tracked_filter='week' %}#sdg_tracked" class="dropdown-item">{% trans "Last 7 days" %}</a>
+              <a href="{% url 'dashboard' %}{% urlparams sdg_tracked_filter='month' %}#sdg_tracked" class="dropdown-item">{% trans "Last 30 days" %}</a>
+              <a href="{% url 'dashboard' %}{% urlparams sdg_tracked_filter='year' %}#sdg_tracked" class="dropdown-item">{% trans "Last 12 months" %}</a>
+              <a href="{% url 'dashboard' %}{% urlparams sdg_tracked_filter='inception' %}#sdg_tracked" class="dropdown-item">{% trans "Since Inception" %}</a>
             </div>
           </div>
         </div>
