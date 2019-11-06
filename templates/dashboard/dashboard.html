@@ -460,8 +460,8 @@
         labels: [...new Set(channel_results_labels)],
         datasets: [{
           label: 'Sent',
-          borderColor: '#c9f4ff',
-          backgroundColor: '#c9f4ff',
+          borderColor: '#97d9f6',
+          backgroundColor: '#97d9f6',
           data: Object.values(channel_results_data.O),
         }, {
           label: 'Received',
@@ -470,8 +470,8 @@
           data: Object.values(channel_results_data.I),
         }, {
           label: 'Fail',
-          // borderColor: '#0400a4',
-          backgroundColor: '#0400a4',
+          // borderColor: '#004f94',
+          backgroundColor: '#004f94',
           data: Object.values(channel_results_data.E),
         }],
       },
@@ -519,7 +519,7 @@
           backgroundColor: [
             '#97d9f6',
             '#03aeef',
-            '#0e08e9',
+            '#004f94',
           ],
           borderColor: "rgba(255, 255, 255, 0.1)",
         }],
@@ -570,8 +570,8 @@
         datasets: [{
           data: [{{ global_total_contacts.global }}, {{ global_total_contacts.local }}],
           backgroundColor: [
-            '#03aeef',
-            '#0054e2',
+            '#7bcff6',
+            '#004f94',
           ],
           borderColor: "rgba(255, 255, 255, 0.1)",
         }],
@@ -628,7 +628,7 @@
           backgroundColor: [
             '#97d9f6',
             '#03aeef',
-            '#0e08e9',
+            '#004f94',
           ],
           borderColor: "rgba(255, 255, 255, 0.1)",
         }],
@@ -692,13 +692,13 @@
         datasets: [
           {
             label: '{{ request.org.name }}',
-            borderColor: '#0400a4',
-            backgroundColor: '#0400a4',
+            borderColor: '#004f94',
+            backgroundColor: '#004f94',
             data: Object.values(overtime_results_data.local),
           }, {
             label: 'Global Average',
-            borderColor: '#00adf3',
-            backgroundColor: '#00adf3',
+            borderColor: '#7bcff6',
+            backgroundColor: '#7bcff6',
             data: Object.values(overtime_results_data.global),
         }]
       },
