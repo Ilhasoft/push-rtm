@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n ureport %}
 
 <nav class="navbar gap-navbar" role="navigation" aria-label="main navigation">
   <div class="container">
@@ -12,21 +12,22 @@
       <span aria-hidden="true"></span>
     </a>
   </div>
-  {% if request.user.is_authenticated and request.org in request.user.get_user_orgs or request.user.is_superuser %}
+  {% check_permissions request.org request.user as user_permissions %}
+  {% if user_permissions %}
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
+        <a class="navbar-item dashboard" href="{% url 'dashboard' %}">Dashboard</a>
         {% if request.user.is_superuser %}
-          <a class="navbar-item dashboard" href="{% url 'dashboard' %}">Dashboard</a>
           <a class="navbar-item uncts" href="{% url 'uncts.unct_list' %}">UNCTs</a>
-        {% else %}
-          <a class="navbar-item dashboard" href="{% url 'dashboard' %}">{{ request.org }}</a>
         {% endif %}
-        <a class="navbar-item users" href="{% url 'accounts.user_list' %}">Users</a>
-        <a class="navbar-item flowhub" href="{% url 'flowhub.flow_list' %}">Repository</a>
         {% if request.user.is_superuser %}
-        <!-- <a class="navbar-item surveys" href="">Global Surveys</a> -->
-        {% else %}
-        <a class="navbar-item surveys" href="{% url 'polls.poll_list' %}">Surveys</a>
+          <a class="navbar-item users" href="{% url 'accounts.global_list' %}">Users</a>
+        {% elif request.org and request.org in request.user.get_user_orgs  %}
+          <a class="navbar-item users" href="{% url 'accounts.user_list' %}">Users</a>
+        {% endif %}
+        <a class="navbar-item flowhub" href="{% url 'flowhub.flow_list' %}">Repository</a>
+        {% if request.org and request.org in request.user.get_user_orgs %}
+          <a class="navbar-item surveys" href="{% url 'polls.poll_list' %}">Surveys</a>
         {% endif %}
         <!-- <a class="navbar-item rtm-help">Help</a> -->
       </div>

@@ -52,17 +52,14 @@ class Dashboard(SmartTemplateView):
             # create dict with sdgs and yours questions. eg: {1: {'questions':
             # []}}
             sdgs_with_data = {
-                sdg[0]: {"questions": [q for q in questions if sdg[0] in q.sdgs]}
-                for sdg in settings.SDG_LIST
+                sdg[0]: {"questions": [q for q in questions if sdg[0] in q.sdgs]} for sdg in settings.SDG_LIST
             }
 
             # add keys total_responded and percentage_in_questions to
             # sdgs_with_data
             for key, value in sdgs_with_data.items():
                 if len(value["questions"]) > 0:
-                    sdgs_with_data[key]["total_responded"] = value["questions"][
-                        0
-                    ].get_responded()
+                    sdgs_with_data[key]["total_responded"] = value["questions"][0].get_responded()
                     sdgs_with_data[key]["percentage_in_questions"] = int(
                         (len(value["questions"]) / questions.count()) * 100
                     )  # (part / total) * 100
@@ -89,11 +86,7 @@ class Dashboard(SmartTemplateView):
                     }
                 )
 
-        data = {
-            "tracked_sdgs": tuple(tracked_sdg),
-            "not_tracked_sdgs": tuple(not_tracked_sdg),
-            "datasets": datasets,
-        }
+        data = {"tracked_sdgs": tuple(tracked_sdg), "not_tracked_sdgs": tuple(not_tracked_sdg), "datasets": datasets}
 
         return data
 
@@ -154,9 +147,8 @@ class Dashboard(SmartTemplateView):
 
     def get(self, request, *args, **kwargs):
         self.access_level = None
-
         if request.user.is_authenticated:
-            if request.user.is_superuser:
+            if request.user.is_superuser or request.user.groups.filter(name="Global Viewers"):
                 self.access_level = "global"
             elif request.org in request.user.get_user_orgs():
                 self.access_level = "local"
@@ -191,14 +183,10 @@ class Dashboard(SmartTemplateView):
         sdg_tracked_questions = questions
 
         if sdg_tracked_filter in ["week", "month", "year"]:
-            sdg_tracked_questions = Dashboard.questions_filter(
-                questions, created_on=sdg_tracked_filter
-            )
+            sdg_tracked_questions = Dashboard.questions_filter(questions, created_on=sdg_tracked_filter)
 
         context["sdg_tracked_filter"] = sdg_tracked_filter
-        context["sdgs_bubble_data"] = Dashboard.get_sdgs_tracked_bubble_chart_data(
-            sdg_tracked_questions
-        )
+        context["sdgs_bubble_data"] = Dashboard.get_sdgs_tracked_bubble_chart_data(sdg_tracked_questions)
 
         # SURVEY PARTIAL RESULT CHART ###
 
@@ -227,13 +215,9 @@ class Dashboard(SmartTemplateView):
         survey_result_sdg_questions = list(survey_result_sdg_questions)
         random.shuffle(survey_result_sdg_questions)
 
-        survey_result_choice_question = self.request.GET.get(
-            "survey_result_choice_question"
-        )
+        survey_result_choice_question = self.request.GET.get("survey_result_choice_question")
         try:
-            survey_result_choice_question = PollQuestion.objects.get(
-                pk=survey_result_choice_question
-            )
+            survey_result_choice_question = PollQuestion.objects.get(pk=survey_result_choice_question)
         except PollQuestion.DoesNotExist:
             survey_result_choice_question = None
 
@@ -281,7 +265,6 @@ class Dashboard(SmartTemplateView):
             channels = channels.filter(uuid=channels_metrics_uuid)
 
         channels_chart_stats = ChannelDailyStats.objects.filter(
-            # channel__org=self.request.org,
             channel__in=channels,
             msg_direction__in=["I", "O", "E"],
             msg_type__in=["M", "I", "E"],
@@ -289,46 +272,35 @@ class Dashboard(SmartTemplateView):
         ).order_by("date")
 
         if self.access_level == "local":
-            channels_chart_stats = channels_chart_stats.filter(
-                channel__org=self.request.org
-            )
+            channels_chart_stats = channels_chart_stats.filter(channel__org=self.request.org)
 
         context["channels_chart_stats"] = channels_chart_stats
         context["channels_data"] = channels_data
         context["channels_metrics_uuid"] = channels_metrics_uuid
         context["channels_metrics_by"] = channels_metrics_by
-        context["channels_messages_ago"] = Dashboard.get_text_time_ago(
-            channels_metrics_by
-        )
+        context["channels_messages_ago"] = Dashboard.get_text_time_ago(channels_metrics_by)
 
         # MOST USED CHANNELS CHARTS
-        context["surveys_total"] = Poll.objects.filter(
-            org=self.request.org, is_active=True
-        ).count()
+        context["surveys_total"] = Poll.objects.filter(is_active=True).count()
+
+        if self.access_level == "local":
+            context["surveys_total"] = Poll.objects.filter(org=self.request.org, is_active=True).count()
 
         most_used = ChannelDailyStats.objects.filter(
-            # channel__org=self.request.org,
-            msg_direction__in=["I", "O"],
-            msg_type__in=["M", "I"],
-            **Dashboard.filter_by_date("date", most_used_by),
+            msg_direction__in=["I", "O"], msg_type__in=["M", "I"], **Dashboard.filter_by_date("date", most_used_by)
         )
 
         if self.access_level == "local":
             most_used = most_used.filter(channel__org=self.request.org)
 
         most_used = (
-            most_used.filter()
-            .values("channel__channel_type")
-            .annotate(total=Sum("count"))
-            .order_by("-total")[:3]
+            most_used.filter().values("channel__channel_type").annotate(total=Sum("count")).order_by("-total")[:3]
         )
 
         most_used_global = (
             ChannelDailyStats.objects.exclude(channel__org=self.request.org)
             .filter(
-                msg_direction__in=["I", "O"],
-                msg_type__in=["M", "I"],
-                **Dashboard.filter_by_date("date", most_used_by),
+                msg_direction__in=["I", "O"], msg_type__in=["M", "I"], **Dashboard.filter_by_date("date", most_used_by)
             )
             .values("channel__channel_type")
             .annotate(total=Sum("count"))
@@ -365,12 +337,9 @@ class Dashboard(SmartTemplateView):
         # RAPIDPRO CONTACTS
         context["contacts_over_time"] = (
             Contact.objects.filter(
-                registered_on__gte=datetime.datetime.utcnow().replace(tzinfo=utc)
-                - datetime.timedelta(days=180)
+                registered_on__gte=datetime.datetime.utcnow().replace(tzinfo=utc) - datetime.timedelta(days=180)
             )
-            .annotate(
-                month=ExtractMonth("registered_on"), year=ExtractYear("registered_on")
-            )
+            .annotate(month=ExtractMonth("registered_on"), year=ExtractYear("registered_on"))
             .order_by("month")
             .values("month", "year")
             .annotate(total=Count("*"))

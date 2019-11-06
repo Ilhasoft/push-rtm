@@ -57,12 +57,8 @@ def pull_channel_stats(org):
 
 
 def request(backend, endpoint):
-    headers = {
-        "Authorization": "Token {}".format(backend.api_token),
-    }
+    headers = {"Authorization": "Token {}".format(backend.api_token)}
 
-    response = requests.get(
-        "{}/api/v2/{}.json".format(backend.host, endpoint),
-        headers=headers)
+    response = requests.get("{}/api/v2/{}.json".format(backend.host, endpoint), headers=headers)
     response = response.json()
     return response.get("results")
