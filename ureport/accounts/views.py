@@ -158,6 +158,10 @@ class GlobalListView(OrgPermsMixin, SmartTemplateView):
     template_name = "accounts/global/index.html"
     permission = "orgs.org_manage_accounts"
 
+    def get(self, request, *args, **kwargs):
+        if not self.request.user.is_superuser:
+            return redirect(reverse("accounts.user_list"))
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         query = self.request.GET.get("query", "")
@@ -191,6 +195,10 @@ class GlobalCreateView(OrgPermsMixin, SmartTemplateView):
     template_name = "accounts/global/form.html"
     permission = "orgs.org_manage_accounts"
 
+    def get(self, request, *args, **kwargs):
+        if not self.request.user.is_superuser:
+            return redirect(reverse("accounts.user_list"))
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["form"] = GlobalAccountForm()
@@ -215,6 +223,10 @@ class GlobalCreateView(OrgPermsMixin, SmartTemplateView):
 class GlobalEditView(OrgObjPermsMixin, SmartTemplateView):
     template_name = "accounts/global/form.html"
     permission = "orgs.org_manage_accounts"
+
+    def get(self, request, *args, **kwargs):
+        if not self.request.user.is_superuser:
+            return redirect(reverse("accounts.user_list"))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

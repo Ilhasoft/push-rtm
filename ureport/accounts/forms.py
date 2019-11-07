@@ -39,7 +39,7 @@ class AccountForm(forms.ModelForm):
 
     groups = forms.ModelChoiceField(
         widget=forms.RadioSelect,
-        queryset=Group.objects.all().exclude(name__in=["Global", "Editors"]),
+        queryset=Group.objects.filter(name__in=["Administrators", "Viewers"]),
         required=True,
         empty_label=None,
     )
