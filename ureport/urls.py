@@ -27,7 +27,7 @@ urlpatterns = [
     url(r"^v2/manage/", include("ureport.assets.urls")),
     url(r"^v2/users/", include("dash.users.urls")),
     url(r"^v2/manage/", include("smartmin.csv_imports.urls")),
-    url(r"^v1/", include("ureport.public.urls")),
+    # url(r"^v1/", include("ureport.public.urls")),
     url(r"^v1/manage/", include("ureport.admins.urls")),
     url(r"^v1/manage/", include("dash.orgs.urls")),
     url(r"^v1/manage/", include("dash.dashblocks.urls")),
@@ -40,7 +40,7 @@ urlpatterns = [
     url(r"^v1/manage/", include("ureport.assets.urls")),
     url(r"^v1/users/", include("dash.users.urls")),
     url(r"^v1/manage/", include("smartmin.csv_imports.urls")),
-    url(r"^", include("ureport.public.urls")),
+    url(r"^public/", include("ureport.public.urls")),
     url(r"^manage/", include("ureport.admins.urls")),
     url(r"^manage/", include("dash.orgs.urls")),
     url(r"^manage/", include("dash.dashblocks.urls")),
@@ -62,7 +62,7 @@ urlpatterns = [
     url(r"^surveys/", include("ureport.polls.urls")),
     url(r"^results/", include("ureport.results.urls")),
     url(r"^flowhub/", include("ureport.flowhub.urls")),
-    url(r"^dashboard/", include("ureport.dashboard.urls")),
+    url(r"^", include("ureport.dashboard.urls")),
 ]
 
 if settings.DEBUG:

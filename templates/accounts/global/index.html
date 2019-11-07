@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load i18n static ureport %}
+
+{% block nav_item %}page-users{% endblock %}
+
+{% block content %}
+<section class="section">
+  <h1 class="title">{% trans "Users" %}</h1>
+</section>
+
+<section class="section">
+  <div class="columns is-mobile">
+    <div class="column auto">
+      <div class="control has-icons-left">
+        <form>
+          <input class="input is-medium search" name="query" placeholder="Search" value="{{ query }}">
+          <span class="icon is-left">
+            <i class="material-icons">search</i>
+          </span>
+        </form>
+      </div>
+    </div>
+    <div class="column is-narrow">
+      <div class="control">
+        <a
+          class="button is-medium is-info"
+          href="{% url 'accounts.global_user_create' %}">
+          <span class="icon">
+            <i class="material-icons">add</i>
+          </span>
+          <span>{% trans "User" %}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <table class="table is-fullwidth">
+    <thead>
+      <tr class="is-tr">
+        <th>{% autosort first_name _("Name") %}</th>
+        <th>{% trans "Username" %}</th>
+        <th>{% trans "Email" %}</th>
+        <th>{% trans "Permission" %}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody class="has-header">
+      {% for user in users %}
+        <tr class="is-tr">
+          <td>{{ user.first_name }} </td>
+          <td>{{ user.username }} </td>
+          <td>{{ user.email }} </td>
+          <td>
+            {% if user.is_superuser %}
+              {% trans "Global Admin" %}
+            {% else %}
+              {% trans "Global Viewers" %}
+            {% endif %}
+          </td>
+          <td>
+            <a
+              href="{% url 'accounts.global_user_update' user.pk %}">
+              <i class="material-icons">border_color</i>
+            </a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="6" class="has-text-centered">{% trans "No results found" %}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="is-pulled-right">
+    {% include "paginator.html" with paginator=users %}
+  </div>
+</section>
+{% endblock %}

@@ -83,23 +83,26 @@
             </span>
             </div>
           </nav>
-          <div class="p-30 bottom-p-10">
-            <div class="bottom-m-40">{{ poll.poll_date|date:"F d, Y" }}</div>
-            <div class="columns bottom-m-20">
+          <div class="bottom-p-20">
+            <div class="columns bottom-m-10">
               <div class="column is-2 has-text-right">{% trans 'Title:'%}</div>
               <div class="column"><strong>{{ poll.title }}</strong></div>
             </div>
-            <div class="columns bottom-m-20">
+            <div class="columns bottom-m-10">
               {% if poll.response_content %}
                 <div class="column is-2 has-text-right">{% trans 'Description:'%}</div>
                 <div class="column">{{ poll.response_content }}</div>
               {% endif %}
             </div>
             <div class="columns bottom-m-10">
+              <div class="column is-2 has-text-right">{% trans 'Date:'%}</div>
+              <div class="column">{{ poll.poll_date|date:"m/d/Y" }}</div>
+            </div>
+            <div class="columns bottom-m-10">
               <div class="column is-2 has-text-right">{% trans 'Linked SDGs:'%}</div>
               <div class="column">
                 {% for sdg in poll.questions.distinct|get_value_in_qs:'sdgs' %}
-                  <span class="tag sdg-{{ sdg }} is-medium right-m-5 bottom-m-5">{{ sdg }} {{ sdg|get_sdg }}</span>
+                  <span class="tag sdg-{{ sdg }} right-m-5 bottom-m-5">{{ sdg }} {{ sdg|get_sdg }}</span>
                 {% endfor %}
               </div>
             </div>
@@ -211,23 +214,6 @@
       }
     });
 
-    const availableColors = [
-      "#0CD7F0",
-      "#0CA2FA",
-      "#016AF5",
-      "#003CFA",
-      "#1F00F5",
-      "#02008A",
-      "#0300B0",
-      "#0400A4",
-      "#0400F0",
-      "#020063",
-      "#2709BD",
-      "#1C0B70",
-      "#320CF0",
-      "#4927F2",
-      "#170670",
-    ];
     const results_age = [];
     const results_gender = [];
     const results_statistics = [];
@@ -267,7 +253,7 @@
                   results_age[question]["series"]["{{ forloop.counter0 }}"] = (typeof results_age[question]["series"]["{{ forloop.counter0 }}"] != "undefined") ? results_age[question]["series"]["{{ forloop.counter0 }}"] : {
                     label: "{{ category.label|safe }}",
                     data: [],
-                    backgroundColor: availableColors[{{ forloop.counter0 }}],
+                    backgroundColor: RTMConfigs.availableColors[{{ forloop.counter0 }}],
                     borderColor: "rgba(255, 255, 255, 0.1)",
                   };
                   results_age[question]["series"]["{{ forloop.counter0 }}"].data.push({{ category.count }});
@@ -292,7 +278,7 @@
                   results_gender[question]["series"]["{{ forloop.counter0 }}"] = (typeof results_gender[question]["series"]["{{ forloop.counter0 }}"] != "undefined") ? results_gender[question]["series"]["{{ forloop.counter0 }}"] : {
                       label: "{{ category.label|safe }}",
                       data: [],
-                      backgroundColor: availableColors[{{ forloop.counter0 }}],
+                      backgroundColor: RTMConfigs.availableColors[{{ forloop.counter0 }}],
                       borderColor: "rgba(255, 255, 255, 0.1)",
                     };
                   results_gender[question]["series"]["{{ forloop.counter0 }}"].data.push({{ category.count }});
@@ -310,7 +296,7 @@
         data: {
           datasets: [{
             data: result.series,
-            backgroundColor: availableColors,
+            backgroundColor: RTMConfigs.availableColors,
             borderColor: "rgba(255, 255, 255, 0.1)",
           }],
           labels: result.labels
@@ -357,7 +343,7 @@
           data: {
             datasets: [{
               data: results_statistics[question].series,
-              backgroundColor: availableColors,
+              backgroundColor: RTMConfigs.availableColors,
               borderColor: "rgba(255, 255, 255, 0.1)",
             }],
             labels: results_statistics[question].labels
@@ -477,7 +463,7 @@
     }
 
     const fillWordColor = function(d, i) {
-      return availableColors[i % availableColors.length];
+      return RTMConfigs.availableColors[i % RTMConfigs.availableColors.length];
     }
 
     $("div[data-question-type=\"cloud\"]").each(function() {

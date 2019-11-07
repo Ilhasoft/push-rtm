@@ -5,13 +5,6 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('flowhub', '0001_initial'),
-    ]
+    dependencies = [("flowhub", "0001_initial")]
 
-    operations = [
-        migrations.RemoveField(
-            model_name='flow',
-            name='stars',
-        ),
-    ]
+    operations = [migrations.RemoveField(model_name="flow", name="stars")]

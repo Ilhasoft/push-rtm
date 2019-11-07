@@ -79,3 +79,17 @@ html {
   margin-left: 5px !important;
   cursor: pointer;
 }
+
+@media (min-width: 1344px) {
+  .container {
+    max-width: 1300px !important;
+    width: 1300px !important;
+  }
+}
+
+@media (min-width: 1472px) {
+  .container {
+    max-width: 1400px !important;
+    width: 1400px !important;
+  }
+}

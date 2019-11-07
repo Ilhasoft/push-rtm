@@ -106,6 +106,7 @@
   
   new Choices("#id_sdgs", {
     removeItemButton: true,
+    placeholderValue: "Link this flow to one or more SDGs",
 
     sortFn: function(a, b) {
       return a.id > b.id;
@@ -155,5 +156,4 @@
     setErrors('{{field}}');
   {% endfor %}
 </script>
-<script async src="https://app.appzi.io/bootstrap/bundle.js?token=MXjnL"></script>
 {% endblock %}

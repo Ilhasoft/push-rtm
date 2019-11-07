@@ -5,14 +5,14 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('polls', '0057_pollquestion_sdgs'),
-    ]
+    dependencies = [("polls", "0057_pollquestion_sdgs")]
 
     operations = [
         migrations.AddField(
-            model_name='poll',
-            name='poll_end_date',
-            field=models.DateTimeField(help_text='The date to display for this poll. Leave empty to use flow creation date.', null=True),
-        ),
+            model_name="poll",
+            name="poll_end_date",
+            field=models.DateTimeField(
+                help_text="The date to display for this poll. Leave empty to use flow creation date.", null=True
+            ),
+        )
     ]

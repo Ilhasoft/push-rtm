@@ -43,9 +43,7 @@ class PollForm(forms.ModelForm):
     )
 
     flow_uuid = forms.ChoiceField(
-        label=_("Select a flow on RapidPro"),
-        help_text=_("Select a flow on RapidPro"),
-        choices=[],
+        label=_("Select a flow on RapidPro"), help_text=_("Select a flow on RapidPro"), choices=[]
     )
 
     response_content = forms.CharField(
@@ -53,11 +51,7 @@ class PollForm(forms.ModelForm):
         label=_("Description"),
         help_text=_("Description"),
         widget=forms.Textarea(
-            attrs={
-                "placeholder": _("Insert the survey description"),
-                "class": "textarea",
-                "rows": 6,
-            }
+            attrs={"placeholder": _("Insert the survey description"), "class": "textarea", "rows": 6}
         ),
     )
 
@@ -88,7 +82,7 @@ class PollForm(forms.ModelForm):
 
     class Meta:
         model = Poll
-        fields = ("is_active", "backend", "title", "flow_uuid", "category", "response_content",)
+        fields = ("is_active", "backend", "title", "flow_uuid", "category", "response_content")
 
 
 class PollResponseForm(forms.ModelForm):
@@ -106,23 +100,13 @@ class PollFlowForm(forms.ModelForm):
     poll_date = forms.DateTimeField(
         label=_("Start Date"),
         required=False,
-        widget=forms.DateTimeInput(
-            attrs={
-                "placeholder": _("Please set the date"),
-                "class": "input",
-            }
-        ),
+        widget=forms.DateTimeInput(attrs={"placeholder": _("Please set the date"), "class": "input"}),
     )
 
     poll_end_date = forms.DateTimeField(
         label=_("End Date"),
         required=False,
-        widget=forms.DateTimeInput(
-            attrs={
-                "placeholder": _("The date this survey was finished"),
-                "class": "input",
-            }
-        ),
+        widget=forms.DateTimeInput(attrs={"placeholder": _("The date this survey was finished"), "class": "input"}),
     )
 
     def __init__(self, *args, **kwargs):
@@ -158,7 +142,7 @@ class PollFlowForm(forms.ModelForm):
 
     class Meta:
         model = Poll
-        fields = ("poll_date", "poll_end_date",)
+        fields = ("poll_date", "poll_end_date")
 
 
 class QuestionForm(ModelForm):
@@ -215,7 +199,7 @@ class PollCRUDL(SmartCRUDL):
         form_class = PollFlowForm
         title = _("Adjust poll date")
         success_url = "id@polls.poll_questions"
-        fields = ("poll_date", "poll_end_date",)
+        fields = ("poll_date", "poll_end_date")
         default_template = "polls/form_date.html"
         success_message = _("Your survey has been updated, now pick which questions to include.")
 
@@ -284,7 +268,7 @@ class PollCRUDL(SmartCRUDL):
         success_url = "id@polls.poll_poll_date"
         permission = "polls.poll_create"
         default_template = "polls/form.html"
-        fields = ("title", "flow_uuid", "response_content",)
+        fields = ("title", "flow_uuid", "response_content")
         success_message = _("Your survey has been created, now adjust the poll date.")
         title = _("Create Survey")
 
@@ -540,6 +524,7 @@ class PollCRUDL(SmartCRUDL):
         fields = ("title", "poll_date", "category", "questions", "opinion_response", "sync_status", "created_on")
         default_order = ("-created_on", "id")
         default_template = "polls/index.html"
+        permissions = "polls.poll_list"
 
         def derive_url_pattern(path, action):
             return "^poll/list/"
@@ -601,12 +586,13 @@ class PollCRUDL(SmartCRUDL):
                 sortered = "{}{}".format("-" if sort_direction == "desc" else "", sort_field)
 
             context["polls"] = get_paginator(
-                Poll.objects.filter(**filters, is_active=True).filter(org=self.request.org).order_by(sortered), page)
+                Poll.objects.filter(**filters, is_active=True).filter(org=self.request.org).order_by(sortered), page
+            )
             return context
 
     class Update(OrgObjPermsMixin, SmartUpdateView):
         form_class = PollForm
-        fields = ("is_active", "title", "response_content",)
+        fields = ("is_active", "title", "response_content")
         success_url = "id@polls.poll_poll_date"
         default_template = "polls/form.html"
         success_message = _("Your survey has been updated, now adjust the poll date.")
