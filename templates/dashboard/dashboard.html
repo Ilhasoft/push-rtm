@@ -314,11 +314,11 @@
 
     (function ($) {
       let $questionList = $('.questions-list'),
-        $questionsItems = $questionList.find('.questions-list__item');
+        $questionsItems = $questionList.find('.question-link');
 
       $questionsItems.first().addClass('active');
 
-      $questionList.on('click', '.questions-list__item', function (e) {
+      $questionList.on('click', '.question-link', function (e) {
         $questionsItems.removeClass('active');
         $(this).addClass('active');
       });
