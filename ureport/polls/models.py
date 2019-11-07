@@ -855,9 +855,7 @@ class PollQuestion(SmartModel):
         default=0, null=True, blank=True, help_text=_("The priority number for this question on the poll")
     )
 
-    sdgs = ArrayField(models.IntegerField(
-        choices=settings.SDG_LIST, blank=True, null=True)
-    )
+    sdgs = ArrayField(models.IntegerField(choices=settings.SDG_LIST, blank=True, null=True))
 
     @classmethod
     def update_or_create(cls, user, poll, ruleset_label, uuid, ruleset_type):

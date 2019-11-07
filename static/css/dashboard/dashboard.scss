@@ -1,4 +1,8 @@
 #page-dashboard {
+  .has-text-grey {
+    color: #707070 !important;
+  }
+
   .card-title {
     font-size: 18px;
   }
@@ -16,7 +20,7 @@
 
     &__item {
       a {
-        color: #4a4a4a;
+        color: #707070;
       }
 
       &.active {

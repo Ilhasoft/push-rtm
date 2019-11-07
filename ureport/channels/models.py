@@ -24,8 +24,7 @@ class ChannelStats(models.Model):
         existing = cls.objects.filter(uuid=uuid, org=org)
 
         if existing:
-            existing.update(msg_count=msg_count,
-                            ivr_count=ivr_count, error_count=error_count)
+            existing.update(msg_count=msg_count, ivr_count=ivr_count, error_count=error_count)
             channel = existing.first()
         else:
             channel = ChannelStats.objects.create(
@@ -43,11 +42,7 @@ class ChannelStats(models.Model):
 
 
 class ChannelDailyStats(models.Model):
-    channel = models.ForeignKey(
-        ChannelStats,
-        on_delete=models.CASCADE,
-        related_name="daily_stats",
-    )
+    channel = models.ForeignKey(ChannelStats, on_delete=models.CASCADE, related_name="daily_stats")
     msg_type = models.CharField(max_length=1)
     msg_direction = models.CharField(max_length=1)
     date = models.DateField()
@@ -69,27 +64,18 @@ class ChannelDailyStats(models.Model):
         elif type == "error":
             msg_type = "E"
 
-        existing = cls.objects.filter(
-            channel=channel, msg_type=msg_type, date=date, msg_direction=msg_direction)
+        existing = cls.objects.filter(channel=channel, msg_type=msg_type, date=date, msg_direction=msg_direction)
 
         if existing:
             existing.update(count=count)
         else:
             ChannelDailyStats.objects.create(
-                channel=channel,
-                msg_type=msg_type,
-                msg_direction=msg_direction,
-                date=date,
-                count=count,
+                channel=channel, msg_type=msg_type, msg_direction=msg_direction, date=date, count=count
             )
 
 
 class ChannelMonthlyStats(models.Model):
-    channel = models.ForeignKey(
-        ChannelStats,
-        on_delete=models.CASCADE,
-        related_name="monthly_stats",
-    )
+    channel = models.ForeignKey(ChannelStats, on_delete=models.CASCADE, related_name="monthly_stats")
     date = models.DateField()
     incoming_messages_count = models.PositiveIntegerField()
     outgoing_messages_count = models.PositiveIntegerField()
@@ -98,7 +84,9 @@ class ChannelMonthlyStats(models.Model):
     error_count = models.PositiveIntegerField()
 
     @classmethod
-    def update_or_create(cls, channel, date, incoming_messages, outgoing_messages, incoming_ivr, outgoing_ivr, error_count):
+    def update_or_create(
+        cls, channel, date, incoming_messages, outgoing_messages, incoming_ivr, outgoing_ivr, error_count
+    ):
         existing = cls.objects.filter(channel=channel, date=date)
 
         if existing:

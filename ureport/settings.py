@@ -116,11 +116,17 @@ INSTALLED_APPS += (
 
 SITE_ALLOW_NO_ORG += (
     "dashboard",
+    "flowhub.flow_list",
     "flowhub.flow_uncts",
     "flowhub.flow_create",
+    "flowhub.flow_star",
+    "flowhub.flow_download",
     "uncts.unct_create",
     "uncts.unct_list",
     "uncts.unct_update",
+    "accounts.user_list",
+    "accounts.global_list",
+    "accounts.global_user_create",
     "accounts.user_org_list",
     "accounts.user_org_create",
     "accounts.user_org_update",
@@ -168,41 +174,21 @@ SDG_COLOR = {
 }
 
 CHANNEL_TYPES = {
-    "EX": {
-        "name": "External",
-        "icon": "icon-phone",
-    },
-    "TG": {
-        "name": "Telegram",
-        "icon": "icon-telegram",
-    },
-    "FB": {
-        "name": "Facebook",
-        "icon": "icon-facebook",
-    },
-    "TW": {
-        "name": "Twitter",
-        "icon": "icon-twitter",
-    },
-    "KN": {
-        "name": "Kannel",
-        "icon": "icon-phone",
-    },
-    "WA": {
-        "name": "Whatsapp",
-        "icon": "icon-whatsapp",
-    },
+    "EX": {"name": "External", "icon": "icon-phone"},
+    "TG": {"name": "Telegram", "icon": "icon-telegram"},
+    "FB": {"name": "Facebook", "icon": "icon-facebook"},
+    "TW": {"name": "Twitter", "icon": "icon-twitter"},
+    "KN": {"name": "Kannel", "icon": "icon-phone"},
+    "WA": {"name": "Whatsapp", "icon": "icon-whatsapp"},
 }
 
-STATICFILES_FINDERS += (
-    "sass_processor.finders.CssFinder",
-)
+STATICFILES_FINDERS += ("sass_processor.finders.CssFinder",)
 
 SASS_PROCESSOR_INCLUDE_FILE_PATTERN = r"^.+\.scss$"
 
 LOGIN_URL = "/users/login/"
 LOGOUT_URL = "/users/logout/"
-LOGIN_REDIRECT_URL = "/surveys/poll/list/"
+LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
 SITE_CHOOSER_TEMPLATE = "public/index.html"

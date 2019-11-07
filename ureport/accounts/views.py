@@ -6,11 +6,11 @@ from django.db.models import Q
 from django.contrib.auth import get_user_model
 
 from dash.orgs.models import Org
-from dash.orgs.views import OrgObjPermsMixin
+from dash.orgs.views import OrgObjPermsMixin, OrgPermsMixin
 from smartmin.views import SmartTemplateView
 from ureport.utils import get_paginator, log_save
 
-from .forms import AccountForm
+from .forms import AccountForm, GlobalAccountForm
 
 
 class ListView(OrgObjPermsMixin, SmartTemplateView):
@@ -46,9 +46,7 @@ class ListView(OrgObjPermsMixin, SmartTemplateView):
         if not self.request.user.is_superuser:
             org = self.request.org
 
-        queryset = queryset.filter(
-            Q(org_admins=org) | Q(org_editors=org) | Q(org_viewers=org)
-        )
+        queryset = queryset.filter(Q(org_admins=org) | Q(org_editors=org) | Q(org_viewers=org))
 
         context["users"] = get_paginator(queryset.filter(**filters, is_active=True).order_by(sortered), page)
 
@@ -151,3 +149,99 @@ class DeleteView(SmartTemplateView):
 
         log_save(self.request.user, user, 3)
         return redirect(self.request.META.get("HTTP_REFERER"))
+
+
+# global
+
+
+class GlobalListView(OrgPermsMixin, SmartTemplateView):
+    template_name = "accounts/global/index.html"
+    permission = "orgs.org_manage_accounts"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        query = self.request.GET.get("query", "")
+        sort_field = self.request.GET.get("sort")
+        sort_direction = self.request.GET.get("dir")
+        page = self.request.GET.get("page")
+
+        filters = {}
+        sortered = "first_name"
+
+        if query:
+            filters["first_name__icontains"] = query
+
+        if sort_field:
+            sortered = "{}{}".format("-" if sort_direction == "desc" else "", sort_field)
+
+        queryset = (
+            get_user_model()
+            .objects.all()
+            .filter(Q(is_superuser=True) | Q(groups__name="Global Viewers"))
+            .exclude(password=None)
+            .exclude(email__exact="")
+        )
+
+        context["users"] = get_paginator(queryset.filter(**filters, is_active=True).order_by(sortered), page)
+        context["query"] = query
+        return context
+
+
+class GlobalCreateView(OrgPermsMixin, SmartTemplateView):
+    template_name = "accounts/global/form.html"
+    permission = "orgs.org_manage_accounts"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = GlobalAccountForm()
+        context["page_subtitle"] = _("New")
+        return context
+
+    def post(self, request, *args, **kwargs):
+        form = form = GlobalAccountForm(request.POST)
+
+        if form.is_valid():
+            form.save(self.request)
+            messages.success(request, _("User created with success!"))
+            return redirect(reverse("accounts.global_list"))
+        else:
+            context = self.get_context_data()
+            context["form"] = form
+            messages.error(request, _("Sorry, you did not complete the registration."))
+            messages.error(request, form.non_field_errors())
+            return render(request, self.template_name, context)
+
+
+class GlobalEditView(OrgObjPermsMixin, SmartTemplateView):
+    template_name = "accounts/global/form.html"
+    permission = "orgs.org_manage_accounts"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = get_object_or_404(get_user_model(), pk=self.kwargs["user"])
+
+        data = {
+            "username": user.username,
+            "first_name": user.first_name,
+            "email": user.email,
+            "groups": "1" if user.is_superuser else "2",
+        }
+
+        context["form"] = GlobalAccountForm(initial=data, password_is_required=False)
+        context["page_subtitle"] = _("Edit")
+        return context
+
+    def post(self, request, *args, **kwargs):
+        user = get_object_or_404(get_user_model(), pk=self.kwargs["user"])
+        form = GlobalAccountForm(request.POST, request.FILES, instance=user, password_is_required=False)
+
+        if form.is_valid():
+            form.save(self.request)
+            messages.success(request, _("User edited with success!"))
+            return redirect(reverse("accounts.global_list"))
+        else:
+            context = self.get_context_data()
+            context["form"] = form
+            messages.error(request, _("Sorry, you did not complete the registration."))
+            messages.error(request, form.non_field_errors())
+            return render(request, self.template_name, context)

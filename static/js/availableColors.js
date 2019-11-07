@@ -1,8 +1,8 @@
 window.RTMConfigs.availableColors = [
-    "#0CD7F0",
-    "#0CA2FA",
-    "#016AF5",
-    "#003CFA",
+    "#7bcff6",
+    "#03aeef",
+    "#0080ca",
+    "#004f94",
     "#1F00F5",
     "#02008A",
     "#0300B0",

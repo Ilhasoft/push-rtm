@@ -16,7 +16,7 @@
   </section>
 
   <section class="section">
-    <div class="box is-shadowless p-40">
+    <div class="box is-shadowless p-40 bottom-m-20" id="sdg_tracked">
       <div class="flex space-between">
         <div>
           <span class="card-title has-text-weight-bold">{% trans "SDGs being tracked" %}</span>
@@ -36,10 +36,10 @@
           </div>
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
-              <a href="{% url 'dashboard' %}{% urlparams sdg_tracked_filter='week' %}" class="dropdown-item">{% trans "Last 7 days" %}</a>
-              <a href="{% url 'dashboard' %}{% urlparams sdg_tracked_filter='month' %}" class="dropdown-item">{% trans "Last 30 days" %}</a>
-              <a href="{% url 'dashboard' %}{% urlparams sdg_tracked_filter='year' %}" class="dropdown-item">{% trans "Last 12 months" %}</a>
-              <a href="{% url 'dashboard' %}{% urlparams sdg_tracked_filter='inception' %}" class="dropdown-item">{% trans "Since Inception" %}</a>
+              <a href="{% url 'dashboard' %}{% urlparams sdg_tracked_filter='week' %}#sdg_tracked" class="dropdown-item">{% trans "Last 7 days" %}</a>
+              <a href="{% url 'dashboard' %}{% urlparams sdg_tracked_filter='month' %}#sdg_tracked" class="dropdown-item">{% trans "Last 30 days" %}</a>
+              <a href="{% url 'dashboard' %}{% urlparams sdg_tracked_filter='year' %}#sdg_tracked" class="dropdown-item">{% trans "Last 12 months" %}</a>
+              <a href="{% url 'dashboard' %}{% urlparams sdg_tracked_filter='inception' %}#sdg_tracked" class="dropdown-item">{% trans "Since Inception" %}</a>
             </div>
           </div>
         </div>
@@ -66,7 +66,7 @@
         {% endfor %}
       </ul>
     </div>
-    <div class="box is-shadowless is-paddingless">
+    <div class="box is-shadowless is-paddingless bottom-m-20">
       <div class="columns is-marginless">
         <div class="column is-three-fifths border-right p-40">
           <span class="card-title has-text-weight-bold">{% trans "Surveys Partial Results" %}</span>
@@ -85,8 +85,8 @@
           </div>
         </div>
         <div class="column is-paddingless" id="sdgQuestions">
-          <div class="flex space-between has-text-weight-bold p-30">
-            <div class="card-title">{{ survey_result_sdg_questions|length }} {% trans "Questions" %}</div>
+          <div class="flex space-between p-30">
+            <div class="card-title has-text-weight-bold">{{ survey_result_sdg_questions|length }} {% trans "Questions" %}</div>
             <div class="dropdown is-hoverable">
               <div class="dropdown-trigger">
                 <div aria-haspopup="true" aria-controls="dropdown-menu">
@@ -121,7 +121,7 @@
       </div>
     </div>
 
-    <div class="box is-shadowless p-40" id="message_metrics">
+    <div class="box is-shadowless p-40 bottom-m-20" id="message_metrics">
       <div class="flex space-between">
         <div class="card-title has-text-weight-bold">{% trans "Message Metrics" %}</div>
         <div class="dropdown is-hoverable">
@@ -214,10 +214,7 @@
       {% include 'dashboard/local_channels_contacts.html' %}
     {% elif access_level == 'global' %}
       {% include 'dashboard/global_channels_contacts.html' %}
-
     {% endif %}
-
-    
   </section>
 {% endblock %}
 
@@ -243,6 +240,7 @@
             usePointStyle: true,
           },
           position: 'left',
+          onClick: null,
         },
         layout: {
           padding: {
@@ -262,6 +260,16 @@
               labelString: 'Number of questions'
             }
           }]
+        },
+        tooltips: {
+          bodyFontSize: 16,
+          callbacks: {
+            label: function(item, data) {
+              var datasetLabel = data.datasets[item.datasetIndex].label || '';
+              var dataPoint = data.datasets[item.datasetIndex].data[item.index];
+              return ' ' + datasetLabel + ': ' + dataPoint.r + ' received';
+            }
+          }
         },
         plugins: {
           datalabels: {
@@ -356,6 +364,10 @@
             },
             plugins: {
               datalabels: {
+                font: {
+                  size: 20,
+                  weight: 'bold',
+                },
                 formatter: (value, ctx) => {
                   let sum = 0;
                   let dataArr = ctx.chart.data.datasets[0].data;
@@ -448,8 +460,8 @@
         labels: [...new Set(channel_results_labels)],
         datasets: [{
           label: 'Sent',
-          borderColor: '#c9f4ff',
-          backgroundColor: '#c9f4ff',
+          borderColor: '#97d9f6',
+          backgroundColor: '#97d9f6',
           data: Object.values(channel_results_data.O),
         }, {
           label: 'Received',
@@ -458,8 +470,8 @@
           data: Object.values(channel_results_data.I),
         }, {
           label: 'Fail',
-          // borderColor: '#0400a4',
-          backgroundColor: '#0400a4',
+          borderColor: '#004f94',
+          backgroundColor: '#004f94',
           data: Object.values(channel_results_data.E),
         }],
       },
@@ -477,6 +489,11 @@
               color: "rgba(0, 0, 0, 0)",
             }
           }],
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
         },
         plugins: {
           datalabels: {
@@ -486,6 +503,7 @@
       }
     });
 
+    {% if access_level == "local" %}
     const localMostUsedResults = {
       labels: [],
       data: [],
@@ -506,7 +524,7 @@
           backgroundColor: [
             '#97d9f6',
             '#03aeef',
-            '#0e08e9',
+            '#004f94',
           ],
           borderColor: "rgba(255, 255, 255, 0.1)",
         }],
@@ -527,62 +545,10 @@
         },
         plugins: {
           datalabels: {
-            formatter: (value, ctx) => {
-              let sum = 0;
-              let dataArr = ctx.chart.data.datasets[0].data;
-              dataArr.map(data => {
-                sum += data;
-              });
-              let percentage = parseInt((value * 100 / sum));
-              return percentage > 0 ? percentage + "%" : "";
+            font: {
+              size: 20,
+              weight: 'bold',
             },
-            color: '#fff',
-          }
-        }
-      },
-    });
-
-    const globalMostUsedResults = {
-      labels: [],
-      data: [],
-    };
-
-    {% for most_used in channels_most_used_global %}
-      globalMostUsedResults.labels.push("{{ most_used.name }}");
-      globalMostUsedResults.data.push("{{ most_used.total }}");
-    {% endfor %}
-
-    let globalMostUsedCtx = document.getElementById('globalMostUsedChannels').getContext('2d');
-    let globalMostUsedChannels = new Chart(globalMostUsedCtx, {
-      type: 'doughnut',
-      data: {
-        labels: globalMostUsedResults.labels,
-        datasets: [{
-          data: globalMostUsedResults.data,
-          backgroundColor: [
-            '#97d9f6',
-            '#03aeef',
-            '#0e08e9',
-          ],
-          borderColor: "rgba(255, 255, 255, 0.1)",
-        }],
-      },
-      options: {
-        title: {
-          fontSize: '16',
-          display: true,
-          text: 'Global',
-          position: 'top',
-        },
-        legend: {
-          labels: {
-            padding: 18,
-            usePointStyle: true,
-          },
-          position: 'left',
-        },
-        plugins: {
-          datalabels: {
             formatter: (value, ctx) => {
               let sum = 0;
               let dataArr = ctx.chart.data.datasets[0].data;
@@ -609,8 +575,8 @@
         datasets: [{
           data: [{{ global_total_contacts.global }}, {{ global_total_contacts.local }}],
           backgroundColor: [
-            '#03aeef',
-            '#0054e2',
+            '#7bcff6',
+            '#004f94',
           ],
           borderColor: "rgba(255, 255, 255, 0.1)",
         }],
@@ -626,6 +592,72 @@
         },
         plugins: {
           datalabels: {
+            font: {
+              size: 20,
+              weight: 'bold',
+            },
+            formatter: (value, ctx) => {
+              let sum = 0;
+              let dataArr = ctx.chart.data.datasets[0].data;
+              dataArr.map(data => {
+                sum += data;
+              });
+              let percentage = parseInt((value * 100 / sum));
+              return percentage > 0 ? percentage + "%" : "";
+            },
+            color: '#fff',
+          }
+        }
+      },
+    });
+
+    {% endif %}
+
+    const globalMostUsedResults = {
+      labels: [],
+      data: [],
+    };
+
+    {% for most_used in channels_most_used_global %}
+      globalMostUsedResults.labels.push("{{ most_used.name }}");
+      globalMostUsedResults.data.push("{{ most_used.total }}");
+    {% endfor %}
+
+    let globalMostUsedCtx = document.getElementById('globalMostUsedChannels').getContext('2d');
+    let globalMostUsedChannels = new Chart(globalMostUsedCtx, {
+      type: 'doughnut',
+      data: {
+        labels: globalMostUsedResults.labels,
+        datasets: [{
+          data: globalMostUsedResults.data,
+          backgroundColor: [
+            '#97d9f6',
+            '#03aeef',
+            '#004f94',
+          ],
+          borderColor: "rgba(255, 255, 255, 0.1)",
+        }],
+      },
+      options: {
+        title: {
+          fontSize: '16',
+          display: true,
+          text: 'Global',
+          position: 'top',
+        },
+        legend: {
+          labels: {
+            padding: 18,
+            usePointStyle: true,
+          },
+          position: 'left',
+        },
+        plugins: {
+          datalabels: {
+            font: {
+              size: 20,
+              weight: 'bold',
+            },
             formatter: (value, ctx) => {
               let sum = 0;
               let dataArr = ctx.chart.data.datasets[0].data;
@@ -665,13 +697,13 @@
         datasets: [
           {
             label: '{{ request.org.name }}',
-            borderColor: '#0400a4',
-            backgroundColor: '#0400a4',
+            borderColor: '#004f94',
+            backgroundColor: '#004f94',
             data: Object.values(overtime_results_data.local),
           }, {
             label: 'Global Average',
-            borderColor: '#00adf3',
-            backgroundColor: '#00adf3',
+            borderColor: '#7bcff6',
+            backgroundColor: '#7bcff6',
             data: Object.values(overtime_results_data.global),
         }]
       },
