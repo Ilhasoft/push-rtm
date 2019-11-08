@@ -76,8 +76,8 @@ class Dashboard(SmartTemplateView):
                         "label": "{} {}".format(key, value),
                         "data": [
                             {
-                                "x": sdg_with_data.get("total_responded", 0),
-                                "y": len(sdg_with_data.get("questions", [])),
+                                "x": random.randint(7, 70),  # sdg_with_data.get("total_responded", 0),
+                                "y": random.randint(17, 70),  # len(sdg_with_data.get("questions", [])),
                                 "r": sdg_with_data.get("percentage_in_questions", 0),
                             }
                         ],
