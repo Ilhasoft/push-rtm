@@ -44,10 +44,10 @@
       <tr class="is-tr">
         <th></th>
         <th>{% autosort title _("Name") %}</th>
-        <th class="has-text-centered">{% trans "Questions" %}</th>
-        <th class="has-text-centered">{% trans "Last sync" %}</th>
+        <th>{% trans "Questions" %}</th>
+        <th>{% autosort runs_count _("Runs") %}</th>
+        <th>{% trans "Last sync" %}</th>
         <th>{% trans "SDGs" %}</th>
-        <th class="has-text-centered">{% autosort runs_count _("Runs") %}</th>
       </tr>
       </thead>
       <tbody class="has-header">
@@ -56,8 +56,9 @@
         <tr>
           <td><a href="{% url 'polls.poll_update' poll.id %}"><i class="material-icons">insert_drive_file</i></a></td>
           <td><a href="{% url 'results.poll_read' poll.id %}">{{ poll.title }}</a></td>
-          <td class="has-text-centered"><a href="{% url 'polls.poll_questions' poll.id %}">{{ poll.get_questions.count }}</a></td>
-          <td class="has-text-centered">{{ poll|get_poll_sync_status }}</td>
+          <td><a href="{% url 'polls.poll_questions' poll.id %}">{{ poll.get_questions.count }}</a></td>
+          <td>{{ poll.runs_count }}</td>
+          <td>{{ poll|get_poll_sync_status }}</td>
           <td>
             {% if poll.questions.count > 3 %}
               <span class="tooltip right">
@@ -77,7 +78,6 @@
               {% endfor %}
             {% endif%}
           </td>
-          <td class="has-text-centered">{{ poll.runs_count }}</td>
         </tr>
       {% empty %}
         <tr>
