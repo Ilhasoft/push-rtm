@@ -178,7 +178,7 @@ CHANNEL_TYPES = {
     "TG": {"name": "Telegram", "icon": "icon-telegram"},
     "FB": {"name": "Facebook", "icon": "icon-facebook"},
     "TW": {"name": "Twitter", "icon": "icon-twitter"},
-    "KN": {"name": "Kannel", "icon": "icon-phone"},
+    "KN": {"name": "SMS", "icon": "icon-phone"},
     "WA": {"name": "Whatsapp", "icon": "icon-whatsapp"},
 }
 
