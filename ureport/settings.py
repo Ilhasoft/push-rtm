@@ -121,6 +121,7 @@ SITE_ALLOW_NO_ORG += (
     "flowhub.flow_create",
     "flowhub.flow_star",
     "flowhub.flow_download",
+    "flowhub.flow_info",
     "uncts.unct_create",
     "uncts.unct_list",
     "uncts.unct_update",

@@ -4,7 +4,7 @@
   <td class="has-text-left" colspan="3">
     <div class="columns is-gapless">
       <div class="column is-11">
-        <a href="#">
+        <a href="{{ flow.get_absolute_url }}">
           <strong>{{ flow.name }}</strong> | <i>{{ flow.org.name }}</i> 
         </a>
         {% if request.org == flow.org %}

@@ -1,5 +1,5 @@
 {% extends "flowhub/base.html" %}
-{% load i18n static sass_tags rtm %}
+{% load i18n static sass_tags %}
 
 {% block nav_item %}page-flowhub{% endblock %}
 
@@ -26,15 +26,17 @@
     <div class="columns">
       <div class="column">
         <strong>{{ flow.name }}</strong>
-        <form class="form-flowhub" action="{% url 'flowhub.flow_delete' flow.pk %}" method="POST">
-          {% csrf_token %}
-          <a href="{% url 'flowhub.flow_update' flow.pk %}">
-            <img src="{% static 'svg/pencil.svg' %}" alt="pencil">
-          </a>
-          <button type="submit">
-            <img src="{% static 'svg/trash.svg' %}" alt="trash">
-          </button>
-        </form>
+        {% if request.org == flow.org %}
+          <form class="form-flowhub" action="{% url 'flowhub.flow_delete' flow.pk %}" method="POST">
+            {% csrf_token %}
+            <a href="{% url 'flowhub.flow_update' flow.pk %}">
+              <img src="{% static 'svg/pencil.svg' %}" alt="pencil">
+            </a>
+            <button class="button-no-bg" type="submit">
+              <img src="{% static 'svg/trash.svg' %}" alt="trash">
+            </button>
+          </form>
+        {% endif %}
       </div>
       <div class="column has-text-right">
         {% trans "Visible globally" %} 
@@ -79,10 +81,22 @@
     </div>
     <div class="columns">
       <div class="column">
+        <p class="has-text-weight-bold">{% trans "Languages" %}</p>
+        {% for key in flow.languages %}
+          {% for choice in LANGUAGES %}
+            {% if key == choice.0 %}
+              <span class="tag">{{ choice.1 }}</span>
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+      </div>
+    </div>
+    <div class="columns">
+      <div class="column">
         <p class="has-text-weight-bold">{% trans "SDGs" %}</p>
-        <div class="sdgs">
-          {% for id, name in flow.get_sdgs.items %}
-            <span class="badge-sdg-{{ id }}">{{ id }} - {{ name }}</span>
+        <div class="column">
+          {% for key, name in flow.get_sdgs.items %}
+            <span class="tag sdg-{{ key }}">{{ name }}</span>
           {% endfor %}
         </div>
       </div>
