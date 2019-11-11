@@ -14,7 +14,6 @@ from smartmin.views import (
     SmartCreateView,
     SmartCRUDL,
     SmartCSVImportView,
-    SmartListView,
     SmartUpdateView,
     SmartTemplateView,
 )
@@ -29,6 +28,8 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.timesince import timesince
 from django.utils.translation import ugettext_lazy as _
+from django.contrib import messages
+from django.shortcuts import redirect
 
 from ureport.utils import json_date_to_datetime, get_paginator
 
@@ -36,7 +37,8 @@ from .models import Poll, PollImage, PollQuestion
 
 
 class PollForm(forms.ModelForm):
-    is_active = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={"class": "is-checkradio"}))
+    is_active = forms.BooleanField(
+        required=False, widget=forms.CheckboxInput(attrs={"class": "is-checkradio"}))
 
     title = forms.CharField(
         max_length=255, widget=forms.TextInput(attrs={"placeholder": _("Insert the survey name"), "class": "input"})
@@ -51,7 +53,8 @@ class PollForm(forms.ModelForm):
         label=_("Description"),
         help_text=_("Description"),
         widget=forms.Textarea(
-            attrs={"placeholder": _("Insert the survey description"), "class": "textarea", "rows": 6}
+            attrs={"placeholder": _(
+                "Insert the survey description"), "class": "textarea", "rows": 6}
         ),
     )
 
@@ -74,7 +77,8 @@ class PollForm(forms.ModelForm):
         cleaned_data = self.cleaned_data
 
         if not self.org.backends.filter(is_active=True).exists():
-            raise ValidationError(_("Your org does not have any API token configuration."))
+            raise ValidationError(
+                _("Your org does not have any API token configuration."))
 
         cleaned_data["category"] = Category.objects.get(org=self.org)
 
@@ -82,10 +86,12 @@ class PollForm(forms.ModelForm):
 
     class Meta:
         model = Poll
-        fields = ("is_active", "backend", "title", "flow_uuid", "category", "response_content")
+        fields = ("is_active", "backend", "title",
+                  "flow_uuid", "category", "response_content")
 
 
 class PollResponseForm(forms.ModelForm):
+
     def __init__(self, *args, **kwargs):
         self.org = kwargs["org"]
         del kwargs["org"]
@@ -100,13 +106,15 @@ class PollFlowForm(forms.ModelForm):
     poll_date = forms.DateTimeField(
         label=_("Start Date"),
         required=False,
-        widget=forms.DateTimeInput(attrs={"placeholder": _("Please set the date"), "class": "input"}),
+        widget=forms.DateTimeInput(
+            attrs={"placeholder": _("Please set the date"), "class": "input"}),
     )
 
     poll_end_date = forms.DateTimeField(
         label=_("End Date"),
         required=False,
-        widget=forms.DateTimeInput(attrs={"placeholder": _("The date this survey was finished"), "class": "input"}),
+        widget=forms.DateTimeInput(attrs={"placeholder": _(
+            "The date this survey was finished"), "class": "input"}),
     )
 
     def __init__(self, *args, **kwargs):
@@ -163,15 +171,18 @@ class QuestionForm(ModelForm):
                 # get the title for it
                 title_key = "ruleset_%s_title" % match.group(1)
                 if not cleaned[title_key]:
-                    raise ValidationError(_("You must include a title for every included question."))
+                    raise ValidationError(
+                        _("You must include a title for every included question."))
 
                 if len(cleaned[title_key]) > 255:
-                    raise ValidationError(_("Title too long. The max limit is 255 characters for each title"))
+                    raise ValidationError(
+                        _("Title too long. The max limit is 255 characters for each title"))
 
                 included_count += 1
 
         if not included_count:
-            raise ValidationError(_("You must include at least one poll question."))
+            raise ValidationError(
+                _("You must include at least one poll question."))
 
         return cleaned
 
@@ -201,7 +212,8 @@ class PollCRUDL(SmartCRUDL):
         success_url = "id@polls.poll_questions"
         fields = ("poll_date", "poll_end_date")
         default_template = "polls/form_date.html"
-        success_message = _("Your survey has been updated, now pick which questions to include.")
+        success_message = _(
+            "Your survey has been updated, now pick which questions to include.")
 
         def get_form_kwargs(self):
             kwargs = super(PollCRUDL.PollDate, self).get_form_kwargs()
@@ -214,7 +226,8 @@ class PollCRUDL(SmartCRUDL):
         title = _("Configure flow")
         success_url = "id@polls.poll_poll_date"
         fields = ("flow_uuid",)
-        success_message = _("Your survey has been configured, now adjust the poll date.")
+        success_message = _(
+            "Your survey has been configured, now adjust the poll date.")
 
         def get_form_kwargs(self):
             kwargs = super(PollCRUDL.PollFlow, self).get_form_kwargs()
@@ -269,7 +282,8 @@ class PollCRUDL(SmartCRUDL):
         permission = "polls.poll_create"
         default_template = "polls/form.html"
         fields = ("title", "flow_uuid", "response_content")
-        success_message = _("Your survey has been created, now adjust the poll date.")
+        success_message = _(
+            "Your survey has been created, now adjust the poll date.")
         title = _("Create Survey")
 
         def get_context_data(self, **kwargs):
@@ -280,7 +294,8 @@ class PollCRUDL(SmartCRUDL):
         def get_form_kwargs(self):
             kwargs = super(PollCRUDL.Create, self).get_form_kwargs()
             kwargs["org"] = self.request.org
-            kwargs["backend"] = self.request.org.backends.filter(is_active=True).first()
+            kwargs["backend"] = self.request.org.backends.filter(
+                is_active=True).first()
 
             try:
                 Category.objects.get(org=self.org)
@@ -330,7 +345,8 @@ class PollCRUDL(SmartCRUDL):
     class Images(OrgObjPermsMixin, SmartUpdateView):
         success_url = "id@polls.poll_responses"
         title = _("Poll Images")
-        success_message = _("Now enter any responses you'd like to feature. (if any)")
+        success_message = _(
+            "Now enter any responses you'd like to feature. (if any)")
 
         def get_form(self):
             form = super(PollCRUDL.Images, self).get_form()
@@ -345,7 +361,8 @@ class PollCRUDL(SmartCRUDL):
                     required=False,
                     initial=image.image,
                     label=_("Image %d") % idx,
-                    help_text=_("Image to display on poll page and in previews. (optional)"),
+                    help_text=_(
+                        "Image to display on poll page and in previews. (optional)"),
                 )
 
                 self.form.fields[image_field_name] = image_field
@@ -355,7 +372,8 @@ class PollCRUDL(SmartCRUDL):
                 self.form.fields["image_%d" % idx] = forms.ImageField(
                     required=False,
                     label=_("Image %d") % idx,
-                    help_text=_("Image to display on poll page and in previews (optional)"),
+                    help_text=_(
+                        "Image to display on poll page and in previews (optional)"),
                 )
                 idx += 1
 
@@ -430,15 +448,18 @@ class PollCRUDL(SmartCRUDL):
                     label=_("Display"),
                     required=False,
                     initial=include_field_initial,
-                    help_text=_("Whether to include this question in your public results"),
-                    widget=forms.CheckboxInput(attrs={"class": "is-checkradio"}),
+                    help_text=_(
+                        "Whether to include this question in your public results"),
+                    widget=forms.CheckboxInput(
+                        attrs={"class": "is-checkradio"}),
                 )
 
                 label_field_name = "ruleset_%s_label" % question.ruleset_uuid
                 label_field_initial = initial.get(label_field_name, "")
                 label_field = forms.CharField(
                     label=counter,
-                    widget=forms.HiddenInput(attrs={"readonly": "readonly", "class": "input"}),
+                    widget=forms.HiddenInput(
+                        attrs={"readonly": "readonly", "class": "input"}),
                     required=False,
                     initial=label_field_initial,
                     help_text=_("The label of the ruleset from RapidPro"),
@@ -449,11 +470,13 @@ class PollCRUDL(SmartCRUDL):
                 title_field = forms.CharField(
                     label=_("Question"),
                     widget=forms.Textarea(
-                        attrs={"class": "textarea", "rows": 3, "placeholder": _("Put a title here for your question")}
+                        attrs={"class": "textarea", "rows": 3, "placeholder": _(
+                            "Put a title here for your question")}
                     ),
                     required=False,
                     initial=title_field_initial,
-                    help_text=_("The question posed to your audience, will be displayed publicly"),
+                    help_text=_(
+                        "The question posed to your audience, will be displayed publicly"),
                 )
 
                 sdgs_field_name = "ruleset_%s_sdgs" % question.ruleset_uuid
@@ -513,15 +536,20 @@ class PollCRUDL(SmartCRUDL):
             questions = self.get_questions()
 
             for question in questions:
-                initial["ruleset_%s_include" % question.ruleset_uuid] = question.is_active
-                initial["ruleset_%s_label" % question.ruleset_uuid] = question.ruleset_label
-                initial["ruleset_%s_title" % question.ruleset_uuid] = question.title
-                initial["ruleset_%s_sdgs" % question.ruleset_uuid] = question.sdgs
+                initial["ruleset_%s_include" %
+                        question.ruleset_uuid] = question.is_active
+                initial["ruleset_%s_label" %
+                        question.ruleset_uuid] = question.ruleset_label
+                initial["ruleset_%s_title" %
+                        question.ruleset_uuid] = question.title
+                initial["ruleset_%s_sdgs" %
+                        question.ruleset_uuid] = question.sdgs
 
             return initial
 
     class List(OrgPermsMixin, SmartTemplateView):
-        fields = ("title", "poll_date", "category", "questions", "opinion_response", "sync_status", "created_on")
+        fields = ("title", "poll_date", "category", "questions",
+                  "opinion_response", "sync_status", "created_on")
         default_order = ("-created_on", "id")
         default_template = "polls/index.html"
         permissions = "polls.poll_list"
@@ -530,16 +558,19 @@ class PollCRUDL(SmartCRUDL):
             return "^poll/list/"
 
         def get_queryset(self):
-            queryset = super(PollCRUDL.List, self).get_queryset().filter(org=self.request.org)
+            queryset = super(PollCRUDL.List, self).get_queryset().filter(
+                org=self.request.org)
             return queryset
 
         def get_sync_status(self, obj):
             if obj.has_synced:
-                last_synced = cache.get(Poll.POLL_RESULTS_LAST_SYNC_TIME_CACHE_KEY % (obj.org.pk, obj.flow_uuid), None)
+                last_synced = cache.get(Poll.POLL_RESULTS_LAST_SYNC_TIME_CACHE_KEY % (
+                    obj.org.pk, obj.flow_uuid), None)
                 if last_synced:
                     return "Last synced %s ago" % timesince(json_date_to_datetime(last_synced))
 
-                # we know we synced do not check the the progress since that is slow
+                # we know we synced do not check the the progress since that is
+                # slow
                 return "Synced 100%"
 
             sync_progress = obj.get_sync_progress()
@@ -569,6 +600,13 @@ class PollCRUDL(SmartCRUDL):
             else:
                 return super(PollCRUDL.List, self).lookup_field_link(context, field, obj)
 
+        def get(self, request, *args, **kwargs):
+            context = self.get_context_data(**kwargs)
+            if context["polls"].paginator.count == 0:
+                messages.error(self.request, _("No results found."))
+                return redirect(reverse("polls.poll_list"))
+            return self.render_to_response(context)
+
         def get_context_data(self, **kwargs):
             context = super().get_context_data(**kwargs)
             query = self.request.GET.get("query", "")
@@ -583,11 +621,10 @@ class PollCRUDL(SmartCRUDL):
                 filters["title__icontains"] = query
 
             if sort_field:
-                sortered = "{}{}".format("-" if sort_direction == "desc" else "", sort_field)
+                sortered = "{}{}".format(
+                    "-" if sort_direction == "desc" else "", sort_field)
 
-            context["polls"] = get_paginator(
-                Poll.objects.filter(**filters, is_active=True).filter(org=self.request.org).order_by(sortered), page
-            )
+            context["polls"] = get_paginator(Poll.objects.filter(**filters, is_active=True).filter(org=self.request.org).order_by(sortered), page)
             return context
 
     class Update(OrgObjPermsMixin, SmartUpdateView):
@@ -595,7 +632,8 @@ class PollCRUDL(SmartCRUDL):
         fields = ("is_active", "title", "response_content")
         success_url = "id@polls.poll_poll_date"
         default_template = "polls/form.html"
-        success_message = _("Your survey has been updated, now adjust the poll date.")
+        success_message = _(
+            "Your survey has been updated, now adjust the poll date.")
 
         def derive_title(self):
             obj = self.get_object()
@@ -611,7 +649,8 @@ class PollCRUDL(SmartCRUDL):
         def get_form_kwargs(self):
             kwargs = super(PollCRUDL.Update, self).get_form_kwargs()
             kwargs["org"] = self.request.org
-            kwargs["backend"] = self.request.org.backends.filter(is_active=True).first()
+            kwargs["backend"] = self.request.org.backends.filter(
+                is_active=True).first()
             return kwargs
 
         def post_save(self, obj):
@@ -632,11 +671,14 @@ class PollCRUDL(SmartCRUDL):
             )
 
     class Import(SmartCSVImportView):
+
         class ImportForm(forms.ModelForm):
+
             def __init__(self, *args, **kwargs):
                 self.org = kwargs["org"]
                 del kwargs["org"]
-                super(PollCRUDL.Import.ImportForm, self).__init__(*args, **kwargs)
+                super(PollCRUDL.Import.ImportForm,
+                      self).__init__(*args, **kwargs)
 
             class Meta:
                 model = ImportTask
@@ -656,7 +698,8 @@ class PollCRUDL(SmartCRUDL):
                 original_filename=self.form.cleaned_data["csv_file"].name,
             )
             params_dump = json.dumps(params)
-            ImportTask.objects.filter(pk=task.pk).update(import_params=params_dump)
+            ImportTask.objects.filter(pk=task.pk).update(
+                import_params=params_dump)
 
             # start the task
             task.start()
