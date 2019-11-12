@@ -57,8 +57,10 @@ class Dashboard(SmartTemplateView):
 
             # add keys total_responded and percentage_in_questions to
             # sdgs_with_data
+            total_response_all_sdgs = 0
             for key, value in sdgs_with_data.items():
                 if len(value["questions"]) > 0:
+                    total_response_all_sdgs += value["questions"][0].get_responded()
                     sdgs_with_data[key]["total_responded"] = value["questions"][0].get_responded()
                     sdgs_with_data[key]["percentage_in_questions"] = int(
                         (len(value["questions"]) / questions.count()) * 100
@@ -71,6 +73,11 @@ class Dashboard(SmartTemplateView):
             for key, value in tuple(tracked_sdg):
                 sdg_with_data = sdgs_with_data.get(key)
 
+                if sdg_with_data.get("total_responded", 0) != 0:
+                    r = round((sdg_with_data.get("total_responded", 0) / total_response_all_sdgs) * 100, 2)
+                else:
+                    r = sdg_with_data.get("total_responded", 0)
+
                 datasets.append(
                     {
                         "label": "{} {}".format(key, value),
@@ -78,7 +85,7 @@ class Dashboard(SmartTemplateView):
                             {
                                 "x": random.randint(7, 70),  # sdg_with_data.get("total_responded", 0),
                                 "y": random.randint(17, 70),  # len(sdg_with_data.get("questions", [])),
-                                "r": sdg_with_data.get("total_responded", 0),  # sdg_with_data.get("percentage_in_questions", 0),
+                                "r": r,  # sdg_with_data.get("percentage_in_questions", 0),
                             }
                         ],
                         "backgroundColor": settings.SDG_COLOR.get(key),
