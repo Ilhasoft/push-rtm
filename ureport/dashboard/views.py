@@ -78,7 +78,7 @@ class Dashboard(SmartTemplateView):
                             {
                                 "x": random.randint(7, 70),  # sdg_with_data.get("total_responded", 0),
                                 "y": random.randint(17, 70),  # len(sdg_with_data.get("questions", [])),
-                                "r": sdg_with_data.get("percentage_in_questions", 0),
+                                "r": sdg_with_data.get("total_responded", 0),  # sdg_with_data.get("percentage_in_questions", 0),
                             }
                         ],
                         "backgroundColor": settings.SDG_COLOR.get(key),
