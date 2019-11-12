@@ -12,7 +12,7 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from dash.orgs.models import Org
-from smartmin.views import SmartTemplateView
+from smartmin.views import SmartTemplateView, SmartReadView
 
 from ureport.utils import get_paginator, is_global_user
 
@@ -75,8 +75,7 @@ class FlowBaseListView(LoginRequiredMixin, SearchSmartListViewMixin):
     def get_queryset(self):
         queryset = self.model.objects.filter(is_active=True).order_by("name")
 
-        if not is_global_user(self.request.user):
-            queryset = queryset.filter(Q(org=self.request.org) | Q(visible_globally=True))
+        queryset = queryset.filter(Q(org=self.request.org) | Q(visible_globally=True))
 
         queryset = self.search(queryset)
         queryset = self.filter(queryset)
@@ -100,7 +99,9 @@ class FlowBaseListView(LoginRequiredMixin, SearchSmartListViewMixin):
             filters["sdgs__contains"] = [sdg]
 
         if sort_field:
-            sortered = "{}{}".format("-" if sort_direction == "desc" else "", sort_field)
+            sortered = "{}{}".format(
+                "-" if sort_direction == "desc" else "", sort_field
+            )
 
         return queryset.filter(**filters).order_by(sortered)
 
@@ -142,13 +143,17 @@ class UnctsView(SearchSmartListViewMixin):
         sortered = "name"
 
         if sort_field:
-            sortered = "{}{}".format("-" if sort_direction == "desc" else "", sort_field)
+            sortered = "{}{}".format(
+                "-" if sort_direction == "desc" else "", sort_field
+            )
 
         queryset = self.model.objects.filter(is_active=True).order_by(sortered)
         queryset = self.search(queryset)
 
         for org in queryset:
-            org.total_stars = sum([f.stars.all().count() for f in org.flows.filter(is_active=True)])
+            org.total_stars = sum(
+                [f.stars.all().count() for f in org.flows.filter(is_active=True)]
+            )
 
         return queryset
 
@@ -230,7 +235,9 @@ class EditView(SmartTemplateView):
 
     def post(self, request, *args, **kwargs):
         flow = get_object_or_404(Flow, pk=self.kwargs["flow"])
-        form = FlowForm(request.POST, request.FILES, instance=flow, flow_is_required=False)
+        form = FlowForm(
+            request.POST, request.FILES, instance=flow, flow_is_required=False
+        )
 
         if form.is_valid():
             form.save(self.request)
@@ -252,7 +259,9 @@ class DownloadView(SmartTemplateView):
         queryset = Flow.objects.filter(pk=self.kwargs["flow"], is_active=True)
 
         if not is_global_user(self.request.user):
-            queryset = queryset.filter(Q(org=self.request.org) | Q(visible_globally=True))
+            queryset = queryset.filter(
+                Q(org=self.request.org) | Q(visible_globally=True)
+            )
 
         flow = queryset.first()
 
@@ -260,7 +269,9 @@ class DownloadView(SmartTemplateView):
             return redirect(reverse("flowhub.flow_list"))
 
         response = HttpResponse(json.dumps(flow.flow), content_type="application/json")
-        response["Content-Disposition"] = "attachment; filename=flow-{}.json".format(flow.pk)
+        response["Content-Disposition"] = "attachment; filename=flow-{}.json".format(
+            flow.pk
+        )
 
         flow.increase_downloads()
 
@@ -275,9 +286,9 @@ class StarView(SmartTemplateView):
         flow = Flow.objects.filter(pk=self.kwargs["flow"], is_active=True).first()
 
         if flow:
-            flow.decrease_stars(request.user) if request.user in flow.stars.all() else flow.increase_stars(
+            flow.decrease_stars(
                 request.user
-            )
+            ) if request.user in flow.stars.all() else flow.increase_stars(request.user)
 
         return redirect(self.request.META.get("HTTP_REFERER"))
 
@@ -289,7 +300,9 @@ class DeleteView(SmartTemplateView):
         super().get_context_data(**kwargs)
 
         try:
-            flow = Flow.objects.get(pk=kwargs.get("flow"), is_active=True, org=request.org)
+            flow = Flow.objects.get(
+                pk=kwargs.get("flow"), is_active=True, org=request.org
+            )
         except Flow.DoesNotExist:
             flow = None
 
@@ -299,3 +312,13 @@ class DeleteView(SmartTemplateView):
         flow.is_active = False
         flow.save()
         return redirect(self.request.META.get("HTTP_REFERER"))
+
+
+class InfoView(SmartReadView):
+    template_name = "flowhub/info.html"
+    pk_url_kwarg = "flow"
+    model = Flow
+
+    def get_queryset(self):
+        queryset = super().get_queryset().filter(is_active=True)
+        return queryset.filter(Q(org=self.request.org) | Q(visible_globally=True))

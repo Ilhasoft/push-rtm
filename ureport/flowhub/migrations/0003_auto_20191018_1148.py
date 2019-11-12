@@ -8,23 +8,31 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [migrations.swappable_dependency(settings.AUTH_USER_MODEL), ("flowhub", "0002_remove_flow_stars")]
+    dependencies = [
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ("flowhub", "0002_remove_flow_stars"),
+    ]
 
     operations = [
         migrations.AddField(
             model_name="flow",
             name="stars",
-            field=models.ManyToManyField(to=settings.AUTH_USER_MODEL, verbose_name="Stars"),
+            field=models.ManyToManyField(
+                to=settings.AUTH_USER_MODEL, verbose_name="Stars"
+            ),
         ),
         migrations.AlterField(
             model_name="flow",
             name="collected_data",
             field=models.TextField(
-                help_text="What data does this data collect from contacts?", verbose_name="Collected Data"
+                help_text="What data does this data collect from contacts?",
+                verbose_name="Collected Data",
             ),
         ),
         migrations.AlterField(
-            model_name="flow", name="description", field=models.TextField(verbose_name="Description")
+            model_name="flow",
+            name="description",
+            field=models.TextField(verbose_name="Description"),
         ),
         migrations.AlterField(
             model_name="flow",
@@ -57,7 +65,9 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="flow",
             name="name",
-            field=models.CharField(help_text="The name for flow", max_length=128, verbose_name="Name"),
+            field=models.CharField(
+                help_text="The name for flow", max_length=128, verbose_name="Name"
+            ),
         ),
         migrations.AlterField(
             model_name="flow",

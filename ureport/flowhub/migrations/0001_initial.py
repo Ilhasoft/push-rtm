@@ -23,11 +23,20 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Flow",
             fields=[
-                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 (
                     "is_active",
                     models.BooleanField(
-                        default=True, help_text="Whether this item is active, use this instead of deleting"
+                        default=True,
+                        help_text="Whether this item is active, use this instead of deleting",
                     ),
                 ),
                 (
@@ -48,9 +57,17 @@ class Migration(migrations.Migration):
                         help_text="When this item was last modified",
                     ),
                 ),
-                ("name", models.CharField(help_text="The name for flow", max_length=128)),
+                (
+                    "name",
+                    models.CharField(help_text="The name for flow", max_length=128),
+                ),
                 ("description", models.TextField()),
-                ("collected_data", models.TextField(help_text="What data does this data collect from contacts?")),
+                (
+                    "collected_data",
+                    models.TextField(
+                        help_text="What data does this data collect from contacts?"
+                    ),
+                ),
                 (
                     "sdgs",
                     django.contrib.postgres.fields.ArrayField(
