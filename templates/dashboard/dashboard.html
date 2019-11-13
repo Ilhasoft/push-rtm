@@ -596,10 +596,61 @@
     });
   }
 
+  function loadChartRapidProContacts() {
+    getJsonData({card: "rapidpro_contacts"}).then(function(result) {
+      console.log(result);
+
+      new Chart(document.getElementById("globalContacts").getContext("2d"), {
+        type: "pie",
+        data: {
+          labels: [
+            "Other UNCTs",
+            "{{ request.org.name }}",
+          ],
+          datasets: [{
+            data: [result.global_total_contacts.global, result.global_total_contacts.local],
+            backgroundColor: RTMConfigs.availableColors,
+            borderColor: "rgba(255, 255, 255, 0.1)",
+          }],
+        },
+        options: {
+          aspectRatio: 1.5,
+          legend: {
+            labels: {
+              padding: 18,
+              usePointStyle: true,
+            },
+            position: "top",
+          },
+          plugins: {
+            datalabels: {
+              font: {
+                size: 20,
+                weight: "bold",
+              },
+              formatter: (value, ctx) => {
+                let sum = 0;
+                let dataArr = ctx.chart.data.datasets[0].data;
+                dataArr.map(data => {
+                  sum += data;
+                });
+                let percentage = parseInt((value * 100 / sum));
+                return percentage > 0 ? percentage + "%" : "";
+              },
+              color: "#fff",
+            }
+          }
+        },
+      });
+    });
+  }
+
   $(document).ready(function() {
     // loadChartTracked("week");
     // loadChartPartialResults();
     // loadChartMessageMetrics("week");
+    // loadChartMostUsedChannels("week");
+    loadChartRapidProContacts();
   });
 </script>
 {% endblock %}

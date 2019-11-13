@@ -1,6 +1,7 @@
 import random
 import datetime
 import json
+import calendar
 
 from django.conf import settings
 from django.shortcuts import redirect
@@ -105,7 +106,8 @@ class DashboardDataView(View):
                     categories = results.get("categories")
                     for category in categories:
                         labels.append(category.get("label"))
-                        series.append("{0:.0f}".format(category.get("count") / results.get("set") * 100))
+                        series.append("{0:.0f}".format(
+                            category.get("count") / results.get("set") * 100))
 
                     statistics["labels"] = labels
                     statistics["series"] = series
@@ -254,17 +256,56 @@ class DashboardDataView(View):
             response["channels_most_used_global"] = channels_most_used_global
 
         if card == "rapidpro_contacts":
-            response["contacts_over_time"] = list((
-                Contact.objects.filter(
-                    registered_on__gte=datetime.datetime.utcnow().replace(tzinfo=utc) -
-                    datetime.timedelta(days=180)
-                )
-                .annotate(month=ExtractMonth("registered_on"), year=ExtractYear("registered_on"))
-                .order_by("month")
-                .values("month", "year")
-                .annotate(total=Count("*"))
-                .values("month", "year", "total", "org")
-            ))
+            contacts_over_time = Contact.objects.filter(
+                registered_on__gte=datetime.datetime.utcnow().replace(tzinfo=utc) -
+                datetime.timedelta(days=180)
+            ).annotate(month=ExtractMonth("registered_on"), year=ExtractYear("registered_on")
+                       ).order_by("month").values("month", "year").annotate(
+                           total=Count("*")).values("month", "year", "total", "org")
+
+            """
+            const overtime_results_labels = [];
+            const overtime_results_data = {
+            local: [],
+            global: [],
+            };
+            let overtime_results_key = "";
+
+            {% for stats in contacts_over_time %}
+            overtime_results_key = "{{ stats.month|get_month_name }}";
+            overtime_results_data["local"][overtime_results_key] = (typeof overtime_results_data["local"][overtime_results_key] != "undefined") ? overtime_results_data["local"][overtime_results_key] : 0;
+            overtime_results_data["global"][overtime_results_key] = (typeof overtime_results_data["global"][overtime_results_key] != "undefined") ? overtime_results_data["global"][overtime_results_key] : 0;
+            
+            overtime_results_data[{% if stats.org == request.org.id %}"local"{% else %}"global"{% endif %}][overtime_results_key] = {{ stats.total }};
+            overtime_results_labels.push(overtime_results_key);
+            {% endfor %}"""
+
+            labels = []
+            series = {
+                "local": {},
+                "global": {},
+            }
+            key = ""
+
+            for contact in contacts_over_time:
+                key = calendar.month_name[contact.get("month")]
+                labels.append(key)
+
+                scope = "local"
+                if contact.get("org") != self.request.org.id:
+                    scope = "global"
+
+                if key not in series[scope]:
+                    series[scope][key] = 0
+
+                series[scope][key] = contact.get("total")
+
+            print(labels)
+
+            response["contacts_over_time"] = {
+                "labels": list(dict.fromkeys(labels)),
+                "series": series,
+            }
 
             response["global_total_contacts"] = {
                 "local": Contact.objects.filter(org=self.request.org).count(),
@@ -437,7 +478,9 @@ class Dashboard(SmartTemplateView):
             })
 
         if self.access_level == "local":
-            context["surveys_local_total"] = Poll.objects.filter(org=self.request.org, is_active=True).count()
-            context["surveys_global_total"] = Poll.objects.exclude(org=self.request.org).filter(is_active=True).count()
+            context["surveys_local_total"] = Poll.objects.filter(
+                org=self.request.org, is_active=True).count()
+            context["surveys_global_total"] = Poll.objects.exclude(
+                org=self.request.org).filter(is_active=True).count()
 
         return context
