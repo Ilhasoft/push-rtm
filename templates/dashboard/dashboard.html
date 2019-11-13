@@ -107,15 +107,15 @@
           </div>
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
-              <a href="?message_metrics_by=week&message_metrics_uuid={{ channels_metrics_uuid }}#message_metrics" class="dropdown-item">{% trans "Last 7 days" %}</a>
-              <a href="?message_metrics_by=month&message_metrics_uuid={{ channels_metrics_uuid }}#message_metrics" class="dropdown-item">{% trans "Last 30 days" %}</a>
-              <a href="?message_metrics_by=year&message_metrics_uuid={{ channels_metrics_uuid }}#message_metrics" class="dropdown-item">{% trans "Last 12 months" %}</a>
-              <a href="?message_metrics_by=&message_metrics_uuid={{ channels_metrics_uuid }}#message_metrics" class="dropdown-item">{% trans "Since Inception" %}</a>
+              <a href="javascript:loadChartMessageMetrics('week')" class="dropdown-item">{% trans "Last 7 days" %}</a>
+              <a href="javascript:loadChartMessageMetrics('month')" class="dropdown-item">{% trans "Last 30 days" %}</a>
+              <a href="javascript:loadChartMessageMetrics('year')" class="dropdown-item">{% trans "Last 12 months" %}</a>
+              <a href="javascript:loadChartMessageMetrics()" class="dropdown-item">{% trans "Since Inception" %}</a>
             </div>
           </div>
         </div>
       </div>
-      <div class="bottom-p-20 has-text-grey-light">{{ channels_messages_ago }}</div>
+      <div class="bottom-p-20 has-text-grey-light" id="message_metrics_time_ago"></div>
       <div class="flex flex-end top-m-20">
         <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
@@ -128,9 +128,9 @@
           </div>
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
-                <a href="?message_metrics_by={{ channels_metrics_by }}#message_metrics" class="dropdown-item">{% trans "All channels" %}</a>
-              {% for uuid, channel in channels_info.items %}
-                <a href="?message_metrics_uuid={{ uuid }}&message_metrics_by={{ channels_metrics_by }}#message_metrics" class="dropdown-item">{{ channel.name }}</a>
+                <a href="javascript:loadChartMessageMetricsByChannel()" class="dropdown-item">{% trans "All channels" %}</a>
+              {% for channel in channels_info %}
+                <a href="javascript:loadChartMessageMetricsByChannel('{{ channel.uuid }}')" class="dropdown-item">{{ channel.name }}</a>
               {% endfor %}
             </div>
           </div>
@@ -138,48 +138,7 @@
       </div>
       <canvas id="channelsChart" height="100"></canvas>
       <div class="card-title has-text-weight-bold top-m-50">{% trans "Messages by Channel" %}</div>
-      <div class="columns is-multiline top-m-30">
-        {% for uuid, channel in channels_data.items %}
-        <div class="column is-one-fifth">
-          <div class="flex">
-            <div class="tooltip top flex align-center">
-              <div class="right-m-10">
-                <span class="channel-icon {{ channel.icon }}"></span>
-              </div>
-              <div>
-                <div class="flex align-center">
-                  <span class="channel-number is-size-5 has-text-weight-bold">{{ channel.total|intcomma }}</span>
-                    {% if channel.global|intcomma > channel.total|intcomma %}
-                      <i class="material-icons has-text-danger">trending_down</i>
-                    {% else %}
-                      <i class="material-icons has-text-success">trending_up</i>
-                    {% endif %}
-                </div>
-                <div>{{ channel.name }}</div>
-              </div>
-              <div class="tooltip-content channel-tooltip flex flex-center p-20">
-                <div class="flex">
-                  <div class="right-m-10">
-                    <span class="channel-icon {{ channel.icon }}"></span>
-                  </div>
-                  <div>
-                    <div class="is-size-6 bottom-p-20">{% trans "Global Average" %}</div>
-                    <div class="flex">
-                      <div>
-                        <div class="flex align-center">
-                          <span class="channel-number is-size-5 has-text-weight-bold">{{ channel.global|intcomma }}</span>
-                        </div>
-                        <div class="is-size-6">{{ channel.name }}</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        {% endfor %}
-      </div>
+      <div class="columns is-multiline top-m-30" id="message_by_channel_list"></div>
     </div>
 
     {% if access_level == 'local' %}
@@ -202,17 +161,19 @@
   let sdgsChart = null;
   let partialChart = null;
   let questionsList = null;
+  let messageMetricsChart = null;
   let questionLastId = 0;
+  let messageMetricsFilterBy = "week";
 
   function getJsonData(params) {
-    const {card, filter_by, channel_uuid, sdg} = params;
+    const {card, filterBy, channelUUID, sdg} = params;
   
     let url = `${dataUrl}?card=${card}`;
-    if (filter_by) {
-      url = `${url}&filter_by=${filter_by}`;
+    if (filterBy) {
+      url = `${url}&filter_by=${filterBy}`;
     }
-    if (channel_uuid) {
-      url = `${url}&uuid=${channel_uuid}`;
+    if (channelUUID) {
+      url = `${url}&uuid=${channelUUID}`;
     }
     if (sdg) {
       url = `${url}&sdg=${sdg}`;
@@ -223,8 +184,8 @@
     });
   }
 
-  function loadChartTracked(filter_by) {
-    getJsonData({card: "sdg_tracked", filter_by: filter_by}).then(function(result) {
+  function loadChartTracked(filterBy) {
+    getJsonData({card: "sdg_tracked", filterBy: filterBy}).then(function(result) {
       if (result) {
         $("#sdgs_tracked_ago").html(result.time_ago);
         $("#sdgs_untracked").html("");
@@ -423,9 +384,120 @@
     questionLastId = questionId;
   }
 
+  function loadChartMessageMetrics(filterBy, channelUUID) {
+    messageMetricsFilterBy = filterBy;
+    getJsonData({card: "message_metrics", filterBy: filterBy, channelUUID: channelUUID}).then(function(result) {
+      if (messageMetricsChart) {
+        messageMetricsChart.destroy();
+      }
+      $("#message_metrics_time_ago").html("");
+      $("#message_metrics_time_ago").html(result.time_ago);
+      if (result.channels_data.length > 0) {
+        $("#message_by_channel_list").html(result.channels_data.map(function(channel) {
+          let trendingInfo = "";
+
+          if (channel.global > channel.total) {
+            trendingInfo = `<i class="material-icons has-text-danger">trending_down</i>`;
+          } else {
+            trendingInfo = `<i class="material-icons has-text-success">trending_up</i>`;
+          }
+
+          return `<div class="column is-one-fifth">
+                  <div class="flex">
+                    <div class="tooltip top flex align-center">
+                      <div class="right-m-10">
+                        <span class="channel-icon ${channel.icon}"></span>
+                      </div>
+                      <div>
+                        <div class="flex align-center">
+                          <span class="channel-number is-size-5 has-text-weight-bold">${channel.total.toLocaleString()}</span>
+                            ${trendingInfo}
+                        </div>
+                        <div>${channel.name}</div>
+                      </div>
+                      <div class="tooltip-content channel-tooltip flex flex-center p-20">
+                        <div class="flex">
+                          <div class="right-m-10">
+                            <span class="channel-icon ${channel.icon}"></span>
+                          </div>
+                          <div>
+                            <div class="is-size-6 bottom-p-20">{% trans "Global Average" %}</div>
+                            <div class="flex">
+                              <div>
+                                <div class="flex align-center">
+                                  <span class="channel-number is-size-5 has-text-weight-bold">${channel.global.toLocaleString()}</span>
+                                </div>
+                                <div class="is-size-6">${channel.name}</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>`;
+        }));
+      }
+
+      messageMetricsChart = new Chart(document.getElementById("channelsChart").getContext("2d"), {
+        type: "line",
+        data: {
+          labels: [...new Set(result.channels_stats.labels)],
+          datasets: [{
+            label: "Sent",
+            borderColor: "#97d9f6",
+            backgroundColor: "#97d9f6",
+            data: Object.values(result.channels_stats.series.O),
+          }, {
+            label: "Received",
+            borderColor: "#03aeef",
+            backgroundColor: "#03aeef",
+            data: Object.values(result.channels_stats.series.I),
+          }, {
+            label: "Fail",
+            borderColor: "#004f94",
+            backgroundColor: "#004f94",
+            data: Object.values(result.channels_stats.series.E),
+          }],
+        },
+        options: {
+          legend: {
+            labels: {
+              padding: 18,
+              usePointStyle: true,
+            },
+            position: "top",
+          },
+          scales: {
+            xAxes: [{
+              gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+              }
+            }],
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          },
+          plugins: {
+            datalabels: {
+              display: false,
+            }
+          }
+        }
+      });
+    });
+  }
+
+  function loadChartMessageMetricsByChannel(channelUUID) {
+    loadChartMessageMetrics(messageMetricsFilterBy, channelUUID);
+  }
+
   $(document).ready(function() {
-    loadChartTracked();
-    loadChartPartialResults();
+    // loadChartTracked("week");
+    // loadChartPartialResults();
+    // loadChartMessageMetrics("week");
   });
 </script>
 {% endblock %}

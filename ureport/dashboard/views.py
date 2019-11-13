@@ -25,7 +25,7 @@ class DashboardDataView(View):
 
     def get(self, request, *args, **kwargs):
         card = self.request.GET.get("card")
-        filter_by = self.request.GET.get("filter_by", "week")
+        filter_by = self.request.GET.get("filter_by")
 
         if request.user.is_authenticated:
             if request.user.is_superuser or request.user.groups.filter(name="Global Viewers"):
@@ -184,14 +184,15 @@ class DashboardDataView(View):
             if self.access_level == "local":
                 channels = channels.filter(org=self.request.org)
 
-            channels_info = {}
-            channels_data = {}
+            channels_info = []
+            channels_data = []
 
             for channel in channels:
-                channels_info[channel.uuid] = {
+                channels_info.append({
+                    "uuid": channel.uuid,
                     "name": Dashboard.channel_info(channel.channel_type, "name"),
                     "icon": Dashboard.channel_info(channel.channel_type, "icon"),
-                }
+                })
             response["channels_info"] = channels_info
 
             for channel in channels:
@@ -209,17 +210,18 @@ class DashboardDataView(View):
                     .aggregate(total=Sum("count"))["total"]
                 )
 
-                channels_data[channel.uuid] = {
+                channels_data.append({
+                    "uuid": channel.uuid,
                     "name": Dashboard.channel_info(channel.channel_type, "name"),
                     "icon": Dashboard.channel_info(channel.channel_type, "icon"),
                     "total": total if total is not None else 0,
                     "global": global_total if global_total is not None else 0,
-                }
+                })
 
             if channel_uuid:
                 channels = channels.filter(uuid=channel_uuid)
 
-            channels_chart_stats = ChannelDailyStats.objects.filter(
+            channels_stats = ChannelDailyStats.objects.filter(
                 channel__in=channels,
                 msg_direction__in=["I", "O", "E"],
                 msg_type__in=["M", "I", "E"],
@@ -227,11 +229,33 @@ class DashboardDataView(View):
             ).order_by("date")
 
             if self.access_level == "local":
-                channels_chart_stats = channels_chart_stats.filter(
+                channels_stats = channels_stats.filter(
                     channel__org=self.request.org)
 
-            response["channels_chart_stats"] = serializers.serialize(
-                "json", channels_chart_stats)
+            labels = []
+            series = {
+                "O": {},
+                "I": {},
+                "E": {},
+            }
+            key = ""
+
+            for stats in channels_stats:
+                if filter_by == "year" or filter_by == "":
+                    key = stats.date.strftime("%B/%Y")
+                else:
+                    key = stats.date.strftime("%d/%m")
+
+                if key not in series[stats.msg_direction]:
+                    series[stats.msg_direction][key] = 0
+
+                labels.append(key)
+                series[stats.msg_direction][key] += stats.count
+
+            response["channels_stats"] = {
+                "labels": list(dict.fromkeys(labels)),
+                "series": series,
+            }
             response["channels_data"] = channels_data
             response["channel_uuid"] = channel_uuid
             response["filter_by"] = filter_by
@@ -406,5 +430,19 @@ class Dashboard(SmartTemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["access_level"] = self.access_level
+
+        channels_info = []
+
+        channels = ChannelStats.objects.all().order_by("channel_type")
+        if self.access_level == "local":
+            channels = channels.filter(org=self.request.org)
+
+        for channel in channels:
+            channels_info.append({
+                "uuid": channel.uuid,
+                "name": Dashboard.channel_info(channel.channel_type, "name"),
+                "icon": Dashboard.channel_info(channel.channel_type, "icon"),
+            })
+        context["channels_info"] = channels_info
 
         return context
