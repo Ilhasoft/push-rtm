@@ -120,63 +120,6 @@ class DashboardDataView(View):
             response["questions_count"] = len(questions)
             response["questions"] = questions
 
-        if card == "channel_most_used":
-            response["surveys_total"] = Poll.objects.filter(
-                is_active=True).count()
-
-            if self.access_level == "local":
-                response["surveys_total"] = Poll.objects.filter(
-                    org=self.request.org, is_active=True).count()
-
-            most_used = ChannelDailyStats.objects.filter(
-                msg_direction__in=["I", "O"], msg_type__in=["M", "I"], **Dashboard.filter_by_date("date", filter_by)
-            )
-
-            if self.access_level == "local":
-                most_used = most_used.filter(channel__org=self.request.org)
-
-            most_used = (
-                most_used.filter().values("channel__channel_type").annotate(
-                    total=Sum("count")).order_by("-total")[:3]
-            )
-
-            most_used_global = (
-                ChannelDailyStats.objects.exclude(
-                    channel__org=self.request.org)
-                .filter(
-                    msg_direction__in=["I", "O"], msg_type__in=["M", "I"], **Dashboard.filter_by_date("date", filter_by)
-                )
-                .values("channel__channel_type")
-                .annotate(total=Sum("count"))
-                .order_by("-total")[:3]
-            )
-
-            channels_most_used = []
-            channels_most_used_global = []
-
-            for channel in most_used:
-                channels_most_used.append(
-                    {
-                        "name": Dashboard.channel_info(
-                            channel.get("channel__channel_type"), "name"
-                        ),
-                        "total": channel.get("total", 0),
-                    }
-                )
-
-            for channel in most_used_global:
-                channels_most_used_global.append(
-                    {
-                        "name": Dashboard.channel_info(
-                            channel.get("channel__channel_type"), "name"
-                        ),
-                        "total": channel.get("total", 0),
-                    }
-                )
-
-            response["channels_most_used"] = channels_most_used
-            response["channels_most_used_global"] = channels_most_used_global
-
         if card == "message_metrics":
             channel_uuid = self.request.GET.get("uuid")
             channels = ChannelStats.objects.all().order_by("channel_type")
@@ -259,6 +202,56 @@ class DashboardDataView(View):
             response["channels_data"] = channels_data
             response["channel_uuid"] = channel_uuid
             response["filter_by"] = filter_by
+
+        if card == "channel_most_used":
+            most_used = ChannelDailyStats.objects.filter(
+                msg_direction__in=["I", "O"], msg_type__in=["M", "I"], **Dashboard.filter_by_date("date", filter_by)
+            )
+
+            if self.access_level == "local":
+                most_used = most_used.filter(channel__org=self.request.org)
+
+            most_used = (
+                most_used.filter().values("channel__channel_type").annotate(
+                    total=Sum("count")).order_by("-total")[:3]
+            )
+
+            most_used_global = (
+                ChannelDailyStats.objects.exclude(
+                    channel__org=self.request.org)
+                .filter(
+                    msg_direction__in=["I", "O"], msg_type__in=["M", "I"], **Dashboard.filter_by_date("date", filter_by)
+                )
+                .values("channel__channel_type")
+                .annotate(total=Sum("count"))
+                .order_by("-total")[:3]
+            )
+
+            channels_most_used = []
+            channels_most_used_global = []
+
+            for channel in most_used:
+                channels_most_used.append(
+                    {
+                        "name": Dashboard.channel_info(
+                            channel.get("channel__channel_type"), "name"
+                        ),
+                        "total": channel.get("total", 0),
+                    }
+                )
+
+            for channel in most_used_global:
+                channels_most_used_global.append(
+                    {
+                        "name": Dashboard.channel_info(
+                            channel.get("channel__channel_type"), "name"
+                        ),
+                        "total": channel.get("total", 0),
+                    }
+                )
+
+            response["channels_most_used"] = channels_most_used
+            response["channels_most_used_global"] = channels_most_used_global
 
         if card == "rapidpro_contacts":
             response["contacts_over_time"] = list((
@@ -432,7 +425,6 @@ class Dashboard(SmartTemplateView):
         context["access_level"] = self.access_level
 
         channels_info = []
-
         channels = ChannelStats.objects.all().order_by("channel_type")
         if self.access_level == "local":
             channels = channels.filter(org=self.request.org)
@@ -443,6 +435,9 @@ class Dashboard(SmartTemplateView):
                 "name": Dashboard.channel_info(channel.channel_type, "name"),
                 "icon": Dashboard.channel_info(channel.channel_type, "icon"),
             })
-        context["channels_info"] = channels_info
+
+        if self.access_level == "local":
+            context["surveys_local_total"] = Poll.objects.filter(org=self.request.org, is_active=True).count()
+            context["surveys_global_total"] = Poll.objects.exclude(org=self.request.org).filter(is_active=True).count()
 
         return context

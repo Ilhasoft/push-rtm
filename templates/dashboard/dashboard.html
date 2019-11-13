@@ -162,6 +162,8 @@
   let partialChart = null;
   let questionsList = null;
   let messageMetricsChart = null;
+  let localMostUsedChannelsChart = null;
+  let globalMostUsedChannelsChart = null;
   let questionLastId = 0;
   let messageMetricsFilterBy = "week";
 
@@ -492,6 +494,106 @@
 
   function loadChartMessageMetricsByChannel(channelUUID) {
     loadChartMessageMetrics(messageMetricsFilterBy, channelUUID);
+  }
+
+  function loadChartMostUsedChannels(filterBy) {
+    getJsonData({card: "channel_most_used", filterBy: filterBy}).then(function(result) {
+      if (localMostUsedChannelsChart) {
+        localMostUsedChannelsChart.destroy();
+      }
+      if (globalMostUsedChannelsChart) {
+        globalMostUsedChannelsChart.destroy();
+      }
+      localMostUsedChannelsChart = new Chart(document.getElementById("localMostUsedChannels").getContext("2d"), {
+        type: "doughnut",
+        data: {
+          labels: result.channels_most_used.map(item => item.name),
+          datasets: [{
+            data: result.channels_most_used.map(item => item.total),
+            backgroundColor: RTMConfigs.availableColors,
+            borderColor: "rgba(255, 255, 255, 0.1)",
+          }],
+        },
+        options: {
+          title: {
+            fontSize: "16",
+            display: true,
+            text: "{{ request.org.name }}",
+            position: "top",
+          },
+          legend: {
+            labels: {
+              padding: 18,
+              usePointStyle: true,
+            },
+            position: "left",
+          },
+          plugins: {
+            datalabels: {
+              font: {
+                size: 20,
+                weight: "bold",
+              },
+              formatter: (value, ctx) => {
+                let sum = 0;
+                let dataArr = ctx.chart.data.datasets[0].data;
+                dataArr.map(data => {
+                  sum += data;
+                });
+                let percentage = parseInt((value * 100 / sum));
+                return percentage > 0 ? percentage + "%" : "";
+              },
+              color: "#fff",
+            }
+          }
+        },
+      });
+
+      globalMostUsedChannelsChart = new Chart(document.getElementById("globalMostUsedChannels").getContext("2d"), {
+        type: "doughnut",
+        data: {
+          labels: result.channels_most_used_global.map(item => item.name),
+          datasets: [{
+            data: result.channels_most_used_global.map(item => item.total),
+            backgroundColor: RTMConfigs.availableColors,
+            borderColor: "rgba(255, 255, 255, 0.1)",
+          }],
+        },
+        options: {
+          title: {
+            fontSize: "16",
+            display: true,
+            text: "Global",
+            position: "top",
+          },
+          legend: {
+            labels: {
+              padding: 18,
+              usePointStyle: true,
+            },
+            position: "left",
+          },
+          plugins: {
+            datalabels: {
+              font: {
+                size: 20,
+                weight: "bold",
+              },
+              formatter: (value, ctx) => {
+                let sum = 0;
+                let dataArr = ctx.chart.data.datasets[0].data;
+                dataArr.map(data => {
+                  sum += data;
+                });
+                let percentage = parseInt((value * 100 / sum));
+                return percentage > 0 ? percentage + "%" : "";
+              },
+              color: "#fff",
+            }
+          }
+        },
+      });
+    });
   }
 
   $(document).ready(function() {
