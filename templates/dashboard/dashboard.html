@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 {% load i18n static humanize sass_tags ureport %}
 
@@ -16,7 +17,7 @@
   </section>
 
   <section class="section">
-    <div class="box is-shadowless p-40 bottom-m-20" id="sdg_tracked">
+    <div class="box is-shadowless p-40 bottom-m-20">
       <div class="flex space-between">
         <div>
           <span class="card-title has-text-weight-bold">{% trans "SDGs being tracked" %}</span>
@@ -36,36 +37,20 @@
           </div>
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
-              <a href="{% url 'dashboard' %}{% urlparams sdg_tracked_filter='week' %}#sdg_tracked" class="dropdown-item">{% trans "Last 7 days" %}</a>
-              <a href="{% url 'dashboard' %}{% urlparams sdg_tracked_filter='month' %}#sdg_tracked" class="dropdown-item">{% trans "Last 30 days" %}</a>
-              <a href="{% url 'dashboard' %}{% urlparams sdg_tracked_filter='year' %}#sdg_tracked" class="dropdown-item">{% trans "Last 12 months" %}</a>
-              <a href="{% url 'dashboard' %}{% urlparams sdg_tracked_filter='inception' %}#sdg_tracked" class="dropdown-item">{% trans "Since Inception" %}</a>
+              <a href="javascript:loadChartTracked('week')" class="dropdown-item">{% trans "Last 7 days" %}</a>
+              <a href="javascript:loadChartTracked('month')" class="dropdown-item">{% trans "Last 30 days" %}</a>
+              <a href="javascript:loadChartTracked('year')" class="dropdown-item">{% trans "Last 12 months" %}</a>
+              <a href="javascript:loadChartTracked('inception')" class="dropdown-item">{% trans "Since Inception" %}</a>
             </div>
           </div>
         </div>
       </div>
-      <div class="has-text-grey-light">
-        {% if sdg_tracked_filter == 'week' %}
-          {% trans "Last 7 days" %}
-        {% elif sdg_tracked_filter == 'month' %}
-          {% trans "Last 30 days" %}
-        {% elif sdg_tracked_filter == 'inception' %}
-          {% trans "Since inception" %}
-        {% else %}
-          {% trans "Last 12 months" %}
-        {% endif %}
-      </div>
+      <div class="has-text-grey-light" id="sdgs_tracked_ago"></div>
       <canvas id="bubbleChart"></canvas>
       <div class="card-title has-text-weight-bold bottom-p-20">{% trans "SDGs not being tracked" %}</div>
-      <ul class="untracked-sgd">
-        {% for key, value in sdgs_bubble_data.not_tracked_sdgs %}
-          <li class="untracked-sgd__item">
-            <div class="untracked-sgd__item__color sdg-{{key}}"></div>
-            <div class="untracked-sgd__item__label">{{key}} {{value}}</div>
-          </li>
-        {% endfor %}
-      </ul>
+      <ul class="untracked-sgd" id="sdgs_untracked"></ul>
     </div>
+
     <div class="box is-shadowless is-paddingless bottom-m-20">
       <div class="columns is-marginless">
         <div class="column is-three-fifths border-right p-40">
@@ -75,9 +60,7 @@
             <span class="tooltip-content">{% trans "Partial SDG results for the lastest ongoing surveys" %}</span>
           </span>
           <div class="selected-question top-m-30">
-            <div class="selected-question__title bottom-m-30">
-              {{ survey_result_sdg_questions.0.title }}
-            </div>
+            <div class="selected-question__title bottom-m-30" id="partial_question_title"></div>
             <div class="selected-question__chart">
               <div id="wordCloud"></div>
               <canvas id="questionChart"></canvas>
@@ -86,42 +69,32 @@
         </div>
         <div class="column is-paddingless" id="sdgQuestions">
           <div class="flex space-between p-30">
-            <div class="card-title has-text-weight-bold">{{ survey_result_sdg_questions|length }} {% trans "Questions" %}</div>
+            <div class="card-title has-text-weight-bold" id="partial_questions_count"></div>
             <div class="dropdown is-hoverable">
               <div class="dropdown-trigger">
                 <div aria-haspopup="true" aria-controls="dropdown-menu">
                   <span>{% trans "Filter by" %}</span>
                   <span class="icon is-small">
-                <i class="fas fa-angle-down" aria-hidden="true"></i>
-              </span>
+                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                  </span>
                 </div>
               </div>
               <div class="dropdown-menu" role="menu">
                 <div class="dropdown-content">
                   <a href="{% url 'dashboard' %}#sdgQuestions" class="dropdown-item sdgLink">{% trans "None" %}</a>
                   {% for key, value in SDG_LIST %}
-                    <a href="{% url 'dashboard' %}{% urlparams survey_result_sdg=key %}#sdgQuestions" class="dropdown-item sdgLink">{% trans "SDG" %} {{ key }}</a>
+                    <a href="javascript:loadChartPartialResults('{{ key }}')" class="dropdown-item sdgLink">{% trans "SDG" %} {{ key }}</a>
                   {% endfor %}
                 </div>
               </div>
             </div>
           </div>
-          <div class="questions-list">
-            {% for question in survey_result_sdg_questions %}
-              <div class="questions-list__item p-30 border-bottom">
-                <a href="javascript:showChart('{{ question.pk }}', '{{ question.title }}', '{{ question.is_open_ended }}');" class="question-link">{{ question.title }}</a>
-              </div>
-            {% empty %}
-              <div class="questions-list__item p-30 border-bottom">
-                {% trans "There are no question registered with SDG" %} {{ survey_result_sdg.0 }} - {{ survey_result_sdg.1 }}
-              </div>
-            {% endfor %}
-          </div>
+          <div class="questions-list" id="partial_questions_list"></div>
         </div>
       </div>
     </div>
 
-    <div class="box is-shadowless p-40 bottom-m-20" id="message_metrics">
+    <div class="box is-shadowless p-40 bottom-m-20">
       <div class="flex space-between">
         <div class="card-title has-text-weight-bold">{% trans "Message Metrics" %}</div>
         <div class="dropdown is-hoverable">
@@ -135,15 +108,15 @@
           </div>
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
-              <a href="?message_metrics_by=week&message_metrics_uuid={{ channels_metrics_uuid }}#message_metrics" class="dropdown-item">{% trans "Last 7 days" %}</a>
-              <a href="?message_metrics_by=month&message_metrics_uuid={{ channels_metrics_uuid }}#message_metrics" class="dropdown-item">{% trans "Last 30 days" %}</a>
-              <a href="?message_metrics_by=year&message_metrics_uuid={{ channels_metrics_uuid }}#message_metrics" class="dropdown-item">{% trans "Last 12 months" %}</a>
-              <a href="?message_metrics_by=&message_metrics_uuid={{ channels_metrics_uuid }}#message_metrics" class="dropdown-item">{% trans "Since Inception" %}</a>
+              <a href="javascript:loadChartMessageMetrics('week')" class="dropdown-item">{% trans "Last 7 days" %}</a>
+              <a href="javascript:loadChartMessageMetrics('month')" class="dropdown-item">{% trans "Last 30 days" %}</a>
+              <a href="javascript:loadChartMessageMetrics('year')" class="dropdown-item">{% trans "Last 12 months" %}</a>
+              <a href="javascript:loadChartMessageMetrics()" class="dropdown-item">{% trans "Since Inception" %}</a>
             </div>
           </div>
         </div>
       </div>
-      <div class="bottom-p-20 has-text-grey-light">{{ channels_messages_ago }}</div>
+      <div class="bottom-p-20 has-text-grey-light" id="message_metrics_time_ago"></div>
       <div class="flex flex-end top-m-20">
         <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
@@ -156,9 +129,9 @@
           </div>
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
-                <a href="?message_metrics_by={{ channels_metrics_by }}#message_metrics" class="dropdown-item">{% trans "All channels" %}</a>
-              {% for uuid, channel in channels_info.items %}
-                <a href="?message_metrics_uuid={{ uuid }}&message_metrics_by={{ channels_metrics_by }}#message_metrics" class="dropdown-item">{{ channel.name }}</a>
+                <a href="javascript:loadChartMessageMetricsByChannel()" class="dropdown-item">{% trans "All channels" %}</a>
+              {% for channel in channels_info %}
+                <a href="javascript:loadChartMessageMetricsByChannel('{{ channel.uuid }}')" class="dropdown-item">{{ channel.name }}</a>
               {% endfor %}
             </div>
           </div>
@@ -166,48 +139,7 @@
       </div>
       <canvas id="channelsChart" height="100"></canvas>
       <div class="card-title has-text-weight-bold top-m-50">{% trans "Messages by Channel" %}</div>
-      <div class="columns is-multiline top-m-30">
-        {% for uuid, channel in channels_data.items %}
-        <div class="column is-one-fifth">
-          <div class="flex">
-            <div class="tooltip top flex align-center">
-              <div class="right-m-10">
-                <span class="channel-icon {{ channel.icon }}"></span>
-              </div>
-              <div>
-                <div class="flex align-center">
-                  <span class="channel-number is-size-5 has-text-weight-bold">{{ channel.total|intcomma }}</span>
-                    {% if channel.global|intcomma > channel.total|intcomma %}
-                      <i class="material-icons has-text-danger">trending_down</i>
-                    {% else %}
-                      <i class="material-icons has-text-success">trending_up</i>
-                    {% endif %}
-                </div>
-                <div>{{ channel.name }}</div>
-              </div>
-              <div class="tooltip-content channel-tooltip flex flex-center p-20">
-                <div class="flex">
-                  <div class="right-m-10">
-                    <span class="channel-icon {{ channel.icon }}"></span>
-                  </div>
-                  <div>
-                    <div class="is-size-6 bottom-p-20">{% trans "Global Average" %}</div>
-                    <div class="flex">
-                      <div>
-                        <div class="flex align-center">
-                          <span class="channel-number is-size-5 has-text-weight-bold">{{ channel.global|intcomma }}</span>
-                        </div>
-                        <div class="is-size-6">{{ channel.name }}</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        {% endfor %}
-      </div>
+      <div class="columns is-multiline top-m-30" id="message_by_channel_list"></div>
     </div>
 
     {% if access_level == 'local' %}
@@ -219,518 +151,564 @@
 {% endblock %}
 
 {% block js_extra %}
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
-  <script src="{% static 'plugins/wordcloud/d3.js' %}"></script>
-  <script src="{% static 'plugins/wordcloud/d3.layout.cloud.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+<script src="{% static 'plugins/wordcloud/d3.js' %}"></script>
+<script src="{% static 'plugins/wordcloud/d3.layout.cloud.js' %}"></script>
 
-{{ sdgs_bubble_data.datasets|json_script:'SDGSBubbleChartDataDatasets' }}
+<script type="text/javascript">
+  const dataUrl = "{% url 'dashboard_data' %}";
+  let sdgsChart = null;
+  let partialChart = null;
+  let questionsList = null;
+  let messageMetricsChart = null;
+  let localMostUsedChannelsChart = null;
+  let globalMostUsedChannelsChart = null;
+  let questionLastId = 0;
+  let messageMetricsFilterBy = "week";
 
-  <script>
-    let bubbleCtx = document.getElementById('bubbleChart').getContext('2d');
-    let bubbleChart = new Chart(bubbleCtx, {
-      type: 'bubble',
-      options: {
-        responsive: true,
-        legend: {
-          labels: {
-            fontSize: 14,
-            padding: 18,
-            usePointStyle: true,
-          },
-          position: 'left',
-          onClick: null,
-        },
-        layout: {
-          padding: {
-            top: 50,
-          }
-        },
-        scales: {
-          xAxes: [{
-            display: false,
-            ticks: {
-              max: 90,
-              min: -10,
-            }
-          }],
-          yAxes: [{
-            display: false,
-            ticks: {
-              max: 90,
-              min: -10,
-            }
-          }]
-        },
-        tooltips: {
-          bodyFontSize: 16,
-          callbacks: {
-            label: function(item, data) {
-              var datasetLabel = data.datasets[item.datasetIndex].label || '';
-              var dataPoint = data.datasets[item.datasetIndex].data[item.index];
-              return ' ' + datasetLabel + ': ' + dataPoint.r[1] + ' / ' + dataPoint.r[0] + '% received';
-            }
-          }
-        },
-        plugins: {
-          datalabels: {
-            display: false,
-          }
-        },
-      },
-      data: {
-        datasets: JSON.parse(document.getElementById('SDGSBubbleChartDataDatasets').textContent)
-      }
-    });
-
-    const surveys_results_statistics = [];
-    const surveys_results_words = [];
-
-    {% for question in survey_result_sdg_questions %}
-      question = {{ question.pk }};
-      {% if not question.is_open_ended %}
-        surveys_results_statistics[question] = {
-          labels: [],
-          series: [],
-        };
-        {% with results=question|question_results %}
-          {% with categories=results.categories %}
-            {% for category in categories %}
-              surveys_results_statistics[question]["labels"].push("{{ category.label|safe }}");
-              surveys_results_statistics[question]["series"].push(parseInt("{% widthratio category.count results.set 100 %}"));
-            {% endfor %}
-          {% endwith %}
-        {% endwith %}
-      {% else %}        
-        surveys_results_words[question] = [];
-        {% for category in question.get_results.0.categories %}
-          surveys_results_words[question].push({
-            text: "{{ category.label|upper }}",
-            size: {% if category.count < 10 %}20 +{% endif %}{{ category.count }},
-          });
-        {% endfor %}
-
-      {% endif %}
-    {% endfor %}
-
-    (function ($) {
-      let $questionList = $('.questions-list'),
-        $questionsItems = $questionList.find('.question-link');
-
-      $questionsItems.first().addClass('active');
-
-      $questionList.on('click', '.question-link', function (e) {
-        $questionsItems.removeClass('active');
-        $(this).addClass('active');
-      });
-    })(jQuery);
-
-    let donutChart;
-    let wordCloud;
-    let svg;
-    let lastQuestion = 0;
-
-    function showChart(question, title, is_open_ended) {
-      if (question == lastQuestion) {
-        return;
-      }
-
-      let donutCtx = document.getElementById('questionChart');
-      if (donutChart) {
-        donutChart.destroy();
-      }
-      d3.select("svg").remove();
-      $('.selected-question__title').html(title);
-
-      if (is_open_ended === "False") {
-        $('#questionChart').show();
-        donutChart = new Chart(donutCtx.getContext("2d"), {
-          type: "doughnut",
-          data: {
-            datasets: [{
-              data: surveys_results_statistics[question].series,
-              backgroundColor: RTMConfigs.availableColors,
-              borderColor: "rgba(255, 255, 255, 0.1)",
-            }],
-            labels: surveys_results_statistics[question].labels
-          },
-          options: {
-            legend: {
-              labels: {
-                fontSize: 14,
-                padding: 18,
-                usePointStyle: true,
-              },
-              position: 'left',
-            },
-            plugins: {
-              datalabels: {
-                font: {
-                  size: 20,
-                  weight: 'bold',
-                },
-                formatter: (value, ctx) => {
-                  let sum = 0;
-                  let dataArr = ctx.chart.data.datasets[0].data;
-                  dataArr.map(data => {
-                    sum += data;
-                  });
-                  let percentage = parseInt((value * 100 / sum));
-                  return percentage > 0 ? percentage + "%" : "";
-                },
-                color: '#fff',
-              }
-            }
-          }
-        });
-      } else {
-        let words = surveys_results_words[question];
-        $('#questionChart').hide();
-        const fillWordColor = function(d, i) {
-          return RTMConfigs.availableColors[i % RTMConfigs.availableColors.length];
-        }
-
-        let margin = {top: 0, right: 10, bottom: 10, left: 10},
-          width = 350 - margin.left - margin.right,
-          height = 290 - margin.top - margin.bottom;
-
-        svg = d3.select("#wordCloud").append("svg")
-          .attr("width", width)
-          .attr("height", height)
-          .append("g")
-          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-        d3.scale.category20();
-        var layout = d3.layout.cloud()
-          .size([width, height])
-          .words(words)
-          .padding(5)
-          .rotate(function() { return ~~(Math.random() * 2) * 90; })
-          .fontSize(function(d) { return d.size; })      // font size of words
-          .on("end", draw);
-        layout.start();
-
-        function draw(words) {
-          svg
-            .append("g")
-            .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
-            .selectAll("text")
-            .data(words)
-            .enter().append("text")
-            .style("font-size", function(d) { return d.size; })
-            .style("fill", fillWordColor)
-            .attr("text-anchor", "middle")
-            .style("font-family", "Impact")
-            .attr("transform", function(d) {
-              return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-            })
-            .text(function(d) { return d.text; });
-        }
-      }
-
-      lastQuestion = question;
+  function getJsonData(params) {
+    const {card, filterBy, channelUUID, sdg} = params;
+  
+    let url = `${dataUrl}?card=${card}`;
+    if (filterBy) {
+      url = `${url}&filter_by=${filterBy}`;
+    }
+    if (channelUUID) {
+      url = `${url}&uuid=${channelUUID}`;
+    }
+    if (sdg) {
+      url = `${url}&sdg=${sdg}`;
     }
 
-    showChart({{ survey_result_sdg_questions.0.pk }}, "{{ survey_result_sdg_questions.0.title }}", "{{ survey_result_sdg_questions.0.is_open_ended }}");
+    return $.get(url, function(result) {
+      return result;
+    });
+  }
 
-    const channel_results_labels = [];
-    const channel_results_data = {
-      O: [],
-      I: [],
-      E: [],
-    };
-    let channel_metrics_key = "";
-    {% for stats in channels_chart_stats %}
-      {% if channels_metrics_by == "year" or channels_metrics_by == "" %}
-        channel_metrics_key = "{{ stats.date|date:'F/Y' }}";
-      {% else %}
-        channel_metrics_key = "{{ stats.date|date:'d/m' }}";
+  function loadChartTracked(filterBy) {
+    getJsonData({card: "sdg_tracked", filterBy: filterBy}).then(function(result) {
+      if (result) {
+        $("#sdgs_tracked_ago").html(result.time_ago);
+        $("#sdgs_untracked").html("");
+        $("#sdgs_untracked").html(result.sdgs_bubble_data.not_tracked_sdgs.map(function(sdg) {
+          return `<li class="untracked-sgd__item">
+                  <div class="untracked-sgd__item__color sdg-${sdg[0]}"></div>
+                  <div class="untracked-sgd__item__label">${sdg[0]} ${sdg[1]}</div></li>`;
+        }));
+
+        if (sdgsChart) {
+          sdgsChart.destroy();
+        }
+
+        if (result.sdgs_bubble_data.datasets.length == 0) {
+          $("#bubbleChart").hide();
+        } else {
+          $("#bubbleChart").show();
+          sdgsChart = new Chart(document.getElementById("bubbleChart").getContext("2d"), {
+            type: "bubble",
+            options: {
+              responsive: true,
+              legend: {
+                labels: {
+                  fontSize: 14,
+                  padding: 18,
+                  usePointStyle: true,
+                },
+                position: "left",
+                onClick: null,
+              },
+              layout: {
+                padding: {
+                  top: 50,
+                }
+              },
+              scales: {
+                xAxes: [{
+                  display: false,
+                  ticks: {
+                    max: 90,
+                    min: -10,
+                  }
+                }],
+                yAxes: [{
+                  display: false,
+                  ticks: {
+                    max: 90,
+                    min: -10,
+                  }
+                }]
+              },
+              tooltips: {
+                bodyFontSize: 16,
+                callbacks: {
+                  label: function(item, data) {
+                    var datasetLabel = data.datasets[item.datasetIndex].label || "";
+                    var dataPoint = data.datasets[item.datasetIndex].data[item.index];
+                    return " " + datasetLabel + ": " + dataPoint.r[1] + " / " + dataPoint.r[0] + "% received";
+                  }
+                }
+              },
+              plugins: {
+                datalabels: {
+                  display: false,
+                }
+              },
+            },
+            data: {
+              datasets: result.sdgs_bubble_data.datasets,
+            }
+          });
+        }
+      }
+    }); 
+  }
+
+  function loadChartPartialResults(sdg) {
+    getJsonData({card: "partial_results", sdg: sdg}).then(function(result) {
+      if (result) {
+        $("#partial_questions_count").html(`${result.questions_count} {% trans "Questions" %}`);
+        $("#partial_questions_list").html("");
+        $("#partial_question_title").html("");
+        questionsList = result.questions;
+
+        if (result.questions.length > 0) {
+          $("#partial_questions_list").html(result.questions.map(function(question) {
+            return `<div class="questions-list__item p-30 border-bottom">
+                    <a href="javascript:loadDonutPatialResult(${question.id});" class="question-link">${question.title}</a>
+                    </div>`;
+          }));
+        } else {
+          $("#partial_questions_list").html(`
+            <div class="questions-list__item p-30 border-bottom">{% trans 'There are no question registered with SDG' %}</div>`);
+        }
+
+        if (result.questions.length > 0) {
+          $("#partial_question_title").html(result.questions[0].title);
+          loadDonutPatialResult(result.questions[0].id);
+        }
+      }
+    });
+  }
+
+  function loadDonutPatialResult(questionId) {
+    if (questionId == questionLastId) {
+      return;
+    }
+      
+    if (partialChart) {
+      partialChart.destroy();
+    }
+
+    let index = questionsList.map(question => question.id).indexOf(questionId);
+    let question = questionsList[index];
+
+    d3.select("svg").remove();
+    $("#partial_question_title").html(question.title);
+
+    if (question.is_open_ended === false) {
+      $('#questionChart').show();
+      partialChart = new Chart(document.getElementById("questionChart").getContext("2d"), {
+        type: "doughnut",
+        data: {
+          datasets: [{
+            data: question.statistics.series,
+            backgroundColor: RTMConfigs.availableColors,
+            borderColor: "rgba(255, 255, 255, 0.1)",
+          }],
+          labels: question.statistics.labels,
+        },
+        options: {
+          legend: {
+            labels: {
+              fontSize: 14,
+              padding: 18,
+              usePointStyle: true,
+            },
+            position: "left",
+          },
+          plugins: {
+            datalabels: {
+              font: {
+                size: 20,
+                weight: "bold",
+              },
+              formatter: (value, ctx) => {
+                let sum = 0;
+                let dataArr = ctx.chart.data.datasets[0].data;
+                dataArr.map(data => {
+                  sum += data;
+                });
+                return value > 0 ? value + "%" : "";
+              },
+              color: "#fff",
+            }
+          }
+        }
+      });
+    } else {
+      let words = question.word_cloud;
+      $('#questionChart').hide();
+      const fillWordColor = function(d, i) {
+        return RTMConfigs.availableColors[i % RTMConfigs.availableColors.length];
+      }
+
+      let margin = {top: 0, right: 10, bottom: 10, left: 10},
+        width = 350 - margin.left - margin.right,
+        height = 290 - margin.top - margin.bottom;
+
+      svg = d3.select("#wordCloud").append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      d3.scale.category20();
+      var layout = d3.layout.cloud()
+        .size([width, height])
+        .words(words)
+        .padding(5)
+        .rotate(function() { return ~~(Math.random() * 2) * 90; })
+        .fontSize(function(d) { return d.size; })      // font size of words
+        .on("end", draw);
+      layout.start();
+
+      function draw(words) {
+        svg
+          .append("g")
+          .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
+          .selectAll("text")
+          .data(words)
+          .enter().append("text")
+          .style("font-size", function(d) { return d.size; })
+          .style("fill", fillWordColor)
+          .attr("text-anchor", "middle")
+          .style("font-family", "Impact")
+          .attr("transform", function(d) {
+            return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+          })
+          .text(function(d) { return d.text; });
+      }
+    }
+
+    questionLastId = questionId;
+  }
+
+  function loadChartMessageMetrics(filterBy, channelUUID) {
+    messageMetricsFilterBy = filterBy;
+    getJsonData({card: "message_metrics", filterBy: filterBy, channelUUID: channelUUID}).then(function(result) {
+      if (messageMetricsChart) {
+        messageMetricsChart.destroy();
+      }
+      $("#message_metrics_time_ago").html("");
+      $("#message_metrics_time_ago").html(result.time_ago);
+      if (result.channels_data.length > 0) {
+        $("#message_by_channel_list").html(result.channels_data.map(function(channel) {
+          let trendingInfo = "";
+
+          if (channel.global > channel.total) {
+            trendingInfo = `<i class="material-icons has-text-danger">trending_down</i>`;
+          } else {
+            trendingInfo = `<i class="material-icons has-text-success">trending_up</i>`;
+          }
+
+          return `<div class="column is-one-fifth">
+                  <div class="flex">
+                    <div class="tooltip top flex align-center">
+                      <div class="right-m-10">
+                        <span class="channel-icon ${channel.icon}"></span>
+                      </div>
+                      <div>
+                        <div class="flex align-center">
+                          <span class="channel-number is-size-5 has-text-weight-bold">${channel.total.toLocaleString()}</span>
+                            ${trendingInfo}
+                        </div>
+                        <div>${channel.name}</div>
+                      </div>
+                      <div class="tooltip-content channel-tooltip flex flex-center p-20">
+                        <div class="flex">
+                          <div class="right-m-10">
+                            <span class="channel-icon ${channel.icon}"></span>
+                          </div>
+                          <div>
+                            <div class="is-size-6 bottom-p-20">{% trans "Global Average" %}</div>
+                            <div class="flex">
+                              <div>
+                                <div class="flex align-center">
+                                  <span class="channel-number is-size-5 has-text-weight-bold">${channel.global.toLocaleString()}</span>
+                                </div>
+                                <div class="is-size-6">${channel.name}</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>`;
+        }));
+      }
+
+      messageMetricsChart = new Chart(document.getElementById("channelsChart").getContext("2d"), {
+        type: "line",
+        data: {
+          labels: [...new Set(result.channels_stats.labels)],
+          datasets: [{
+            label: "Sent",
+            borderColor: "#97d9f6",
+            backgroundColor: "#97d9f6",
+            data: Object.values(result.channels_stats.series.O),
+          }, {
+            label: "Received",
+            borderColor: "#03aeef",
+            backgroundColor: "#03aeef",
+            data: Object.values(result.channels_stats.series.I),
+          }, {
+            label: "Fail",
+            borderColor: "#004f94",
+            backgroundColor: "#004f94",
+            data: Object.values(result.channels_stats.series.E),
+          }],
+        },
+        options: {
+          legend: {
+            labels: {
+              padding: 18,
+              usePointStyle: true,
+            },
+            position: "top",
+          },
+          scales: {
+            xAxes: [{
+              gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+              }
+            }],
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          },
+          plugins: {
+            datalabels: {
+              display: false,
+            }
+          }
+        }
+      });
+    });
+  }
+
+  function loadChartMessageMetricsByChannel(channelUUID) {
+    loadChartMessageMetrics(messageMetricsFilterBy, channelUUID);
+  }
+
+  function loadChartMostUsedChannels(filterBy) {
+    getJsonData({card: "channel_most_used", filterBy: filterBy}).then(function(result) {
+      if (localMostUsedChannelsChart) {
+        localMostUsedChannelsChart.destroy();
+      }
+      if (globalMostUsedChannelsChart) {
+        globalMostUsedChannelsChart.destroy();
+      }
+      {% if access_level == "local" %}
+      localMostUsedChannelsChart = new Chart(document.getElementById("localMostUsedChannels").getContext("2d"), {
+        type: "doughnut",
+        data: {
+          labels: result.channels_most_used.map(item => item.name),
+          datasets: [{
+            data: result.channels_most_used.map(item => item.total),
+            backgroundColor: RTMConfigs.availableColors,
+            borderColor: "rgba(255, 255, 255, 0.1)",
+          }],
+        },
+        options: {
+          title: {
+            fontSize: "16",
+            display: true,
+            text: "{{ request.org.name }}",
+            position: "top",
+          },
+          legend: {
+            labels: {
+              padding: 18,
+              usePointStyle: true,
+            },
+            position: "left",
+          },
+          plugins: {
+            datalabels: {
+              font: {
+                size: 20,
+                weight: "bold",
+              },
+              formatter: (value, ctx) => {
+                let sum = 0;
+                let dataArr = ctx.chart.data.datasets[0].data;
+                dataArr.map(data => {
+                  sum += data;
+                });
+                let percentage = parseInt((value * 100 / sum));
+                return percentage > 0 ? percentage + "%" : "";
+              },
+              color: "#fff",
+            }
+          }
+        },
+      });
       {% endif %}
 
-      channel_results_data["I"][channel_metrics_key] = (typeof channel_results_data["I"][channel_metrics_key] != "undefined") ? channel_results_data["I"][channel_metrics_key] : 0;
-      channel_results_data["O"][channel_metrics_key] = (typeof channel_results_data["O"][channel_metrics_key] != "undefined") ? channel_results_data["O"][channel_metrics_key] : 0;
-      channel_results_data["E"][channel_metrics_key] = (typeof channel_results_data["E"][channel_metrics_key] != "undefined") ? channel_results_data["E"][channel_metrics_key] : 0;
-      channel_results_data["{{ stats.msg_direction }}"][channel_metrics_key] += {{ stats.count }};
-      channel_results_labels.push(channel_metrics_key);
-    {% endfor %}
-    
-    let channelsCtx = document.getElementById('channelsChart').getContext('2d');
-    let channelsChart = new Chart(channelsCtx, {
-      type: 'line',
-      data: {
-        labels: [...new Set(channel_results_labels)],
-        datasets: [{
-          label: 'Sent',
-          borderColor: '#97d9f6',
-          backgroundColor: '#97d9f6',
-          data: Object.values(channel_results_data.O),
-        }, {
-          label: 'Received',
-          borderColor: '#03aeef',
-          backgroundColor: '#03aeef',
-          data: Object.values(channel_results_data.I),
-        }, {
-          label: 'Fail',
-          borderColor: '#004f94',
-          backgroundColor: '#004f94',
-          data: Object.values(channel_results_data.E),
-        }],
-      },
-      options: {
-        legend: {
-          labels: {
-            padding: 18,
-            usePointStyle: true,
-          },
-          position: 'top',
-        },
-        scales: {
-          xAxes: [{
-            gridLines: {
-              color: "rgba(0, 0, 0, 0)",
-            }
-          }],
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            }
-          }]
-        },
-        plugins: {
-          datalabels: {
-            display: false,
-          }
-        }
-      }
-    });
-
-    {% if access_level == "local" %}
-    const localMostUsedResults = {
-      labels: [],
-      data: [],
-    };
-
-    {% for most_used in channels_most_used %}
-      localMostUsedResults.labels.push("{{ most_used.name }}");
-      localMostUsedResults.data.push("{{ most_used.total }}");
-    {% endfor %}
-
-    let localMostUsedCtx = document.getElementById('localMostUsedChannels').getContext('2d');
-    let localMostUsedChannels = new Chart(localMostUsedCtx, {
-      type: 'doughnut',
-      data: {
-        labels: localMostUsedResults.labels,
-        datasets: [{
-          data: localMostUsedResults.data,
-          backgroundColor: [
-            '#97d9f6',
-            '#03aeef',
-            '#004f94',
-          ],
-          borderColor: "rgba(255, 255, 255, 0.1)",
-        }],
-      },
-      options: {
-        title: {
-          fontSize: '16',
-          display: true,
-          text: '{{ request.org.name }}',
-          position: 'top',
-        },
-        legend: {
-          labels: {
-            padding: 18,
-            usePointStyle: true,
-          },
-          position: 'left',
-        },
-        plugins: {
-          datalabels: {
-            font: {
-              size: 20,
-              weight: 'bold',
-            },
-            formatter: (value, ctx) => {
-              let sum = 0;
-              let dataArr = ctx.chart.data.datasets[0].data;
-              dataArr.map(data => {
-                sum += data;
-              });
-              let percentage = parseInt((value * 100 / sum));
-              return percentage > 0 ? percentage + "%" : "";
-            },
-            color: '#fff',
-          }
-        }
-      },
-    });
-
-    let pieCtx = document.getElementById('pieChart').getContext('2d');
-    let pieChart = new Chart(pieCtx, {
-      type: 'pie',
-      data: {
-        labels: [
-          'Other UNCTs',
-          '{{ request.org.name }}',
-        ],
-        datasets: [{
-          data: [{{ global_total_contacts.global }}, {{ global_total_contacts.local }}],
-          backgroundColor: [
-            '#7bcff6',
-            '#004f94',
-          ],
-          borderColor: "rgba(255, 255, 255, 0.1)",
-        }],
-      },
-      options: {
-        aspectRatio: 1.5,
-        legend: {
-          labels: {
-            padding: 18,
-            usePointStyle: true,
-          },
-          position: 'top',
-        },
-        plugins: {
-          datalabels: {
-            font: {
-              size: 20,
-              weight: 'bold',
-            },
-            formatter: (value, ctx) => {
-              let sum = 0;
-              let dataArr = ctx.chart.data.datasets[0].data;
-              dataArr.map(data => {
-                sum += data;
-              });
-              let percentage = parseInt((value * 100 / sum));
-              return percentage > 0 ? percentage + "%" : "";
-            },
-            color: '#fff',
-          }
-        }
-      },
-    });
-
-    {% endif %}
-
-    const globalMostUsedResults = {
-      labels: [],
-      data: [],
-    };
-
-    {% for most_used in channels_most_used_global %}
-      globalMostUsedResults.labels.push("{{ most_used.name }}");
-      globalMostUsedResults.data.push("{{ most_used.total }}");
-    {% endfor %}
-
-    let globalMostUsedCtx = document.getElementById('globalMostUsedChannels').getContext('2d');
-    let globalMostUsedChannels = new Chart(globalMostUsedCtx, {
-      type: 'doughnut',
-      data: {
-        labels: globalMostUsedResults.labels,
-        datasets: [{
-          data: globalMostUsedResults.data,
-          backgroundColor: [
-            '#97d9f6',
-            '#03aeef',
-            '#004f94',
-          ],
-          borderColor: "rgba(255, 255, 255, 0.1)",
-        }],
-      },
-      options: {
-        title: {
-          fontSize: '16',
-          display: true,
-          text: 'Global',
-          position: 'top',
-        },
-        legend: {
-          labels: {
-            padding: 18,
-            usePointStyle: true,
-          },
-          position: 'left',
-        },
-        plugins: {
-          datalabels: {
-            font: {
-              size: 20,
-              weight: 'bold',
-            },
-            formatter: (value, ctx) => {
-              let sum = 0;
-              let dataArr = ctx.chart.data.datasets[0].data;
-              dataArr.map(data => {
-                sum += data;
-              });
-              let percentage = parseInt((value * 100 / sum));
-              return percentage > 0 ? percentage + "%" : "";
-            },
-            color: '#fff',
-          }
-        }
-      },
-    });
-
-    const overtime_results_labels = [];
-    const overtime_results_data = {
-      local: [],
-      global: [],
-    };
-    let overtime_results_key = "";
-
-    {% for stats in contacts_over_time %}
-      overtime_results_key = "{{ stats.month|get_month_name }}";
-      overtime_results_data["local"][overtime_results_key] = (typeof overtime_results_data["local"][overtime_results_key] != "undefined") ? overtime_results_data["local"][overtime_results_key] : 0;
-      overtime_results_data["global"][overtime_results_key] = (typeof overtime_results_data["global"][overtime_results_key] != "undefined") ? overtime_results_data["global"][overtime_results_key] : 0;
-      
-      overtime_results_data[{% if stats.org == request.org.id %}"local"{% else %}"global"{% endif %}][overtime_results_key] = {{ stats.total }};
-      overtime_results_labels.push(overtime_results_key);
-    {% endfor %}
-
-    let contactsCtx = document.getElementById('contactsChart').getContext('2d');
-    let contactsChart = new Chart(contactsCtx, {
-      type: 'line',
-      data: {
-        labels: [...new Set(overtime_results_labels)],
-        datasets: [
-          {
-            label: '{{ request.org.name }}',
-            borderColor: '#004f94',
-            backgroundColor: '#004f94',
-            data: Object.values(overtime_results_data.local),
-          }, {
-            label: 'Global Average',
-            borderColor: '#7bcff6',
-            backgroundColor: '#7bcff6',
-            data: Object.values(overtime_results_data.global),
-        }]
-      },
-      options: {
-        legend: {
-          labels: {
-            padding: 18,
-            usePointStyle: true,
-          },
-          position: 'top',
-        },
-        scales: {
-          xAxes: [{
-            gridLines: {
-              color: "rgba(0, 0, 0, 0)",
-            }
+      globalMostUsedChannelsChart = new Chart(document.getElementById("globalMostUsedChannels").getContext("2d"), {
+        type: "doughnut",
+        data: {
+          labels: result.channels_most_used_global.map(item => item.name),
+          datasets: [{
+            data: result.channels_most_used_global.map(item => item.total),
+            backgroundColor: RTMConfigs.availableColors,
+            borderColor: "rgba(255, 255, 255, 0.1)",
           }],
         },
-        plugins: {
-          datalabels: {
-            display: false,
+        options: {
+          title: {
+            fontSize: "16",
+            display: true,
+            text: "Global",
+            position: "top",
+          },
+          legend: {
+            labels: {
+              padding: 18,
+              usePointStyle: true,
+            },
+            position: "left",
+          },
+          plugins: {
+            datalabels: {
+              font: {
+                size: 20,
+                weight: "bold",
+              },
+              formatter: (value, ctx) => {
+                let sum = 0;
+                let dataArr = ctx.chart.data.datasets[0].data;
+                dataArr.map(data => {
+                  sum += data;
+                });
+                let percentage = parseInt((value * 100 / sum));
+                return percentage > 0 ? percentage + "%" : "";
+              },
+              color: "#fff",
+            }
+          }
+        },
+      });
+    });
+  }
+
+  function loadChartRapidProContacts() {
+    getJsonData({card: "rapidpro_contacts"}).then(function(result) {
+      const datasets = [];
+
+      {% if access_level == "local" %}
+      datasets.push({
+        label: "{{ request.org.name }}",
+        borderColor: "#004f94",
+        backgroundColor: "#004f94",
+        data: Object.values(result.contacts_over_time.series.local),
+      });
+      {% endif %}
+
+      datasets.push({
+        label: "{% trans 'Global Average' %}",
+        borderColor: "#7bcff6",
+        backgroundColor: "#7bcff6",
+        data: Object.values(result.contacts_over_time.series.global),
+      });
+
+      new Chart(document.getElementById("contactsChart").getContext("2d"), {
+        type: "line",
+        data: {
+          labels: [...new Set(result.contacts_over_time.labels)],
+          datasets: datasets
+        },
+        options: {
+          legend: {
+            labels: {
+              padding: 18,
+              usePointStyle: true,
+            },
+            position: "top",
+          },
+          scales: {
+            xAxes: [{
+              gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+              }
+            }],
+          },
+          plugins: {
+            datalabels: {
+              display: false,
+            }
           }
         }
-      }
-    });
-  </script>
+      });
 
+      {% if access_level == "local" %}
+      new Chart(document.getElementById("globalContacts").getContext("2d"), {
+        type: "pie",
+        data: {
+          labels: [
+            "{% trans 'Other UNCTs' %}",
+            "{{ request.org.name }}",
+          ],
+          datasets: [{
+            data: [result.global_total_contacts.global, result.global_total_contacts.local],
+            backgroundColor: RTMConfigs.availableColors,
+            borderColor: "rgba(255, 255, 255, 0.1)",
+          }],
+        },
+        options: {
+          aspectRatio: 1.5,
+          legend: {
+            labels: {
+              padding: 18,
+              usePointStyle: true,
+            },
+            position: "top",
+          },
+          plugins: {
+            datalabels: {
+              font: {
+                size: 20,
+                weight: "bold",
+              },
+              formatter: (value, ctx) => {
+                let sum = 0;
+                let dataArr = ctx.chart.data.datasets[0].data;
+                dataArr.map(data => {
+                  sum += data;
+                });
+                let percentage = parseInt((value * 100 / sum));
+                return percentage > 0 ? percentage + "%" : "";
+              },
+              color: "#fff",
+            }
+          }
+        },
+      });
+      {% endif %}
+    });
+  }
+
+  $(document).ready(function() {
+    loadChartTracked("week");
+    loadChartPartialResults();
+    loadChartMessageMetrics("week");
+    loadChartMostUsedChannels("week");
+    loadChartRapidProContacts();
+  });
+</script>
 {% endblock %}

@@ -1,5 +1,8 @@
 from django.conf.urls import url
-from . import views
+from .views import Dashboard, DashboardDataView
 
 
-urlpatterns = [url(r"^$", views.Dashboard.as_view(), name="dashboard")]
+urlpatterns = [
+    url(r"^$", Dashboard.as_view(), name="dashboard"),
+    url(r"^dashboard/data/", DashboardDataView.as_view(), name="dashboard_data"),
+]
