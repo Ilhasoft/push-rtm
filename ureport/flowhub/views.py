@@ -12,7 +12,7 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from dash.orgs.models import Org
-from smartmin.views import SmartTemplateView
+from smartmin.views import SmartTemplateView, SmartReadView
 
 from ureport.utils import get_paginator, is_global_user
 
@@ -313,3 +313,13 @@ class DeleteView(SmartTemplateView):
         flow.is_active = False
         flow.save()
         return redirect(self.request.META.get("HTTP_REFERER"))
+
+
+class InfoView(SmartReadView):
+    template_name = "flowhub/info.html"
+    pk_url_kwarg = "flow"
+    model = Flow
+
+    def get_queryset(self):
+        queryset = super().get_queryset().filter(is_active=True)
+        return queryset.filter(Q(org=self.request.org) | Q(visible_globally=True))
