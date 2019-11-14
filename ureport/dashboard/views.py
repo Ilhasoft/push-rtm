@@ -1,6 +1,5 @@
 import random
 import datetime
-import json
 import calendar
 
 from django.conf import settings
@@ -12,7 +11,6 @@ from django.db.models import Sum, Count
 from django.db.models.functions import ExtractMonth, ExtractYear
 from django.views.generic import View
 from django.http import JsonResponse
-from django.core import serializers
 
 from smartmin.views import SmartTemplateView
 
@@ -191,8 +189,14 @@ class DashboardDataView(View):
                 else:
                     key = stats.date.strftime("%d/%m")
 
-                if key not in series[stats.msg_direction]:
-                    series[stats.msg_direction][key] = 0
+                if key not in series["O"]:
+                    series["O"][key] = 0
+
+                if key not in series["I"]:
+                    series["I"][key] = 0
+
+                if key not in series["E"]:
+                    series["E"][key] = 0
 
                 labels.append(key)
                 series[stats.msg_direction][key] += stats.count
@@ -263,23 +267,6 @@ class DashboardDataView(View):
                        ).order_by("month").values("month", "year").annotate(
                            total=Count("*")).values("month", "year", "total", "org")
 
-            """
-            const overtime_results_labels = [];
-            const overtime_results_data = {
-            local: [],
-            global: [],
-            };
-            let overtime_results_key = "";
-
-            {% for stats in contacts_over_time %}
-            overtime_results_key = "{{ stats.month|get_month_name }}";
-            overtime_results_data["local"][overtime_results_key] = (typeof overtime_results_data["local"][overtime_results_key] != "undefined") ? overtime_results_data["local"][overtime_results_key] : 0;
-            overtime_results_data["global"][overtime_results_key] = (typeof overtime_results_data["global"][overtime_results_key] != "undefined") ? overtime_results_data["global"][overtime_results_key] : 0;
-            
-            overtime_results_data[{% if stats.org == request.org.id %}"local"{% else %}"global"{% endif %}][overtime_results_key] = {{ stats.total }};
-            overtime_results_labels.push(overtime_results_key);
-            {% endfor %}"""
-
             labels = []
             series = {
                 "local": {},
@@ -291,16 +278,17 @@ class DashboardDataView(View):
                 key = calendar.month_name[contact.get("month")]
                 labels.append(key)
 
-                scope = "local"
-                if contact.get("org") != self.request.org.id:
-                    scope = "global"
+                if key not in series["local"]:
+                    series["local"][key] = 0
 
-                if key not in series[scope]:
-                    series[scope][key] = 0
+                if key not in series["global"]:
+                    series["global"][key] = 0
+
+                scope = "global"
+                if self.request.org and contact.get("org") == self.request.org.id:
+                    scope = "local"
 
                 series[scope][key] = contact.get("total")
-
-            print(labels)
 
             response["contacts_over_time"] = {
                 "labels": list(dict.fromkeys(labels)),
@@ -476,6 +464,8 @@ class Dashboard(SmartTemplateView):
                 "name": Dashboard.channel_info(channel.channel_type, "name"),
                 "icon": Dashboard.channel_info(channel.channel_type, "icon"),
             })
+
+        context["channels_info"] = channels_info
 
         if self.access_level == "local":
             context["surveys_local_total"] = Poll.objects.filter(

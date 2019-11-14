@@ -16,7 +16,7 @@
   </section>
 
   <section class="section">
-    <div class="box is-shadowless p-40 bottom-m-20" id="sdg_tracked">
+    <div class="box is-shadowless p-40 bottom-m-20">
       <div class="flex space-between">
         <div>
           <span class="card-title has-text-weight-bold">{% trans "SDGs being tracked" %}</span>
@@ -93,7 +93,7 @@
       </div>
     </div>
 
-    <div class="box is-shadowless p-40 bottom-m-20" id="message_metrics">
+    <div class="box is-shadowless p-40 bottom-m-20">
       <div class="flex space-between">
         <div class="card-title has-text-weight-bold">{% trans "Message Metrics" %}</div>
         <div class="dropdown is-hoverable">
@@ -504,6 +504,7 @@
       if (globalMostUsedChannelsChart) {
         globalMostUsedChannelsChart.destroy();
       }
+      {% if access_level == "local" %}
       localMostUsedChannelsChart = new Chart(document.getElementById("localMostUsedChannels").getContext("2d"), {
         type: "doughnut",
         data: {
@@ -548,6 +549,7 @@
           }
         },
       });
+      {% endif %}
 
       globalMostUsedChannelsChart = new Chart(document.getElementById("globalMostUsedChannels").getContext("2d"), {
         type: "doughnut",
@@ -598,13 +600,59 @@
 
   function loadChartRapidProContacts() {
     getJsonData({card: "rapidpro_contacts"}).then(function(result) {
-      console.log(result);
+      const datasets = [];
 
+      {% if access_level == "local" %}
+      datasets.push({
+        label: "{{ request.org.name }}",
+        borderColor: "#004f94",
+        backgroundColor: "#004f94",
+        data: Object.values(result.contacts_over_time.series.local),
+      });
+      {% endif %}
+
+      datasets.push({
+        label: "{% trans 'Global Average' %}",
+        borderColor: "#7bcff6",
+        backgroundColor: "#7bcff6",
+        data: Object.values(result.contacts_over_time.series.global),
+      });
+
+      new Chart(document.getElementById("contactsChart").getContext("2d"), {
+        type: "line",
+        data: {
+          labels: [...new Set(result.contacts_over_time.labels)],
+          datasets: datasets
+        },
+        options: {
+          legend: {
+            labels: {
+              padding: 18,
+              usePointStyle: true,
+            },
+            position: "top",
+          },
+          scales: {
+            xAxes: [{
+              gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+              }
+            }],
+          },
+          plugins: {
+            datalabels: {
+              display: false,
+            }
+          }
+        }
+      });
+
+      {% if access_level == "local" %}
       new Chart(document.getElementById("globalContacts").getContext("2d"), {
         type: "pie",
         data: {
           labels: [
-            "Other UNCTs",
+            "{% trans 'Other UNCTs' %}",
             "{{ request.org.name }}",
           ],
           datasets: [{
@@ -642,14 +690,15 @@
           }
         },
       });
+      {% endif %}
     });
   }
 
   $(document).ready(function() {
-    // loadChartTracked("week");
-    // loadChartPartialResults();
-    // loadChartMessageMetrics("week");
-    // loadChartMostUsedChannels("week");
+    loadChartTracked("week");
+    loadChartPartialResults();
+    loadChartMessageMetrics("week");
+    loadChartMostUsedChannels("week");
     loadChartRapidProContacts();
   });
 </script>
