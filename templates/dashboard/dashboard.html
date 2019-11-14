@@ -60,7 +60,10 @@
             <span class="tooltip-content">{% trans "Partial SDG results for the lastest ongoing surveys" %}</span>
           </span>
           <div class="selected-question top-m-30">
-            <div class="selected-question__title bottom-m-30" id="partial_question_title"></div>
+            <div class="selected-question__title bottom-m-10 has-text-grey-light" id="partial_question_title"></div>
+            <div class="bottom-m-30">
+              <a href="#" target="_blank" id="partial_questions_url">{% trans "See survey" %}</a>
+            </div>
             <div class="selected-question__chart">
               <div id="wordCloud"></div>
               <canvas id="questionChart"></canvas>
@@ -286,6 +289,7 @@
 
         if (result.questions.length > 0) {
           $("#partial_question_title").html(result.questions[0].title);
+          $("#partial_questions_url").attr("href", result.questions[0].url);
           loadDonutPatialResult(result.questions[0].id);
           $(".questions-list").find(".question-link").first().addClass("active");
         }
@@ -315,6 +319,7 @@
 
     d3.select("svg").remove();
     $("#partial_question_title").html(question.title);
+    $("#partial_questions_url").attr("href", question.url);
 
     if (question.is_open_ended === false) {
       $('#questionChart').show();

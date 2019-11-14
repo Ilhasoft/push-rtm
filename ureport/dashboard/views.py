@@ -103,6 +103,7 @@ class DashboardDataView(View):
                     {
                         "id": question.pk,
                         "title": question.title,
+                        "url": reverse("results.poll_read", args=[question.poll.pk]),
                         "is_open_ended": question.is_open_ended(),
                         "word_cloud": word_cloud,
                         "statistics": statistics,
