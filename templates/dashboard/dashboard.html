@@ -513,6 +513,8 @@
       if (globalMostUsedChannelsChart) {
         globalMostUsedChannelsChart.destroy();
       }
+      $("#channels_most_used_time_ago").html("");
+      $("#channels_most_used_time_ago").html(result.time_ago);
       {% if access_level == "local" %}
       localMostUsedChannelsChart = new Chart(document.getElementById("localMostUsedChannels").getContext("2d"), {
         type: "doughnut",
