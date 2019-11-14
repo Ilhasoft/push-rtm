@@ -84,8 +84,7 @@ class FlowBaseListView(LoginRequiredMixin, SearchSmartListViewMixin):
         queryset = self.model.objects.filter(is_active=True).order_by("name")
 
         if not is_global_user(self.request.user):
-            queryset = queryset.filter(
-                Q(org=self.request.org) | Q(visible_globally=True))
+            queryset = queryset.filter(Q(org=self.request.org) | Q(visible_globally=True))
 
         queryset = self.search(queryset)
         queryset = self.filter(queryset)
@@ -109,8 +108,7 @@ class FlowBaseListView(LoginRequiredMixin, SearchSmartListViewMixin):
             filters["sdgs__contains"] = [sdg]
 
         if sort_field:
-            sortered = "{}{}".format(
-                "-" if sort_direction == "desc" else "", sort_field)
+            sortered = "{}{}".format("-" if sort_direction == "desc" else "", sort_field)
 
         return queryset.filter(**filters).order_by(sortered)
 
@@ -153,8 +151,7 @@ class UnctsView(SearchSmartListViewMixin):
         sortered = "name"
 
         if sort_field:
-            sortered = "{}{}".format(
-                "-" if sort_direction == "desc" else "", sort_field)
+            sortered = "{}{}".format("-" if sort_direction == "desc" else "", sort_field)
 
         queryset = self.model.objects.filter(is_active=True).order_by(sortered)
         queryset = self.search(queryset)
@@ -164,8 +161,7 @@ class UnctsView(SearchSmartListViewMixin):
             messages.error(self.request, _("No results found."))
 
         for org in queryset:
-            org.total_stars = sum([f.stars.all().count()
-                                   for f in org.flows.filter(is_active=True)])
+            org.total_stars = sum([f.stars.all().count() for f in org.flows.filter(is_active=True)])
 
         return queryset
 
@@ -221,8 +217,7 @@ class CreateView(SmartTemplateView):
         else:
             context = self.get_context_data()
             context["form"] = form
-            messages.error(request, _(
-                "Sorry, you did not complete the registration."))
+            messages.error(request, _("Sorry, you did not complete the registration."))
             messages.error(request, form.non_field_errors())
             return render(request, self.template_name, context)
 
@@ -249,8 +244,7 @@ class EditView(SmartTemplateView):
 
     def post(self, request, *args, **kwargs):
         flow = get_object_or_404(Flow, pk=self.kwargs["flow"])
-        form = FlowForm(request.POST, request.FILES,
-                        instance=flow, flow_is_required=False)
+        form = FlowForm(request.POST, request.FILES, instance=flow, flow_is_required=False)
 
         if form.is_valid():
             form.save(self.request)
@@ -259,8 +253,7 @@ class EditView(SmartTemplateView):
         else:
             context = self.get_context_data()
             context["form"] = form
-            messages.error(request, _(
-                "Sorry, you did not complete the registration."))
+            messages.error(request, _("Sorry, you did not complete the registration."))
             messages.error(request, form.non_field_errors())
             return render(request, self.template_name, context)
 
@@ -273,18 +266,15 @@ class DownloadView(SmartTemplateView):
         queryset = Flow.objects.filter(pk=self.kwargs["flow"], is_active=True)
 
         if not is_global_user(self.request.user):
-            queryset = queryset.filter(
-                Q(org=self.request.org) | Q(visible_globally=True))
+            queryset = queryset.filter(Q(org=self.request.org) | Q(visible_globally=True))
 
         flow = queryset.first()
 
         if not flow:
             return redirect(reverse("flowhub.flow_list"))
 
-        response = HttpResponse(json.dumps(flow.flow),
-                                content_type="application/json")
-        response[
-            "Content-Disposition"] = "attachment; filename=flow-{}.json".format(flow.pk)
+        response = HttpResponse(json.dumps(flow.flow), content_type="application/json")
+        response["Content-Disposition"] = "attachment; filename=flow-{}.json".format(flow.pk)
 
         flow.increase_downloads()
 
@@ -296,8 +286,7 @@ class StarView(SmartTemplateView):
 
     def get(self, request, *args, **kwargs):
         super().get_context_data(**kwargs)
-        flow = Flow.objects.filter(
-            pk=self.kwargs["flow"], is_active=True).first()
+        flow = Flow.objects.filter(pk=self.kwargs["flow"], is_active=True).first()
 
         if flow:
             flow.decrease_stars(request.user) if request.user in flow.stars.all() else flow.increase_stars(
@@ -314,8 +303,7 @@ class DeleteView(SmartTemplateView):
         super().get_context_data(**kwargs)
 
         try:
-            flow = Flow.objects.get(pk=kwargs.get(
-                "flow"), is_active=True, org=request.org)
+            flow = Flow.objects.get(pk=kwargs.get("flow"), is_active=True, org=request.org)
         except Flow.DoesNotExist:
             flow = None
 

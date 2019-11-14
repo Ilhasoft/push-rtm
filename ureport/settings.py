@@ -199,11 +199,7 @@ SITE_CHOOSER_URL_NAME = "public.index"
 IS_DEV = config("IS_DEV", default=False, cast=bool)
 if IS_DEV:
     CELERYBEAT_SCHEDULE = {
-        "refresh_flows": {
-            "task": "polls.refresh_org_flows",
-            "schedule": timedelta(minutes=10),
-            "relative": True,
-        },
+        "refresh_flows": {"task": "polls.refresh_org_flows", "schedule": timedelta(minutes=10), "relative": True},
         "recheck_poll_flow_data": {
             "task": "polls.recheck_poll_flow_data",
             "schedule": timedelta(minutes=10),

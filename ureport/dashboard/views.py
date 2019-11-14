@@ -36,8 +36,7 @@ class DashboardDataView(View):
         response["time_ago"] = Dashboard.get_text_time_ago(filter_by)
 
         if card == "sdg_tracked":
-            questions = PollQuestion.objects.filter(
-                is_active=True, poll__is_active=True)
+            questions = PollQuestion.objects.filter(is_active=True, poll__is_active=True)
 
             if self.access_level == "local":
                 questions = questions.filter(poll__org=self.request.org)
@@ -48,17 +47,14 @@ class DashboardDataView(View):
             sdg_tracked_questions = questions
 
             if filter_by in ["week", "month", "year"]:
-                sdg_tracked_questions = Dashboard.questions_filter(
-                    questions, created_on=filter_by)
+                sdg_tracked_questions = Dashboard.questions_filter(questions, created_on=filter_by)
 
             response["filter_by"] = filter_by
-            response["sdgs_bubble_data"] = Dashboard.get_sdgs_tracked_bubble_chart_data(
-                sdg_tracked_questions)
+            response["sdgs_bubble_data"] = Dashboard.get_sdgs_tracked_bubble_chart_data(sdg_tracked_questions)
 
         if card == "partial_results":
             survey_result_sdg = self.request.GET.get("sdg")
-            questions = PollQuestion.objects.filter(
-                is_active=True, poll__is_active=True)
+            questions = PollQuestion.objects.filter(is_active=True, poll__is_active=True)
 
             if self.access_level == "local":
                 questions = questions.filter(poll__org=self.request.org)
@@ -71,15 +67,10 @@ class DashboardDataView(View):
                 survey_result_sdg_questions = questions
             else:
                 survey_result_sdg = int(survey_result_sdg)
-                survey_result_sdg_questions = questions.filter(
-                    sdgs__contains=[survey_result_sdg]
-                )
-                response["survey_result_sdg"] = settings.SDG_LIST[
-                    survey_result_sdg - 1]
+                survey_result_sdg_questions = questions.filter(sdgs__contains=[survey_result_sdg])
+                response["survey_result_sdg"] = settings.SDG_LIST[survey_result_sdg - 1]
 
-            survey_result_sdg_questions = [
-                q for q in survey_result_sdg_questions if q.get_responded() > 0
-            ]
+            survey_result_sdg_questions = [q for q in survey_result_sdg_questions if q.get_responded() > 0]
 
             survey_result_sdg_questions = list(survey_result_sdg_questions)
             random.shuffle(survey_result_sdg_questions)
@@ -92,10 +83,9 @@ class DashboardDataView(View):
                 if question.is_open_ended():
                     for category in question.get_results()[0].get("categories"):
                         count = category.get("count")
-                        word_cloud.append({
-                            "text": category.get("label").upper(),
-                            "size": count if count > 10 else 20 + count,
-                        })
+                        word_cloud.append(
+                            {"text": category.get("label").upper(), "size": count if count > 10 else 20 + count}
+                        )
                 else:
                     labels = []
                     series = []
@@ -104,19 +94,20 @@ class DashboardDataView(View):
                     categories = results.get("categories")
                     for category in categories:
                         labels.append(category.get("label"))
-                        series.append("{0:.0f}".format(
-                            category.get("count") / results.get("set") * 100))
+                        series.append("{0:.0f}".format(category.get("count") / results.get("set") * 100))
 
                     statistics["labels"] = labels
                     statistics["series"] = series
 
-                questions.append({
-                    "id": question.pk,
-                    "title": question.title,
-                    "is_open_ended": question.is_open_ended(),
-                    "word_cloud": word_cloud,
-                    "statistics": statistics,
-                })
+                questions.append(
+                    {
+                        "id": question.pk,
+                        "title": question.title,
+                        "is_open_ended": question.is_open_ended(),
+                        "word_cloud": word_cloud,
+                        "statistics": statistics,
+                    }
+                )
             response["questions_count"] = len(questions)
             response["questions"] = questions
 
@@ -131,11 +122,13 @@ class DashboardDataView(View):
             channels_data = []
 
             for channel in channels:
-                channels_info.append({
-                    "uuid": channel.uuid,
-                    "name": Dashboard.channel_info(channel.channel_type, "name"),
-                    "icon": Dashboard.channel_info(channel.channel_type, "icon"),
-                })
+                channels_info.append(
+                    {
+                        "uuid": channel.uuid,
+                        "name": Dashboard.channel_info(channel.channel_type, "name"),
+                        "icon": Dashboard.channel_info(channel.channel_type, "icon"),
+                    }
+                )
             response["channels_info"] = channels_info
 
             for channel in channels:
@@ -144,22 +137,20 @@ class DashboardDataView(View):
                 ).aggregate(total=Sum("count"))["total"]
 
                 global_total = (
-                    ChannelDailyStats.objects.exclude(
-                        channel__org=self.request.org)
-                    .filter(
-                        channel__channel_type=channel.channel_type,
-                        **Dashboard.filter_by_date("date", filter_by),
-                    )
+                    ChannelDailyStats.objects.exclude(channel__org=self.request.org)
+                    .filter(channel__channel_type=channel.channel_type, **Dashboard.filter_by_date("date", filter_by))
                     .aggregate(total=Sum("count"))["total"]
                 )
 
-                channels_data.append({
-                    "uuid": channel.uuid,
-                    "name": Dashboard.channel_info(channel.channel_type, "name"),
-                    "icon": Dashboard.channel_info(channel.channel_type, "icon"),
-                    "total": total if total is not None else 0,
-                    "global": global_total if global_total is not None else 0,
-                })
+                channels_data.append(
+                    {
+                        "uuid": channel.uuid,
+                        "name": Dashboard.channel_info(channel.channel_type, "name"),
+                        "icon": Dashboard.channel_info(channel.channel_type, "icon"),
+                        "total": total if total is not None else 0,
+                        "global": global_total if global_total is not None else 0,
+                    }
+                )
 
             if channel_uuid:
                 channels = channels.filter(uuid=channel_uuid)
@@ -172,15 +163,10 @@ class DashboardDataView(View):
             ).order_by("date")
 
             if self.access_level == "local":
-                channels_stats = channels_stats.filter(
-                    channel__org=self.request.org)
+                channels_stats = channels_stats.filter(channel__org=self.request.org)
 
             labels = []
-            series = {
-                "O": {},
-                "I": {},
-                "E": {},
-            }
+            series = {"O": {}, "I": {}, "E": {}}
             key = ""
 
             for stats in channels_stats:
@@ -201,10 +187,7 @@ class DashboardDataView(View):
                 labels.append(key)
                 series[stats.msg_direction][key] += stats.count
 
-            response["channels_stats"] = {
-                "labels": list(dict.fromkeys(labels)),
-                "series": series,
-            }
+            response["channels_stats"] = {"labels": list(dict.fromkeys(labels)), "series": series}
             response["channels_data"] = channels_data
             response["channel_uuid"] = channel_uuid
             response["filter_by"] = filter_by
@@ -218,15 +201,15 @@ class DashboardDataView(View):
                 most_used = most_used.filter(channel__org=self.request.org)
 
             most_used = (
-                most_used.filter().values("channel__channel_type").annotate(
-                    total=Sum("count")).order_by("-total")[:3]
+                most_used.filter().values("channel__channel_type").annotate(total=Sum("count")).order_by("-total")[:3]
             )
 
             most_used_global = (
-                ChannelDailyStats.objects.exclude(
-                    channel__org=self.request.org)
+                ChannelDailyStats.objects.exclude(channel__org=self.request.org)
                 .filter(
-                    msg_direction__in=["I", "O"], msg_type__in=["M", "I"], **Dashboard.filter_by_date("date", filter_by)
+                    msg_direction__in=["I", "O"],
+                    msg_type__in=["M", "I"],
+                    **Dashboard.filter_by_date("date", filter_by),
                 )
                 .values("channel__channel_type")
                 .annotate(total=Sum("count"))
@@ -239,9 +222,7 @@ class DashboardDataView(View):
             for channel in most_used:
                 channels_most_used.append(
                     {
-                        "name": Dashboard.channel_info(
-                            channel.get("channel__channel_type"), "name"
-                        ),
+                        "name": Dashboard.channel_info(channel.get("channel__channel_type"), "name"),
                         "total": channel.get("total", 0),
                     }
                 )
@@ -249,9 +230,7 @@ class DashboardDataView(View):
             for channel in most_used_global:
                 channels_most_used_global.append(
                     {
-                        "name": Dashboard.channel_info(
-                            channel.get("channel__channel_type"), "name"
-                        ),
+                        "name": Dashboard.channel_info(channel.get("channel__channel_type"), "name"),
                         "total": channel.get("total", 0),
                     }
                 )
@@ -260,18 +239,19 @@ class DashboardDataView(View):
             response["channels_most_used_global"] = channels_most_used_global
 
         if card == "rapidpro_contacts":
-            contacts_over_time = Contact.objects.filter(
-                registered_on__gte=datetime.datetime.utcnow().replace(tzinfo=utc) -
-                datetime.timedelta(days=180)
-            ).annotate(month=ExtractMonth("registered_on"), year=ExtractYear("registered_on")
-                       ).order_by("month").values("month", "year").annotate(
-                           total=Count("*")).values("month", "year", "total", "org")
+            contacts_over_time = (
+                Contact.objects.filter(
+                    registered_on__gte=datetime.datetime.utcnow().replace(tzinfo=utc) - datetime.timedelta(days=180)
+                )
+                .annotate(month=ExtractMonth("registered_on"), year=ExtractYear("registered_on"))
+                .order_by("month")
+                .values("month", "year")
+                .annotate(total=Count("*"))
+                .values("month", "year", "total", "org")
+            )
 
             labels = []
-            series = {
-                "local": {},
-                "global": {},
-            }
+            series = {"local": {}, "global": {}}
             key = ""
 
             for contact in contacts_over_time:
@@ -290,10 +270,7 @@ class DashboardDataView(View):
 
                 series[scope][key] = contact.get("total")
 
-            response["contacts_over_time"] = {
-                "labels": list(dict.fromkeys(labels)),
-                "series": series,
-            }
+            response["contacts_over_time"] = {"labels": list(dict.fromkeys(labels)), "series": series}
 
             response["global_total_contacts"] = {
                 "local": Contact.objects.filter(org=self.request.org).count(),
@@ -344,10 +321,11 @@ class Dashboard(SmartTemplateView):
 
             # add keys total_responded and percentage_in_questions to
             # sdgs_with_data
+            total_response_all_sdgs = 0
             for key, value in sdgs_with_data.items():
                 if len(value["questions"]) > 0:
-                    sdgs_with_data[key]["total_responded"] = value[
-                        "questions"][0].get_responded()
+                    total_response_all_sdgs += value["questions"][0].get_responded()
+                    sdgs_with_data[key]["total_responded"] = value["questions"][0].get_responded()
                     sdgs_with_data[key]["percentage_in_questions"] = int(
                         (len(value["questions"]) / questions.count()) * 100
                     )  # (part / total) * 100
@@ -359,14 +337,24 @@ class Dashboard(SmartTemplateView):
             for key, value in tuple(tracked_sdg):
                 sdg_with_data = sdgs_with_data.get(key)
 
+                if sdg_with_data.get("total_responded", 0) != 0:
+                    total_responded_percent = round(
+                        (sdg_with_data.get("total_responded", 0) / total_response_all_sdgs) * 100
+                    )
+                else:
+                    total_responded_percent = sdg_with_data.get("total_responded", 0)
+
                 datasets.append(
                     {
                         "label": "{} {}".format(key, value),
                         "data": [
                             {
-                                "x": sdg_with_data.get("total_responded", 0),
-                                "y": len(sdg_with_data.get("questions", [])),
-                                "r": sdg_with_data.get("percentage_in_questions", 0),
+                                "x": random.randint(7, 70),  # sdg_with_data.get("total_responded", 0),
+                                "y": random.randint(17, 70),  # len(sdg_with_data.get("questions", [])),
+                                "r": (
+                                    total_responded_percent,
+                                    sdg_with_data.get("total_responded", 0),
+                                ),  # sdg_with_data.get("percentage_in_questions", 0),
                             }
                         ],
                         "backgroundColor": settings.SDG_COLOR.get(key),
@@ -374,8 +362,7 @@ class Dashboard(SmartTemplateView):
                     }
                 )
 
-        data = {"tracked_sdgs": tuple(tracked_sdg), "not_tracked_sdgs": tuple(
-            not_tracked_sdg), "datasets": datasets}
+        data = {"tracked_sdgs": tuple(tracked_sdg), "not_tracked_sdgs": tuple(not_tracked_sdg), "datasets": datasets}
 
         return data
 
@@ -444,7 +431,7 @@ class Dashboard(SmartTemplateView):
             return redirect(reverse("users.user_login"))
 
         if self.access_level is None:
-            return redirect(reverse('public.index'))
+            return redirect(reverse("public.index"))
 
         context = self.get_context_data(**kwargs)
         return self.render_to_response(context)
@@ -459,18 +446,18 @@ class Dashboard(SmartTemplateView):
             channels = channels.filter(org=self.request.org)
 
         for channel in channels:
-            channels_info.append({
-                "uuid": channel.uuid,
-                "name": Dashboard.channel_info(channel.channel_type, "name"),
-                "icon": Dashboard.channel_info(channel.channel_type, "icon"),
-            })
+            channels_info.append(
+                {
+                    "uuid": channel.uuid,
+                    "name": Dashboard.channel_info(channel.channel_type, "name"),
+                    "icon": Dashboard.channel_info(channel.channel_type, "icon"),
+                }
+            )
 
         context["channels_info"] = channels_info
 
         if self.access_level == "local":
-            context["surveys_local_total"] = Poll.objects.filter(
-                org=self.request.org, is_active=True).count()
-            context["surveys_global_total"] = Poll.objects.exclude(
-                org=self.request.org).filter(is_active=True).count()
+            context["surveys_local_total"] = Poll.objects.filter(org=self.request.org, is_active=True).count()
+            context["surveys_global_total"] = Poll.objects.exclude(org=self.request.org).filter(is_active=True).count()
 
         return context
