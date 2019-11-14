@@ -276,7 +276,7 @@
         if (result.questions.length > 0) {
           $("#partial_questions_list").html(result.questions.map(function(question) {
             return `<div class="questions-list__item p-30 border-bottom">
-                    <a href="javascript:loadDonutPatialResult(${question.id});" class="question-link">${question.title}</a>
+                    <a href="javascript:loadDonutPatialResult(${question.id});" id="" class="question-link">${question.title}</a>
                     </div>`;
           }));
         } else {
@@ -287,6 +287,7 @@
         if (result.questions.length > 0) {
           $("#partial_question_title").html(result.questions[0].title);
           loadDonutPatialResult(result.questions[0].id);
+          $(".questions-list").find(".question-link").first().addClass("active");
         }
       }
     });
@@ -300,6 +301,14 @@
     if (partialChart) {
       partialChart.destroy();
     }
+
+    let $questionList = $(".questions-list"),
+        $questionsItems = $questionList.find(".question-link");
+
+    $questionList.on("click", ".question-link", function (e) {
+      $questionsItems.removeClass("active");
+      $(this).addClass("active");
+    });
 
     let index = questionsList.map(question => question.id).indexOf(questionId);
     let question = questionsList[index];
@@ -712,5 +721,17 @@
     loadChartMostUsedChannels("week");
     loadChartRapidProContacts();
   });
+
+  // (function ($) {
+  //   let $questionList = $(".questions-list"),
+  //     $questionsItems = $questionList.find(".question-link");
+
+  //   $questionsItems.first().addClass("active");
+
+  //   $questionList.on("click", ".question-link", function (e) {
+  //     $questionsItems.removeClass("active");
+  //     $(this).addClass("active");
+  //   });
+  // })(jQuery);
 </script>
 {% endblock %}
