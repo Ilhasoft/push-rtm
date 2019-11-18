@@ -69,6 +69,7 @@ class EditView(SmartTemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         unct = get_object_or_404(Org, pk=self.kwargs["unct"])
+        config = unct.config.get("rapidpro")
 
         data = {
             "name": unct.name,
@@ -77,6 +78,16 @@ class EditView(SmartTemplateView):
             "timezone": unct.timezone,
             "host": unct.backends.first().host,
             "api_token": unct.backends.first().api_token,
+            "born_label": config.get("born_label", ""),
+            "male_label": config.get("male_label", ""),
+            "ward_label": config.get("ward_label", ""),
+            "state_label": config.get("state_label", ""),
+            "female_label": config.get("female_label", ""),
+            "gender_label": config.get("gender_label", ""),
+            "district_label": config.get("district_label", ""),
+            "reporter_group": config.get("reporter_group", ""),
+            "occupation_label": config.get("occupation_label", ""),
+            "registration_label": config.get("registration_label", ""),
         }
 
         context["form"] = UnctForm(initial=data)
