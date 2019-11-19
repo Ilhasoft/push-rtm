@@ -249,7 +249,7 @@
                   label: function(item, data) {
                     var datasetLabel = data.datasets[item.datasetIndex].label || "";
                     var dataPoint = data.datasets[item.datasetIndex].data[item.index];
-                    return " " + datasetLabel + ": " + dataPoint.r[1] + " / " + dataPoint.r[0] + "% received";
+                    return " " + datasetLabel + ": " + dataPoint.z[1] + " / " + dataPoint.z[0] + "% received";
                   }
                 }
               },
