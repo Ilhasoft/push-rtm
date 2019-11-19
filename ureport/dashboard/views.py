@@ -350,12 +350,13 @@ class Dashboard(SmartTemplateView):
                         "label": "{} {}".format(key, value),
                         "data": [
                             {
-                                "x": random.randint(7, 70),  # sdg_with_data.get("total_responded", 0),
-                                "y": random.randint(17, 70),  # len(sdg_with_data.get("questions", [])),
-                                "r": (
+                                "x": random.randint(7, 70),
+                                "y": random.randint(17, 70),
+                                "r": total_responded_percent + 20,
+                                "z": (
                                     total_responded_percent,
                                     sdg_with_data.get("total_responded", 0),
-                                ),  # sdg_with_data.get("percentage_in_questions", 0),
+                                ),
                             }
                         ],
                         "backgroundColor": settings.SDG_COLOR.get(key),
