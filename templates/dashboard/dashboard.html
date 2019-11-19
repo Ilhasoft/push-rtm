@@ -47,7 +47,9 @@
       </div>
       <div class="has-text-grey-light" id="sdgs_tracked_ago"></div>
       <canvas id="bubbleChart"></canvas>
-      <div id="empty_bubble_chart"></div>
+      <div id="empty_bubble_chart">
+        <div class="top-m-30 bottom-m-30">{% trans 'There are no data for this filter' %}</div>
+      </div>
       <div class="card-title has-text-weight-bold bottom-p-20">{% trans "SDGs not being tracked" %}</div>
       <ul class="untracked-sgd" id="sdgs_untracked"></ul>
     </div>
@@ -220,9 +222,9 @@
 
         if (result.sdgs_bubble_data.datasets.length == 0) {
           $("#bubbleChart").hide();
-            $("#empty_bubble_chart").html(`
-            <div class="top-m-30 bottom-m-30">{% trans 'There are no data for this filter' %}</div>`);
+          $("#empty_bubble_chart").show();
         } else {
+          $("#empty_bubble_chart").hide();
           $("#bubbleChart").show();
           sdgsChart = new Chart(document.getElementById("bubbleChart").getContext("2d"), {
             type: "bubble",
@@ -285,6 +287,10 @@
 
   function loadChartPartialResults(sdg) {
     getJsonData({card: "partial_results", sdg: sdg}).then(function(result) {
+      if (partialChart) {
+        partialChart.destroy();
+      }
+
       if (result) {
         $("#partial_questions_count").html(`${result.questions_count} {% trans "Questions" %}`);
         $("#partial_questions_list").html("");
@@ -547,10 +553,9 @@
       {% if access_level == "local" %}
 
         if (result.channels_most_used.length == 0) {
-          $("#empty_most_used_channels").html(`
-            <div class="m-20 has-text-weight-bold">{% trans 'Local' %}</div>
-            <div class="m-20">{% trans 'There are no data for this filter' %}</div>`);
+          $("#empty_most_used_channels").show();
         } else {
+          $("#empty_most_used_channels").hide();
           localMostUsedChannelsChart = new Chart(document.getElementById("localMostUsedChannels").getContext("2d"), {
             type: "doughnut",
             data: {
@@ -599,12 +604,9 @@
       {% endif %}
 
       if (result.channels_most_used_global.length == 0) {
-        $("#empty_global_most_used_channels").html(`
-          {% if access_level == "local" %}
-            <div class="m-20 has-text-weight-bold">{% trans 'Global' %}</div>
-          {% endif %}
-          <div class="m-20">{% trans 'There are no data for this filter' %}</div>`);
+        $("#empty_global_most_used_channels").show();
       } else {
+        $("#empty_global_most_used_channels").hide();
         globalMostUsedChannelsChart = new Chart(document.getElementById("globalMostUsedChannels").getContext("2d"), {
           type: "doughnut",
           data: {
