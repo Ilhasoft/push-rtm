@@ -99,7 +99,13 @@
 
     <div class="box is-shadowless p-40 bottom-m-20">
       <div class="flex space-between">
-        <div class="card-title has-text-weight-bold">{% trans "Message Metrics" %}</div>
+        <div class="card-title">
+          <span class="has-text-weight-bold">{% trans "Message Metrics" %}</span>
+          <span class="tooltip top left-m-10">
+            <i class="material-icons info-icon">info</i>
+            <span class="tooltip-content">{% trans "Breakdown of status messages into the unct and global view" %}</span>
+          </span>
+        </div>
         <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
             <div aria-haspopup="true" aria-controls="dropdown-menu">
@@ -141,7 +147,13 @@
         </div>
       </div>
       <canvas id="channelsChart" height="100"></canvas>
-      <div class="card-title has-text-weight-bold top-m-50">{% trans "Messages by Channel" %}</div>
+      <div class="card-title top-m-50">
+        <span class="has-text-weight-bold">{% trans "Messages by Channel" %}</span>
+        <span class="tooltip top left-m-10">
+          <i class="material-icons info-icon">info</i>
+          <span class="tooltip-content">{% trans "These results are the sum of messages received and sent" %}</span>
+        </span>
+      </div>
       <div class="columns is-multiline top-m-30" id="message_by_channel_list"></div>
     </div>
 
@@ -173,7 +185,7 @@
 
   function getJsonData(params) {
     const {card, filterBy, channelUUID, sdg} = params;
-  
+
     let url = `${dataUrl}?card=${card}`;
     if (filterBy) {
       url = `${url}&filter_by=${filterBy}`;
@@ -265,7 +277,7 @@
           });
         }
       }
-    }); 
+    });
   }
 
   function loadChartPartialResults(sdg) {
@@ -301,7 +313,7 @@
     if (questionId == questionLastId) {
       return;
     }
-      
+
     if (partialChart) {
       partialChart.destroy();
     }
