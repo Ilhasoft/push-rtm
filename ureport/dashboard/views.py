@@ -347,7 +347,8 @@ class Dashboard(SmartTemplateView):
 
                 datasets.append(
                     {
-                        "label": "{} {}".format(key, value),
+                        "sdg": value,
+                        "label": "SDG{}".format(key),
                         "data": [
                             {
                                 "x": random.randint(7, 70),

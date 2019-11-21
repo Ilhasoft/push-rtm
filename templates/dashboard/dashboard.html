@@ -46,19 +46,19 @@
         </div>
       </div>
       <div class="has-text-grey-light" id="sdgs_tracked_ago"></div>
-      <div class="columns top-m-20" id="tracked_sdgs">
+      <div class="columns top-m-10" id="tracked_sdgs">
         <div class="column is-two-fifths">
-          <ul class="tracked-sgd" id="sdgs_tracked"></ul>
+          <ul class="tracked-sgd left-m-20 bottom-m-10" id="sdgs_tracked"></ul>
+          <div id="empty_bubble_chart">
+            <div class="left-m-20 bottom-m-20">{% trans 'There are no data for this filter' %}</div>
+          </div>
+          <div class="card-title has-text-weight-bold bottom-p-20">{% trans "SDGs not being tracked" %}</div>
+          <ul class="untracked-sgd" id="sdgs_untracked"></ul>
         </div>
         <div class="column">
-          <div id="bubbleChart" class="has-text-centered"></div>
+          <div id="bubbleChart"></div>
         </div>
       </div>
-      <div id="empty_bubble_chart">
-        <div class="top-m-30 bottom-m-30">{% trans 'There are no data for this filter' %}</div>
-      </div>
-      <div class="card-title has-text-weight-bold bottom-p-20">{% trans "SDGs not being tracked" %}</div>
-      <ul class="untracked-sgd" id="sdgs_untracked"></ul>
     </div>
 
     <div class="box is-shadowless is-paddingless bottom-m-20">
@@ -233,6 +233,7 @@
       children: result.sdgs_bubble_data.datasets.map(d => {
         return {
           name: d.label,
+          sdg: d.sdg,
           count: d.data[0].r,
           color: d.backgroundColor,
         };
@@ -260,7 +261,7 @@
 
     node.append("title")
       .text(function(d) {
-        return d.name + ': ' + d.count;
+        return d.data.sdg + ': ' + d.data.count + ' messages';
       });
 
     node
@@ -273,16 +274,28 @@
       });
 
     node.append("text")
-      .attr("dy", ".5em")
+      .attr("dy", ".2em")
       .style("text-anchor", "middle")
       .text(function(d) {
-        return d.data.count;
+        return d.data.name.substring(0, d.r / 3);
       })
       .attr("font-family",  "Gill Sans", "Gill Sans MT")
       .attr("font-size", function(d){
         return d.r/5;
       })
       .attr("fill", "white");
+
+      node.append("text")
+        .attr("dy", "1.3em")
+        .style("text-anchor", "middle")
+        .text(function(d) {
+            return d.data.count;
+        })
+        .attr("font-family",  "Gill Sans", "Gill Sans MT")
+        .attr("font-size", function(d){
+            return d.r/5;
+        })
+        .attr("fill", "white");
 
     d3.select(self.frameElement)
       .style("height", diameter + "px");
@@ -302,11 +315,13 @@
         }));
 
         if (result.sdgs_bubble_data.datasets.length == 0) {
-          $("#tracked_sdgs").hide();
+          $("#sdgs_tracked").hide();
+          $("#bubbleChart").hide();
           $("#empty_bubble_chart").show();
         } else {
           $("#empty_bubble_chart").hide();
-          $("#tracked_sdgs").show();
+          $("#bubbleChart").show();
+          $("#sdgs_tracked").show();
           $("#sdgs_tracked").html(result.sdgs_bubble_data.tracked_sdgs.map(function(sdg) {
             return `<li class="untracked-sgd__item">
               <div class="untracked-sgd__item__color sdg-${sdg[0]}"></div>
