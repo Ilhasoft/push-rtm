@@ -304,7 +304,7 @@ class Dashboard(SmartTemplateView):
 
                     datasets.append(
                         {
-                            "label": "{} {}".format(key, value),
+                            "label": "SDG{}".format(key),
                             "data": [{"x": values[0], "y": values[1], "r": values[2]}],
                             "backgroundColor": settings.SDG_COLOR.get(key),
                             "borderColor": "#FFFFFF",
