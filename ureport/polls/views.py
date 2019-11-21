@@ -10,14 +10,7 @@ import six
 from dash.categories.models import Category
 from dash.orgs.views import OrgObjPermsMixin, OrgPermsMixin
 from smartmin.csv_imports.models import ImportTask
-from smartmin.views import (
-    SmartCreateView,
-    SmartCRUDL,
-    SmartCSVImportView,
-    SmartListView,
-    SmartUpdateView,
-    SmartTemplateView,
-)
+from smartmin.views import SmartCreateView, SmartCRUDL, SmartCSVImportView, SmartUpdateView, SmartTemplateView
 
 from django import forms
 from django.conf import settings
@@ -29,6 +22,8 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.timesince import timesince
 from django.utils.translation import ugettext_lazy as _
+from django.contrib import messages
+from django.shortcuts import redirect
 
 from ureport.utils import json_date_to_datetime, get_paginator
 
@@ -467,6 +462,7 @@ class PollCRUDL(SmartCRUDL):
                         attrs={
                             "multiple": True,
                             "class": "chosen-select form-control",
+                            "data": "chosen-select",
                             "data-placeholder": _("Select one or more Tags."),
                         }
                     ),
@@ -539,7 +535,8 @@ class PollCRUDL(SmartCRUDL):
                 if last_synced:
                     return "Last synced %s ago" % timesince(json_date_to_datetime(last_synced))
 
-                # we know we synced do not check the the progress since that is slow
+                # we know we synced do not check the the progress since that is
+                # slow
                 return "Synced 100%"
 
             sync_progress = obj.get_sync_progress()
@@ -568,6 +565,13 @@ class PollCRUDL(SmartCRUDL):
                 return reverse("polls.poll_responses", args=[obj.pk])
             else:
                 return super(PollCRUDL.List, self).lookup_field_link(context, field, obj)
+
+        def get(self, request, *args, **kwargs):
+            context = self.get_context_data(**kwargs)
+            if context["polls"].paginator.count == 0:
+                messages.error(self.request, _("No results found."))
+                return redirect(reverse("polls.poll_list"))
+            return self.render_to_response(context)
 
         def get_context_data(self, **kwargs):
             context = super().get_context_data(**kwargs)

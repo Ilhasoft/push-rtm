@@ -12,7 +12,7 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from dash.orgs.models import Org
-from smartmin.views import SmartTemplateView
+from smartmin.views import SmartTemplateView, SmartReadView
 
 from ureport.utils import get_paginator, is_global_user
 
@@ -62,6 +62,14 @@ class FlowBaseListView(LoginRequiredMixin, SearchSmartListViewMixin):
     search_query_name = "search"
     select_related = None
     fields = "__all__"
+    redirect_to = ""
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        if context["flows"].paginator.count == 0:
+            messages.error(self.request, _("No results found."))
+            return redirect(reverse(self.redirect_to))
+        return self.render_to_response(context)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -111,6 +119,7 @@ class ListView(FlowBaseListView):
     search_fields = ["name__icontains", "description__icontains"]
     filter_fields = ["name__icontains", "description__icontains"]
     search_query_name = "search"
+    redirect_to = "flowhub.flow_list"
 
     def derive_url_pattern(path, action):
         return "flowhub/"
@@ -147,6 +156,10 @@ class UnctsView(SearchSmartListViewMixin):
         queryset = self.model.objects.filter(is_active=True).order_by(sortered)
         queryset = self.search(queryset)
 
+        if queryset.count() == 0:
+            queryset = self.model.objects.filter(is_active=True).order_by(sortered)
+            messages.error(self.request, _("No results found."))
+
         for org in queryset:
             org.total_stars = sum([f.stars.all().count() for f in org.flows.filter(is_active=True)])
 
@@ -166,6 +179,7 @@ class MyOrgListView(FlowBaseListView):
     model = Flow
     context_object_name = "flows"
     search_fields = ["name__icontains", "description__icontains"]
+    redirect_to = "flowhub.my_org_flow_list"
 
     def get_queryset(self):
         return super().get_queryset().filter(org=self.request.org)
@@ -299,3 +313,13 @@ class DeleteView(SmartTemplateView):
         flow.is_active = False
         flow.save()
         return redirect(self.request.META.get("HTTP_REFERER"))
+
+
+class InfoView(SmartReadView):
+    template_name = "flowhub/info.html"
+    pk_url_kwarg = "flow"
+    model = Flow
+
+    def get_queryset(self):
+        queryset = super().get_queryset().filter(is_active=True)
+        return queryset.filter(Q(org=self.request.org) | Q(visible_globally=True))

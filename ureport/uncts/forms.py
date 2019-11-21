@@ -39,75 +39,106 @@ class UnctForm(forms.ModelForm):
     language = forms.ChoiceField(required=False, choices=[("", "")] + list(settings.LANGUAGES))
     timezone = TimeZoneFormField()
 
+    # Backend Config
+    reporter_group = forms.CharField(
+        label=_("Contact Group"),
+        help_text=_("The name of the Contact Group that contains registered reporters"),
+        required=True,
+        max_length=255,
+        widget=forms.TextInput(attrs={"placeholder": _("Contact Group"), "required": True, "class": "input"}),
+    )
+
+    born_label = forms.CharField(
+        label=_("Born Label"),
+        help_text=_("The label of the Contact Field that contains the birth date of reporters"),
+        required=True,
+        max_length=255,
+        widget=forms.TextInput(attrs={"placeholder": _("Born Label"), "required": True, "class": "input"}),
+    )
+
+    gender_label = forms.CharField(
+        label=_("Gender Label"),
+        help_text=_("The label of the Contact Field that contains the gender of reporters"),
+        required=True,
+        max_length=255,
+        widget=forms.TextInput(attrs={"placeholder": _("Gender Label"), "required": True, "class": "input"}),
+    )
+
+    occupation_label = forms.CharField(
+        label=_("Occupation Label"),
+        help_text=_("The label of the Contact Field that contains the occupation of reporters"),
+        required=True,
+        max_length=255,
+        widget=forms.TextInput(attrs={"placeholder": _("Occupation Label"), "required": False, "class": "input"}),
+    )
+
+    registration_label = forms.CharField(
+        label=_("Registration Label"),
+        help_text=_("The label of the Contact Field that contains the registration date of reporters"),
+        required=True,
+        max_length=255,
+        widget=forms.TextInput(attrs={"placeholder": _("Registration Label"), "required": True, "class": "input"}),
+    )
+
+    state_label = forms.CharField(
+        label=_("State Label"),
+        help_text=_("The label of the Contact Field that contains the State of reporters"),
+        required=False,
+        max_length=255,
+        widget=forms.TextInput(attrs={"placeholder": _("State Label"), "required": False, "class": "input"}),
+    )
+
+    district_label = forms.CharField(
+        label=_("District Label"),
+        help_text=_("The label of the Contact Field that contains the District of reporters"),
+        required=False,
+        max_length=255,
+        widget=forms.TextInput(attrs={"placeholder": _("District Label"), "required": False, "class": "input"}),
+    )
+
+    ward_label = forms.CharField(
+        label=_("Ward Label"),
+        help_text=_("The label of the Contact Field that contains the Ward of reporters"),
+        required=False,
+        max_length=255,
+        widget=forms.TextInput(attrs={"placeholder": _("Ward Label"), "required": False, "class": "input"}),
+    )
+
+    male_label = forms.CharField(
+        label=_("Male Label"),
+        help_text=_("The label assigned to U-Reporters that are Male."),
+        required=True,
+        max_length=255,
+        widget=forms.TextInput(attrs={"placeholder": _("Male Label"), "required": True, "class": "input"}),
+    )
+
+    female_label = forms.CharField(
+        label=_("Female Label"),
+        help_text=_("The label assigned to U-Reporters that are Female."),
+        required=True,
+        max_length=255,
+        widget=forms.TextInput(attrs={"placeholder": _("Female Label"), "required": True, "class": "input"}),
+    )
+
     def save(self, user):
         instance = super().save(commit=False)
         instance.created_by = user
         instance.modified_by = user
         instance.config = {
-            "common": {
-                "colors": "",
-                "bg_color": "",
-                "has_jobs": False,
-                "iso_code": "",
-                "is_global": False,
-                "join_text": "",
-                "shortcode": "",
-                "text_font": "",
-                "colors_map": "",
-                "custom_html": "",
-                "dark1_color": "",
-                "dark2_color": "",
-                "dark3_color": "",
-                "ignore_words": "",
-                "light1_color": "",
-                "light2_color": "",
-                "limit_states": "",
-                "headline_font": "",
-                "join_bg_color": "",
-                "join_fg_color": "",
-                "primary_color": "",
-                "has_new_design": False,
-                "twitter_handle": "",
-                "facebook_app_id": "",
-                "secondary_color": "",
-                "text_small_font": "",
-                "whatsapp_number": "",
-                "facebook_page_id": "",
-                "has_extra_gender": False,
-                "facebook_page_url": "",
-                "facebook_pixel_id": "",
-                "google_tracking_id": "",
-                "instagram_username": "",
-                "is_on_landing_page": False,
-                "stories_description": "",
-                "youtube_channel_url": "",
-                "opinions_description": "",
-                "photos_section_title": "",
-                "ureport_announcement": "",
-                "facebook_welcome_text": "",
-                "twitter_search_widget": "",
-                "engagement_description": "",
-                "homepage_join_video_id": "",
-                "is_participation_hidden": False,
-                "instagram_lightwidget_id": "",
-                "engagement_footer_callout": "",
-                "photos_section_description": "",
-            },
             "rapidpro": {
-                "born_label": "Born",
-                "male_label": "Male",
-                "ward_label": "",
-                "state_label": "District",
-                "female_label": "Female",
-                "gender_label": "Gender",
-                "district_label": "",
-                "reporter_group": "U-Reporters",
-                "occupation_label": "Occupation",
-                "registration_label": "Registration Date",
+                "born_label": self.cleaned_data.get("born_label"),
+                "male_label": self.cleaned_data.get("male_label"),
+                "ward_label": self.cleaned_data.get("ward_label"),
+                "state_label": self.cleaned_data.get("state_label"),
+                "female_label": self.cleaned_data.get("female_label"),
+                "gender_label": self.cleaned_data.get("gender_label"),
+                "district_label": self.cleaned_data.get("district_label"),
+                "reporter_group": self.cleaned_data.get("reporter_group"),
+                "occupation_label": self.cleaned_data.get("occupation_label"),
+                "registration_label": self.cleaned_data.get("registration_label"),
             },
         }
         instance.save()
-
         backend = OrgBackend.objects.filter(org=instance).first()
 
         if backend:

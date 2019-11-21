@@ -116,11 +116,13 @@ INSTALLED_APPS += (
 
 SITE_ALLOW_NO_ORG += (
     "dashboard",
+    "dashboard_data",
     "flowhub.flow_list",
     "flowhub.flow_uncts",
     "flowhub.flow_create",
     "flowhub.flow_star",
     "flowhub.flow_download",
+    "flowhub.flow_info",
     "uncts.unct_create",
     "uncts.unct_list",
     "uncts.unct_update",
@@ -178,7 +180,7 @@ CHANNEL_TYPES = {
     "TG": {"name": "Telegram", "icon": "icon-telegram"},
     "FB": {"name": "Facebook", "icon": "icon-facebook"},
     "TW": {"name": "Twitter", "icon": "icon-twitter"},
-    "KN": {"name": "Kannel", "icon": "icon-phone"},
+    "KN": {"name": "SMS", "icon": "icon-phone"},
     "WA": {"name": "Whatsapp", "icon": "icon-whatsapp"},
 }
 
@@ -198,61 +200,60 @@ SITE_CHOOSER_URL_NAME = "public.index"
 IS_DEV = config("IS_DEV", default=False, cast=bool)
 if IS_DEV:
     CELERYBEAT_SCHEDULE = {
-        "refresh_flows": {"task": "polls.refresh_org_flows", "schedule": timedelta(minutes=1), "relative": True},
+        "refresh_flows": {"task": "polls.refresh_org_flows", "schedule": timedelta(minutes=10), "relative": True},
         "recheck_poll_flow_data": {
             "task": "polls.recheck_poll_flow_data",
-            "schedule": timedelta(minutes=1),
+            "schedule": timedelta(minutes=10),
             "relative": True,
         },
         "fetch_old_sites_count": {
             "task": "polls.fetch_old_sites_count",
-            "schedule": timedelta(minutes=1),
+            "schedule": timedelta(minutes=10),
             "relative": True,
         },
         "contact-pull": {
             "task": "dash.orgs.tasks.trigger_org_task",
-            "schedule": timedelta(minutes=1),
+            "schedule": timedelta(minutes=10),
             "args": ("ureport.contacts.tasks.pull_contacts",),
         },
         "backfill-poll-results": {
             "task": "dash.orgs.tasks.trigger_org_task",
-            "schedule": timedelta(minutes=1),
+            "schedule": timedelta(minutes=10),
             "relative": True,
             "args": ("ureport.polls.tasks.backfill_poll_results", "sync"),
         },
         "results-pull-main-poll": {
             "task": "dash.orgs.tasks.trigger_org_task",
-            "schedule": timedelta(minutes=1),
+            "schedule": timedelta(minutes=10),
             "args": ("ureport.polls.tasks.pull_results_main_poll", "sync"),
         },
         "results-pull-recent-polls": {
             "task": "dash.orgs.tasks.trigger_org_task",
-            "schedule": timedelta(minutes=1),
+            "schedule": timedelta(minutes=10),
             "relative": True,
             "args": ("ureport.polls.tasks.pull_results_recent_polls", "sync"),
         },
         "results-pull-brick-polls": {
             "task": "dash.orgs.tasks.trigger_org_task",
-            "schedule": timedelta(minutes=1),
+            "schedule": timedelta(minutes=10),
             "relative": True,
             "args": ("ureport.polls.tasks.pull_results_brick_polls", "sync"),
         },
         "results-pull-other-polls": {
             "task": "dash.orgs.tasks.trigger_org_task",
-            "schedule": timedelta(minutes=1),
+            "schedule": timedelta(minutes=10),
             "relative": True,
             "args": ("ureport.polls.tasks.pull_results_other_polls", "sync"),
         },
         "refresh-engagement-data": {
             "task": "dash.orgs.tasks.trigger_org_task",
-            "schedule": timedelta(minutes=1),
+            "schedule": timedelta(minutes=10),
             "relative": True,
             "args": ("ureport.stats.tasks.refresh_engagement_data", "sync"),
         },
         "pull-channel-stats": {
-            "task": "dash.orgs.tasks.trigger_org_task",
-            "schedule": timedelta(minutes=30),
+            "task": "channels.pull-channel-stats",
+            "schedule": timedelta(minutes=10),
             "relative": True,
-            "args": ("ureport.channels.tasks.pull_channel_stats", "sync"),
         },
     }

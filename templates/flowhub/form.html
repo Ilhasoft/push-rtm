@@ -101,14 +101,14 @@
 
 {% block js_extra %}
 <script src="{% static 'js/forms/errors.js' %}"></script>
-<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/scripts/choices.min.js"></script>
 <script type="text/javascript">
   
   new Choices("#id_sdgs", {
     removeItemButton: true,
     placeholderValue: "Link this flow to one or more SDGs",
 
-    sortFn: function(a, b) {
+    sorter: function(a, b) {
       return a.id > b.id;
     },
 
@@ -140,11 +140,15 @@
   
   new Choices("#id_languages", {
     removeItemButton: true,
-    listItems: "choices__list--multiple"
+    classNames: {
+      listItems: "choices__list--multiple",
+    },
   });
   new Choices("#id_tags", {
     removeItemButton: true,
-    listItems: "choices__list--multiple"
+    classNames: {
+      listItems: "choices__list--multiple",
+    },
   });
   
   document.getElementById("id_flow").onchange = ((e) => {
