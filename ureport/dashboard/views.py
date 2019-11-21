@@ -347,6 +347,7 @@ class Dashboard(SmartTemplateView):
 
                 datasets.append(
                     {
+                        "sdg": value,
                         "label": "SDG{}".format(key),
                         "data": [
                             {

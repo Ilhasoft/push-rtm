@@ -46,12 +46,22 @@
         </div>
       </div>
       <div class="has-text-grey-light" id="sdgs_tracked_ago"></div>
-      <canvas id="bubbleChart"></canvas>
-      <div id="empty_bubble_chart">
-        <div class="top-m-30 bottom-m-30">{% trans 'There are no data for this filter' %}</div>
+      <div class="columns top-m-10" id="tracked_sdgs">
+        <div class="column is-two-fifths">
+          <ul class="tracked-sgd left-m-20 bottom-m-10" id="sdgs_tracked"></ul>
+          <div id="empty_sdgs">
+            <div class="left-m-20 bottom-m-20">{% trans 'No SDGs being tracked in this period' %}</div>
+          </div>
+          <div class="card-title has-text-weight-bold bottom-p-20">{% trans "SDGs not being tracked" %}</div>
+          <ul class="untracked-sgd" id="sdgs_untracked"></ul>
+        </div>
+        <div class="column flex flex-center align-center">
+          <div id="empty_bubble_chart">
+            <div>{% trans 'There are no data for this filter' %}</div>
+          </div>
+          <div id="bubbleChart"></div>
+        </div>
       </div>
-      <div class="card-title has-text-weight-bold bottom-p-20">{% trans "SDGs not being tracked" %}</div>
-      <ul class="untracked-sgd" id="sdgs_untracked"></ul>
     </div>
 
     <div class="box is-shadowless is-paddingless bottom-m-20">
@@ -176,7 +186,7 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
-<script src="{% static 'plugins/wordcloud/d3.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.3/d3.min.js"></script>
 <script src="{% static 'plugins/wordcloud/d3.layout.cloud.js' %}"></script>
 
 <script type="text/javascript">
@@ -209,6 +219,93 @@
     });
   }
 
+  function renderBubbleChart(result) {
+    let diameter = 600;
+    let color = d3.scaleOrdinal(d3.schemeCategory20);
+
+    // Clean up the charts.
+    d3.select('#bubbleChart').selectAll('*').remove();
+
+    let svg = d3.select("#bubbleChart")
+      .append("svg")
+      .attr("width", diameter)
+      .attr("height", diameter)
+      .attr("class", "bubble");
+
+    let dataset = {
+      children: result.sdgs_bubble_data.datasets.map(d => {
+        return {
+          name: d.label,
+          sdg: d.sdg,
+          count: d.data[0].r,
+          color: d.backgroundColor,
+        };
+      }),
+    };
+
+    let bubble = d3.pack(dataset)
+      .size([diameter, diameter])
+      .padding(1.5);
+
+    let nodes = d3.hierarchy(dataset)
+      .sum(function(d) { return d.count; });
+
+    let node = svg.selectAll("node")
+      .data(bubble(nodes).descendants())
+      .enter()
+      .filter(function(d){
+        return  !d.children
+      })
+      .append("g")
+      .attr("class", "node")
+      .attr("transform", function(d) {
+        return "translate(" + d.x + "," + d.y + ")";
+      });
+
+    node.append("title")
+      .text(function(d) {
+        return d.data.sdg + ': ' + d.data.count + ' messages';
+      });
+
+    node
+      .append("circle")
+      .attr("r", function(d) {
+        return d.r;
+      })
+      .style("fill", function(d,i) {
+        return d.data.color || 'gray';
+      });
+
+    node.append("text")
+      .attr("dy", ".2em")
+      .style("text-anchor", "middle")
+      .text(function(d) {
+        return d.data.name.substring(0, d.r / 3);
+      })
+      .attr("font-family",  "Gill Sans", "Gill Sans MT")
+      .attr("font-size", function(d){
+        return d.r/5;
+      })
+      .attr("fill", "white");
+
+      node.append("text")
+        .attr("dy", "1.3em")
+        .style("text-anchor", "middle")
+        .text(function(d) {
+            return d.data.count;
+        })
+        .attr("font-family",  "Gill Sans", "Gill Sans MT")
+        .attr("font-size", function(d){
+            return d.r/5;
+        })
+        .attr("fill", "white");
+
+    d3.select(self.frameElement)
+      .style("height", diameter + "px");
+
+    return svg;
+  }
+
   function loadChartTracked(filterBy) {
     getJsonData({card: "sdg_tracked", filterBy: filterBy}).then(function(result) {
       if (result) {
@@ -220,70 +317,23 @@
                   <div class="untracked-sgd__item__label">${sdg[0]} ${sdg[1]}</div></li>`;
         }));
 
-        if (sdgsChart) {
-          sdgsChart.destroy();
-        }
-
         if (result.sdgs_bubble_data.datasets.length == 0) {
+          $("#sdgs_tracked").hide();
           $("#bubbleChart").hide();
+          $("#empty_sdgs").show();
           $("#empty_bubble_chart").show();
         } else {
+          $("#empty_sdgs").hide();
           $("#empty_bubble_chart").hide();
           $("#bubbleChart").show();
-          sdgsChart = new Chart(document.getElementById("bubbleChart").getContext("2d"), {
-            type: "bubble",
-            options: {
-              responsive: true,
-              legend: {
-                labels: {
-                  fontSize: 14,
-                  padding: 18,
-                  usePointStyle: true,
-                },
-                position: "left",
-                onClick: null,
-              },
-              layout: {
-                padding: {
-                  top: 50,
-                }
-              },
-              scales: {
-                xAxes: [{
-                  display: false,
-                  ticks: {
-                    max: 90,
-                    min: -10,
-                  }
-                }],
-                yAxes: [{
-                  display: false,
-                  ticks: {
-                    max: 90,
-                    min: -10,
-                  }
-                }]
-              },
-              tooltips: {
-                bodyFontSize: 16,
-                callbacks: {
-                  label: function(item, data) {
-                    var datasetLabel = data.datasets[item.datasetIndex].label || "";
-                    var dataPoint = data.datasets[item.datasetIndex].data[item.index];
-                    return " " + datasetLabel + ": " + dataPoint.z[1] + " / " + dataPoint.z[0] + "% received";
-                  }
-                }
-              },
-              plugins: {
-                datalabels: {
-                  display: false,
-                }
-              },
-            },
-            data: {
-              datasets: result.sdgs_bubble_data.datasets,
-            }
-          });
+          $("#sdgs_tracked").show();
+          $("#sdgs_tracked").html(result.sdgs_bubble_data.tracked_sdgs.map(function(sdg) {
+            return `<li class="untracked-sgd__item">
+              <div class="untracked-sgd__item__color sdg-${sdg[0]}"></div>
+              <div class="untracked-sgd__item__label">${sdg[0]} ${sdg[1]}</div></li>`;
+          }));
+
+          renderBubbleChart(result);
         }
       }
     });
@@ -391,7 +441,7 @@
       $('#questionChart').hide();
       const fillWordColor = function(d, i) {
         return RTMConfigs.availableColors[i % RTMConfigs.availableColors.length];
-      }
+      };
 
       let margin = {top: 0, right: 10, bottom: 10, left: 10},
         width = 350 - margin.left - margin.right,
@@ -403,7 +453,6 @@
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-      d3.scale.category20();
       var layout = d3.layout.cloud()
         .size([width, height])
         .words(words)
