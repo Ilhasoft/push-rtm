@@ -3,7 +3,13 @@
   <div class="column right-p-5 bottom-p-0">
     <div class="box is-shadowless">
       <div class="p-20 flex space-between">
-        <div class="card-title has-text-weight-bold">{% trans "Most used Channels" %}</div>
+        <div class="card-title">
+          <span class="has-text-weight-bold">{% trans "Most used Channels" %}</span>
+          <span class="tooltip top left-m-10">
+            <i class="material-icons info-icon">info</i>
+            <span class="tooltip-content">{% trans "Most used channels into the UNCT and around the globe" %}</span>
+          </span>
+        </div>
         <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
             <div aria-haspopup="true" aria-controls="dropdown-menu">
@@ -26,9 +32,17 @@
       <div class="left-p-20 bottom-p-20 has-text-grey-light" id="channels_most_used_time_ago"></div>
       <div class="columns">
         <div class="column">
+          <div id="empty_most_used_channels">
+            <div class="m-20 has-text-weight-bold">{% trans 'Local' %}</div>
+            <div class="m-20">{% trans 'There are no data for this filter' %}</div>
+          </div>
           <canvas id="localMostUsedChannels"></canvas>
         </div>
         <div class="column">
+          <div id="empty_global_most_used_channels">
+            <div class="m-20 has-text-weight-bold">{% trans 'Global' %}</div>
+            <div class="m-20">{% trans 'There are no data for this filter' %}</div>
+          </div>
           <canvas id="globalMostUsedChannels"></canvas>
         </div>
       </div>
@@ -59,7 +73,13 @@
 </div>
 
 <div class="box is-shadowless">
-  <div class="card-title p-20 has-text-weight-bold">{% trans "RapidPro Contacts" %}</div>
+  <div class="card-title p-20">
+    <span class="has-text-weight-bold">{% trans "RapidPro Contacts" %}</span>
+    <span class="tooltip top left-m-10">
+      <i class="material-icons info-icon">info</i>
+      <span class="tooltip-content">{% trans "Overview of the contacts status on RapidPro" %}</span>
+    </span>
+  </div>
   <div class="columns p-20">
     <div class="column is-three-fifths">
       <div class="has-text-weight-bold bottom-m-20 has-text-grey">{% trans "Contacts growth over time" %}</div>

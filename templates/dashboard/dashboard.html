@@ -47,6 +47,9 @@
       </div>
       <div class="has-text-grey-light" id="sdgs_tracked_ago"></div>
       <canvas id="bubbleChart"></canvas>
+      <div id="empty_bubble_chart">
+        <div class="top-m-30 bottom-m-30">{% trans 'There are no data for this filter' %}</div>
+      </div>
       <div class="card-title has-text-weight-bold bottom-p-20">{% trans "SDGs not being tracked" %}</div>
       <ul class="untracked-sgd" id="sdgs_untracked"></ul>
     </div>
@@ -99,7 +102,13 @@
 
     <div class="box is-shadowless p-40 bottom-m-20">
       <div class="flex space-between">
-        <div class="card-title has-text-weight-bold">{% trans "Message Metrics" %}</div>
+        <div class="card-title">
+          <span class="has-text-weight-bold">{% trans "Message Metrics" %}</span>
+          <span class="tooltip top left-m-10">
+            <i class="material-icons info-icon">info</i>
+            <span class="tooltip-content">{% trans "Breakdown of status messages into the unct and global view" %}</span>
+          </span>
+        </div>
         <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
             <div aria-haspopup="true" aria-controls="dropdown-menu">
@@ -141,7 +150,13 @@
         </div>
       </div>
       <canvas id="channelsChart" height="100"></canvas>
-      <div class="card-title has-text-weight-bold top-m-50">{% trans "Messages by Channel" %}</div>
+      <div class="card-title top-m-50">
+        <span class="has-text-weight-bold">{% trans "Messages by Channel" %}</span>
+        <span class="tooltip top left-m-10">
+          <i class="material-icons info-icon">info</i>
+          <span class="tooltip-content">{% trans "These results are the sum of messages received and sent" %}</span>
+        </span>
+      </div>
       <div class="columns is-multiline top-m-30" id="message_by_channel_list"></div>
     </div>
 
@@ -150,6 +165,10 @@
     {% elif access_level == 'global' %}
       {% include 'dashboard/global_channels_contacts.html' %}
     {% endif %}
+
+    <a href="#top" class="bottom-anchor">
+      <i class="material-icons">keyboard_arrow_up</i>
+    </a>
   </section>
 {% endblock %}
 
@@ -173,7 +192,7 @@
 
   function getJsonData(params) {
     const {card, filterBy, channelUUID, sdg} = params;
-  
+
     let url = `${dataUrl}?card=${card}`;
     if (filterBy) {
       url = `${url}&filter_by=${filterBy}`;
@@ -207,7 +226,9 @@
 
         if (result.sdgs_bubble_data.datasets.length == 0) {
           $("#bubbleChart").hide();
+          $("#empty_bubble_chart").show();
         } else {
+          $("#empty_bubble_chart").hide();
           $("#bubbleChart").show();
           sdgsChart = new Chart(document.getElementById("bubbleChart").getContext("2d"), {
             type: "bubble",
@@ -265,11 +286,15 @@
           });
         }
       }
-    }); 
+    });
   }
 
   function loadChartPartialResults(sdg) {
     getJsonData({card: "partial_results", sdg: sdg}).then(function(result) {
+      if (partialChart) {
+        partialChart.destroy();
+      }
+
       if (result) {
         $("#partial_questions_count").html(`${result.questions_count} {% trans "Questions" %}`);
         $("#partial_questions_list").html("");
@@ -301,7 +326,7 @@
     if (questionId == questionLastId) {
       return;
     }
-      
+
     if (partialChart) {
       partialChart.destroy();
     }
@@ -530,96 +555,107 @@
       $("#channels_most_used_time_ago").html("");
       $("#channels_most_used_time_ago").html(result.time_ago);
       {% if access_level == "local" %}
-      localMostUsedChannelsChart = new Chart(document.getElementById("localMostUsedChannels").getContext("2d"), {
-        type: "doughnut",
-        data: {
-          labels: result.channels_most_used.map(item => item.name),
-          datasets: [{
-            data: result.channels_most_used.map(item => item.total),
-            backgroundColor: RTMConfigs.availableColors,
-            borderColor: "rgba(255, 255, 255, 0.1)",
-          }],
-        },
-        options: {
-          title: {
-            fontSize: "16",
-            display: true,
-            text: "{{ request.org.name }}",
-            position: "top",
-          },
-          legend: {
-            labels: {
-              padding: 18,
-              usePointStyle: true,
+
+        if (result.channels_most_used.length == 0) {
+          $("#empty_most_used_channels").show();
+        } else {
+          $("#empty_most_used_channels").hide();
+          localMostUsedChannelsChart = new Chart(document.getElementById("localMostUsedChannels").getContext("2d"), {
+            type: "doughnut",
+            data: {
+              labels: result.channels_most_used.map(item => item.name),
+              datasets: [{
+                data: result.channels_most_used.map(item => item.total),
+                backgroundColor: RTMConfigs.availableColors,
+                borderColor: "rgba(255, 255, 255, 0.1)",
+              }],
             },
-            position: "left",
-          },
-          plugins: {
-            datalabels: {
-              font: {
-                size: 20,
-                weight: "bold",
+            options: {
+              title: {
+                fontSize: "16",
+                display: true,
+                text: "{{ request.org.name }}",
+                position: "top",
               },
-              formatter: (value, ctx) => {
-                let sum = 0;
-                let dataArr = ctx.chart.data.datasets[0].data;
-                dataArr.map(data => {
-                  sum += data;
-                });
-                let percentage = parseInt((value * 100 / sum));
-                return percentage > 0 ? percentage + "%" : "";
+              legend: {
+                labels: {
+                  padding: 18,
+                  usePointStyle: true,
+                },
+                position: "left",
               },
-              color: "#fff",
-            }
-          }
-        },
-      });
+              plugins: {
+                datalabels: {
+                  font: {
+                    size: 20,
+                    weight: "bold",
+                  },
+                  formatter: (value, ctx) => {
+                    let sum = 0;
+                    let dataArr = ctx.chart.data.datasets[0].data;
+                    dataArr.map(data => {
+                      sum += data;
+                    });
+                    let percentage = parseInt((value * 100 / sum));
+                    return percentage > 0 ? percentage + "%" : "";
+                  },
+                  color: "#fff",
+                }
+              }
+            },
+          });
+        }
       {% endif %}
 
-      globalMostUsedChannelsChart = new Chart(document.getElementById("globalMostUsedChannels").getContext("2d"), {
-        type: "doughnut",
-        data: {
-          labels: result.channels_most_used_global.map(item => item.name),
-          datasets: [{
-            data: result.channels_most_used_global.map(item => item.total),
-            backgroundColor: RTMConfigs.availableColors,
-            borderColor: "rgba(255, 255, 255, 0.1)",
-          }],
-        },
-        options: {
-          title: {
-            fontSize: "16",
-            display: true,
-            text: "Global",
-            position: "top",
+      if (result.channels_most_used_global.length == 0) {
+        $("#empty_global_most_used_channels").show();
+      } else {
+        $("#empty_global_most_used_channels").hide();
+        globalMostUsedChannelsChart = new Chart(document.getElementById("globalMostUsedChannels").getContext("2d"), {
+          type: "doughnut",
+          data: {
+            labels: result.channels_most_used_global.map(item => item.name),
+            datasets: [{
+              data: result.channels_most_used_global.map(item => item.total),
+              backgroundColor: RTMConfigs.availableColors,
+              borderColor: "rgba(255, 255, 255, 0.1)",
+            }],
           },
-          legend: {
-            labels: {
-              padding: 18,
-              usePointStyle: true,
+          options: {
+            title: {
+              fontSize: "16",
+              display: true,
+              text: "Global",
+              position: "top",
             },
-            position: "left",
-          },
-          plugins: {
-            datalabels: {
-              font: {
-                size: 20,
-                weight: "bold",
+            legend: {
+              labels: {
+                padding: 18,
+                usePointStyle: true,
               },
-              formatter: (value, ctx) => {
-                let sum = 0;
-                let dataArr = ctx.chart.data.datasets[0].data;
-                dataArr.map(data => {
-                  sum += data;
-                });
-                let percentage = parseInt((value * 100 / sum));
-                return percentage > 0 ? percentage + "%" : "";
-              },
-              color: "#fff",
+              position: "left",
+            },
+            plugins: {
+              datalabels: {
+                font: {
+                  size: 20,
+                  weight: "bold",
+                },
+                formatter: (value, ctx) => {
+                  let sum = 0;
+                  let dataArr = ctx.chart.data.datasets[0].data;
+                  dataArr.map(data => {
+                      sum += data;
+                  });
+                  let percentage = parseInt((value * 100 / sum));
+                  return percentage > 0 ? percentage + "%" : "";
+                },
+                color: "#fff",
+              }
             }
-          }
-        },
-      });
+          },
+        });
+      }
     });
   }
 
@@ -725,6 +761,19 @@
     loadChartMessageMetrics("week");
     loadChartMostUsedChannels("week");
     loadChartRapidProContacts();
+
+    $(window).scroll(function(){
+      if ($(this).scrollTop() > 100) {
+        $('a[href="#top"]').fadeIn();
+      } else {
+        $('a[href="#top"]').fadeOut();
+      }
+    });
+
+    $('a[href="#top"]').click(function(){
+      $('html, body').animate({scrollTop : 0},800);
+      return false;
+    });
   });
 </script>
 {% endblock %}
