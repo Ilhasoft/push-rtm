@@ -6,12 +6,9 @@ import json
 import six
 from dash.categories.models import Category
 from dash.orgs.models import Org
-from dash.stories.models import Story
 from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
 
-from ureport.assets.models import Image
-from ureport.news.models import NewsItem, Video
 from ureport.polls.models import Poll
 
 
@@ -87,33 +84,6 @@ class OrgReadSerializer(serializers.ModelSerializer):
         return six.text_type(obj.timezone)
 
 
-class StoryReadSerializer(serializers.ModelSerializer):
-    category = CategoryReadSerializer()
-    images = SerializerMethodField()
-
-    class Meta:
-        model = Story
-        fields = (
-            "id",
-            "title",
-            "featured",
-            "summary",
-            "video_id",
-            "audio_link",
-            "tags",
-            "org",
-            "images",
-            "category",
-            "created_on",
-        )
-
-    def get_images(self, obj):
-        return [
-            generate_absolute_url_from_file(self.context["request"], image.image)
-            for image in obj.get_featured_images()
-        ]
-
-
 class PollReadSerializer(serializers.ModelSerializer):
     category = CategoryReadSerializer()
     questions = SerializerMethodField()
@@ -145,34 +115,3 @@ class PollReadSerializer(serializers.ModelSerializer):
             )
 
         return questions
-
-
-class NewsItemReadSerializer(serializers.ModelSerializer):
-    short_description = SerializerMethodField()
-    category = CategoryReadSerializer()
-
-    class Meta:
-        model = NewsItem
-        fields = ("id", "short_description", "category", "title", "description", "link", "org", "created_on")
-
-    def get_short_description(self, obj):
-        return obj.short_description()
-
-
-class VideoReadSerializer(serializers.ModelSerializer):
-    category = CategoryReadSerializer()
-
-    class Meta:
-        model = Video
-        fields = ("id", "category", "title", "description", "video_id", "org", "created_on")
-
-
-class ImageReadSerializer(serializers.ModelSerializer):
-    image_url = SerializerMethodField()
-
-    class Meta:
-        model = Image
-        fields = ("id", "image_url", "image_type", "org", "name", "created_on")
-
-    def get_image_url(self, obj):
-        return generate_absolute_url_from_file(self.context["request"], obj.image)
