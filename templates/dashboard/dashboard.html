@@ -49,13 +49,16 @@
       <div class="columns top-m-10" id="tracked_sdgs">
         <div class="column is-two-fifths">
           <ul class="tracked-sgd left-m-20 bottom-m-10" id="sdgs_tracked"></ul>
-          <div id="empty_bubble_chart">
-            <div class="left-m-20 bottom-m-20">{% trans 'There are no data for this filter' %}</div>
+          <div id="empty_sdgs">
+            <div class="left-m-20 bottom-m-20">{% trans 'No SDGs being tracked in this period' %}</div>
           </div>
           <div class="card-title has-text-weight-bold bottom-p-20">{% trans "SDGs not being tracked" %}</div>
           <ul class="untracked-sgd" id="sdgs_untracked"></ul>
         </div>
-        <div class="column">
+        <div class="column flex flex-center align-center">
+          <div id="empty_bubble_chart">
+            <div>{% trans 'There are no data for this filter' %}</div>
+          </div>
           <div id="bubbleChart"></div>
         </div>
       </div>
@@ -317,8 +320,10 @@
         if (result.sdgs_bubble_data.datasets.length == 0) {
           $("#sdgs_tracked").hide();
           $("#bubbleChart").hide();
+          $("#empty_sdgs").show();
           $("#empty_bubble_chart").show();
         } else {
+          $("#empty_sdgs").hide();
           $("#empty_bubble_chart").hide();
           $("#bubbleChart").show();
           $("#sdgs_tracked").show();
