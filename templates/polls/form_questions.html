@@ -75,39 +75,42 @@
 
 {% block js_extra %}
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/scripts/choices.min.js"></script>
 <script type="text/javascript">
-new Choices(".chosen-select", {
-  removeItemButton: true,
+$("select").each(function() {
+  let id = $(this).attr("id");
+  new Choices("#" + id, {
+    removeItemButton: true,
 
-  sortFn: function(a, b) {
-    return a.id > b.id;
-  },
+    sorter: function(a, b) {
+      return a.id > b.id;
+    },
 
-  callbackOnCreateTemplates: function (template) {
-    return {
-      item: (classNames, data) => {
-        return template(`
-          <div class="${classNames.item} tag-sdg-${data.value} ${data.highlighted ? classNames.highlightedState : classNames.itemSelectable}" data-item data-id="${data.id}" data-value="${data.value}" ${data.active ? 'aria-selected="true"' : ''} ${data.disabled ? 'aria-disabled="true"' : ''}>${data.value} ${data.label}<button type="button" class="choices-button-close" data-button="" aria-label="Remove item: '${data.value}'">X</button>
-        `);
-      },
-      choice: (classNames, data) => {
-        return template(`
-          <div class="${classNames.item} ${classNames.itemChoice} ${
-            data.disabled ? classNames.itemDisabled : classNames.itemSelectable
-          }" data-select-text="${this.config.itemSelectText}" data-choice ${
-            data.disabled
-              ? 'data-choice-disabled aria-disabled="true"'
-              : 'data-choice-selectable'
-          } data-id="${data.id}" data-value="${data.value}" ${
-            data.groupId > 0 ? 'role="treeitem"' : 'role="option"'
-          }>
-            ${data.value} - ${data.label}
-          </div>
-        `);
-      },
-    };
-  }
+    callbackOnCreateTemplates: function (template) {
+      return {
+        item: (classNames, data) => {
+          return template(`
+            <div class="${classNames.item} tag-sdg-${data.value} ${data.highlighted ? classNames.highlightedState : classNames.itemSelectable}" data-item data-id="${data.id}" data-value="${data.value}" ${data.active ? 'aria-selected="true"' : ''} ${data.disabled ? 'aria-disabled="true"' : ''}>${data.value} ${data.label}<button type="button" class="choices-button-close" data-button="" aria-label="Remove item: '${data.value}'">X</button>
+          `);
+        },
+        choice: (classNames, data) => {
+          return template(`
+            <div class="${classNames.item} ${classNames.itemChoice} ${
+              data.disabled ? classNames.itemDisabled : classNames.itemSelectable
+            }" data-select-text="${this.config.itemSelectText}" data-choice ${
+              data.disabled
+                ? 'data-choice-disabled aria-disabled="true"'
+                : 'data-choice-selectable'
+            } data-id="${data.id}" data-value="${data.value}" ${
+              data.groupId > 0 ? 'role="treeitem"' : 'role="option"'
+            }>
+              ${data.value} - ${data.label}
+            </div>
+          `);
+        },
+      };
+    }
+  });
 });
 
 {% for field, errors in form.errors.items %}{% for error in errors %}{% if error %}

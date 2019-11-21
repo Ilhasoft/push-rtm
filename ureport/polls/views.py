@@ -462,6 +462,7 @@ class PollCRUDL(SmartCRUDL):
                         attrs={
                             "multiple": True,
                             "class": "chosen-select form-control",
+                            "data": "chosen-select",
                             "data-placeholder": _("Select one or more Tags."),
                         }
                     ),
