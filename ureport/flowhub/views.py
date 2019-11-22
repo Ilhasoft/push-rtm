@@ -64,13 +64,6 @@ class FlowBaseListView(LoginRequiredMixin, SearchSmartListViewMixin):
     fields = "__all__"
     redirect_to = ""
 
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data(**kwargs)
-        if context["flows"].paginator.count == 0:
-            messages.error(self.request, _("No results found."))
-            return redirect(reverse(self.redirect_to))
-        return self.render_to_response(context)
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["languages"] = settings.LANGUAGES
@@ -89,6 +82,12 @@ class FlowBaseListView(LoginRequiredMixin, SearchSmartListViewMixin):
         queryset = self.search(queryset)
         queryset = self.filter(queryset)
 
+        if queryset.count() == 0 and self.request.GET.get(self.search_query_name):
+            queryset = self.model.objects.filter(is_active=True).order_by("name")
+            if not is_global_user(self.request.user):
+                queryset = queryset.filter(Q(org=self.request.org) | Q(visible_globally=True))
+            messages.error(self.request, _("No results found."))
+
         return queryset
 
     def filter(self, queryset):
@@ -98,7 +97,6 @@ class FlowBaseListView(LoginRequiredMixin, SearchSmartListViewMixin):
         sdg = self.request.GET.get("sdg", 0)
 
         filters = {}
-
         sortered = "stars"
 
         if language:
