@@ -129,6 +129,7 @@ SITE_ALLOW_NO_ORG += (
     "accounts.user_list",
     "accounts.global_list",
     "accounts.global_user_create",
+    "accounts.global_user_update",
     "accounts.user_org_list",
     "accounts.user_org_create",
     "accounts.user_org_update",
