@@ -49,7 +49,6 @@ class ListView(OrgObjPermsMixin, SmartTemplateView):
         queryset = queryset.filter(Q(org_admins=org) | Q(org_editors=org) | Q(org_viewers=org))
 
         context["users"] = get_paginator(queryset.filter(**filters, is_active=True).order_by(sortered), page)
-
         context["query"] = query
         context["org"] = org
         return context
@@ -63,6 +62,8 @@ class CreateView(OrgObjPermsMixin, SmartTemplateView):
         context = super().get_context_data(**kwargs)
         context["form"] = AccountForm()
         context["page_subtitle"] = _("New")
+        if kwargs.get("org"):
+            context["org"] = Org.objects.get(pk=kwargs.get("org"))
         return context
 
     def post(self, request, *args, **kwargs):
@@ -102,6 +103,8 @@ class EditView(OrgObjPermsMixin, SmartTemplateView):
 
         context["form"] = AccountForm(initial=data, password_is_required=False)
         context["page_subtitle"] = _("Edit")
+        if kwargs.get("org"):
+            context["org"] = Org.objects.get(pk=kwargs.get("org"))
         return context
 
     def post(self, request, *args, **kwargs):
@@ -199,6 +202,7 @@ class GlobalCreateView(OrgPermsMixin, SmartTemplateView):
     def get(self, request, *args, **kwargs):
         if not self.request.user.is_superuser:
             return redirect(reverse("accounts.user_list"))
+        return super().get(request)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -228,6 +232,7 @@ class GlobalEditView(OrgObjPermsMixin, SmartTemplateView):
     def get(self, request, *args, **kwargs):
         if not self.request.user.is_superuser:
             return redirect(reverse("accounts.user_list"))
+        return super().get(request)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
