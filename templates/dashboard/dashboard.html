@@ -57,7 +57,7 @@
         </div>
         <div class="column flex flex-center align-center">
           <div id="empty_bubble_chart">
-            <div>{% trans 'There are no data for this filter' %}</div>
+            <div>{% trans 'There is no data for this filter' %}</div>
           </div>
           <div id="bubbleChart"></div>
         </div>
@@ -359,7 +359,7 @@
           }));
         } else {
           $("#partial_questions_list").html(`
-            <div class="questions-list__item p-30 border-bottom">{% trans 'There are no question registered with SDG' %}</div>`);
+            <div class="questions-list__item p-30 border-bottom">{% trans 'There are no questions registered with this SDG' %}</div>`);
         }
 
         if (result.questions.length > 0) {
