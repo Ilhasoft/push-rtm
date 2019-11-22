@@ -23,7 +23,6 @@ from django.utils import timezone
 from django.utils.timesince import timesince
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
-from django.shortcuts import redirect
 
 from ureport.utils import json_date_to_datetime, get_paginator
 
@@ -566,13 +565,6 @@ class PollCRUDL(SmartCRUDL):
             else:
                 return super(PollCRUDL.List, self).lookup_field_link(context, field, obj)
 
-        def get(self, request, *args, **kwargs):
-            context = self.get_context_data(**kwargs)
-            if context["polls"].paginator.count == 0:
-                messages.error(self.request, _("No results found."))
-                return redirect(reverse("polls.poll_list"))
-            return self.render_to_response(context)
-
         def get_context_data(self, **kwargs):
             context = super().get_context_data(**kwargs)
             query = self.request.GET.get("query", "")
@@ -589,9 +581,13 @@ class PollCRUDL(SmartCRUDL):
             if sort_field:
                 sortered = "{}{}".format("-" if sort_direction == "desc" else "", sort_field)
 
-            context["polls"] = get_paginator(
-                Poll.objects.filter(**filters, is_active=True).filter(org=self.request.org).order_by(sortered), page
-            )
+            polls = Poll.objects.filter(**filters, is_active=True).filter(org=self.request.org)
+
+            if query and polls.count() == 0:
+                polls = Poll.objects.filter(is_active=True).filter(org=self.request.org)
+                messages.error(self.request, _("No results found."))
+
+            context["polls"] = get_paginator(polls.order_by(sortered), page)
             return context
 
     class Update(OrgObjPermsMixin, SmartUpdateView):
