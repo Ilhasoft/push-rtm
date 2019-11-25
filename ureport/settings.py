@@ -112,6 +112,7 @@ INSTALLED_APPS += (
     "ureport.flowhub",
     "ureport.dashboard",
     "ureport.channels",
+    "ureport.authentication",
 )
 
 SITE_ALLOW_NO_ORG += (
@@ -134,6 +135,7 @@ SITE_ALLOW_NO_ORG += (
     "accounts.user_org_create",
     "accounts.user_org_update",
     "accounts.user_org_delete",
+    "authentication",
 )
 
 SDG_LIST = (
@@ -259,3 +261,23 @@ CELERYBEAT_SCHEDULE = {
         "relative": True,
     },
 }
+
+
+## OAUTH2
+
+OAUTHLIB_CLIENT_ID = config("OAUTHLIB_CLIENT_ID", default="")
+OAUTHLIB_SECRET = config("OAUTHLIB_SECRET", default="")
+OAUTHLIB_AUTHORIZATION_URL = config(
+    "OAUTHLIB_AUTHORIZATION_URL", default="http://dataforallcloud.org/oauth2/authorize"
+)
+OAUTHLIB_TOKEN_URL = config("OAUTHLIB_TOKEN_URL", default="http://dataforallcloud.org/oauth2/token")
+OAUTHLIB_INSECURE_TRANSPORT = config("OAUTHLIB_INSECURE_TRANSPORT", default=False)
+OAUTHLIB_REDIRECT_URI = config("OAUTHLIB_REDIRECT_URI", default="")
+OAUTHLIB_USER_URL = config("OAUTHLIB_USER_URL", default="http://dataforallcloud.org/oauth2/userInfo")
+OAUTHLIB_MOMSERVICE_TOKEN_URL = config(
+    "OAUTHLIB_MOMSERVICE_TOKEN_URL", default="http://dataforallcloud.org/monservice/api/v1/token"
+)
+OAUTHLIB_MOMSERVICE_USER_URL = config(
+    "OAUTHLIB_MOMSERVICE_USER_URL", default="http://dataforallcloud.org/monservice/api/v1/rtmUserInfo"
+)
+OAUTHLIB_APP_ID = config("OAUTHLIB_APP_ID", default="uninfortm")

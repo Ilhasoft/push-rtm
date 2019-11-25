@@ -43,3 +43,4 @@ django-filter
 django-taggit
 libsass
 django-qurl-templatetag
+requests_oauthlib
