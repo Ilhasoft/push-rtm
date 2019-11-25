@@ -4,8 +4,8 @@
 {% block nav_item %}page-surveys{% endblock %}
 
 {% block css_extra %}
-  <link rel="stylesheet" href="{% sass_src 'plugins/tooltip/tooltip.scss' %}">
-  <link rel="stylesheet" href="{% sass_src 'css/polls/survey_list.scss' %}"/>
+<link rel="stylesheet" href="{% sass_src 'plugins/tooltip/tooltip.scss' %}">
+<link rel="stylesheet" href="{% sass_src 'css/polls/survey_list.scss' %}" />
 {% endblock %}
 
 {% block content %}
@@ -15,36 +15,45 @@
 </section>
 
 <section class="section">
-    <div class="columns -is-mobile">
-      <div class="column auto">
-        <div class="control has-icons-left">
-          <form>
-            <input class="input is-medium search is-borderless" name="query" placeholder="Search" value="{{ query }}">
-            <span class="icon is-left">
-              <i class="material-icons">search</i>
-            </span>
-          </form>
-        </div>
+  <div class="columns -is-mobile">
+    <div class="column auto">
+      <div class="control has-icons-left">
+        <form>
+          <input class="input is-medium search is-borderless" name="query" placeholder="Search" value="{{ query }}">
+          <span class="icon is-left">
+            <i class="material-icons">search</i>
+          </span>
+        </form>
       </div>
-      {% if not request.org.is_master %}
-        <div class="column is-narrow">
-          <div class="control">
-            <a class="button is-medium is-info" href="{% url 'polls.poll_create' %}">
-              <span class="icon">
-                <i class="material-icons">share</i>
-              </span>
-              <span>{% trans "Connect Survey" %}</span>
-            </a>
-          </div>
-        </div>
-      {% endif %}
     </div>
-    <div class="box is-radiusless is-shadowless is-marginless border-bottom left-p-40">
-      <div class="has-text-weight-bold is-size-5 bottom-p-55">Survey Results</div>
-      <div class="has-text-grey-light">Click on a survey item below to see its results</div>
+    {% if not request.org.is_master %}
+    <div class="column is-narrow">
+      <div class="control">
+        <a class="button is-medium is-info" href="{% url 'polls.poll_create' %}">
+          <span class="icon">
+            <i class="material-icons">share</i>
+          </span>
+          <span>{% trans "Connect Survey" %}</span>
+        </a>
+      </div>
     </div>
-    <table class="table is-fullwidth is-hoverable">
-      <thead>
+    {% endif %}
+  </div>
+  {% if query and has_result %}
+  <div class="columns-is-mobile">
+    <div class="column auto">
+      <div class="control">
+        <a href="{% url 'polls.poll_list' %}">{% trans "Clear search" %}</a> 
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  <div class="box is-radiusless is-shadowless is-marginless border-bottom left-p-40">
+    <div class="has-text-weight-bold is-size-5 bottom-p-55">Survey Results</div>
+    <div class="has-text-grey-light">Click on a survey item below to see its results</div>
+  </div>
+  <table class="table is-fullwidth is-hoverable">
+    <thead>
       <tr class="is-tr">
         <th></th>
         <th>{% autosort title _("Name") %}</th>
@@ -53,45 +62,45 @@
         <th>{% trans "SDGs" %}</th>
         <th>{% trans "Last sync" %}</th>
       </tr>
-      </thead>
-      <tbody class="has-header">
+    </thead>
+    <tbody class="has-header">
 
       {% for poll in polls %}
-        <tr>
-          <td><a href="{% url 'polls.poll_update' poll.id %}"><i class="material-icons">insert_drive_file</i></a></td>
-          <td><a href="{% url 'results.poll_read' poll.id %}">{{ poll.title }}</a></td>
-          <td><a href="{% url 'polls.poll_questions' poll.id %}">{{ poll.get_questions.count }}</a></td>
-          <td>{{ poll.runs_count }}</td>
-          <td>
-            {% if poll.questions.count > 3 %}
-              <span class="tooltip right">
-                {% for sdg in poll.questions.distinct|slice:":3"|get_value_in_qs:'sdgs' %}
-                  <span class="tag sdg-{{ sdg }}">SDG {{ sdg }}</span>
-                {% endfor %}
+      <tr>
+        <td><a href="{% url 'polls.poll_update' poll.id %}"><i class="material-icons">insert_drive_file</i></a></td>
+        <td><a href="{% url 'results.poll_read' poll.id %}">{{ poll.title }}</a></td>
+        <td><a href="{% url 'polls.poll_questions' poll.id %}">{{ poll.get_questions.count }}</a></td>
+        <td>{{ poll.runs_count }}</td>
+        <td>
+          {% if poll.questions.count > 3 %}
+          <span class="tooltip right">
+            {% for sdg in poll.questions.distinct|slice:":3"|get_value_in_qs:'sdgs' %}
+            <span class="tag sdg-{{ sdg }}">SDG {{ sdg }}</span>
+            {% endfor %}
 
-                <span class="tooltip-content">
-                  {% for sdg in poll.questions.distinct|get_value_in_qs:'sdgs' %}
-                    <span class="tag sdg-{{ sdg }} bottom-m-5">SDG {{ sdg }}</span>
-                  {% endfor %}
-                </span>
-              </span>
-            {% else %}
+            <span class="tooltip-content">
               {% for sdg in poll.questions.distinct|get_value_in_qs:'sdgs' %}
-                <span class="tag sdg-{{ sdg }}">SDG {{ sdg }}</span>
+              <span class="tag sdg-{{ sdg }} bottom-m-5">SDG {{ sdg }}</span>
               {% endfor %}
-            {% endif%}
-          </td>
-          <td>{{ poll|get_poll_sync_status }}</td>
-        </tr>
+            </span>
+          </span>
+          {% else %}
+          {% for sdg in poll.questions.distinct|get_value_in_qs:'sdgs' %}
+          <span class="tag sdg-{{ sdg }}">SDG {{ sdg }}</span>
+          {% endfor %}
+          {% endif%}
+        </td>
+        <td>{{ poll|get_poll_sync_status }}</td>
+      </tr>
       {% empty %}
-        <tr>
-          <td colspan="7" class="has-text-centered">{% trans "No results found" %}</td>
-        </tr>
+      <tr>
+        <td colspan="7" class="has-text-centered">{% trans "No results found" %}</td>
+      </tr>
       {% endfor %}
-      </tbody>
-    </table>
-    <div class="is-pulled-right">
-      {% include "paginator.html" with paginator=polls %}
-    </div>
-  </section>
+    </tbody>
+  </table>
+  <div class="is-pulled-right">
+    {% include "paginator.html" with paginator=polls %}
+  </div>
+</section>
 {% endblock %}
