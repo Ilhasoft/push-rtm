@@ -26,3 +26,11 @@ class LoginAuthView(SmartTemplateView):
         print(context)
 
         return context
+
+
+class CallbackAuthView(SmartTemplateView):
+    template_name = "authentication/login.html"
+
+    def get(self, request, *args, **kwargs):
+        print(self.request.GET)
+        return super().get(request)

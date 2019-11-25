@@ -135,7 +135,8 @@ SITE_ALLOW_NO_ORG += (
     "accounts.user_org_create",
     "accounts.user_org_update",
     "accounts.user_org_delete",
-    "authentication",
+    "authentication.login",
+    "authentication.callback",
 )
 
 SDG_LIST = (
