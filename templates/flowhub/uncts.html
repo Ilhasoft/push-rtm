@@ -55,7 +55,9 @@
           <strong>{{ unct.name }}</strong>
         </td>
         <td class="has-text-centered">
-          {{ unct.flows.count }} {% trans "flows" %}
+          {% with flows=unct.flows|only_is_active|length %}
+            {{ flows }} {% trans "flow" %}{{ flows|pluralize }}
+          {% endwith %}
         </td>
         <td class="has-text-centered">
           {% trans "Registered" %} {{ unct.flows.last.created_on|naturaltime }}
