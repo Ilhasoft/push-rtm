@@ -41,6 +41,16 @@
     </div>
   </div>
 
+  {% if query and not messages %}
+  <div class="columns-is-mobile">
+    <div class="column auto">
+      <div class="control">
+        <a href="{{ back_to }}">{% trans "Clear search" %}</a> 
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
   <div class="flowhub-table-header">
     <div class="filters">
       <div>
