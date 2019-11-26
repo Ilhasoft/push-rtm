@@ -61,12 +61,13 @@
         <th>{% autosort runs_count _("Runs") %}</th>
         <th>{% trans "SDGs" %}</th>
         <th>{% trans "Last sync" %}</th>
+        <th>Status</th>
       </tr>
     </thead>
     <tbody class="has-header">
 
       {% for poll in polls %}
-      <tr>
+      <tr class="{%if not poll.is_active %} is-poll-inactive {% endif %}">
         <td><a href="{% url 'polls.poll_update' poll.id %}"><i class="material-icons">insert_drive_file</i></a></td>
         <td><a href="{% url 'results.poll_read' poll.id %}">{{ poll.title }}</a></td>
         <td><a href="{% url 'polls.poll_questions' poll.id %}">{{ poll.get_questions.count }}</a></td>
@@ -74,7 +75,7 @@
         <td>
           {% if poll.questions.count > 3 %}
           <span class="tooltip right">
-            {% for sdg in poll.questions.distinct|slice:":3"|get_value_in_qs:'sdgs' %}
+            {% for sdg in poll.questions.distinct|get_value_in_qs:'sdgs'|slice:3 %}
             <span class="tag sdg-{{ sdg }}">SDG {{ sdg }}</span>
             {% endfor %}
 
@@ -91,6 +92,11 @@
           {% endif%}
         </td>
         <td>{{ poll|get_poll_sync_status }}</td>
+        <td>
+          {%if poll.is_active %} {% trans "Active" %}
+          {% else %} {% trans "Inactive" %}
+          {% endif %}
+        </td>
       </tr>
       {% empty %}
       <tr>
@@ -99,7 +105,7 @@
       {% endfor %}
     </tbody>
   </table>
-  <div class="is-pulled-right">
+  <div class="is-pulled-right bottom-m-50">
     {% include "paginator.html" with paginator=polls %}
   </div>
 </section>
