@@ -129,7 +129,8 @@ class ListView(FlowBaseListView):
 
         page = self.request.GET.get("page", 1)
         context["flows"] = get_paginator(list(set(self.get_queryset())), page)
-
+        context["query"] = self.request.GET.get(self.search_query_name)
+        context["back_to"] = reverse("flowhub.flow_list")
         return context
 
 
@@ -169,6 +170,8 @@ class UnctsView(SearchSmartListViewMixin):
         context["flow_section_id"] = "flowhub-uncts"
         page = self.request.GET.get("page", 1)
         context["uncts"] = get_paginator(self.get_queryset(), page)
+        context["query"] = self.request.GET.get(self.search_query_name)
+        context["back_to"] = reverse("flowhub.flow_uncts")
         return context
 
 
@@ -189,6 +192,8 @@ class MyOrgListView(FlowBaseListView):
 
         page = self.request.GET.get("page", 1)
         context["flows"] = get_paginator(list(set(self.get_queryset())), page)
+        context["query"] = self.request.GET.get(self.search_query_name)
+        context["back_to"] = reverse("flowhub.my_org_flow_list")
 
         return context
 
