@@ -141,7 +141,10 @@
           </div>
         </div>
       </div>
-      <div class="bottom-p-20 has-text-grey-light" id="message_metrics_time_ago"></div>
+      <div class="bottom-p-20 has-text-grey-light">
+        <span id="message_metrics_time_ago"></span>
+        <span id="message_metrics_channel"></span>
+      </div>
       <div class="flex flex-end top-m-20">
         <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
@@ -156,7 +159,7 @@
             <div class="dropdown-content">
                 <a href="javascript:loadChartMessageMetricsByChannel()" class="dropdown-item">{% trans "All channels" %}</a>
               {% for channel in channels_info %}
-                <a href="javascript:loadChartMessageMetricsByChannel('{{ channel.uuid }}')" class="dropdown-item">{{ channel.name }}</a>
+                <a href="javascript:loadChartMessageMetricsByChannel('{{ channel.uuid }}', '{{ channel.name }}')" class="dropdown-item">{{ channel.name }}</a>
               {% endfor %}
             </div>
           </div>
@@ -599,8 +602,14 @@
     });
   }
 
-  function loadChartMessageMetricsByChannel(channelUUID) {
+  function loadChartMessageMetricsByChannel(channelUUID, channelName) {
     loadChartMessageMetrics(messageMetricsFilterBy, channelUUID);
+
+    $("#message_metrics_channel").html("");
+
+    if (channelName) {
+      $("#message_metrics_channel").html(" - " + channelName);
+    }
   }
 
   function loadChartMostUsedChannels(filterBy) {
