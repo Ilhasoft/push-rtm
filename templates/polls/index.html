@@ -15,7 +15,7 @@
 </section>
 
 <section class="section">
-  <div class="columns -is-mobile">
+  <div class="columns -is-mobile bottom-m-0">
     <div class="column auto">
       <div class="control has-icons-left">
         <form>
@@ -41,14 +41,14 @@
   </div>
   {% if query and has_result %}
   <div class="columns-is-mobile">
-    <div class="column auto">
+    <div class="column auto is-paddingless">
       <div class="control">
-        <a href="{% url 'polls.poll_list' %}">{% trans "Clear search" %}</a> 
+        <a href="{% url 'polls.poll_list' %}">{% trans "Clear search" %}</a>
       </div>
     </div>
   </div>
   {% endif %}
-  <div class="box is-radiusless is-shadowless is-marginless border-bottom left-p-40">
+  <div class="box is-radiusless is-shadowless border-bottom left-p-40 top-m-10 bottom-m-0">
     <div class="has-text-weight-bold is-size-5 bottom-p-55">Survey Results</div>
     <div class="has-text-grey-light">Click on a survey item below to see its results</div>
   </div>
