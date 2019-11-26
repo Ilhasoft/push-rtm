@@ -89,15 +89,18 @@ class DashboardDataView(View):
                 else:
                     labels = []
                     series = []
+                    counts = []
 
                     results = question.get_results()[0]
                     categories = results.get("categories")
                     for category in categories:
                         labels.append(category.get("label"))
                         series.append("{0:.0f}".format(category.get("count") / results.get("set") * 100))
+                        counts.append(category.get("count"))
 
                     statistics["labels"] = labels
                     statistics["series"] = series
+                    statistics["counts"] = counts
 
                 questions.append(
                     {
@@ -285,87 +288,49 @@ class Dashboard(SmartTemplateView):
     template_name = "dashboard/dashboard.html"
 
     @classmethod
-    def get_sdgs_tracked_bubble_chart_data(self, questions, mock=False):
-        """
-        return data to chart.js bubble chart.
-        get questions queryset and boolean mock parammeter.
-        default mock is False.
-        """
+    def get_sdgs_tracked_bubble_chart_data(self, questions):
         tracked_sdg = []
         not_tracked_sdg = []
         datasets = []
 
-        #  USE DATA MOCK
-        if mock is True:
-            for key, value in settings.SDG_LIST:
-                if key % 2 == 0:
-                    tracked_sdg.append(settings.SDG_LIST[key])
-                    values = [random.randint(7, 70) for n in range(4)]
+        sdgs_with_data = {
+            sdg[0]: {"questions": [q for q in questions if sdg[0] in q.sdgs]} for sdg in settings.SDG_LIST
+        }
 
-                    datasets.append(
+        total_response_all_sdgs = 0
+        for key, value in sdgs_with_data.items():
+            if value.get("questions"):
+                tracked_sdg.append(settings.SDG_LIST[key - 1])
+                for question in value.get("questions"):
+                    total_response_all_sdgs += question.get_responded()
+
+                    if "total_responded" not in sdgs_with_data[key]:
+                        sdgs_with_data[key]["total_responded"] = 0
+
+                    sdgs_with_data[key]["total_responded"] += question.get_responded()
+            else:
+                not_tracked_sdg.append(settings.SDG_LIST[key - 1])
+
+        for key, value in tuple(tracked_sdg):
+            datasets.append(
+                {
+                    "sdg": value,
+                    "label": "SDG{}".format(key),
+                    "data": [
                         {
-                            "label": "SDG{}".format(key),
-                            "data": [{"x": values[0], "y": values[1], "r": values[2]}],
-                            "backgroundColor": settings.SDG_COLOR.get(key),
-                            "borderColor": "#FFFFFF",
+                            "r": sdgs_with_data.get(key).get("total_responded", 0),
                         }
-                    )
-                else:
-                    not_tracked_sdg.append(settings.SDG_LIST[key - 1])
+                    ],
+                    "backgroundColor": settings.SDG_COLOR.get(key),
+                    "borderColor": "#FFFFFF",
+                }
+            )
 
-        else:  # USE REAL DATA
-            # create dict with sdgs and yours questions. eg: {1: {'questions':
-            # []}}
-            sdgs_with_data = {
-                sdg[0]: {"questions": [q for q in questions if sdg[0] in q.sdgs]} for sdg in settings.SDG_LIST
-            }
-
-            # add keys total_responded and percentage_in_questions to
-            # sdgs_with_data
-            total_response_all_sdgs = 0
-            for key, value in sdgs_with_data.items():
-                if len(value["questions"]) > 0:
-                    total_response_all_sdgs += value["questions"][0].get_responded()
-                    sdgs_with_data[key]["total_responded"] = value["questions"][0].get_responded()
-                    sdgs_with_data[key]["percentage_in_questions"] = int(
-                        (len(value["questions"]) / questions.count()) * 100
-                    )  # (part / total) * 100
-                    tracked_sdg.append(settings.SDG_LIST[key - 1])
-                else:
-                    not_tracked_sdg.append(settings.SDG_LIST[key - 1])
-
-            # implement chart.js bubblechart data.datasets model for all SDGs
-            for key, value in tuple(tracked_sdg):
-                sdg_with_data = sdgs_with_data.get(key)
-
-                if sdg_with_data.get("total_responded", 0) != 0:
-                    total_responded_percent = round(
-                        (sdg_with_data.get("total_responded", 0) / total_response_all_sdgs) * 100
-                    )
-                else:
-                    total_responded_percent = sdg_with_data.get("total_responded", 0)
-
-                datasets.append(
-                    {
-                        "sdg": value,
-                        "label": "SDG{}".format(key),
-                        "data": [
-                            {
-                                "x": random.randint(7, 70),
-                                "y": random.randint(17, 70),
-                                "r": total_responded_percent + 20,
-                                "z": (
-                                    total_responded_percent,
-                                    sdg_with_data.get("total_responded", 0),
-                                ),
-                            }
-                        ],
-                        "backgroundColor": settings.SDG_COLOR.get(key),
-                        "borderColor": "#FFFFFF",
-                    }
-                )
-
-        data = {"tracked_sdgs": tuple(tracked_sdg), "not_tracked_sdgs": tuple(not_tracked_sdg), "datasets": datasets}
+        data = {
+            "tracked_sdgs": tuple(tracked_sdg),
+            "not_tracked_sdgs": tuple(not_tracked_sdg),
+            "datasets": datasets,
+        }
 
         return data
 
