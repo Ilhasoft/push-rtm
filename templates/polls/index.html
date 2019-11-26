@@ -17,12 +17,17 @@
 <section class="section">
   <div class="columns -is-mobile bottom-m-0">
     <div class="column auto">
-      <div class="control has-icons-left">
+      <div class="control has-icons-left has-icons-right">
         <form>
           <input class="input is-medium search is-borderless" name="query" placeholder="Search" value="{{ query }}">
           <span class="icon is-left">
             <i class="material-icons">search</i>
           </span>
+          {% if query and has_result %}
+            <a class="clear-search-icon" href="{% url 'polls.poll_list' %}">
+              <i class="material-icons">clear</i>
+            </a>
+          {% endif %}
         </form>
       </div>
     </div>
@@ -39,15 +44,6 @@
     </div>
     {% endif %}
   </div>
-  {% if query and has_result %}
-  <div class="columns-is-mobile">
-    <div class="column auto is-paddingless">
-      <div class="control">
-        <a href="{% url 'polls.poll_list' %}">{% trans "Clear search" %}</a>
-      </div>
-    </div>
-  </div>
-  {% endif %}
   <div class="box is-radiusless is-shadowless border-bottom left-p-40 top-m-10 bottom-m-0">
     <div class="has-text-weight-bold is-size-5 bottom-p-55">Survey Results</div>
     <div class="has-text-grey-light">Click on a survey item below to see its results</div>
