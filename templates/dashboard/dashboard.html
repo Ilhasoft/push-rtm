@@ -270,7 +270,7 @@
 
     node.append("title")
       .text(function(d) {
-        return d.data.sdg + ': ' + d.data.count + ' messages';
+        return d.data.sdg + ': ' + d.data.count + ' messages received';
       });
 
     node
@@ -286,7 +286,8 @@
       .attr("dy", ".2em")
       .style("text-anchor", "middle")
       .text(function(d) {
-        return d.data.name.substring(0, d.r / 3);
+        let sdg = d.data.name.substring(0,3) + ' ' + d.data.name.substring(3,5);
+        return sdg.substring(0, d.r / 3);
       })
       .attr("font-family",  "Gill Sans", "Gill Sans MT")
       .attr("font-size", function(d){
