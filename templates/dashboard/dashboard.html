@@ -97,7 +97,7 @@
               </div>
               <div class="dropdown-menu" role="menu">
                 <div class="dropdown-content">
-                  <a href="{% url 'dashboard' %}#sdgQuestions" class="dropdown-item sdgLink">{% trans "None" %}</a>
+                  <a href="javascript:loadChartPartialResults('')" class="dropdown-item sdgLink">{% trans "None" %}</a>
                   {% for key, value in SDG_LIST %}
                     <a href="javascript:loadChartPartialResults('{{ key }}')" class="dropdown-item sdgLink">{% trans "SDG" %} {{ key }}</a>
                   {% endfor %}
