@@ -85,7 +85,10 @@
         </div>
         <div class="column is-paddingless" id="sdgQuestions">
           <div class="flex space-between p-30">
-            <div class="card-title has-text-weight-bold" id="partial_questions_count"></div>
+            <div>
+              <div class="card-title has-text-weight-bold" id="partial_questions_count"></div>
+              <div class="has-text-grey-light" id="sdg_number"></div>
+            </div>
             <div class="dropdown is-hoverable">
               <div class="dropdown-trigger">
                 <div aria-haspopup="true" aria-controls="dropdown-menu">
@@ -343,6 +346,12 @@
     getJsonData({card: "partial_results", sdg: sdg}).then(function(result) {
       if (partialChart) {
         partialChart.destroy();
+      }
+
+      if (sdg) {
+          $("#sdg_number").html("SDG" + sdg);
+      } else {
+          $("#sdg_number").html("");
       }
 
       if (result) {
