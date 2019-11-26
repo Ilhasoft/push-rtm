@@ -67,7 +67,7 @@
     <tbody class="has-header">
 
       {% for poll in polls %}
-      <tr class="{%if not poll.is_active %} is-poll-inactive {% endif %}">
+      <tr>
         <td><a href="{% url 'polls.poll_update' poll.id %}"><i class="material-icons">insert_drive_file</i></a></td>
         <td><a href="{% url 'results.poll_read' poll.id %}">{{ poll.title }}</a></td>
         <td><a href="{% url 'polls.poll_questions' poll.id %}">{{ poll.get_questions.count }}</a></td>
@@ -92,9 +92,11 @@
           {% endif%}
         </td>
         <td>{{ poll|get_poll_sync_status }}</td>
-        <td>
-          {%if poll.is_active %} {% trans "Active" %}
-          {% else %} {% trans "Inactive" %}
+        <td class="poll-status">
+          {%if poll.is_active %}
+            <div class="is-poll-active" title="{% trans 'Active' %}"></div>
+          {% else %}
+            <div class="is-poll-inactive" title="{% trans 'Inactive' %}"></div>
           {% endif %}
         </td>
       </tr>
