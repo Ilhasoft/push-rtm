@@ -402,7 +402,7 @@
         type: "doughnut",
         data: {
           datasets: [{
-            data: question.statistics.series,
+            data: question.statistics.counts,
             backgroundColor: RTMConfigs.availableColors,
             borderColor: "rgba(255, 255, 255, 0.1)",
           }],
@@ -429,7 +429,8 @@
                 dataArr.map(data => {
                   sum += data;
                 });
-                return value > 0 ? value + "%" : "";
+                let percentage = parseInt((value * 100 / sum));
+                return percentage > 0 ? percentage + "%" : "";
               },
               color: "#fff",
             }
