@@ -89,15 +89,18 @@ class DashboardDataView(View):
                 else:
                     labels = []
                     series = []
+                    counts = []
 
                     results = question.get_results()[0]
                     categories = results.get("categories")
                     for category in categories:
                         labels.append(category.get("label"))
                         series.append("{0:.0f}".format(category.get("count") / results.get("set") * 100))
+                        counts.append(category.get("count"))
 
                     statistics["labels"] = labels
                     statistics["series"] = series
+                    statistics["counts"] = counts
 
                 questions.append(
                     {
