@@ -23,21 +23,16 @@
             <span class="icon is-left">
               <i class="material-icons">search</i>
             </span>
+            {% if query and not messages %}
+              <a class="clear-search-icon" href="{{ back_to }}">
+                <i class="material-icons">clear</i>
+              </a>
+            {% endif %}
           </form>
         </div>
       </div>
     </div>
   </div>
-
-  {% if query and not messages %}
-  <div class="columns-is-mobile">
-    <div class="column auto">
-      <div class="control">
-        <a href="{{ back_to }}">{% trans "Clear search" %}</a> 
-      </div>
-    </div>
-  </div>
-  {% endif %}
 
   <div>
     <div class="flowhub-table-header">
