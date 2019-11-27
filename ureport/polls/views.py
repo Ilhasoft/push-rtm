@@ -573,7 +573,7 @@ class PollCRUDL(SmartCRUDL):
             page = self.request.GET.get("page")
 
             filters = {}
-            sortered = "title"
+            sortered = "-is_active"
 
             if query:
                 filters["title__icontains"] = query
@@ -581,11 +581,11 @@ class PollCRUDL(SmartCRUDL):
             if sort_field:
                 sortered = "{}{}".format("-" if sort_direction == "desc" else "", sort_field)
 
-            polls = Poll.objects.filter(**filters, is_active=True).filter(org=self.request.org)
+            polls = Poll.objects.filter(**filters, org=self.request.org)
             context["has_result"] = True
 
             if query and polls.count() == 0:
-                polls = Poll.objects.filter(is_active=True).filter(org=self.request.org)
+                polls = Poll.objects.filter(org=self.request.org)
                 messages.error(self.request, _("No results found."))
                 context["has_result"] = False
 

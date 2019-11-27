@@ -85,7 +85,10 @@
         </div>
         <div class="column is-paddingless" id="sdgQuestions">
           <div class="flex space-between p-30">
-            <div class="card-title has-text-weight-bold" id="partial_questions_count"></div>
+            <div>
+              <div class="card-title has-text-weight-bold" id="partial_questions_count"></div>
+              <div class="has-text-grey-light" id="sdg_number"></div>
+            </div>
             <div class="dropdown is-hoverable">
               <div class="dropdown-trigger">
                 <div aria-haspopup="true" aria-controls="dropdown-menu">
@@ -97,7 +100,7 @@
               </div>
               <div class="dropdown-menu" role="menu">
                 <div class="dropdown-content">
-                  <a href="{% url 'dashboard' %}#sdgQuestions" class="dropdown-item sdgLink">{% trans "None" %}</a>
+                  <a href="javascript:loadChartPartialResults('')" class="dropdown-item sdgLink">{% trans "None" %}</a>
                   {% for key, value in SDG_LIST %}
                     <a href="javascript:loadChartPartialResults('{{ key }}')" class="dropdown-item sdgLink">{% trans "SDG" %} {{ key }}</a>
                   {% endfor %}
@@ -138,7 +141,10 @@
           </div>
         </div>
       </div>
-      <div class="bottom-p-20 has-text-grey-light" id="message_metrics_time_ago"></div>
+      <div class="bottom-p-20 has-text-grey-light">
+        <span id="message_metrics_time_ago"></span>
+        <span id="message_metrics_channel"></span>
+      </div>
       <div class="flex flex-end top-m-20">
         <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
@@ -153,7 +159,7 @@
             <div class="dropdown-content">
                 <a href="javascript:loadChartMessageMetricsByChannel()" class="dropdown-item">{% trans "All channels" %}</a>
               {% for channel in channels_info %}
-                <a href="javascript:loadChartMessageMetricsByChannel('{{ channel.uuid }}')" class="dropdown-item">{{ channel.name }}</a>
+                <a href="javascript:loadChartMessageMetricsByChannel('{{ channel.uuid }}', '{{ channel.name }}')" class="dropdown-item">{{ channel.name }}</a>
               {% endfor %}
             </div>
           </div>
@@ -264,7 +270,7 @@
 
     node.append("title")
       .text(function(d) {
-        return d.data.sdg + ': ' + d.data.count + ' messages';
+        return d.data.sdg + ': ' + (d.data.count).toLocaleString() + ' messages received';
       });
 
     node
@@ -280,7 +286,8 @@
       .attr("dy", ".2em")
       .style("text-anchor", "middle")
       .text(function(d) {
-        return d.data.name.substring(0, d.r / 3);
+        let sdg = d.data.name.substring(0,3) + ' ' + d.data.name.substring(3,5);
+        return sdg.substring(0, d.r / 3);
       })
       .attr("font-family",  "Gill Sans", "Gill Sans MT")
       .attr("font-size", function(d){
@@ -292,7 +299,7 @@
         .attr("dy", "1.3em")
         .style("text-anchor", "middle")
         .text(function(d) {
-            return d.data.count;
+            return (d.data.count).toLocaleString();
         })
         .attr("font-family",  "Gill Sans", "Gill Sans MT")
         .attr("font-size", function(d){
@@ -341,8 +348,10 @@
 
   function loadChartPartialResults(sdg) {
     getJsonData({card: "partial_results", sdg: sdg}).then(function(result) {
-      if (partialChart) {
-        partialChart.destroy();
+      if (sdg) {
+          $("#sdg_number").html("SDG" + sdg);
+      } else {
+          $("#sdg_number").html("");
       }
 
       if (result) {
@@ -354,7 +363,7 @@
         if (result.questions.length > 0) {
           $("#partial_questions_list").html(result.questions.map(function(question) {
             return `<div class="questions-list__item p-30 border-bottom">
-                    <a href="javascript:loadDonutPatialResult(${question.id});" id="" class="question-link">${question.title}</a>
+                    <a href="javascript:loadDonutPartialResult(${question.id});" id="" class="question-link">${question.title}</a>
                     </div>`;
           }));
         } else {
@@ -363,24 +372,21 @@
         }
 
         if (result.questions.length > 0) {
+          $("#partial_questions_url").show();
           $("#partial_question_title").html(result.questions[0].title);
           $("#partial_questions_url").attr("href", result.questions[0].url);
-          loadDonutPatialResult(result.questions[0].id);
+          loadDonutPartialResult(result.questions[0].id);
           $(".questions-list").find(".question-link").first().addClass("active");
+        } else {
+          $('#questionChart').hide();
+          d3.select("#wordCloud svg").remove();
+          $("#partial_questions_url").hide();
         }
       }
     });
   }
 
-  function loadDonutPatialResult(questionId) {
-    if (questionId == questionLastId) {
-      return;
-    }
-
-    if (partialChart) {
-      partialChart.destroy();
-    }
-
+  function loadDonutPartialResult(questionId) {
     let $questionList = $(".questions-list"),
         $questionsItems = $questionList.find(".question-link");
 
@@ -392,51 +398,65 @@
     let index = questionsList.map(question => question.id).indexOf(questionId);
     let question = questionsList[index];
 
-    d3.select("svg").remove();
+    d3.select("#wordCloud svg").remove();
     $("#partial_question_title").html(question.title);
     $("#partial_questions_url").attr("href", question.url);
 
     if (question.is_open_ended === false) {
       $('#questionChart').show();
-      partialChart = new Chart(document.getElementById("questionChart").getContext("2d"), {
-        type: "doughnut",
-        data: {
+      if (! partialChart) {
+        partialChart = new Chart(document.getElementById("questionChart").getContext("2d"), {
+          type: "doughnut",
+          data: {
+            datasets: [{
+              data: question.statistics.counts,
+              backgroundColor: RTMConfigs.availableColors,
+              borderColor: "rgba(255, 255, 255, 0.1)",
+            }],
+            labels: question.statistics.labels,
+          },
+          options: {
+            legend: {
+              labels: {
+                fontSize: 14,
+                padding: 18,
+                usePointStyle: true,
+              },
+              position: "left",
+            },
+            plugins: {
+              datalabels: {
+                font: {
+                  size: 20,
+                  weight: "bold",
+                },
+                formatter: (value, ctx) => {
+                  let sum = 0;
+                  let dataArr = ctx.chart.data.datasets[0].data;
+                  dataArr.map(data => {
+                      sum += data;
+                  });
+                  let percentage = parseInt((value * 100 / sum));
+                  return percentage > 0 ? percentage + "%" : "";
+                },
+                color: "#fff",
+              }
+            }
+          }
+        });
+      } else {
+        partialChart.data = {
           datasets: [{
-            data: question.statistics.series,
+            data: question.statistics.counts,
             backgroundColor: RTMConfigs.availableColors,
             borderColor: "rgba(255, 255, 255, 0.1)",
           }],
           labels: question.statistics.labels,
-        },
-        options: {
-          legend: {
-            labels: {
-              fontSize: 14,
-              padding: 18,
-              usePointStyle: true,
-            },
-            position: "left",
-          },
-          plugins: {
-            datalabels: {
-              font: {
-                size: 20,
-                weight: "bold",
-              },
-              formatter: (value, ctx) => {
-                let sum = 0;
-                let dataArr = ctx.chart.data.datasets[0].data;
-                dataArr.map(data => {
-                  sum += data;
-                });
-                return value > 0 ? value + "%" : "";
-              },
-              color: "#fff",
-            }
-          }
-        }
-      });
-    } else {
+        };
+        partialChart.update();
+      }
+    }
+    else {
       let words = question.word_cloud;
       $('#questionChart').hide();
       const fillWordColor = function(d, i) {
@@ -479,8 +499,6 @@
           .text(function(d) { return d.text; });
       }
     }
-
-    questionLastId = questionId;
   }
 
   function loadChartMessageMetrics(filterBy, channelUUID) {
@@ -589,8 +607,14 @@
     });
   }
 
-  function loadChartMessageMetricsByChannel(channelUUID) {
+  function loadChartMessageMetricsByChannel(channelUUID, channelName) {
     loadChartMessageMetrics(messageMetricsFilterBy, channelUUID);
+
+    $("#message_metrics_channel").html("");
+
+    if (channelName) {
+      $("#message_metrics_channel").html(" - " + channelName);
+    }
   }
 
   function loadChartMostUsedChannels(filterBy) {
