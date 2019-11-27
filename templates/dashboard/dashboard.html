@@ -348,10 +348,6 @@
 
   function loadChartPartialResults(sdg) {
     getJsonData({card: "partial_results", sdg: sdg}).then(function(result) {
-      if (partialChart) {
-        partialChart.destroy();
-      }
-
       if (sdg) {
           $("#sdg_number").html("SDG" + sdg);
       } else {
@@ -367,7 +363,7 @@
         if (result.questions.length > 0) {
           $("#partial_questions_list").html(result.questions.map(function(question) {
             return `<div class="questions-list__item p-30 border-bottom">
-                    <a href="javascript:loadDonutPatialResult(${question.id});" id="" class="question-link">${question.title}</a>
+                    <a href="javascript:loadDonutPartialResult(${question.id});" id="" class="question-link">${question.title}</a>
                     </div>`;
           }));
         } else {
@@ -376,24 +372,21 @@
         }
 
         if (result.questions.length > 0) {
+          $("#partial_questions_url").show();
           $("#partial_question_title").html(result.questions[0].title);
           $("#partial_questions_url").attr("href", result.questions[0].url);
-          loadDonutPatialResult(result.questions[0].id);
+          loadDonutPartialResult(result.questions[0].id);
           $(".questions-list").find(".question-link").first().addClass("active");
+        } else {
+          $('#questionChart').hide();
+          d3.select("#wordCloud svg").remove();
+          $("#partial_questions_url").hide();
         }
       }
     });
   }
 
-  function loadDonutPatialResult(questionId) {
-    if (questionId == questionLastId) {
-      return;
-    }
-
-    if (partialChart) {
-      partialChart.destroy();
-    }
-
+  function loadDonutPartialResult(questionId) {
     let $questionList = $(".questions-list"),
         $questionsItems = $questionList.find(".question-link");
 
@@ -411,46 +404,59 @@
 
     if (question.is_open_ended === false) {
       $('#questionChart').show();
-      partialChart = new Chart(document.getElementById("questionChart").getContext("2d"), {
-        type: "doughnut",
-        data: {
+      if (! partialChart) {
+        partialChart = new Chart(document.getElementById("questionChart").getContext("2d"), {
+          type: "doughnut",
+          data: {
+            datasets: [{
+              data: question.statistics.counts,
+              backgroundColor: RTMConfigs.availableColors,
+              borderColor: "rgba(255, 255, 255, 0.1)",
+            }],
+            labels: question.statistics.labels,
+          },
+          options: {
+            legend: {
+              labels: {
+                fontSize: 14,
+                padding: 18,
+                usePointStyle: true,
+              },
+              position: "left",
+            },
+            plugins: {
+              datalabels: {
+                font: {
+                  size: 20,
+                  weight: "bold",
+                },
+                formatter: (value, ctx) => {
+                  let sum = 0;
+                  let dataArr = ctx.chart.data.datasets[0].data;
+                  dataArr.map(data => {
+                      sum += data;
+                  });
+                  let percentage = parseInt((value * 100 / sum));
+                  return percentage > 0 ? percentage + "%" : "";
+                },
+                color: "#fff",
+              }
+            }
+          }
+        });
+      } else {
+        partialChart.data = {
           datasets: [{
             data: question.statistics.counts,
             backgroundColor: RTMConfigs.availableColors,
             borderColor: "rgba(255, 255, 255, 0.1)",
           }],
           labels: question.statistics.labels,
-        },
-        options: {
-          legend: {
-            labels: {
-              fontSize: 14,
-              padding: 18,
-              usePointStyle: true,
-            },
-            position: "left",
-          },
-          plugins: {
-            datalabels: {
-              font: {
-                size: 20,
-                weight: "bold",
-              },
-              formatter: (value, ctx) => {
-                let sum = 0;
-                let dataArr = ctx.chart.data.datasets[0].data;
-                dataArr.map(data => {
-                  sum += data;
-                });
-                let percentage = parseInt((value * 100 / sum));
-                return percentage > 0 ? percentage + "%" : "";
-              },
-              color: "#fff",
-            }
-          }
-        }
-      });
-    } else {
+        };
+        partialChart.update();
+      }
+    }
+    else {
       let words = question.word_cloud;
       $('#questionChart').hide();
       const fillWordColor = function(d, i) {
@@ -493,8 +499,6 @@
           .text(function(d) { return d.text; });
       }
     }
-
-    questionLastId = questionId;
   }
 
   function loadChartMessageMetrics(filterBy, channelUUID) {
