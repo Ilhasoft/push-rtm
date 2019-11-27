@@ -17,6 +17,11 @@
           <span class="icon is-left">
             <i class="material-icons">search</i>
           </span>
+          {% if query and has_result %}
+            <a class="clear-search-icon" href="{% url 'accounts.user_list' %}">
+              <i class="material-icons">clear</i>
+            </a>
+          {% endif %}
         </form>
       </div>
     </div>
