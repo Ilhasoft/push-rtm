@@ -1,9 +1,6 @@
 from django.conf.urls import url
 
-from .views import (
-    LoginAuthView,
-    CallbackAuthView,
-)
+from .views import LoginAuthView, CallbackAuthView
 
 urlpatterns = [
     # url(r"^$", IndexView.as_view(), {}, "public.index"),
