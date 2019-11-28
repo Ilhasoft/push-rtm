@@ -7,10 +7,7 @@ from dash.orgs.models import Org
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
 
-from ureport.api.serializers import (
-    OrgReadSerializer,
-    PollReadSerializer,
-)
+from ureport.api.serializers import OrgReadSerializer, PollReadSerializer
 from ureport.polls.models import Poll
 from ureport.dashboard.views import DashboardDataView
 
@@ -411,6 +408,7 @@ class DashboardDetails(RetrieveAPIView):
         Example:
             /api/v1/dashboard/1/?card=message_metrics&filter_by=month
     """
+
     queryset = Org.objects.filter(is_active=True)
     serializer_class = OrgReadSerializer
 

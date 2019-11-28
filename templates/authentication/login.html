@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% load smartmin i18n %}
+
+{% block content %}
+  <div class="section">
+    <h1 class="title">{% trans "Sign in" %}</h1>
+  </div>
+
+  <a href="{{ authorization_url }}">{% trans "Login with Data for All" %}</a>
+{% endblock %}

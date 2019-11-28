@@ -316,21 +316,13 @@ class Dashboard(SmartTemplateView):
                 {
                     "sdg": value,
                     "label": "SDG{}".format(key),
-                    "data": [
-                        {
-                            "r": sdgs_with_data.get(key).get("total_responded", 0),
-                        }
-                    ],
+                    "data": [{"r": sdgs_with_data.get(key).get("total_responded", 0)}],
                     "backgroundColor": settings.SDG_COLOR.get(key),
                     "borderColor": "#FFFFFF",
                 }
             )
 
-        data = {
-            "tracked_sdgs": tuple(tracked_sdg),
-            "not_tracked_sdgs": tuple(not_tracked_sdg),
-            "datasets": datasets,
-        }
+        data = {"tracked_sdgs": tuple(tracked_sdg), "not_tracked_sdgs": tuple(not_tracked_sdg), "datasets": datasets}
 
         return data
 
