@@ -289,7 +289,7 @@
         let sdg = d.data.name.substring(0,3) + ' ' + d.data.name.substring(3,5);
         return sdg.substring(0, d.r / 3);
       })
-      .attr("font-family",  "Gill Sans", "Gill Sans MT")
+      .attr("font-family",  "Roboto", "sans-serif")
       .attr("font-size", function(d){
         return d.r/5;
       })
@@ -301,7 +301,7 @@
         .text(function(d) {
             return (d.data.count).toLocaleString();
         })
-        .attr("font-family",  "Gill Sans", "Gill Sans MT")
+        .attr("font-family",  "Roboto", "sans-serif")
         .attr("font-size", function(d){
             return d.r/5;
         })
@@ -492,7 +492,7 @@
           .style("font-size", function(d) { return d.size; })
           .style("fill", fillWordColor)
           .attr("text-anchor", "middle")
-          .style("font-family", "Impact")
+          .style("font-family", "Roboto", "sans-serif")
           .attr("transform", function(d) {
             return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
           })
