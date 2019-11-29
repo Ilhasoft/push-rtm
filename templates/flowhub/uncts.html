@@ -23,10 +23,10 @@
             <span class="icon is-left">
               <i class="material-icons">search</i>
             </span>
-            {% if query and not messages %}
-              <a class="clear-search-icon" href="{{ back_to }}">
-                <i class="material-icons">clear</i>
-              </a>
+            {% if query %}
+            <a class="clear-search-icon" href="{{ back_to }}">
+              <i class="material-icons">clear</i>
+            </a>
             {% endif %}
           </form>
         </div>
@@ -75,6 +75,10 @@
             </div>
           </td>
         </tr>
+        {% empty %}
+        <tr>
+          <td class="has-text-centered">{% trans "No results found" %}</td>
+        </tr>
         {% endfor %}
       </tbody>
     </table>
@@ -83,4 +87,5 @@
       {% include "paginator.html" with paginator=uncts %}
     </div>
   </div>
-  {% endblock %}
+</div>
+{% endblock %}

@@ -24,13 +24,6 @@ class SearchSmartListViewMixin(SmartTemplateView):
     search_query_name = "search"
 
     def search(self, queryset):
-        """
-        It receives the queryset parameters, applies the filter and returns the queryset.
-        This method requires the class to have the 'search_fields' and 'search_query_name' atrributes.
-        eg:
-        search_fields = ['title__icontains', 'description__icontains']
-        search_query_name = 'search' # in template, this attribute is an input name by search field
-        """
         search_query = self.request.GET.get(self.search_query_name)
         search_fields = self.derive_search_fields()
 
@@ -44,7 +37,6 @@ class SearchSmartListViewMixin(SmartTemplateView):
 
             queryset = queryset.filter(reduce(operator.and_, term_queries))
 
-        # add any select related
         related = self.derive_select_related()
         if related:
             queryset = queryset.select_related(*related)
@@ -52,9 +44,6 @@ class SearchSmartListViewMixin(SmartTemplateView):
         return queryset
 
     def derive_search_fields(self):
-        """
-        Derives our search fields, by default just returning what was set
-        """
         return self.search_fields
 
 
@@ -83,14 +72,6 @@ class FlowBaseListView(LoginRequiredMixin, SearchSmartListViewMixin):
         queryset = self.search(queryset)
         queryset = self.filter(queryset)
         self.query = self.request.GET.get(self.search_query_name, "")
-
-        if queryset.count() == 0 and self.request.GET.get(self.search_query_name):
-            queryset = self.model.objects.filter(is_active=True).order_by("name")
-            if not is_global_user(self.request.user):
-                queryset = queryset.filter(Q(org=self.request.org) | Q(visible_globally=True))
-            messages.error(self.request, _("No results found."))
-            self.query = ""
-
         return queryset
 
     def filter(self, queryset):
@@ -159,11 +140,6 @@ class UnctsView(SearchSmartListViewMixin):
         queryset = self.model.objects.filter(is_active=True).order_by(sortered)
         queryset = self.search(queryset)
         self.query = self.request.GET.get("search", "")
-
-        if queryset.count() == 0:
-            queryset = self.model.objects.filter(is_active=True).order_by(sortered)
-            messages.error(self.request, _("No results found."))
-            self.query = ""
 
         for org in queryset:
             org.total_stars = sum([f.stars.all().count() for f in org.flows.filter(is_active=True)])
