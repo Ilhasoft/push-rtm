@@ -23,7 +23,7 @@
           <span class="icon is-left">
             <i class="material-icons">search</i>
           </span>
-          {% if query and has_result %}
+          {% if query %}
             <a class="clear-search-icon" href="{% url 'polls.poll_list' %}">
               <i class="material-icons">clear</i>
             </a>
