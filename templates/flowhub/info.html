@@ -37,18 +37,12 @@
             </button>
           </form>
         {% endif %}
+        <div class="has-text-grey-light">
+          {{ flow.org.name }}
+        </div>
       </div>
       <div class="column has-text-right">
-        {% trans "Visible globally" %} 
-        <label class="switch">
-          <input type="checkbox" disabled="disabled" {% if flow.visible_globally %}checked{% endif %}>
-          <span class="slider round"></span>
-        </label>
-      </div>
-    </div>
-    <div class="columns">
-      <div class="column">
-        {{ flow.org.name }}
+        {% trans "Visible globally" %}
       </div>
     </div>
     <div class="columns">
