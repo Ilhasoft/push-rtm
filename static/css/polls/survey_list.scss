@@ -7,25 +7,20 @@
     min-width: 70px;
   }
 
-  .poll-status {
+  td a {
     .tooltip .tooltip-content {
-      min-width: 50px;
+      min-width: 110px;
       font-weight: bold;
     }
   }
 
   .is-poll-inactive,
-  .is-poll-active {
-    height: 10px;
-    width: 10px;
-    border-radius: 50%;
+  .is-poll-inactive td a,
+  .is-poll-inactive td a i, {
+    color: #a8a7a7;
   }
 
-  .is-poll-active {
-    background-color: #6cb95e;
-  }
-
-  .is-poll-inactive {
-    background-color: #d61313;
+  .is-poll-inactive td .tag {
+    opacity: 50%;
   }
 }

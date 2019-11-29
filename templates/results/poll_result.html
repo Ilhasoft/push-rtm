@@ -26,7 +26,7 @@
   <section class="section">
     <h1 class="title">{% trans 'Survey Results'%}</h1>
   </section>
-  
+
   <section class="section">
     <div class="columns is-mobile">
       <div class="column is-one-third-mobile is-one-quarter">
@@ -106,6 +106,10 @@
                 {% endfor %}
               </div>
             </div>
+            <div class="columns bottom-m-10">
+              <div class="column is-2 has-text-right">{% trans 'Last answer:'%}</div>
+              <div class="column">{{ poll|get_poll_sync_status }}</div>
+            </div>
           </div>
         </div>
 
@@ -143,10 +147,10 @@
                     <div class="dropdown-menu" id="dropdown-menu" role="menu">
                       <div class="dropdown-content">
                         <a href="javascript:showChart('statistics', {{ question.pk }});" class="dropdown-item statistics">{% trans "All" %}</a>
-                        {% if not is_iorg and show_gender_stats %} 
+                        {% if not is_iorg and show_gender_stats %}
                         <a href="javascript:showChart('gender', {{ question.pk }});" class="dropdown-item gender">{% trans "Gender" %}</a>
                         {% endif %}
-                        {% if not is_iorg and show_age_stats %} 
+                        {% if not is_iorg and show_age_stats %}
                         <a href="javascript:showChart('age', {{ question.pk }});" class="dropdown-item age">{% trans "Age" %}</a>
                         {% endif %}
                       </div>
@@ -179,6 +183,10 @@
         </div>
       </div>
     </div>
+
+    <a href="#top" class="bottom-anchor">
+      <i class="material-icons">keyboard_arrow_up</i>
+    </a>
   </section>
 {% endblock %}
 
@@ -192,7 +200,7 @@
   <script type="text/javascript">
     $("input:checkbox").click(function() {
       let isChecked = $("input:checkbox").filter(":checked");
-      
+
       isChecked.map(function() {
         let sdg = this.value;
 
@@ -227,6 +235,7 @@
         results_statistics[question] = {
           labels: [],
           series: [],
+          count: [],
         };
 
         {% with results=question|question_results %}
@@ -234,6 +243,7 @@
             {% for category in categories %}
               results_statistics[question]["labels"].push("{{ category.label|safe }}");
               results_statistics[question]["series"].push(parseInt("{% widthratio category.count results.set 100 %}"));
+              results_statistics[question]["count"].push(parseInt("{{ category.count }}"));
             {% endfor %}
           {% endwith %}
         {% endwith %}
@@ -258,7 +268,7 @@
                   };
                   results_age[question]["series"]["{{ forloop.counter0 }}"].data.push({{ category.count }});
                 {% endfor %}
-              {% endwith %}              
+              {% endwith %}
             {% endfor %}
           {% endwith %}
         {% endif %}
@@ -295,7 +305,7 @@
         type: "doughnut",
         data: {
           datasets: [{
-            data: result.series,
+            data: result.count,
             backgroundColor: RTMConfigs.availableColors,
             borderColor: "rgba(255, 255, 255, 0.1)",
           }],
@@ -339,7 +349,7 @@
       let updateOptions = {};
       let chart = charts[question];
       let chartCanvas = document.getElementById("chart-question-" + question);
-      
+
       if (tab == "statistics") {
         chart.destroy();
         chart = new Chart(chartCanvas.getContext("2d"), {
@@ -533,6 +543,21 @@
             });
           }
         }
+      });
+    });
+
+    $(document).ready(function() {
+      $(window).scroll(function(){
+        if ($(this).scrollTop() > 100) {
+          $('a[href="#top"]').fadeIn();
+        } else {
+          $('a[href="#top"]').fadeOut();
+        }
+      });
+
+      $('a[href="#top"]').click(function(){
+        $('html, body').animate({scrollTop : 0},800);
+        return false;
       });
     });
   </script>
