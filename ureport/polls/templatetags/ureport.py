@@ -360,7 +360,7 @@ def get_poll_sync_status(obj):
     if obj.has_synced:
         last_synced = cache.get(Poll.POLL_RESULTS_LAST_SYNC_TIME_CACHE_KEY % (obj.org.pk, obj.flow_uuid), None)
         if last_synced:
-            return "Last synced %s ago" % timesince(json_date_to_datetime(last_synced))
+            return timesince(json_date_to_datetime(last_synced))
 
         # we know we synced do not check the the progress since that is slow
         return "Synced 100%"
