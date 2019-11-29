@@ -482,7 +482,7 @@
 
     const fillWordColor = function(d, i) {
       return RTMConfigs.availableColors[i % RTMConfigs.availableColors.length];
-    }
+    };
 
     $("div[data-question-type=\"cloud\"]").each(function() {
       const question = $(this).attr("data-question");
@@ -529,7 +529,7 @@
             .style("font-size", function(d) {
               return d.size + "px";
             })
-            .style("font-family", "Impact")
+            .style("font-family", "Roboto", "sans-serif")
             .style("fill", function(d, i) {
               return wordCloud(i);
             })
