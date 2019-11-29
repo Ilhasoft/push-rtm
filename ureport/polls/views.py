@@ -583,14 +583,15 @@ class PollCRUDL(SmartCRUDL):
 
             polls = Poll.objects.filter(**filters, org=self.request.org)
             context["has_result"] = True
+            context["query"] = query
 
             if query and polls.count() == 0:
                 polls = Poll.objects.filter(org=self.request.org)
                 messages.error(self.request, _("No results found."))
                 context["has_result"] = False
+                context["query"] = ""
 
-            context["polls"] = get_paginator(polls.order_by(sortered), page)
-            context["query"] = query
+            context["polls"] = get_paginator(polls.order_by(sortered), page)            
             return context
 
     class Update(OrgObjPermsMixin, SmartUpdateView):

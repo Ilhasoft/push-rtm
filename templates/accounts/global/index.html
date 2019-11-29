@@ -17,6 +17,11 @@
           <span class="icon is-left">
             <i class="material-icons">search</i>
           </span>
+          {% if query %}
+            <a class="clear-search-icon" href="{{ back_to }}">
+              <i class="material-icons">clear</i>
+            </a>
+          {% endif %}
         </form>
       </div>
     </div>

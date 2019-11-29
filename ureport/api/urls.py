@@ -6,13 +6,7 @@ from rest_framework_swagger.views import get_swagger_view
 from django.conf.urls import url
 from django.views.generic import RedirectView
 
-from ureport.api.views import (
-    OrgDetails,
-    OrgList,
-    PollDetails,
-    PollList,
-    DashboardDetails,
-)
+from ureport.api.views import OrgDetails, OrgList, PollDetails, PollList, DashboardDetails
 
 schema_view = get_swagger_view(title="API")
 
