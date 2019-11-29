@@ -4,30 +4,36 @@
 {% block nav_item %}page-flowhub{% endblock %}
 
 {% block css_extra %}
-<link rel="stylesheet" href="{% sass_src 'css/flowhub/common.scss' %}"/>
-<link rel="stylesheet" href="{% sass_src 'css/flowhub/detail.scss' %}"/>
+<link rel="stylesheet" href="{% sass_src 'css/flowhub/common.scss' %}" />
+<link rel="stylesheet" href="{% sass_src 'css/flowhub/detail.scss' %}" />
 {% endblock %}
 
 {% block flow_content %}
 <div class="column auto">
-    <div class="box is-shadowless is-paddingless">
-      <div class="p-30 border-bottom">
-        <div class="has-text-weight-bold is-size-5 bottom-p-5">{{ subtitle }}</div>
-        <div class="has-text-grey-light">A list of all UNCTs that have uploaded flows to the repository.</div>
-      </div>
-      <div class="columns">
-        <div class="column bottom-p-0">
-          <div class="control has-icons-left">
-            <form>
-              <input type="text" class="input is-medium search" name="search" placeholder="Search" value="{{ query }}">
-              <span class="icon is-left">
-                <i class="material-icons">search</i>
-              </span>
-            </form>
-          </div>
+  <div class="box is-shadowless is-paddingless">
+    <div class="p-30 border-bottom">
+      <div class="has-text-weight-bold is-size-5 bottom-p-5">{{ subtitle }}</div>
+      <div class="has-text-grey-light">A list of all UNCTs that have uploaded flows to the repository.</div>
+    </div>
+    <div class="columns">
+      <div class="column bottom-p-0">
+        <div class="control has-icons-left">
+          <form>
+            <input type="text" class="input is-medium search" name="search" placeholder="Search" value="{{ query }}">
+            <span class="icon is-left">
+              <i class="material-icons">search</i>
+            </span>
+            {% if query and not messages %}
+              <a class="clear-search-icon" href="{{ back_to }}">
+                <i class="material-icons">clear</i>
+              </a>
+            {% endif %}
+          </form>
         </div>
       </div>
     </div>
+  </div>
+
   <div>
     <div class="flowhub-table-header">
       <div class="dropdown is-right">
@@ -38,36 +44,38 @@
           </div>
         </div>
         <div class="dropdown-menu" id="dropdown-menu" role="menu">
-            <div class="dropdown-content">
-              <a href="{% autosort name '' true %}" class="dropdown-item">{% trans "Alphabetical" %}</a>
-              
-              <a href="{% autosort created_on '' true %}" class="dropdown-item">{% trans "Newest" %}</a>
-            </div>
+          <div class="dropdown-content">
+            <a href="{% autosort name '' true %}" class="dropdown-item">{% trans "Alphabetical" %}</a>
+
+            <a href="{% autosort created_on '' true %}" class="dropdown-item">{% trans "Newest" %}</a>
+          </div>
         </div>
       </div>
     </div>
 
     <table class="table is-fullwidth">
       <tbody>
-      {% for unct in uncts %}
-      <tr class="is-tr">
-        <td class="has-text-left">
-          <strong>{{ unct.name }}</strong>
-        </td>
-        <td class="has-text-centered">
-          {{ unct.flows.count }} {% trans "flows" %}
-        </td>
-        <td class="has-text-centered">
-          {% trans "Registered" %} {{ unct.flows.last.created_on|naturaltime }}
-        </td>
-        <td class="has-text-centered">
-          <div class="stars">
-            <img src="{% static 'svg/star-solid.svg' %}" alt="stars">
-            <span>{{unct.total_stars}}</span>
-          </div>
-        </td>
-      </tr>
-      {% endfor %}
+        {% for unct in uncts %}
+        <tr class="is-tr">
+          <td class="has-text-left">
+            <strong>{{ unct.name }}</strong>
+          </td>
+          <td class="has-text-centered">
+            {% with flows=unct.flows|only_is_active|length %}
+            {{ flows }} {% trans "flow" %}{{ flows|pluralize }}
+            {% endwith %}
+          </td>
+          <td class="has-text-centered">
+            {% trans "Registered" %} {{ unct.flows.last.created_on|naturaltime }}
+          </td>
+          <td class="has-text-centered">
+            <div class="stars">
+              <img src="{% static 'svg/star-solid.svg' %}" alt="stars">
+              <span>{{unct.total_stars}}</span>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
       </tbody>
     </table>
 
@@ -75,4 +83,4 @@
       {% include "paginator.html" with paginator=uncts %}
     </div>
   </div>
-{% endblock %}
+  {% endblock %}

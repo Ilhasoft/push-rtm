@@ -83,23 +83,6 @@ COMPRESS_JS_FILTERS = ["compressor.filters.jsmin.JSMinFilter"]
 
 sentry_sdk.init(dsn=config("RAVEN_CONFIG", default=""), integrations=[DjangoIntegration()])
 
-OAUTHLIB_CLIENT_ID = config("OAUTHLIB_CLIENT_ID", default="")
-OAUTHLIB_SECRET = config("OAUTHLIB_SECRET", default="")
-OAUTHLIB_AUTHORIZATION_URL = config(
-    "OAUTHLIB_AUTHORIZATION_URL", default="http://dataforallcloud.org/oauth2/authorize"
-)
-OAUTHLIB_TOKEN_URL = config("OAUTHLIB_TOKEN_URL", default="http://dataforallcloud.org/oauth2/token")
-OAUTHLIB_INSECURE_TRANSPORT = config("OAUTHLIB_INSECURE_TRANSPORT", default=False)
-OAUTHLIB_REDIRECT_URI = config("OAUTHLIB_REDIRECT_URI", default="https://rtm-ilhasoft.ngrok.io/callback")
-OAUTHLIB_USER_URL = config("OAUTHLIB_USER_URL", default="http://dataforallcloud.org/oauth2/userInfo")
-OAUTHLIB_MOMSERVICE_TOKEN_URL = config(
-    "OAUTHLIB_MOMSERVICE_TOKEN_URL", default="http://dataforallcloud.org/monservice/api/v1/token"
-)
-OAUTHLIB_MOMSERVICE_USER_URL = config(
-    "OAUTHLIB_MOMSERVICE_USER_URL", default="http://dataforallcloud.org/monservice/api/v1/rtmUserInfo"
-)
-OAUTHLIB_APP_ID = config("OAUTHLIB_APP_ID", default="uninfortm")
-
 # custom configs
 INSTALLED_APPS += (
     "sass_processor",
@@ -112,6 +95,7 @@ INSTALLED_APPS += (
     "ureport.flowhub",
     "ureport.dashboard",
     "ureport.channels",
+    "ureport.authentication",
 )
 
 SITE_ALLOW_NO_ORG += (
@@ -134,6 +118,8 @@ SITE_ALLOW_NO_ORG += (
     "accounts.user_org_create",
     "accounts.user_org_update",
     "accounts.user_org_delete",
+    "authentication.login",
+    "authentication.callback",
 )
 
 SDG_LIST = (
@@ -198,11 +184,7 @@ SITE_CHOOSER_TEMPLATE = "public/index.html"
 SITE_CHOOSER_URL_NAME = "public.index"
 
 CELERYBEAT_SCHEDULE = {
-    "refresh_flows": {
-        "task": "polls.refresh_org_flows",
-        "schedule": timedelta(minutes=1),
-        "relative": True
-    },
+    "refresh_flows": {"task": "polls.refresh_org_flows", "schedule": timedelta(minutes=1), "relative": True},
     "recheck_poll_flow_data": {
         "task": "polls.recheck_poll_flow_data",
         "schedule": timedelta(minutes=1),
@@ -253,9 +235,27 @@ CELERYBEAT_SCHEDULE = {
         "relative": True,
         "args": ("ureport.stats.tasks.refresh_engagement_data", "sync"),
     },
-    "pull-channel-stats": {
-        "task": "channels.pull-channel-stats",
-        "schedule": timedelta(minutes=10),
-        "relative": True,
-    },
+    "pull-channel-stats": {"task": "channels.pull-channel-stats", "schedule": timedelta(minutes=10), "relative": True},
 }
+
+
+## OAUTH2
+
+OAUTHLIB_CLIENT_ID = config("OAUTHLIB_CLIENT_ID", default="")
+OAUTHLIB_SECRET = config("OAUTHLIB_SECRET", default="")
+OAUTHLIB_AUTHORIZATION_URL = config(
+    "OAUTHLIB_AUTHORIZATION_URL", default="http://dataforallcloud.org/oauth2/authorize"
+)
+OAUTHLIB_TOKEN_URL = config("OAUTHLIB_TOKEN_URL", default="http://dataforallcloud.org/oauth2/token")
+OAUTHLIB_INSECURE_TRANSPORT = config("OAUTHLIB_INSECURE_TRANSPORT", default=False)
+OAUTHLIB_REDIRECT_URI = config(
+    "OAUTHLIB_REDIRECT_URI", default="https://rtm-ilhasoft.ngrok.io/authentication/callback"
+)
+OAUTHLIB_USER_URL = config("OAUTHLIB_USER_URL", default="http://dataforallcloud.org/oauth2/userInfo")
+OAUTHLIB_MOMSERVICE_TOKEN_URL = config(
+    "OAUTHLIB_MOMSERVICE_TOKEN_URL", default="http://dataforallcloud.org/monservice/api/v1/token"
+)
+OAUTHLIB_MOMSERVICE_USER_URL = config(
+    "OAUTHLIB_MOMSERVICE_USER_URL", default="http://dataforallcloud.org/monservice/api/v1/rtmUserInfo"
+)
+OAUTHLIB_APP_ID = config("OAUTHLIB_APP_ID", default="uninfortm")

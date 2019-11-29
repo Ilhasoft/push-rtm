@@ -395,3 +395,8 @@ def check_permissions(org, user):
         elif org and org in user.get_user_orgs():
             return True
     return False
+
+
+@register.filter(name="only_is_active")
+def only_is_active(queryset):
+    return queryset.filter(is_active=True)

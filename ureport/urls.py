@@ -63,6 +63,7 @@ urlpatterns = [
     url(r"^results/", include("ureport.results.urls")),
     url(r"^flowhub/", include("ureport.flowhub.urls")),
     url(r"^", include("ureport.dashboard.urls")),
+    url(r"^authentication/", include("ureport.authentication.urls")),
 ]
 
 if settings.DEBUG:

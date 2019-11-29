@@ -63,6 +63,7 @@ class FlowBaseListView(LoginRequiredMixin, SearchSmartListViewMixin):
     select_related = None
     fields = "__all__"
     redirect_to = ""
+    query = ""
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -81,12 +82,14 @@ class FlowBaseListView(LoginRequiredMixin, SearchSmartListViewMixin):
 
         queryset = self.search(queryset)
         queryset = self.filter(queryset)
+        self.query = self.request.GET.get(self.search_query_name, "")
 
         if queryset.count() == 0 and self.request.GET.get(self.search_query_name):
             queryset = self.model.objects.filter(is_active=True).order_by("name")
             if not is_global_user(self.request.user):
                 queryset = queryset.filter(Q(org=self.request.org) | Q(visible_globally=True))
             messages.error(self.request, _("No results found."))
+            self.query = ""
 
         return queryset
 
@@ -129,7 +132,8 @@ class ListView(FlowBaseListView):
 
         page = self.request.GET.get("page", 1)
         context["flows"] = get_paginator(list(set(self.get_queryset())), page)
-
+        context["query"] = self.query
+        context["back_to"] = reverse("flowhub.flow_list")
         return context
 
 
@@ -139,6 +143,7 @@ class UnctsView(SearchSmartListViewMixin):
     context_object_name = "uncts"
     search_fields = ["name__icontains"]
     select_related = None
+    query = ""
 
     def derive_select_related(self):
         return self.select_related
@@ -153,10 +158,12 @@ class UnctsView(SearchSmartListViewMixin):
 
         queryset = self.model.objects.filter(is_active=True).order_by(sortered)
         queryset = self.search(queryset)
+        self.query = self.request.GET.get("search", "")
 
         if queryset.count() == 0:
             queryset = self.model.objects.filter(is_active=True).order_by(sortered)
             messages.error(self.request, _("No results found."))
+            self.query = ""
 
         for org in queryset:
             org.total_stars = sum([f.stars.all().count() for f in org.flows.filter(is_active=True)])
@@ -169,6 +176,8 @@ class UnctsView(SearchSmartListViewMixin):
         context["flow_section_id"] = "flowhub-uncts"
         page = self.request.GET.get("page", 1)
         context["uncts"] = get_paginator(self.get_queryset(), page)
+        context["query"] = self.query
+        context["back_to"] = reverse("flowhub.flow_uncts")
         return context
 
 
@@ -189,6 +198,8 @@ class MyOrgListView(FlowBaseListView):
 
         page = self.request.GET.get("page", 1)
         context["flows"] = get_paginator(list(set(self.get_queryset())), page)
+        context["query"] = self.query
+        context["back_to"] = reverse("flowhub.my_org_flow_list")
 
         return context
 

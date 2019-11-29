@@ -51,6 +51,7 @@ class ListView(OrgObjPermsMixin, SmartTemplateView):
         context["users"] = get_paginator(queryset.filter(**filters, is_active=True).order_by(sortered), page)
         context["query"] = query
         context["org"] = org
+        context["back_to"] = reverse("accounts.user_list")
         return context
 
 
@@ -192,6 +193,7 @@ class GlobalListView(OrgPermsMixin, SmartTemplateView):
 
         context["users"] = get_paginator(queryset.filter(**filters, is_active=True).order_by(sortered), page)
         context["query"] = query
+        context["back_to"] = reverse("accounts.global_list")
         return context
 
 

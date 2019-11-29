@@ -136,7 +136,7 @@ class UnctForm(forms.ModelForm):
                 "reporter_group": self.cleaned_data.get("reporter_group"),
                 "occupation_label": self.cleaned_data.get("occupation_label"),
                 "registration_label": self.cleaned_data.get("registration_label"),
-            },
+            }
         }
         instance.save()
         backend = OrgBackend.objects.filter(org=instance).first()
