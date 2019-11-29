@@ -235,6 +235,7 @@
         results_statistics[question] = {
           labels: [],
           series: [],
+          count: [],
         };
 
         {% with results=question|question_results %}
@@ -242,6 +243,7 @@
             {% for category in categories %}
               results_statistics[question]["labels"].push("{{ category.label|safe }}");
               results_statistics[question]["series"].push(parseInt("{% widthratio category.count results.set 100 %}"));
+              results_statistics[question]["count"].push(parseInt("{{ category.count }}"));
             {% endfor %}
           {% endwith %}
         {% endwith %}
@@ -303,7 +305,7 @@
         type: "doughnut",
         data: {
           datasets: [{
-            data: result.series,
+            data: result.count,
             backgroundColor: RTMConfigs.availableColors,
             borderColor: "rgba(255, 255, 255, 0.1)",
           }],
