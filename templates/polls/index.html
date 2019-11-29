@@ -56,17 +56,42 @@
         <th>{% trans "Questions" %}</th>
         <th>{% autosort runs_count _("Runs") %}</th>
         <th>{% trans "SDGs" %}</th>
-        <th>{% trans "Last sync" %}</th>
+<!--        <th>{% trans "Last sync" %}</th>-->
         <th>Status</th>
       </tr>
     </thead>
     <tbody class="has-header">
 
       {% for poll in polls %}
-      <tr>
-        <td><a href="{% url 'polls.poll_update' poll.id %}"><i class="material-icons">insert_drive_file</i></a></td>
-        <td><a href="{% url 'results.poll_read' poll.id %}">{{ poll.title }}</a></td>
-        <td><a href="{% url 'polls.poll_questions' poll.id %}">{{ poll.get_questions.count }}</a></td>
+      <tr class="{% if not poll.is_active %} is-poll-inactive {% endif %}">
+        <td>
+          <a href="{% url 'polls.poll_update' poll.id %}">
+            <span class="tooltip right">
+              <i class="material-icons">insert_drive_file</i>
+              <span class="tooltip-content">Edit survey</span>
+            </span>
+          </a>
+        </td>
+        <td>
+          {%if poll.is_active %}
+            <a href="{% url 'results.poll_read' poll.id %}">
+              <span class="tooltip right">
+                {{ poll.title }}
+                <span class="tooltip-content">See the results</span>
+              </span>
+            </a>
+          {% else %}
+            {{ poll.title }}
+          {% endif %}
+        </td>
+        <td>
+          <a href="{% url 'polls.poll_questions' poll.id %}">
+            <span class="tooltip right">
+              {{ poll.get_questions.count }}
+              <span class="tooltip-content">Go to question edit</span>
+            </span>
+          </a>
+        </td>
         <td>{{ poll.runs_count }}</td>
         <td>
           {% if poll.questions.count > 3 %}
@@ -87,12 +112,12 @@
           {% endfor %}
           {% endif%}
         </td>
-        <td>{{ poll|get_poll_sync_status }}</td>
+<!--        <td>{{ poll|get_poll_sync_status }}</td>-->
         <td class="poll-status">
           {%if poll.is_active %}
-            <div class="is-poll-active" title="{% trans 'Active' %}"></div>
+            {% trans 'Active' %}
           {% else %}
-            <div class="is-poll-inactive" title="{% trans 'Inactive' %}"></div>
+            {% trans 'Inactive' %}
           {% endif %}
         </td>
       </tr>
