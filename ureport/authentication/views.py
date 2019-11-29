@@ -18,21 +18,21 @@ class LoginAuthView(SmartTemplateView):
     template_name = "authentication/login.html"
 
     def get(self, request, *args, **kwargs):
-        try:
-            code = self.request.GET.get("code")
-            org = self.request.org
+        context = self.get_context_data(**kwargs)
+        code = self.request.GET.get("code")
+        org = self.request.org
 
-            context = self.get_context_data(**kwargs)
-            context["org"] = org
+        oauth = OAuth2Session(
+            settings.OAUTHLIB_CLIENT_ID,
+            redirect_uri=settings.OAUTHLIB_REDIRECT_URI,
+            scope="openid email profile",
+            state=str(base64.b64encode(org.subdomain.encode("utf-8")), "utf-8") if hasattr(org, "subdomain") else None,
+        )
 
-            oauth = OAuth2Session(
-                settings.OAUTHLIB_CLIENT_ID,
-                redirect_uri=settings.OAUTHLIB_REDIRECT_URI,
-                scope="openid email profile",
-                state=str(base64.b64encode(org.subdomain.encode("utf-8")), "utf-8") if hasattr(org, "subdomain") else None,
-            )
+        if code:
+            try:
+                context["org"] = org
 
-            if code:
                 fetch_token = oauth.fetch_token(
                     settings.OAUTHLIB_TOKEN_URL,
                     code=code,
@@ -80,12 +80,12 @@ class LoginAuthView(SmartTemplateView):
 
                     login(self.request, user)
                     return redirect(reverse("dashboard"))
-            else:
-                authorization_url, state = oauth.authorization_url(settings.OAUTHLIB_AUTHORIZATION_URL)
-                context["authorization_url"] = authorization_url
-        except Exception:
-            messages.error(self.request, _("Please try again."))
-            return redirect(reverse("authentication.login"))
+            except Exception:
+                messages.error(self.request, _("Please try again."))
+                return redirect(reverse("authentication.login"))
+        else:
+            authorization_url, state = oauth.authorization_url(settings.OAUTHLIB_AUTHORIZATION_URL)
+            context["authorization_url"] = authorization_url
 
         return self.render_to_response(context)
 
