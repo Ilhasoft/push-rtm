@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n static %}
+{% load i18n static ureport %}
 
 {% block content %}
 <section class="section">
@@ -18,6 +18,8 @@
               <li><a class="uncts" href="{% url 'flowhub.flow_uncts' %}">{% trans "UNCTs" %}</a></li>
               {% if not request.user.is_superuser and request.org in request.user.get_user_orgs %}
                 <li><a class="my-org" href="{% url 'flowhub.my_org_flow_list' %}">{{ org.name }}</a></li>
+              {% endif %}
+              {% if request.user|is_admin_user %}
                 <li><a class="upload" href="{% url 'flowhub.flow_create' %}">{% trans "Upload Flow" %}</a></li>
               {% endif %}
             </ul>

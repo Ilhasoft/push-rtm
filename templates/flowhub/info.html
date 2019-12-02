@@ -1,5 +1,5 @@
 {% extends "flowhub/base.html" %}
-{% load i18n static sass_tags %}
+{% load i18n static sass_tags ureport %}
 
 {% block nav_item %}page-flowhub{% endblock %}
 
@@ -26,7 +26,7 @@
     <div class="columns">
       <div class="column">
         <strong>{{ flow.name }}</strong>
-        {% if request.org == flow.org %}
+        {% if request.org == flow.org and request.user|is_admin_user %}
           <form class="form-flowhub" action="{% url 'flowhub.flow_delete' flow.pk %}" method="POST">
             {% csrf_token %}
             <a href="{% url 'flowhub.flow_update' flow.pk %}">
@@ -37,18 +37,12 @@
             </button>
           </form>
         {% endif %}
+        <div class="has-text-grey-light">
+          {{ flow.org.name }}
+        </div>
       </div>
       <div class="column has-text-right">
-        {% trans "Visible globally" %} 
-        <label class="switch">
-          <input type="checkbox" disabled="disabled" {% if flow.visible_globally %}checked{% endif %}>
-          <span class="slider round"></span>
-        </label>
-      </div>
-    </div>
-    <div class="columns">
-      <div class="column">
-        {{ flow.org.name }}
+        {% trans "Visible globally" %}
       </div>
     </div>
     <div class="columns">

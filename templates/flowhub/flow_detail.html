@@ -1,4 +1,4 @@
-{% load static i18n %}
+{% load static i18n ureport %}
 
 <tr class="is-tr">
   <td class="has-text-left" colspan="3">
@@ -7,7 +7,7 @@
         <a href="{{ flow.get_absolute_url }}">
           <strong>{{ flow.name }}</strong> | <i>{{ flow.org.name }}</i> 
         </a>
-        {% if request.org == flow.org %}
+        {% if request.org == flow.org and request.user|is_admin_user %}
           <form class="form-flowhub" action="{% url 'flowhub.flow_delete' flow.pk %}" method="POST">
             {% csrf_token %}
             <a href="{% url 'flowhub.flow_update' flow.pk %}">

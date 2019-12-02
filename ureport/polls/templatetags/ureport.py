@@ -400,3 +400,10 @@ def check_permissions(org, user):
 @register.filter(name="only_is_active")
 def only_is_active(queryset):
     return queryset.filter(is_active=True)
+
+
+@register.filter(name="is_admin_user")
+def is_admin_user(user):
+    if user.groups.filter(name="Administrators"):
+        return True
+    return False

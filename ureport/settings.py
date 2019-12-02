@@ -235,7 +235,12 @@ CELERYBEAT_SCHEDULE = {
         "relative": True,
         "args": ("ureport.stats.tasks.refresh_engagement_data", "sync"),
     },
-    "pull-channel-stats": {"task": "channels.pull-channel-stats", "schedule": timedelta(minutes=10), "relative": True},
+    "pull-channel-stats": {
+        "task": "dash.orgs.tasks.trigger_org_task",
+        "schedule": timedelta(seconds=10),
+        "relative": True,
+        "args": ("ureport.channels.tasks.pull_channel_stats", "sync"),
+    },
 }
 
 

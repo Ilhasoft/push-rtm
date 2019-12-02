@@ -22,7 +22,7 @@
         {% endif %}
         {% if request.user.is_superuser %}
           <a class="navbar-item users" href="{% url 'accounts.global_list' %}">Users</a>
-        {% elif request.org and request.org in request.user.get_user_orgs  %}
+        {% elif request.org and request.user|is_admin_user %}
           <a class="navbar-item users" href="{% url 'accounts.user_list' %}">Users</a>
         {% endif %}
         <a class="navbar-item flowhub" href="{% url 'flowhub.flow_list' %}">Repository</a>
