@@ -57,7 +57,7 @@
         <th>{% autosort runs_count _("Runs") %}</th>
         <th>{% trans "SDGs" %}</th>
 <!--        <th>{% trans "Last sync" %}</th>-->
-        <th>Status</th>
+        <th>{% autosort is_active _("Status") %}</th>
       </tr>
     </thead>
     <tbody class="has-header">
