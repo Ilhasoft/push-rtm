@@ -1,3 +1,4 @@
+import base64
 import json
 import operator
 from functools import reduce
@@ -12,7 +13,7 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from dash.orgs.models import Org
-from smartmin.views import SmartTemplateView, SmartReadView
+from smartmin.views import SmartTemplateView
 
 from ureport.utils import get_paginator, is_global_user
 
@@ -67,7 +68,8 @@ class FlowBaseListView(LoginRequiredMixin, SearchSmartListViewMixin):
         queryset = self.model.objects.filter(is_active=True).order_by("name")
 
         if not is_global_user(self.request.user):
-            queryset = queryset.filter(Q(org=self.request.org) | Q(visible_globally=True))
+            queryset = queryset.filter(
+                Q(org=self.request.org) | Q(visible_globally=True))
 
         queryset = self.search(queryset)
         queryset = self.filter(queryset)
@@ -94,7 +96,8 @@ class FlowBaseListView(LoginRequiredMixin, SearchSmartListViewMixin):
             filters["org_id"] = unct
 
         if sort_field:
-            sortered = "{}{}".format("-" if sort_direction == "desc" else "", sort_field)
+            sortered = "{}{}".format(
+                "-" if sort_direction == "desc" else "", sort_field)
 
         return queryset.filter(**filters).order_by(sortered)
 
@@ -119,6 +122,8 @@ class ListView(FlowBaseListView):
         context["flows"] = get_paginator(list(set(self.get_queryset())), page)
         context["query"] = self.query
         context["back_to"] = reverse("flowhub.flow_list")
+        context["redirect_to"] = str(base64.b64encode(
+            context["back_to"].encode("UTF-8")), "UTF-8")
         return context
 
 
@@ -139,14 +144,16 @@ class UnctsView(SearchSmartListViewMixin):
         sortered = "name"
 
         if sort_field:
-            sortered = "{}{}".format("-" if sort_direction == "desc" else "", sort_field)
+            sortered = "{}{}".format(
+                "-" if sort_direction == "desc" else "", sort_field)
 
         queryset = self.model.objects.filter(is_active=True).order_by(sortered)
         queryset = self.search(queryset)
         self.query = self.request.GET.get("search", "")
 
         for org in queryset:
-            org.total_stars = sum([f.stars.all().count() for f in org.flows.filter(is_active=True)])
+            org.total_stars = sum([f.stars.all().count()
+                                   for f in org.flows.filter(is_active=True)])
 
         return queryset
 
@@ -180,6 +187,8 @@ class MyOrgListView(FlowBaseListView):
         context["flows"] = get_paginator(list(set(self.get_queryset())), page)
         context["query"] = self.query
         context["back_to"] = reverse("flowhub.my_org_flow_list")
+        context["redirect_to"] = str(base64.b64encode(
+            context["back_to"].encode("UTF-8")), "UTF-8")
 
         return context
 
@@ -206,7 +215,8 @@ class CreateView(SmartTemplateView):
         else:
             context = self.get_context_data()
             context["form"] = form
-            messages.error(request, _("Sorry, you did not complete the registration."))
+            messages.error(request, _(
+                "Sorry, you did not complete the registration."))
             messages.error(request, form.non_field_errors())
             return render(request, self.template_name, context)
 
@@ -233,7 +243,8 @@ class EditView(SmartTemplateView):
 
     def post(self, request, *args, **kwargs):
         flow = get_object_or_404(Flow, pk=self.kwargs["flow"])
-        form = FlowForm(request.POST, request.FILES, instance=flow, flow_is_required=False)
+        form = FlowForm(request.POST, request.FILES,
+                        instance=flow, flow_is_required=False)
 
         if form.is_valid():
             form.save(self.request)
@@ -242,7 +253,8 @@ class EditView(SmartTemplateView):
         else:
             context = self.get_context_data()
             context["form"] = form
-            messages.error(request, _("Sorry, you did not complete the registration."))
+            messages.error(request, _(
+                "Sorry, you did not complete the registration."))
             messages.error(request, form.non_field_errors())
             return render(request, self.template_name, context)
 
@@ -255,15 +267,18 @@ class DownloadView(SmartTemplateView):
         queryset = Flow.objects.filter(pk=self.kwargs["flow"], is_active=True)
 
         if not is_global_user(self.request.user):
-            queryset = queryset.filter(Q(org=self.request.org) | Q(visible_globally=True))
+            queryset = queryset.filter(
+                Q(org=self.request.org) | Q(visible_globally=True))
 
         flow = queryset.first()
 
         if not flow:
             return redirect(reverse("flowhub.flow_list"))
 
-        response = HttpResponse(json.dumps(flow.flow), content_type="application/json")
-        response["Content-Disposition"] = "attachment; filename=flow-{}.json".format(flow.pk)
+        response = HttpResponse(json.dumps(flow.flow),
+                                content_type="application/json")
+        response[
+            "Content-Disposition"] = "attachment; filename=flow-{}.json".format(flow.pk)
 
         flow.increase_downloads()
 
@@ -275,7 +290,8 @@ class StarView(SmartTemplateView):
 
     def get(self, request, *args, **kwargs):
         super().get_context_data(**kwargs)
-        flow = Flow.objects.filter(pk=self.kwargs["flow"], is_active=True).first()
+        flow = Flow.objects.filter(
+            pk=self.kwargs["flow"], is_active=True).first()
 
         if flow:
             flow.decrease_stars(request.user) if request.user in flow.stars.all() else flow.increase_stars(
@@ -292,7 +308,8 @@ class DeleteView(SmartTemplateView):
         super().get_context_data(**kwargs)
 
         try:
-            flow = Flow.objects.get(pk=kwargs.get("flow"), is_active=True, org=request.org)
+            flow = Flow.objects.get(pk=kwargs.get(
+                "flow"), is_active=True, org=request.org)
         except Flow.DoesNotExist:
             flow = None
 
@@ -301,14 +318,22 @@ class DeleteView(SmartTemplateView):
 
         flow.is_active = False
         flow.save()
+
+        redirect_to = request.POST.get("redirect_to")
+        if redirect_to:
+            redirect_to = str(base64.b64decode(
+                redirect_to.encode("UTF-8")), "UTF-8")
+            return redirect(redirect_to)
         return redirect(self.request.META.get("HTTP_REFERER"))
 
 
-class InfoView(SmartReadView):
+class InfoView(SmartTemplateView):
     template_name = "flowhub/info.html"
-    pk_url_kwarg = "flow"
-    model = Flow
 
-    def get_queryset(self):
-        queryset = super().get_queryset().filter(is_active=True)
-        return queryset.filter(Q(org=self.request.org) | Q(visible_globally=True))
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        queryset = Flow.objects.get(pk=kwargs.get("flow"))
+        context["redirect_to"] = str(base64.b64encode(
+            self.request.META.get("HTTP_REFERER").encode("UTF-8")), "UTF-8")
+        context["flow"] = queryset
+        return context

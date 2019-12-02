@@ -117,6 +117,7 @@
     <footer class="modal-card-foot">
       <form class="form-flowhub" action="{% url 'flowhub.flow_delete' flow.pk %}" method="POST">
         {% csrf_token %}
+        <input type="hidden" value="{{ redirect_to }}" name="redirect_to"/>
         <button class="button is-danger right-m-5" type="submit">Confirm</button>
       </form>
       <button class="button dark-reverse" id="cancelDelete">Cancel</button>
