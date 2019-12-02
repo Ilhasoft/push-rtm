@@ -31,7 +31,7 @@
         </form>
       </div>
     </div>
-    {% if not request.org.is_master %}
+    {% if not request.org.is_master and request.user|is_admin_user %}
     <div class="column is-narrow">
       <div class="control">
         <a class="button is-medium is-info" href="{% url 'polls.poll_create' %}">
