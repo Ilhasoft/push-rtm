@@ -61,9 +61,11 @@
             <strong>{{ unct.name }}</strong>
           </td>
           <td class="has-text-centered">
-            {% with flows=unct.flows|only_is_active|length %}
-            {{ flows }} {% trans "flow" %}{{ flows|pluralize }}
-            {% endwith %}
+            <a href="{% url 'flowhub.flow_list' %}?unct={{ unct.pk }}">
+              {% with flows=unct.flows|only_is_active|length %}
+                {{ flows }} {% trans "flow" %}{{ flows|pluralize }}
+              {% endwith %}
+            </a>
           </td>
           <td class="has-text-centered">
             {% trans "Registered" %} {{ unct.flows.last.created_on|naturaltime }}

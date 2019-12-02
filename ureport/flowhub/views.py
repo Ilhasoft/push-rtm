@@ -79,6 +79,7 @@ class FlowBaseListView(LoginRequiredMixin, SearchSmartListViewMixin):
         sort_direction = self.request.GET.get("dir")
         language = self.request.GET.get("lang", "")
         sdg = self.request.GET.get("sdg", 0)
+        unct = self.request.GET.get("unct")
 
         filters = {}
         sortered = "stars"
@@ -88,6 +89,9 @@ class FlowBaseListView(LoginRequiredMixin, SearchSmartListViewMixin):
 
         if sdg:
             filters["sdgs__contains"] = [sdg]
+
+        if unct:
+            filters["org_id"] = unct
 
         if sort_field:
             sortered = "{}{}".format("-" if sort_direction == "desc" else "", sort_field)
