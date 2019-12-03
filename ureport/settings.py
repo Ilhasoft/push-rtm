@@ -89,6 +89,7 @@ INSTALLED_APPS += (
     "qurl_templatetag",
     "taggit",
     "widget_tweaks",
+    "drf_yasg",
     "ureport.uncts",
     "ureport.accounts",
     "ureport.results",
