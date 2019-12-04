@@ -89,6 +89,7 @@ INSTALLED_APPS += (
     "qurl_templatetag",
     "taggit",
     "widget_tweaks",
+    "drf_yasg",
     "ureport.uncts",
     "ureport.accounts",
     "ureport.results",
@@ -178,7 +179,7 @@ SASS_PROCESSOR_INCLUDE_FILE_PATTERN = r"^.+\.scss$"
 LOGIN_URL = "/users/login/"
 LOGOUT_URL = "/users/logout/"
 LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "http://dataforallcloud.org/"
 
 SITE_CHOOSER_TEMPLATE = "public/index.html"
 SITE_CHOOSER_URL_NAME = "public.index"
