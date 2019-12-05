@@ -7,5 +7,14 @@
     <h1 class="title">{% trans "Sign in" %}</h1>
   </div>
 
-  <a href="{{ authorization_url }}">{% trans "Login with Data for All" %}</a>
+  <a href="{{ authorization_url }}" id="authorization_url">{% trans "Login with Data for All" %}</a>
+{% endblock %}
+
+{% block js_extra %}
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+setTimeout(function() {
+  window.location.href = document.getElementById("authorization_url").href;
+}, 3000);
+</script>
 {% endblock %}
