@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load i18n static ureport sass_tags %}
+
+{% block nav_item %}page-surveys-global{% endblock %}
+
+{% block css_extra %}
+<link rel="stylesheet" href="{% sass_src 'css/polls/survey_global_list.scss' %}" />
+{% endblock %}
+
+
+{% block content %}
+<section class="section">
+  <h1 class="title">{% trans "Surveys Global" %}</h1>
+</section>
+
+<section class="section">
+  <div class="columns is-mobile">
+    <div class="column auto">
+      <div class="control has-icons-left">
+        <form>
+          <input class="input is-medium search is-borderless" name="query" placeholder="Search" value="{{ query }}">
+          <span class="icon is-left icon-search">
+            <i class="material-icons">search</i>
+          </span>
+        </form>
+      </div>
+    </div>
+    <div class="column is-narrow">
+      <div class="control">
+        <a class="button is-medium is-info" href="{% url 'polls_global.poll_create' %}">
+          <span class="icon">
+            <i class="material-icons">add</i>
+          </span>
+          <span>{% trans "Surveys Global" %}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <table class="table is-fullwidth">
+    <thead>
+      <tr class="is-tr">
+        <th>{% autosort name _("Name") %}</th>
+        <th>{% autosort poll_date _("Initial Date") %}</th>
+        <th>{% autosort poll_end_date _("Final Date") %}</th>
+        <th>{% autosort is_active _("Status") %}</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody class="has-header">
+      {% for poll in polls %}
+        <tr class="{% if not poll.is_active %} is-poll-inactive {% endif %}">
+          <td>{{ poll.title }}</td>
+          <td>{{ poll.poll_date|date:"m/d/Y" }} </td>
+          <td>{{ poll.poll_end_date|date:"m/d/Y" }}</td>
+          <td class="poll-status">
+            {% if poll.is_active %}
+              {% trans 'Active' %}
+            {% else %}
+              {% trans 'Inactive' %}
+            {% endif %}
+          </td>
+          <td>
+            <a href="{% url 'polls_global.poll_update' poll.pk %}">
+              <i class="material-icons">border_color</i>
+            </a>
+          </td>
+          <td>
+            <a href="">
+              <i class="material-icons">library_add</i>
+            </a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5" class="has-text-centered">{% trans "No results found" %}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="is-pulled-right bottom-m-50">
+    {% include "paginator.html" with paginator=polls %}
+  </div>
+</section>
+{% endblock %}

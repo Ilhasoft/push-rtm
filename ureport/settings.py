@@ -97,6 +97,7 @@ INSTALLED_APPS += (
     "ureport.dashboard",
     "ureport.channels",
     "ureport.authentication",
+    "ureport.polls_global",
 )
 
 SITE_ALLOW_NO_ORG += (
@@ -121,6 +122,9 @@ SITE_ALLOW_NO_ORG += (
     "accounts.user_org_delete",
     "authentication.login",
     "authentication.callback",
+    "polls_global.poll_list",
+    "polls_global.poll_create",
+    "polls_global.poll_update",
 )
 
 SDG_LIST = (

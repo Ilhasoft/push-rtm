@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load i18n static sass_tags %}
+
+{% block nav_item %}page-surveys-global{% endblock %}
+
+{% block css_extra %}
+<link rel="stylesheet" href="{% sass_src 'css/polls/form.scss' %}">
+<link rel="stylesheet" href="{% static 'plugins/checkbox/checkbox.min.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.css">
+{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="columns">
+    <div class="column box is-three-fifths is-offset-one-fifth">
+      <form class="generic-form" method="post">
+          <h1 class="title">{% trans "Surveys Global" %}</h1>
+          <h2 class="subtitle has-text-grey-light">{{ page_subtitle }}</h2>
+        {% csrf_token %}
+        <div class="field bottom-m-20">
+          <label class="label">{{ form.title.label }}</label>
+          <div class="control">
+            {{ form.title }}
+            {{ form.title.errors }}
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">
+            {{ form.poll_date.label }}
+          </label>
+          <div class="control has-icons-right">
+            {{ form.poll_date }}
+            <span class="icon is-small is-right">
+              <i class="material-icons">calendar_today</i>
+            </span>
+            {{ form.poll_date.errors }}
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">{{ form.poll_end_date.label }}</label>
+          <div class="control has-icons-right">
+            {{ form.poll_end_date }}
+            <span class="icon is-small is-right">
+              <i class="material-icons">calendar_today</i>
+            </span>
+            {{ form.poll_end_date.errors }}
+          </div>
+        </div>
+
+        {% if form.is_active %}
+          <div class="control">
+            {{ form.is_active }}
+            <label class="label" for="{{ form.is_active.auto_id }}">{{ form.is_active.label }}</label>
+          </div>
+          <p class="help">{{ field.help_text }}</p>
+        {% endif %}
+        <button type="submit" class="button is-medium is-info right-m-20">{% trans "OK" %}</button>
+        <a href="{% url 'polls_global.poll_list' %}" class="button is-medium primary-reverse l-m-10">{% trans "Cancel" %}</a>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block js_extra %}
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.js"></script>
+<script src="{% static 'js/forms/errors.js' %}"></script>
+<script type="text/javascript">
+$('#id_poll_date, #id_poll_end_date').datepicker({
+  // format: 'yyyy-mm-dd'
+});
+{% for field in form.errors %}
+  setErrors('{{field}}');
+{% endfor %}
+</script>
+{% endblock %}
