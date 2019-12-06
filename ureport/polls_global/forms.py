@@ -27,8 +27,17 @@ class PollGlobalForm(forms.ModelForm):
     is_active = forms.BooleanField(
         required=False, widget=forms.CheckboxInput(attrs={"class": "is-checkradio"}))
 
+    description = forms.CharField(
+        label=_("Description"),
+        required=True,
+        max_length=255,
+        widget=forms.Textarea(
+            attrs={"placeholder": _("Survey Description"), "required": True, "class": "textarea", "rows": 5}
+        ),
+    )
+
     class Meta:
-        fields = ["title", "poll_date", "poll_end_date", "is_active"]
+        fields = ["title", "poll_date", "poll_end_date", "is_active", "description"]
         model = PollGlobal
 
     def save(self, user):

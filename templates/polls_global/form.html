@@ -46,7 +46,13 @@
             {{ form.poll_end_date.errors }}
           </div>
         </div>
-
+        <div class="field bottom-m-20">
+          <label class="label">{{ form.description.label }}</label>
+          <div class="control">
+            {{ form.description }}
+            {{ form.description.errors }}
+          </div>
+        </div>
         {% if form.is_active %}
           <div class="control">
             {{ form.is_active }}

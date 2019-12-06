@@ -125,6 +125,7 @@ SITE_ALLOW_NO_ORG += (
     "polls_global.poll_list",
     "polls_global.poll_create",
     "polls_global.poll_update",
+    "polls_global.poll_grant",
 )
 
 SDG_LIST = (

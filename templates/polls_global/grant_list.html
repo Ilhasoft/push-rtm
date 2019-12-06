@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load i18n static ureport sass_tags %}
+
+{% block nav_item %}page-surveys-global{% endblock %}
+
+{% block css_extra %}
+<link rel="stylesheet" href="{% sass_src 'css/polls/survey_global_list.scss' %}" />
+{% endblock %}
+
+
+{% block content %}
+<section class="section">
+  <h1 class="title">{% trans "Surveys Global - Pending" %}</h1>
+  <table class="table is-fullwidth">
+    <thead>
+      <tr class="is-tr">
+        <th>{% trans "Name" %}</th>
+        <th class="has-text-centered">{% trans "Questions" %}</th>
+        <th class="has-text-centered">{% trans "UNCT" %}</th>
+        <th class="has-text-centered">{% trans "Date" %}</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody class="has-header">
+      {% for poll in polls_pending %}
+        <tr>
+            <a href="{{ poll.poll_local.org|get_org_url }}{% url 'results.poll_read' poll.poll_local.pk %}" target="blank">{{ poll.poll_local.title }}</a>
+          <td class="has-text-centered">{{ poll.poll_local.get_questions.count }}</td>
+          <td class="has-text-centered">{{ poll.poll_local.org.name }}</td>
+          <td class="has-text-centered">{{ poll.created_on|date:"m/d/Y" }}</td>
+          <td>
+            <a href="{% url 'polls_global.poll_update' poll.poll_global.pk poll.poll_local.pk %}?action=approve">
+              <i class="material-icons">done</i>
+            </a>
+          </td>
+          <td>
+            <a href="{% url 'polls_global.poll_update' poll.poll_global.pk poll.poll_local.pk %}?action=remove">
+              <i class="material-icons">clear</i>
+            </a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="6" class="has-text-centered">{% trans "No results found" %}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<section class="section">
+  <h1 class="title">{% trans "Surveys Global - Approved" %}</h1>
+  <table class="table is-fullwidth">
+    <thead>
+      <tr class="is-tr">
+        <th>{% trans "Name" %}</th>
+        <th class="has-text-centered">{% trans "Questions" %}</th>
+        <th class="has-text-centered">{% trans "UNCT" %}</th>
+        <th class="has-text-centered">{% trans "Joined" %}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody class="has-header">
+      {% for poll in polls_accepted %}
+        <tr>
+          <td>
+              <a href="{{ poll.poll_local.org|get_org_url }}{% url 'results.poll_read' poll.poll_local.pk %}" target="blank">{{ poll.poll_local.title }}</a>
+          </td>
+          <td class="has-text-centered">{{ poll.poll_local.get_questions.count }}</td>
+          <td class="has-text-centered">{{ poll.poll_local.org.name }}</td>
+          <td class="has-text-centered">{{ poll.created_on|date:"m/d/Y" }}</td>
+          <td>
+            <a href="{% url 'polls_global.poll_update' poll.poll_global.pk poll.poll_local.pk %}?action=remove">
+              <i class="material-icons">clear</i>
+            </a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="6" class="has-text-centered">{% trans "No results found" %}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

@@ -407,3 +407,8 @@ def is_admin_user(user):
     if user.groups.filter(name="Administrators"):
         return True
     return False
+
+
+@register.filter(name="get_org_url")
+def get_org_url(org):
+    return settings.SITE_HOST_PATTERN.format(org.subdomain)

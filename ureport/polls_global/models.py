@@ -1,6 +1,10 @@
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+
 from smartmin.models import SmartModel
+
+from ureport.polls.models import Poll
 
 
 class PollGlobal(SmartModel):
@@ -13,7 +17,23 @@ class PollGlobal(SmartModel):
     )
 
     title = models.CharField(
-        max_length=255, help_text=_("The title for this Survey"))
+        max_length=255, help_text=_("The title for this survey."))
+
+    description = models.TextField(null=True, help_text=_("THe description for this survey."))
 
     def __str__(self):
         return self.title
+
+
+class PollGlobalSurveys(models.Model):
+    poll_global = models.ForeignKey(to=PollGlobal, related_name="polls_global", on_delete=models.PROTECT)
+
+    poll_local = models.ForeignKey(to=Poll, related_name="polls_global", on_delete=models.PROTECT)
+
+    is_joined = models.BooleanField(default=False)
+
+    created_on = models.DateTimeField(default=timezone.now, editable=False, blank=True,
+                                      help_text="When this item was originally created")
+
+    class Meta:
+        unique_together = ["poll_global", "poll_local"]
