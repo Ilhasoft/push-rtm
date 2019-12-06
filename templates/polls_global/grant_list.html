@@ -25,7 +25,9 @@
     <tbody class="has-header">
       {% for poll in polls_pending %}
         <tr>
+          <td>
             <a href="{{ poll.poll_local.org|get_org_url }}{% url 'results.poll_read' poll.poll_local.pk %}" target="blank">{{ poll.poll_local.title }}</a>
+          </td>
           <td class="has-text-centered">{{ poll.poll_local.get_questions.count }}</td>
           <td class="has-text-centered">{{ poll.poll_local.org.name }}</td>
           <td class="has-text-centered">{{ poll.created_on|date:"m/d/Y" }}</td>
