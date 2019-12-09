@@ -158,8 +158,8 @@
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
                 <a href="javascript:loadChartMessageMetricsByChannel()" class="dropdown-item">{% trans "All channels" %}</a>
-              {% for channel in channels_info %}
-                <a href="javascript:loadChartMessageMetricsByChannel('{{ channel.uuid }}', '{{ channel.name }}')" class="dropdown-item">{{ channel.name }}</a>
+              {% for key, channel in channels_info.items %}
+                <a href="javascript:loadChartMessageMetricsByChannel('{{ channel.type }}', '{{ channel.name }}')" class="dropdown-item">{{ channel.name }}</a>
               {% endfor %}
             </div>
           </div>
@@ -214,7 +214,7 @@
       url = `${url}&filter_by=${filterBy}`;
     }
     if (channelUUID) {
-      url = `${url}&uuid=${channelUUID}`;
+      url = `${url}&type=${channelUUID}`;
     }
     if (sdg) {
       url = `${url}&sdg=${sdg}`;
@@ -509,8 +509,9 @@
       }
       $("#message_metrics_time_ago").html("");
       $("#message_metrics_time_ago").html(result.time_ago);
-      if (result.channels_data.length > 0) {
-        $("#message_by_channel_list").html(result.channels_data.map(function(channel) {
+
+      if (Object.values(result.channels_data).length > 0) {
+        $("#message_by_channel_list").html(Object.values(result.channels_data).map(function(channel, key) {
           let trendingInfo = "";
 
           if (channel.global > channel.total) {
