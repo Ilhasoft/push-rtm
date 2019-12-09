@@ -56,7 +56,7 @@
         <th>{% trans "Questions" %}</th>
         <th>{% autosort runs_count _("Runs") %}</th>
         <th>{% trans "SDGs" %}</th>
-<!--        <th>{% trans "Last sync" %}</th>-->
+        <th>{% trans "Global" %}</th>
         <th>{% autosort is_active _("Status") %}</th>
       </tr>
     </thead>
@@ -112,7 +112,13 @@
           {% endfor %}
           {% endif%}
         </td>
-<!--        <td>{{ poll|get_poll_sync_status }}</td>-->
+        <td>
+          {% if poll.polls_global.count %}
+            {% trans "Yes" %}
+          {% else %}
+            {% trans "No" %}
+          {% endif %}
+        </td>
         <td class="poll-status">
           {%if poll.is_active %}
             {% trans 'Active' %}
