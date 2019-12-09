@@ -15,7 +15,7 @@
 </section>
 
 <div class="column">
-  <form class="generic-form box p-30" method="post" enctype="multipart/form-data">
+  <form class="generic-form box p-40" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="columns">
       <div class="column">
@@ -64,10 +64,10 @@
             </label>
           </span>
           {% endfor %}
+        </div>
       </div>
     </div>
-  {{form.groups.errors}}
-  </div>
+    {{form.groups.errors}}
     <div class="columns">
       <div class="column is-centered">
         <button type="submit" class="button is-primary">{% trans "OK" %}</button>
