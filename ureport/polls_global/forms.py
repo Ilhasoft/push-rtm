@@ -30,7 +30,6 @@ class PollGlobalForm(forms.ModelForm):
     description = forms.CharField(
         label=_("Description"),
         required=True,
-        max_length=255,
         widget=forms.Textarea(
             attrs={"placeholder": _("Survey Description"), "required": True, "class": "textarea", "rows": 5}
         ),
