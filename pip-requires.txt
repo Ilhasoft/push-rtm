@@ -8,7 +8,7 @@ django-debug-toolbar
 django-digest
 django-rosetta
 django-storages
-django-rest-swagger
+drf-yasg
 djangorestframework
 dj-database-url
 boto3

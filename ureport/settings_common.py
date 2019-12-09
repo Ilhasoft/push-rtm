@@ -585,7 +585,6 @@ INSTALLED_APPS = (
     "ureport.stats",
     "django_countries",
     "rest_framework",
-    "rest_framework_swagger",
     "hamlpy",
 )
 

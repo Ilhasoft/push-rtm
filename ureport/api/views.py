@@ -41,11 +41,11 @@ class OrgList(ListAPIView):
             "results": [
             {
                 "id": 1,
-                "logo_url": "http://test.ureport.in/media/logos/StraightOuttaSomewhere_2.jpg",
+                "logo_url": "http://test.rtm.in/media/logos/StraightOuttaSomewhere_2.jpg",
                 "name": "test",
                 "language": "en",
                 "subdomain": "test",
-                "domain": "ureport.in",
+                "domain": "rtm.in",
                 "timezone": "Africa/Kampala"
                 "gender_stats": {
                     "female_count": 0,
@@ -79,11 +79,11 @@ class OrgDetails(RetrieveAPIView):
 
         {
             "id": 1,
-            "logo_url": "http://test.ureport.in/media/logos/StraightOuttaSomewhere_2.jpg",
+            "logo_url": "http://test.rtm.in/media/logos/StraightOuttaSomewhere_2.jpg",
             "name": "test",
             "language": "en",
             "subdomain": "test",
-            "domain": "ureport.in",
+            "domain": "rtm.in",
             "timezone": "Africa/Kampala"
             "gender_stats": {
                     "female_count": 0,
@@ -122,7 +122,6 @@ class PollList(BaseListAPIView):
     * **flow_uuid** - the FLOW_UUID of the run (string) (filterable: ```flow_uuid```)
     * **title** - the TITLE of the poll (string)
     * **org** - the ID of the org that owns this poll (int)
-    * **category** - the CATEGORIES of of this poll (dictionary)
 
     Example:
 
@@ -140,10 +139,6 @@ class PollList(BaseListAPIView):
                     "flow_uuid": "a497ba0f-6b58-4bed-ba52-05c3f40403e2",
                     "title": "Food Poll",
                     "org": 1,
-                    "category": {
-                        "image_url": null,
-                        "name": "Education"
-                     },
                     "questions": [
                         {
                             "id": 14,
@@ -237,12 +232,6 @@ class PollList(BaseListAPIView):
                         }
 
                     ]
-
-
-                    "category": {
-                        "image_url": "http://test.ureport.in/media/categories/StraightOuttaSomewhere_2.jpg",
-                        "name": "tests"
-                    },
                     "created_on": "2015-09-02T08:53:30.313251Z"
                 }
                 ...
@@ -277,10 +266,6 @@ class PollDetails(RetrieveAPIView):
             "flow_uuid": "a497ba0f-6b58-4bed-ba52-05c3f40403e2",
             "title": "Food Poll",
             "org": 1,
-            "category": {
-                "image_url": null,
-                "name": "Education"
-            },
             "questions": [
                 {
                     "id": 14,
@@ -388,29 +373,20 @@ class DashboardDetails(RetrieveAPIView):
 
     ## Get dashboard data
 
-    Example:
+    By making a ```GET``` request you can get a dashboard data for an organization, filtering them as needed.
 
-        GET /api/v1/dashboard/1/
+    * **id** - the ID of the organization (int)
+    * **card** - the CARD is section of dashboard (string), (filterable: ```sdg_tracked```, ```message_metrics```, ```channel_most_used``` or ```rapidpro_contacts```).
+    * **filter_by** - the FILTER_BY is period (string) (filterable: ```week```, ```month```, ```year```, ```inception```)
+    * **uuid** - the UUID of the channel UUID (string) (only message_metrics)
 
-        Query params:
-            card=
-                sdg_tracked,
-                message_metrics,
-                channel_most_used,
-                rapidpro_contacts
-            filter_by=
-                week,
-                month,
-                year,
-                inception
-            uuid=123456abcd (only message_metrics)
+    ### Example:
 
-        Example:
-            /api/v1/dashboard/1/?card=message_metrics&filter_by=month
+        GET /api/v1/dashboard/1/?card=message_metrics&filter_by=year&uuid=123456abcd
     """
 
     queryset = Org.objects.filter(is_active=True)
-    serializer_class = OrgReadSerializer
+    serializer_class = None
 
     def retrieve(self, request, *args, **kwargs):
         self.access_level = "local"

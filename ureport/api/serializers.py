@@ -4,7 +4,6 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import json
 
 import six
-from dash.categories.models import Category
 from dash.orgs.models import Org
 from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
@@ -14,24 +13,6 @@ from ureport.polls.models import Poll
 
 def generate_absolute_url_from_file(request, file):
     return request.build_absolute_uri(file.url)
-
-
-class CategoryReadSerializer(serializers.ModelSerializer):
-    image_url = SerializerMethodField()
-
-    class Meta:
-        model = Category
-        fields = ("image_url", "name")
-
-    def get_image_url(self, obj):
-        image = None
-        if obj.image:
-            image = obj.image
-        elif obj.get_first_image():
-            image = obj.get_first_image()
-        if image:
-            return generate_absolute_url_from_file(self.context["request"], image)
-        return None
 
 
 class OrgReadSerializer(serializers.ModelSerializer):
@@ -85,12 +66,11 @@ class OrgReadSerializer(serializers.ModelSerializer):
 
 
 class PollReadSerializer(serializers.ModelSerializer):
-    category = CategoryReadSerializer()
     questions = SerializerMethodField()
 
     class Meta:
         model = Poll
-        fields = ("id", "flow_uuid", "title", "org", "category", "poll_date", "created_on", "questions")
+        fields = ("id", "flow_uuid", "title", "org", "poll_date", "created_on", "questions")
 
     def get_questions(self, obj):
         questions = []

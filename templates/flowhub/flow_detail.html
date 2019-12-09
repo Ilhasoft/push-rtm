@@ -5,18 +5,18 @@
     <div class="columns is-gapless">
       <div class="column is-11">
         <a href="{{ flow.get_absolute_url }}">
-          <strong>{{ flow.name }}</strong> | <i>{{ flow.org.name }}</i> 
+          <strong>{{ flow.name }}</strong> | <i>{{ flow.org.name }}</i>
         </a>
         {% if request.org == flow.org and request.user|is_admin_user %}
-          <form class="form-flowhub" action="{% url 'flowhub.flow_delete' flow.pk %}" method="POST">
+          <form class="form-flowhub">
             {% csrf_token %}
             <a href="{% url 'flowhub.flow_update' flow.pk %}">
               <img src="{% static 'svg/pencil.svg' %}" alt="pencil">
             </a>
-            <button class="button-no-bg" type="submit">
-              <img src="{% static 'svg/trash.svg' %}" alt="trash">
-            </button>
           </form>
+          <button class="button-no-bg" id="showDeleteModal">
+            <img src="{% static 'svg/trash.svg' %}" alt="trash">
+          </button>
         {% endif %}
       </div>
       <div class="column stars">
@@ -50,14 +50,14 @@
       </div>
     </div>
     {% endif %}
-    
+
     <div class="columns">
       <div class="column">
         {% for key, name in flow.get_sdgs.items %}
           <span class="tag sdg-{{ key }}">{{ name }}</span>
         {% endfor %}
       </div>
-    </div>    
+    </div>
 
     <div class="columns">
       <div class="column download">
@@ -67,3 +67,24 @@
     </div>
   </td>
 </tr>
+
+<div id="deleteModal" class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">{% trans 'Are you sure?' %}</p>
+      <button class="delete" aria-label="close" id="modalClose"></button>
+    </header>
+    <section class="modal-card-body">
+      {% trans 'Do you really want to delete this flow?' %}
+    </section>
+    <footer class="modal-card-foot">
+      <form class="form-flowhub" action="{% url 'flowhub.flow_delete' flow.pk %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" value="{{ redirect_to }}" name="redirect_to"/>
+        <button class="button is-danger right-m-5" type="submit">Confirm</button>
+      </form>
+      <button class="button dark-reverse" id="cancelDelete">Cancel</button>
+    </footer>
+  </div>
+</div>

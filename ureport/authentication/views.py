@@ -61,6 +61,7 @@ class LoginAuthView(SmartTemplateView):
                 workspace = extra_data.get("workspace")
 
                 if self.request.org.subdomain in workspace:
+                    is_new_user = False
                     try:
                         user = get_user_model().objects.get(
                             email=extra_data.get("email"), username=extra_data.get("userid")
@@ -73,7 +74,9 @@ class LoginAuthView(SmartTemplateView):
                         )
                         user.set_password(random.getrandbits(128))
                         user.save()
+                        is_new_user = True
 
+                    if self.request.org.subdomain not in user.get_user_orgs() or is_new_user:
                         group = Group.objects.get(name="Viewers")
                         user.groups.add(group)
                         self.request.org.viewers.add(user)

@@ -27,15 +27,15 @@
       <div class="column">
         <strong>{{ flow.name }}</strong>
         {% if request.org == flow.org and request.user|is_admin_user %}
-          <form class="form-flowhub" action="{% url 'flowhub.flow_delete' flow.pk %}" method="POST">
+          <form class="form-flowhub">
             {% csrf_token %}
             <a href="{% url 'flowhub.flow_update' flow.pk %}">
               <img src="{% static 'svg/pencil.svg' %}" alt="pencil">
             </a>
-            <button class="button-no-bg" type="submit">
-              <img src="{% static 'svg/trash.svg' %}" alt="trash">
-            </button>
           </form>
+        <button class="button-no-bg" id="showDeleteModal">
+          <img src="{% static 'svg/trash.svg' %}" alt="trash">
+        </button>
         {% endif %}
         <div class="has-text-grey-light">
           {{ flow.org.name }}
@@ -103,4 +103,45 @@
     </div>
   </div>
 </div>
+
+<div id="deleteModal" class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">{% trans 'Are you sure?' %}</p>
+      <button class="delete" aria-label="close" id="modalClose"></button>
+    </header>
+    <section class="modal-card-body">
+      {% trans 'Do you really want to delete this flow?' %}
+    </section>
+    <footer class="modal-card-foot">
+      <form class="form-flowhub" action="{% url 'flowhub.flow_delete' flow.pk %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" value="{{ redirect_to }}" name="redirect_to"/>
+        <button class="button is-danger right-m-5" type="submit">Confirm</button>
+      </form>
+      <button class="button dark-reverse" id="cancelDelete">Cancel</button>
+    </footer>
+  </div>
+</div>
+{% endblock %}
+
+{% block js_extra %}
+<script>
+    let btn = document.querySelector('#showDeleteModal');
+    let modalDlg = document.querySelector('#deleteModal');
+    let modalCloseBtn = document.querySelector('#modalClose');
+    let cancelBtn = document.querySelector('#cancelDelete');
+    btn.addEventListener('click', function(){
+        modalDlg.classList.add('is-active');
+    });
+
+    modalCloseBtn.addEventListener('click', function(){
+        modalDlg.classList.remove('is-active');
+    });
+
+    cancelBtn.addEventListener('click', function(){
+        modalDlg.classList.remove('is-active');
+    });
+</script>
 {% endblock %}
