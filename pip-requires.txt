@@ -44,3 +44,14 @@ django-taggit
 libsass
 django-qurl-templatetag
 requests_oauthlib
+Sphinx
+sphinx-autodoc-napoleon-typehints
+sphinx-autodoc-typehints
+sphinx-rtd-theme
+sphinxcontrib-applehelp
+sphinxcontrib-devhelp
+sphinxcontrib-htmlhelp
+sphinxcontrib-jsmath
+sphinxcontrib-napoleon
+sphinxcontrib-qthelp
+sphinxcontrib-serializinghtml
