@@ -696,8 +696,9 @@ class PollCRUDL(SmartCRUDL):
                     PollGlobalSurveys.objects.create(poll_global=self.form.cleaned_data[
                         "global_survey"], poll_local=obj)
             else:
-                global_survey = PollGlobalSurveys.objects.get(poll_local=self.object, is_joined=False)
-                global_survey.delete()
+                global_survey = PollGlobalSurveys.objects.filter(poll_local=self.object).first()
+                if global_survey and not global_survey.is_joined:
+                    global_survey.delete()
             return obj
 
     class PullRefresh(SmartUpdateView):
