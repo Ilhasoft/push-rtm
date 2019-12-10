@@ -20,7 +20,7 @@
       </div>
     </div>
   </div>
-  <form class="generic-form box is-shadowless" action="#" method="POST" enctype="multipart/form-data">
+  <form class="generic-form box is-shadowless p-40" action="#" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="files-form">
       <div class="file has-name is-info field">
@@ -103,7 +103,7 @@
 <script src="{% static 'js/forms/errors.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/scripts/choices.min.js"></script>
 <script type="text/javascript">
-  
+
   new Choices("#id_sdgs", {
     removeItemButton: true,
     placeholderValue: "Link this flow to one or more SDGs",
@@ -137,7 +137,7 @@
       };
     }
   });
-  
+
   new Choices("#id_languages", {
     removeItemButton: true,
     classNames: {
@@ -150,7 +150,7 @@
       listItems: "choices__list--multiple",
     },
   });
-  
+
   document.getElementById("id_flow").onchange = ((e) => {
     if (e.srcElement.files.length > 0) {
       document.getElementById("file_name").innerText = e.srcElement.files.item(0).name;

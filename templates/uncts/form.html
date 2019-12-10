@@ -11,7 +11,7 @@
 
 <section class="section">
   <div class="columns">
-    <div class="column box">
+    <div class="column box is-paddingless">
       <form class="generic-form" method="post">
         {% csrf_token %}
         <div class="columns">
@@ -173,8 +173,8 @@
             </div>
           </div>
         </div>
-        <button type="submit" class="button is-medium is-info right-m-20">{% trans "OK" %}</button>
-        <a href="{% url 'uncts.unct_list' %}" class="button is-medium primary-reverse l-m-10">{% trans "Cancel" %}</a>
+        <button type="submit" class="button is-info">{% trans "OK" %}</button>
+        <a href="{% url 'uncts.unct_list' %}" class="button primary-reverse l-m-10">{% trans "Cancel" %}</a>
       </form>
     </div>
   </div>
