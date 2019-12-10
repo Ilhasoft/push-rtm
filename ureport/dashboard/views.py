@@ -116,23 +116,22 @@ class DashboardDataView(View):
             response["questions"] = questions
 
         if card == "message_metrics":
-            channel_uuid = self.request.GET.get("uuid")
+            channel_type = self.request.GET.get("type")
             channels = ChannelStats.objects.all().order_by("channel_type")
 
             if self.access_level == "local":
                 channels = channels.filter(org=self.request.org)
 
-            channels_info = []
-            channels_data = []
+            channels_info = {}
+            channels_data = {}
 
             for channel in channels:
-                channels_info.append(
-                    {
-                        "uuid": channel.uuid,
-                        "name": Dashboard.channel_info(channel.channel_type, "name"),
-                        "icon": Dashboard.channel_info(channel.channel_type, "icon"),
-                    }
-                )
+                channels_info[channel.channel_type] = {
+                    "type": channel.channel_type,
+                    "name": Dashboard.channel_info(channel.channel_type, "name"),
+                    "icon": Dashboard.channel_info(channel.channel_type, "icon"),
+                }
+
             response["channels_info"] = channels_info
 
             for channel in channels:
@@ -146,18 +145,19 @@ class DashboardDataView(View):
                     .aggregate(total=Sum("count"))["total"]
                 )
 
-                channels_data.append(
-                    {
-                        "uuid": channel.uuid,
+                if channel.channel_type not in channels_data:
+                    channels_data[channel.channel_type] = {
+                        "type": channel.channel_type,
                         "name": Dashboard.channel_info(channel.channel_type, "name"),
                         "icon": Dashboard.channel_info(channel.channel_type, "icon"),
-                        "total": total if total is not None else 0,
+                        "total": 0,
                         "global": global_total if global_total is not None else 0,
                     }
-                )
 
-            if channel_uuid:
-                channels = channels.filter(uuid=channel_uuid)
+                channels_data[channel.channel_type]["total"] += total
+
+            if channel_type:
+                channels = channels.filter(channel_type=channel_type)
 
             channels_stats = ChannelDailyStats.objects.filter(
                 channel__in=channels,
@@ -193,7 +193,7 @@ class DashboardDataView(View):
 
             response["channels_stats"] = {"labels": list(dict.fromkeys(labels)), "series": series}
             response["channels_data"] = channels_data
-            response["channel_uuid"] = channel_uuid
+            response["channel_type"] = channel_type
             response["filter_by"] = filter_by
 
         if card == "channel_most_used":
@@ -400,19 +400,17 @@ class Dashboard(SmartTemplateView):
         context = super().get_context_data(**kwargs)
         context["access_level"] = self.access_level
 
-        channels_info = []
+        channels_info = {}
         channels = ChannelStats.objects.all().order_by("channel_type")
         if self.access_level == "local":
             channels = channels.filter(org=self.request.org)
 
         for channel in channels:
-            channels_info.append(
-                {
-                    "uuid": channel.uuid,
-                    "name": Dashboard.channel_info(channel.channel_type, "name"),
-                    "icon": Dashboard.channel_info(channel.channel_type, "icon"),
-                }
-            )
+            channels_info[channel.channel_type] = {
+                "type": channel.channel_type,
+                "name": Dashboard.channel_info(channel.channel_type, "name"),
+                "icon": Dashboard.channel_info(channel.channel_type, "icon"),
+            }
 
         context["channels_info"] = channels_info
 
