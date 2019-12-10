@@ -90,6 +90,7 @@ INSTALLED_APPS += (
     "taggit",
     "widget_tweaks",
     "drf_yasg",
+    "docs",
     "ureport.uncts",
     "ureport.accounts",
     "ureport.results",
@@ -270,3 +271,8 @@ OAUTHLIB_MOMSERVICE_USER_URL = config(
     "OAUTHLIB_MOMSERVICE_USER_URL", default="http://dataforallcloud.org/monservice/api/v1/rtmUserInfo"
 )
 OAUTHLIB_APP_ID = config("OAUTHLIB_APP_ID", default="uninfortm")
+
+
+## DOCS
+
+DOCS_ROOT = os.path.join(PROJECT_DIR, "../docs/_build/html")
