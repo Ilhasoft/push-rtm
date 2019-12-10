@@ -4,6 +4,7 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
+cd docs && make html && cd ..
 python /app/manage.py collectstatic --noinput
 if [ "${COMPRESS_ENABLED}" = true ]; then
     python /app/manage.py compress --extension=.html
