@@ -25,3 +25,9 @@ a.button.is-info:hover .material-icons,
 a.button.is-outlined:hover .material-icons{
   color: #FFFFFF;
 }
+
+form {
+  .button {
+    min-width: 10rem;
+  }
+}
