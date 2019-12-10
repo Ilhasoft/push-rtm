@@ -12,8 +12,12 @@
 
 {% block content %}
 <section class="section">
+  <h1 class="title">{% trans "Surveys" %}</h1>
+</section>
+
+<section class="section">
   <div class="columns">
-    <div class="column is-four-fifths is-offset-1">
+    <div class="column">
       <div class="columns tabs">
         <div class="column tab">{% trans "1 General" %}</div>
         <div class="column tab">{% trans "2 Date Setting" %}</div>
@@ -22,7 +26,7 @@
     </div>
   </div>
   <div class="columns">
-    <div class="column box is-four-fifths is-offset-1 is-paddingless">
+    <div class="column box">
       <form class="generic-form questions is-paddingless" method="post">
         {% csrf_token %}
         <h1 class="title p-30 bottom-m-0">{% trans "Survey Questions" %}</h1>

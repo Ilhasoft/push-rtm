@@ -11,8 +11,12 @@
 
 {% block content %}
 <section class="section">
+  <h1 class="title">{% trans "Surveys" %}</h1>
+</section>
+
+<section class="section">
   <div class="columns">
-    <div class="column is-four-fifths is-offset-1">
+    <div class="column">
       <div class="columns tabs">
         <div class="column tab">{% trans "1 Poll for flow" %}</div>
         <div class="column tab is-active">{% trans "2 Date Setting" %}</div>
@@ -21,34 +25,40 @@
     </div>
   </div>
   <div class="columns">
-    <div class="column box is-four-fifths is-offset-1">
+    <div class="column box">
       <form class="generic-form" method="post">
         {% csrf_token %}
         <h1 class="title">{% trans "Date Setting" %}</h1>
-        <div class="field">
-          <label class="label">
-            {{ form.poll_date.label }}
-            <span class="tooltip top left-m-10">
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label">
+                {{ form.poll_date.label }}
+                <span class="tooltip top left-m-10">
               <i class="material-icons info-icon">info</i>
               <span class="tooltip-content">{% trans "Registration date or leave this field empty to keep the date flow creation date" %}</span>
             </span>
-          </label>
-          <div class="control has-icons-right">
-            {{ form.poll_date }}
-            <span class="icon is-small is-right">
+              </label>
+              <div class="control has-icons-right">
+                {{ form.poll_date }}
+                <span class="icon is-small is-right">
               <i class="material-icons">calendar_today</i>
             </span>
-            {{ form.poll_date.errors }}
+                {{ form.poll_date.errors }}
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="field">
-          <label class="label">{{ form.poll_end_date.label }}</label>
-          <div class="control has-icons-right">
-            {{ form.poll_end_date }}
-            <span class="icon is-small is-right">
+          <div class="column">
+            <div class="field">
+              <label class="label">{{ form.poll_end_date.label }}</label>
+              <div class="control has-icons-right">
+                {{ form.poll_end_date }}
+                <span class="icon is-small is-right">
               <i class="material-icons">calendar_today</i>
             </span>
-            {{ form.poll_end_date.errors }}
+                {{ form.poll_end_date.errors }}
+              </div>
+            </div>
           </div>
         </div>
         <div class="columns wrapper-buttons">
