@@ -3,18 +3,37 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to RTM's documentation!
-===============================
+============================
+Real Time Monitoring Module
+============================
+User Software Manual - v1.0
+```````````````````````````
+
+Description
+-----------
+Briefly describe the software
+
+Benefits and values
+-------------------
+List all benefits and values
+
+Platform Requirements
+---------------------
+List all requirements
+
+Keywords
+--------
+List all keywords
+
+Index
+-----
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 3
 
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   login
+   users
+   uncts
+   local-dashboard
+   repository
+   survey-results
