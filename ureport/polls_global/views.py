@@ -21,7 +21,7 @@ class ListView(SmartTemplateView):
         page = self.request.GET.get("page")
 
         filters = {}
-        sortered = "title"
+        sortered = "-is_active"
 
         if query:
             filters["title__icontains"] = query
