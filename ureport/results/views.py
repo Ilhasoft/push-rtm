@@ -22,7 +22,9 @@ class PollReadView(SmartReadView):
 
     def derive_queryset(self):
         queryset = super(PollReadView, self).derive_queryset()
-        queryset = queryset.filter(org=self.request.org, is_active=True, has_synced=True)
+        queryset = queryset.filter(is_active=True, has_synced=True)
+        if not self.request.user.is_superuser:
+            queryset = queryset.filter(org=self.request.org)
         return queryset
 
 

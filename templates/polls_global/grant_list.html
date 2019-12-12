@@ -26,7 +26,7 @@
       {% for poll in polls_pending %}
         <tr>
           <td>
-            <a href="{{ poll.poll_local.org|get_org_url }}{% url 'results.poll_read' poll.poll_local.pk %}" target="blank">{{ poll.poll_local.title }}</a>
+            <a href="{% url 'results.poll_read' poll.poll_local.pk %}" target="blank">{{ poll.poll_local.title }}</a>
           </td>
           <td class="has-text-centered">{{ poll.poll_local.get_questions.count }}</td>
           <td class="has-text-centered">{{ poll.poll_local.org.name }}</td>
@@ -67,7 +67,7 @@
       {% for poll in polls_accepted %}
         <tr>
           <td>
-              <a href="{{ poll.poll_local.org|get_org_url }}{% url 'results.poll_read' poll.poll_local.pk %}" target="blank">{{ poll.poll_local.title }}</a>
+              <a href="{% url 'results.poll_read' poll.poll_local.pk %}" target="blank">{{ poll.poll_local.title }}</a>
           </td>
           <td class="has-text-centered">{{ poll.poll_local.get_questions.count }}</td>
           <td class="has-text-centered">{{ poll.poll_local.org.name }}</td>
