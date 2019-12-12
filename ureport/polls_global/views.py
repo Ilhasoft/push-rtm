@@ -12,6 +12,7 @@ from .forms import PollGlobalForm
 
 class ListView(SmartTemplateView):
     template_name = "polls_global/index.html"
+    permission = "polls_global.poll_list"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -38,6 +39,7 @@ class ListView(SmartTemplateView):
 
 class CreateView(SmartTemplateView):
     template_name = "polls_global/form.html"
+    permission = "polls_global.poll_create"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -63,6 +65,7 @@ class CreateView(SmartTemplateView):
 
 class EditView(SmartTemplateView):
     template_name = "polls_global/form.html"
+    permission = "polls_global.poll_update"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -99,6 +102,7 @@ class EditView(SmartTemplateView):
 
 class GrantView(SmartTemplateView):
     template_name = "polls_global/grant_list.html"
+    permission = "polls_global.poll_grant"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -113,6 +117,7 @@ class GrantView(SmartTemplateView):
 
 class GrantUpdateView(SmartTemplateView):
     template_name = "polls_global/grant_list.html"
+    permission = "polls_global.poll_grant"
 
     def get(self, request, *args, **kwargs):
         super().get_context_data(**kwargs)
