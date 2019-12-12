@@ -1,13 +1,16 @@
 {% extends "base.html" %}
 
-{% load smartmin i18n %}
+{% load smartmin i18n static %}
 
 {% block content %}
-  <div class="section">
-    <h1 class="title">{% trans "Sign in" %}</h1>
+  <div class="section has-text-centered">
+    <h1 class="title">{% trans "Redirecting" %}</h1>
+    <img src="{% static 'svg/bars.svg' %}" alt="">
+    <div class="has-text-grey-light has-text-weight-light">
+      {% trans "You are being redirected, if the page does not load," %}
+      <a href="{{ authorization_url }}" id="authorization_url">{% trans "click here" %}</a>
+    </div>
   </div>
-
-  <a href="{{ authorization_url }}" id="authorization_url">{% trans "Login with Data for All" %}</a>
 {% endblock %}
 
 {% block js_extra %}
