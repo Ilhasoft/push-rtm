@@ -31,7 +31,7 @@ class ListView(SmartTemplateView):
                 "-" if sort_direction == "desc" else "", sort_field)
 
         context["polls"] = get_paginator(
-            PollGlobal.objects.filter(**filters).order_by(sortered), page)
+            PollGlobal.objects.filter(**filters).order_by("{}".format(sortered), "-created_on"), page)
         context["query"] = query
         return context
 
