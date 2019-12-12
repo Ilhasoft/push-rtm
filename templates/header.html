@@ -29,6 +29,9 @@
         {% if request.org and request.org in request.user.get_user_orgs %}
           <a class="navbar-item surveys" href="{% url 'polls.poll_list' %}">Surveys</a>
         {% endif %}
+        {% if request.user.is_superuser %}
+          <a class="navbar-item surveys-global" href="{% url 'polls_global.poll_list' %}">Global Surveys</a>
+        {% endif %}
         <!-- <a class="navbar-item rtm-help">Help</a> -->
       </div>
       <div class="navbar-end">

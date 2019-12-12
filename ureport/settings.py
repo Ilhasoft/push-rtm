@@ -90,6 +90,7 @@ INSTALLED_APPS += (
     "taggit",
     "widget_tweaks",
     "drf_yasg",
+    "docs",
     "ureport.uncts",
     "ureport.accounts",
     "ureport.results",
@@ -97,6 +98,7 @@ INSTALLED_APPS += (
     "ureport.dashboard",
     "ureport.channels",
     "ureport.authentication",
+    "ureport.polls_global",
 )
 
 SITE_ALLOW_NO_ORG += (
@@ -121,6 +123,11 @@ SITE_ALLOW_NO_ORG += (
     "accounts.user_org_delete",
     "authentication.login",
     "authentication.callback",
+    "polls_global.poll_list",
+    "polls_global.poll_create",
+    "polls_global.poll_update",
+    "polls_global.poll_grant",
+    "results.poll_read",
 )
 
 SDG_LIST = (
@@ -265,3 +272,8 @@ OAUTHLIB_MOMSERVICE_USER_URL = config(
     "OAUTHLIB_MOMSERVICE_USER_URL", default="http://dataforallcloud.org/monservice/api/v1/rtmUserInfo"
 )
 OAUTHLIB_APP_ID = config("OAUTHLIB_APP_ID", default="uninfortm")
+
+
+## DOCS
+
+DOCS_ROOT = os.path.join(PROJECT_DIR, "../docs/_build/html")
