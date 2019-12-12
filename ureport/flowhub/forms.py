@@ -20,7 +20,6 @@ class FlowForm(forms.ModelForm):
     description = forms.CharField(
         label=_("Description"),
         required=True,
-        max_length=255,
         widget=forms.Textarea(
             attrs={"placeholder": _("Flow Description"), "required": True, "class": "textarea", "rows": 5}
         ),
@@ -31,7 +30,6 @@ class FlowForm(forms.ModelForm):
     collected_data = forms.CharField(
         label=_("Collected Data"),
         required=True,
-        max_length=255,
         widget=forms.Textarea(
             attrs={"placeholder": _("Collected Data"), "rows": 5, "class": "textarea", "required": True}
         ),

@@ -1,0 +1,11 @@
+#page-surveys-global {
+  .is-poll-inactive,
+  .is-poll-inactive td a,
+  .is-poll-inactive td a i, {
+    color: #a8a7a7;
+  }
+  
+  .is-poll-inactive td .tag {
+    opacity: 50%;
+  }
+}

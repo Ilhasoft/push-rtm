@@ -24,6 +24,7 @@ from django.utils.timesince import timesince
 from django.utils.translation import ugettext_lazy as _
 
 from ureport.utils import json_date_to_datetime, get_paginator
+from ureport.polls_global.models import PollGlobal, PollGlobalSurveys
 
 from .models import Poll, PollImage, PollQuestion
 
@@ -48,6 +49,22 @@ class PollForm(forms.ModelForm):
             attrs={"placeholder": _(
                 "Insert the survey description"), "class": "textarea", "rows": 6}
         ),
+    )
+
+    connect_global = forms.BooleanField(
+        label=_("Connect to on ongoing global survey"),
+        required=False, widget=forms.CheckboxInput(attrs={"class": "is-checkradio"}))
+
+    global_survey = forms.ModelChoiceField(
+        required=False,
+        empty_label=_("Select a global survey"),
+        label=_("Select a global survey"),
+        help_text=_("Select a global survey"),
+        queryset=PollGlobal.objects.filter(
+            is_active=True,
+            poll_date__lte=timezone.now(),
+            poll_end_date__gte=timezone.now(),
+        )
     )
 
     def __init__(self, *args, **kwargs):
@@ -273,7 +290,8 @@ class PollCRUDL(SmartCRUDL):
         success_url = "id@polls.poll_poll_date"
         permission = "polls.poll_create"
         default_template = "polls/form.html"
-        fields = ("title", "flow_uuid", "response_content")
+        fields = ("title", "flow_uuid", "response_content",
+                  "connect_global", "global_survey")
         success_message = _(
             "Your survey has been created, now adjust the poll date.")
         title = _("Create Survey")
@@ -281,6 +299,12 @@ class PollCRUDL(SmartCRUDL):
         def get_context_data(self, **kwargs):
             context = super().get_context_data(**kwargs)
             context["page_subtitle"] = _("New")
+            context["global_survey"] = PollGlobal.objects.filter(
+                is_active=True,
+                poll_date__lte=timezone.now(),
+                poll_end_date__gte=timezone.now(),
+            )
+            context["show_connect_global"] = True
             return context
 
         def get_form_kwargs(self):
@@ -330,8 +354,12 @@ class PollCRUDL(SmartCRUDL):
         def post_save(self, obj):
             obj = super(PollCRUDL.Create, self).post_save(obj)
             obj.update_or_create_questions(user=self.request.user)
-
             Poll.pull_poll_results_task(obj)
+
+            if self.form.cleaned_data["connect_global"]:
+                PollGlobalSurveys.objects.create(poll_global=self.form.cleaned_data[
+                    "global_survey"], poll_local=obj)
+
             return obj
 
     class Images(OrgObjPermsMixin, SmartUpdateView):
@@ -617,7 +645,7 @@ class PollCRUDL(SmartCRUDL):
 
     class Update(OrgObjPermsMixin, SmartUpdateView):
         form_class = PollForm
-        fields = ("is_active", "title", "response_content")
+        fields = ("is_active", "title", "response_content", "connect_global", "global_survey")
         success_url = "id@polls.poll_poll_date"
         default_template = "polls/form.html"
         success_message = _(
@@ -634,6 +662,21 @@ class PollCRUDL(SmartCRUDL):
 
             return "Edit Poll for flow [%s (%s)]" % (flow_name, flow_date_hint)
 
+        def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            context["page_subtitle"] = _("Edit")
+            context["global_survey"] = PollGlobal.objects.filter(
+                is_active=True,
+                poll_date__lte=timezone.now(),
+                poll_end_date__gte=timezone.now(),
+            )
+            in_global = PollGlobalSurveys.objects.filter(poll_local=self.object).first()
+            context["approve_pending"] = in_global
+            context["show_connect_global"] = False
+            if not in_global or in_global.is_joined is False:
+                context["show_connect_global"] = True
+            return context
+
         def get_form_kwargs(self):
             kwargs = super(PollCRUDL.Update, self).get_form_kwargs()
             kwargs["org"] = self.request.org
@@ -644,6 +687,18 @@ class PollCRUDL(SmartCRUDL):
         def post_save(self, obj):
             obj = super(PollCRUDL.Update, self).post_save(obj)
             obj.update_or_create_questions(user=self.request.user)
+            if self.form.cleaned_data["connect_global"]:
+                try:
+                    global_survey = PollGlobalSurveys.objects.get(poll_local=self.object)
+                    global_survey.poll_global = self.form.cleaned_data["global_survey"]
+                    global_survey.save()
+                except PollGlobalSurveys.DoesNotExist:
+                    PollGlobalSurveys.objects.create(poll_global=self.form.cleaned_data[
+                        "global_survey"], poll_local=obj)
+            else:
+                global_survey = PollGlobalSurveys.objects.filter(poll_local=self.object).first()
+                if global_survey and not global_survey.is_joined:
+                    global_survey.delete()
             return obj
 
     class PullRefresh(SmartUpdateView):

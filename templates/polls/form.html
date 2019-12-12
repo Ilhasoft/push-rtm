@@ -69,6 +69,22 @@
           <p class="help">{{ field.help_text }}</p>
         {% endif %}
 
+        {% if show_connect_global %}
+          <div class="control">
+            {{ form.connect_global }}
+            <label class="label" for="{{ form.connect_global.auto_id }}">{{ form.connect_global.label }}</label>
+          </div>
+
+          <div class="field is-hidden" id="select_global_survey">
+            <label class="label"></label>
+            <div class="select is-fullwidth">
+              {{ form.global_survey }}
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="notification is-warning is-hidden" id="global_survey_description"></div>
+
         <div class="columns wrapper-buttons">
           <div class="column">
             <button type="submit" class="button is-primary is-pulled-right">{% trans "Save" %}</button>
@@ -81,9 +97,57 @@
 {% endblock %}
 
 {% block js_extra %}
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="{% static 'js/forms/errors.js' %}"></script>
-{% for field in form.errors %}
-  setErrors('{{field}}');
-{% endfor %}
+<script type="text/javascript">
+$(document).ready(function() {
+  const surveys_global = [];
+  {% for survey in global_survey %}
+    surveys_global[{{ survey.pk }}] = "{{ survey.description|linebreaksbr }}";
+  {% endfor %}
+
+  $("#id_connect_global").click(function() {
+    if ($(this).is(":checked")) {
+      $("#select_global_survey").removeClass("is-hidden");
+      $("#id_global_survey").attr("required", true);
+    } else {
+      $("#select_global_survey").addClass("is-hidden");
+      $("#id_global_survey").attr("required", false);
+      $("#global_survey_description").html("");
+      $("#global_survey_description").addClass("is-hidden");
+      $("#id_global_survey").val("");
+    }
+  });
+
+  $("#id_global_survey").change(function() {
+    let id = parseInt($("#id_global_survey option:selected").val());
+    $("#global_survey_description").html("");
+    $("#global_survey_description").addClass("is-hidden");
+    if (id) {
+      $("#global_survey_description").html(surveys_global[id]);
+      $("#global_survey_description").removeClass("is-hidden");
+    }
+  });
+
+  {% if form.connect_global.value %}
+    $("#id_global_survey").attr("required", true);
+    $("#id_connect_global").attr("checked", true);
+    loadGlobal({{ form.global_survey.value }});
+  {% endif %}
+
+  {% if show_connect_global %}
+    loadGlobal({{ approve_pending.poll_global.pk }});
+  {% endif %}
+
+  function loadGlobal(id) {
+    if (id) {
+      $("#id_global_survey").val(id);
+      $("#id_connect_global").attr("checked", true);
+      $("#global_survey_description").html(surveys_global[id]);
+      $("#select_global_survey").removeClass("is-hidden");
+      $("#global_survey_description").removeClass("is-hidden");
+    }
+  }
+});
 </script>
 {% endblock %}

@@ -64,6 +64,7 @@ urlpatterns = [
     url(r"^flowhub/", include("ureport.flowhub.urls")),
     url(r"^", include("ureport.dashboard.urls")),
     url(r"^authentication/", include("ureport.authentication.urls")),
+    url(r"^surveys-global/", include("ureport.polls_global.urls")),
     url(r'^docs/', include("docs.urls")),
 ]
 
