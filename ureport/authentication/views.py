@@ -76,7 +76,7 @@ class LoginAuthView(SmartTemplateView):
                         user.save()
                         is_new_user = True
 
-                    if self.request.org.subdomain not in user.get_user_orgs() or is_new_user:
+                    if self.request.org not in user.get_user_orgs() or is_new_user:
                         group = Group.objects.get(name="Viewers")
                         user.groups.add(group)
                         self.request.org.viewers.add(user)
