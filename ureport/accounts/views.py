@@ -43,8 +43,10 @@ class ListView(OrgObjPermsMixin, SmartTemplateView):
             .exclude(email__exact="")
         )
 
-        if not self.request.user.is_superuser:
+        if self.request.org:
             org = self.request.org
+        else:
+            org = Org.objects.get(pk=org)
 
         queryset = queryset.filter(Q(org_admins=org) | Q(org_editors=org) | Q(org_viewers=org))
 
