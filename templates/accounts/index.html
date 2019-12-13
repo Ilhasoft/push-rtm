@@ -29,7 +29,7 @@
       <div class="control">
         <a
           class="button is-medium is-info"
-          href="{% if request.user.is_superuser %}{% url 'accounts.user_org_create' org %}{% else %}{% url 'accounts.user_create' %}{% endif %}">
+          href="{% if request.user.is_superuser %}{% url 'accounts.user_org_create' org.pk %}{% else %}{% url 'accounts.user_create' %}{% endif %}">
           <span class="icon">
             <i class="material-icons">add</i>
           </span>
@@ -55,16 +55,16 @@
           <td>{{ user.first_name }} </td>
           <td>{{ user.username }} </td>
           <td>{{ user.email }} </td>
-          <td>{{ user|user_org_group }}</td>
+          <td>{{ user|user_org_group:org }}</td>
           <td>
             <a
-              href="{% if request.user.is_superuser %}{% url 'accounts.user_org_update' org user.pk %}{% else %}{% url 'accounts.user_update' user.pk %}{% endif %}">
+              href="{% if request.user.is_superuser %}{% url 'accounts.user_org_update' org.pk user.pk %}{% else %}{% url 'accounts.user_update' user.pk %}{% endif %}">
               <i class="material-icons">border_color</i>
             </a>
           </td>
           <td>
             <form
-              action="{% if request.user.is_superuser %}{% url 'accounts.user_org_delete' org user.id %}{% else %}{% url 'accounts.user_delete' user.pk %}{% endif %}"
+              action="{% if request.user.is_superuser %}{% url 'accounts.user_org_delete' org.pk user.id %}{% else %}{% url 'accounts.user_delete' user.pk %}{% endif %}"
               method="POST">
               {% csrf_token %}
               <button class="button-no-bg" type="submit">

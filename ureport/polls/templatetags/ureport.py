@@ -321,8 +321,15 @@ class SortAnchorNode(template.Node):
 
 
 @register.filter(name="user_org_group")
-def user_org_group(user):
-    return ", ".join([get_group_name(group.name) for group in user.groups.all()])
+def user_org_group(user, org):
+    if org in user.org_admins.all():
+        return "UNCT Admin"
+
+    if org in user.org_editors.all():
+        return "UNCT Editor"
+
+    if org in user.org_viewers.all():
+        return "UNCT Viewer"
 
 
 @register.filter(name="items_to_list")
