@@ -57,7 +57,7 @@ MIDDLEWARE = MIDDLEWARE + ("whitenoise.middleware.WhiteNoiseMiddleware",)
 STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "HTTPS")
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 REDIS_HOST = config("REDIS_HOST", default="localhost")
 REDIS_DATABASE = config("REDIS_DATABASE", default="1")
