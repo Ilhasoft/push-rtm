@@ -25,18 +25,6 @@
         </form>
       </div>
     </div>
-    <div class="column is-narrow">
-      <div class="control">
-        <a
-          class="button is-medium is-info"
-          href="{% if request.user.is_superuser %}{% url 'accounts.user_org_create' org.pk %}{% else %}{% url 'accounts.user_create' %}{% endif %}">
-          <span class="icon">
-            <i class="material-icons">add</i>
-          </span>
-          <span>{% trans "User" %}</span>
-        </a>
-      </div>
-    </div>
   </div>
   <table class="table is-fullwidth">
     <thead>

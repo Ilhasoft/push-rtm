@@ -12,14 +12,24 @@ class AccountForm(forms.ModelForm):
         label=_("Username"),
         required=True,
         max_length=255,
-        widget=forms.TextInput(attrs={"placeholder": _("username"), "required": True, "class": "input"}),
+        widget=forms.TextInput(attrs={
+            "placeholder": _("username"),
+            "required": True,
+            "class": "input",
+            "readonly": True,
+        }),
     )
 
     first_name = forms.CharField(
         label=_("Name"),
         required=True,
         max_length=255,
-        widget=forms.TextInput(attrs={"placeholder": _("Name"), "required": True, "class": "input"}),
+        widget=forms.TextInput(attrs={
+            "placeholder": _("Name"),
+            "required": True,
+            "class": "input",
+            "readonly": True,
+        }),
     )
 
     new_password = forms.CharField(
@@ -27,14 +37,22 @@ class AccountForm(forms.ModelForm):
         required=True,
         max_length=255,
         strip=False,
-        widget=forms.PasswordInput(attrs={"placeholder": _("Password"), "class": "input"}),
+        widget=forms.PasswordInput(attrs={
+            "placeholder": _("Password"),
+            "class": "input",
+        }),
     )
 
     email = forms.EmailField(
         label=_("E-mail"),
         required=True,
         max_length=255,
-        widget=forms.EmailInput(attrs={"placeholder": _("Email"), "required": True, "class": "input"}),
+        widget=forms.EmailInput(attrs={
+            "placeholder": _("Email"),
+            "required": True,
+            "class": "input",
+            "readonly": True,
+        }),
     )
 
     groups = forms.ModelChoiceField(
@@ -92,7 +110,7 @@ class AccountForm(forms.ModelForm):
         return instance
 
     class Meta:
-        fields = ["username", "first_name", "email", "groups"]
+        fields = ["groups"]
         model = get_user_model()
 
 
@@ -102,14 +120,24 @@ class GlobalAccountForm(forms.ModelForm):
         label=_("Username"),
         required=True,
         max_length=255,
-        widget=forms.TextInput(attrs={"placeholder": _("username"), "required": True, "class": "input"}),
+        widget=forms.TextInput(attrs={
+            "placeholder": _("username"),
+            "required": True,
+            "class": "input",
+            "readonly": True,
+        }),
     )
 
     first_name = forms.CharField(
         label=_("Name"),
         required=True,
         max_length=255,
-        widget=forms.TextInput(attrs={"placeholder": _("Name"), "required": True, "class": "input"}),
+        widget=forms.TextInput(attrs={
+            "placeholder": _("Name"),
+            "required": True,
+            "class": "input",
+            "readonly": True,
+        }),
     )
 
     new_password = forms.CharField(
@@ -117,14 +145,22 @@ class GlobalAccountForm(forms.ModelForm):
         required=True,
         max_length=255,
         strip=False,
-        widget=forms.PasswordInput(attrs={"placeholder": _("Password"), "class": "input"}),
+        widget=forms.PasswordInput(attrs={
+            "placeholder": _("Password"),
+            "class": "input",
+        }),
     )
 
     email = forms.EmailField(
         label=_("E-mail"),
         required=True,
         max_length=255,
-        widget=forms.EmailInput(attrs={"placeholder": _("Email"), "required": True, "class": "input"}),
+        widget=forms.EmailInput(attrs={
+            "placeholder": _("Email"),
+            "required": True,
+            "class": "input",
+            "readonly": True,
+        }),
     )
 
     groups = forms.ChoiceField(
@@ -172,5 +208,5 @@ class GlobalAccountForm(forms.ModelForm):
         return instance
 
     class Meta:
-        fields = ["username", "first_name", "email"]
+        fields = []
         model = get_user_model()
