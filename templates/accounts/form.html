@@ -22,8 +22,7 @@
         <div class="field">
           <label class="label">{% trans "Username" %}</label>
           <div class="control">
-            {{ form.username }}
-            {{ form.username.errors }}
+            <strong>{{ form.username.value }}</strong>
           </div>
         </div>
       </div>
@@ -31,22 +30,21 @@
         <div class="field">
           <label class="label">{% trans "Name" %}</label>
           <div class="control">
-            {{ form.first_name }}
-            {{ form.first_name.errors }}
+            <strong>{{ form.first_name.value }}</strong>
           </div>
         </div>
       </div>
-    </div>
-    <div class="columns">
       <div class="column">
         <div class="field">
           <label class="label">{% trans "Email" %}</label>
           <div class="control">
-            {{ form.email }}
-            {{ form.email.errors }}
+            <strong>{{ form.email.value }}</strong>
           </div>
         </div>
       </div>
+    </div>
+    <hr>
+    <div class="columns">
       <div class="column">
         <div class="field">
           <label class="label">{% trans "Groups" %}</label>
