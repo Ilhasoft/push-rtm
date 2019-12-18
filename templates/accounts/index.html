@@ -51,14 +51,32 @@
             </a>
           </td>
           <td>
-            <form
-              action="{% if request.user.is_superuser %}{% url 'accounts.user_org_delete' org.pk user.id %}{% else %}{% url 'accounts.user_delete' user.pk %}{% endif %}"
-              method="POST">
-              {% csrf_token %}
-              <button class="button-no-bg" type="submit">
-                <i class="material-icons">delete</i>
-              </button>
-            </form>
+            <button class="button-no-bg" onclick=openModal('{{org.pk}}','{{user.pk}}');> 
+              <i class="material-icons">delete</i>
+            </button>
+
+            <div id="deleteModal-{{org.pk}}-{{user.pk}}" class="modal">
+              <div class="modal-background"></div>
+              <div class="modal-card">
+                <header class="modal-card-head">
+                  <p class="modal-card-title">{% trans 'Are you sure?' %}</p>
+                  <button class="delete" aria-label="close" onclick=closeModal('{{org.pk}}','{{user.pk}}');></button>
+                </header>
+                <section class="modal-card-body">
+                  {% trans 'Do you really want to delete the user' %} "{{user.username}}" ?
+                </section>
+                <footer class="modal-card-foot">
+                  <form action="{% if request.user.is_superuser %}{% url 'accounts.user_org_delete' org.pk user.pk %}{% else %}{% url 'accounts.user_delete' user.pk %}{% endif %}"
+                   method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" value="{{ redirect_to }}" name="redirect_to"/>
+                    <button class="button is-danger right-m-5" type="submit">{% trans 'Confirm' %}</button>
+                  </form>
+                  <button class="button dark-reverse" onclick=closeModal('{{org.pk}}','{{user.pk}}');>{% trans 'Cancel' %}</button>
+                </footer>
+              </div>
+            </div>
+            
           </td>
         </tr>
       {% empty %}
@@ -72,4 +90,18 @@
     {% include "paginator.html" with paginator=users %}
   </div>
 </section>
+{% endblock %}
+
+{% block js_extra %}
+<script>
+    function closeModal(orgPk, userId){
+      let modal = document.getElementById("deleteModal-" + orgPk+ "-" + userId);
+      modal.classList.remove("is-active");
+    }
+
+    function openModal(orgPk, userId){
+      let modal = document.getElementById("deleteModal-" + orgPk+ "-" + userId);
+      modal.classList.add("is-active");
+    }
+</script>
 {% endblock %}
