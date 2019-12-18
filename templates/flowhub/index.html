@@ -120,20 +120,14 @@
 
 {% block js_extra %}
 <script>
-    let btn = document.querySelector('#showDeleteModal');
-    let modalDlg = document.querySelector('#deleteModal');
-    let modalCloseBtn = document.querySelector('#modalClose');
-    let cancelBtn = document.querySelector('#cancelDelete');
-    btn.addEventListener('click', function(){
-        modalDlg.classList.add('is-active');
-    });
+    function closeModal(idModal){
+      let modal = document.getElementById("deleteModal-" + idModal);
+      modal.classList.remove("is-active");
+    }
 
-    modalCloseBtn.addEventListener('click', function(){
-        modalDlg.classList.remove('is-active');
-    });
-
-    cancelBtn.addEventListener('click', function(){
-        modalDlg.classList.remove('is-active');
-    });
+    function openModal(idModal){
+      let modal = document.getElementById("deleteModal-" + idModal);
+      modal.classList.add("is-active");
+    }
 </script>
 {% endblock %}
