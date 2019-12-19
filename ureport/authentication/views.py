@@ -66,6 +66,10 @@ class LoginAuthView(SmartTemplateView):
                         user = get_user_model().objects.get(
                             email=extra_data.get("email"), username=extra_data.get("userid")
                         )
+                        if not user.is_active:
+                            messages.error(self.request, _("Your account is disabled. Contact the Global Administrator"))
+                            redirect(reverse("authentication.login"))
+
                     except get_user_model().DoesNotExist:
                         user = get_user_model().objects.create(
                             username=extra_data.get("userid"),
@@ -83,6 +87,10 @@ class LoginAuthView(SmartTemplateView):
 
                     login(self.request, user)
                     return redirect(reverse("dashboard"))
+
+                else:
+                    messages.error(self.request, _("You do not have permission to access this UNCT"))
+                    redirect(reverse("authentication.login"))
             except Exception:
                 messages.error(self.request, _("Please try again."))
                 return redirect(reverse("authentication.login"))
