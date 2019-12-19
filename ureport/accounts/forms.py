@@ -10,11 +10,11 @@ class AccountForm(forms.ModelForm):
 
     username = forms.CharField(
         label=_("Username"),
-        required=True,
+        required=False,
         max_length=255,
         widget=forms.TextInput(attrs={
             "placeholder": _("username"),
-            "required": True,
+            "required": False,
             "class": "input",
             "readonly": True,
         }),
@@ -22,11 +22,11 @@ class AccountForm(forms.ModelForm):
 
     first_name = forms.CharField(
         label=_("Name"),
-        required=True,
+        required=False,
         max_length=255,
         widget=forms.TextInput(attrs={
             "placeholder": _("Name"),
-            "required": True,
+            "required": False,
             "class": "input",
             "readonly": True,
         }),
@@ -34,7 +34,7 @@ class AccountForm(forms.ModelForm):
 
     new_password = forms.CharField(
         label=_("Password"),
-        required=True,
+        required=False,
         max_length=255,
         strip=False,
         widget=forms.PasswordInput(attrs={
@@ -45,11 +45,11 @@ class AccountForm(forms.ModelForm):
 
     email = forms.EmailField(
         label=_("E-mail"),
-        required=True,
+        required=False,
         max_length=255,
         widget=forms.EmailInput(attrs={
             "placeholder": _("Email"),
-            "required": True,
+            "required": False,
             "class": "input",
             "readonly": True,
         }),
@@ -118,11 +118,11 @@ class GlobalAccountForm(forms.ModelForm):
 
     username = forms.CharField(
         label=_("Username"),
-        required=True,
+        required=False,
         max_length=255,
         widget=forms.TextInput(attrs={
             "placeholder": _("username"),
-            "required": True,
+            "required": False,
             "class": "input",
             "readonly": True,
         }),
@@ -130,11 +130,11 @@ class GlobalAccountForm(forms.ModelForm):
 
     first_name = forms.CharField(
         label=_("Name"),
-        required=True,
+        required=False,
         max_length=255,
         widget=forms.TextInput(attrs={
             "placeholder": _("Name"),
-            "required": True,
+            "required": False,
             "class": "input",
             "readonly": True,
         }),
@@ -142,7 +142,7 @@ class GlobalAccountForm(forms.ModelForm):
 
     new_password = forms.CharField(
         label=_("Password"),
-        required=True,
+        required=False,
         max_length=255,
         strip=False,
         widget=forms.PasswordInput(attrs={
@@ -153,11 +153,11 @@ class GlobalAccountForm(forms.ModelForm):
 
     email = forms.EmailField(
         label=_("E-mail"),
-        required=True,
+        required=False,
         max_length=255,
         widget=forms.EmailInput(attrs={
             "placeholder": _("Email"),
-            "required": True,
+            "required": False,
             "class": "input",
             "readonly": True,
         }),
