@@ -66,7 +66,7 @@
       <div class="column">
         <div class="box is-paddingless">
           <nav class="level is-paddingless border-bottom is-mobile">
-            <div class="level-item border-right">
+            <div class="level-item">
               <span class="title right-m-10 left-m-10">{{ poll.get_questions.count }}</span>
               <span>{% trans "Question" %}{{ poll.get_questions.count|pluralize }}</span>
               <span class="tooltip top left-m-10">
@@ -74,6 +74,7 @@
                 <span class="tooltip-content">{% trans 'The amount of questions in this survey'%}</span>
               </span>
             </div>
+            <!--
             <div class="level-item">
               <i class="material-icons export-icon right-m-5">save_alt</i>
               <span>Export</span>
@@ -82,6 +83,7 @@
               <span class="tooltip-content">{% trans 'Export results on .csv format'%}</span>
             </span>
             </div>
+            -->
           </nav>
           <div class="bottom-p-20">
             <div class="columns bottom-m-10">
