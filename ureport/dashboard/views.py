@@ -154,7 +154,7 @@ class DashboardDataView(View):
                         "global": global_total if global_total is not None else 0,
                     }
 
-                channels_data[channel.channel_type]["total"] += total
+                channels_data[channel.channel_type]["total"] += total if total is not None else 0
 
             if channel_type:
                 channels = channels.filter(channel_type=channel_type)
