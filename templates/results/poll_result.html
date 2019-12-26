@@ -13,11 +13,7 @@
   <section class="section top-p-0">
     <nav class="breadcrumb" aria-label="breadcrumbs">
       <ul>
-        {% if request.user.is_superuser %}
-        <li><a href="{% url 'polls_global.poll_list' %}">{% trans 'Global Surveys'%}</a></li>
-        {% else %}
         <li><a href="{% url 'polls.poll_list' %}">{% trans 'Surveys'%}</a></li>
-        {% endif %}
         <li class="is-active"><a href="#" aria-current="page">{% trans 'Survey Results'%}</a></li>
       </ul>
     </nav>
