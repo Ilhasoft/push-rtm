@@ -13,16 +13,12 @@
 
 {% block flow_content %}
 <div class="column auto info">
-  {% if back %}
-  <div class="columns">
-    <div class="column">
-      <a href="{{ back }}" class="icon is-medium is-left back">
-        <img src="{% static 'svg/left-arrow.svg' %}" alt="{% trans 'back' %}">
-      </a>
-    </div>
-  </div>
-  {% endif %}
   <div class="box detail">
+    <a class="flex back" onclick="history.go(-1)">
+      <i class="material-icons">keyboard_backspace</i>
+      {% trans 'Return' %}
+    </a>
+    <hr>
     <div class="columns">
       <div class="column">
         <strong>{{ flow.name }}</strong>
