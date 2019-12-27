@@ -136,7 +136,7 @@
         </div>
 
         {% for question in poll.get_questions %}
-          <div class="global-survey-card box is-paddingless" x-data="accordion()" data-question-sdgs="{{ question.sdgs|join:"," }}">
+          <div class="global-survey-card box is-paddingless" x-data="accordion()" data-question-sdgs="{{ question.sdgs|join:',' }}">
             <div class="survey-question">
               <div class="survey-question__number">{{ forloop.counter }}</div>
               <div class="survey-question__info">
@@ -151,7 +151,7 @@
                       <span class="tag sdg-{{ sdg }} right-m-5 bottom-m-5">{{ sdg }} {{ sdg|get_sdg }}</span>
                     {% endfor %}
                   </div>
-                  <div class="accordion-btn" x-on:click="open()">
+                  <div class="accordion-btn" x-on:click="toggle()">
                     <span x-show="!isOpen()">
                       More
                       <i class="material-icons">keyboard_arrow_down</i>
@@ -164,7 +164,7 @@
                 </div>
               </div>
             </div>
-            <div class="global-survey-chart" x-show="isOpen()" x-on:click.away="close()">
+            <div class="global-survey-chart" x-show="isOpen()">
               <div class="columns is-marginless">
                 <div class="column border-top border-bottom p-30 has-text-centered">
                   <img class="right-m-5" src="{% static 'svg/business-affiliate-network.svg' %}" alt="">
@@ -280,10 +280,9 @@
     function accordion() {
         return {
             show: false,
-            open() { this.show = true },
-            close() { this.show = false },
+            toggle() { this.show = !this.show },
             isOpen() { return this.show === true },
-        }
+        };
     }
   </script>
 {% endblock %}

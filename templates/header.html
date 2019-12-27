@@ -32,7 +32,7 @@
         {% if request.user.is_superuser %}
           <a class="navbar-item surveys-global" href="{% url 'polls_global.poll_list' %}">Global Surveys</a>
         {% endif %}
-         <a class="navbar-item rtm-help" href="{% url 'docs_root' %}">Help</a>
+         <a class="navbar-item rtm-help" target="_blank" href="{% url 'docs_root' %}">Help</a>
       </div>
       <div class="navbar-end">
         <!-- <div class="navbar-item has-dropdown is-hoverable">
