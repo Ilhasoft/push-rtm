@@ -87,7 +87,8 @@
 
         <div class="columns wrapper-buttons">
           <div class="column">
-            <button type="submit" class="button is-primary is-pulled-right">{% trans "Save" %}</button>
+            <a href="{% url 'polls.poll_list' %}" class="button primary-reverse is-pulled-right">{% trans "Cancel" %}</a> 
+            <button type="submit" class="button is-primary is-pulled-right right-m-20">{% trans "Save" %}</button>
           </div>
         </div>
       </form>
