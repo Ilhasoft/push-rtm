@@ -128,6 +128,8 @@ SITE_ALLOW_NO_ORG += (
     "polls_global.poll_update",
     "polls_global.poll_grant",
     "results.poll_read",
+    "results.global_poll_read",
+    "results.global_poll_data",
 )
 
 SDG_LIST = (

@@ -62,7 +62,7 @@
         <div class="box is-paddingless">
           <nav class="level is-paddingless border-bottom is-mobile">
             <div class="level-item border-right">
-              <span class="title right-m-10 left-m-10">{{ poll.get_questions.count }}</span>
+              <span class="title right-m-10 left-m-10" id="number-questions"></span>
               <span>{% trans "Question" %}{{ poll.get_questions.count|pluralize }}</span>
               <span class="tooltip top left-m-10">
                 <i class="material-icons info-icon">info</i>
@@ -74,7 +74,7 @@
               <div class="dropdown is-hoverable">
                 <div class="dropdown-trigger">
                   <span aria-haspopup="true" aria-controls="countries-dropdown">
-                    <span class="title right-m-10 left-m-10">30</span>
+                    <span class="title right-m-10 left-m-10">{{num_countries}}</span>
                     <span>{% trans "Countries" %}</span>
                     <span class="icon is-small">
                       <i class="fas fa-angle-down" aria-hidden="true"></i>
@@ -83,11 +83,9 @@
                 </div>
                 <div class="dropdown-menu" id="countries-dropdown" role="menu">
                   <div class="dropdown-content">
-                    <div class="dropdown-item"><span>Country 1</span></div>
-                    <div class="dropdown-item"><span>Country 2</span></div>
-                    <div class="dropdown-item"><span>Country 3</span></div>
-                    <div class="dropdown-item"><span>Country 4</span></div>
-                    <div class="dropdown-item"><span>Country 5</span></div>
+                    {% for country in all_local_polls %}
+                      <a href="#" class="dropdown-item" onclick="loadDataCountry({{country.id}}, 'statistics', 'nao');">{{country.title}}</a>
+                    {% endfor %}
                   </div>
                 </div>
               </div>
@@ -96,153 +94,40 @@
                 <span class="tooltip-content">{% trans 'Countries participating in this global survey'%}</span>
               </span>
             </div>
-            <div class="level-item border-left">
-              <i class="material-icons export-icon right-m-5">save_alt</i>
-              <span>Export</span>
-              <span class="tooltip top left-m-10">
-              <i class="material-icons info-icon">info</i>
-              <span class="tooltip-content">{% trans 'Export results on .csv format'%}</span>
-            </span>
-            </div>
           </nav>
           <div class="bottom-p-20">
             <div class="columns bottom-m-10">
               <div class="column is-2 has-text-right">{% trans 'Title:'%}</div>
-              <div class="column"><strong>{{ poll.title }}</strong></div>
+              <div class="column">{{ poll_global.title }}</div>
             </div>
             <div class="columns bottom-m-10">
-              {% if poll.response_content %}
+              {% if poll_global.response_content %}
               <div class="column is-2 has-text-right">{% trans 'Description:'%}</div>
-              <div class="column">{{ poll.response_content }}</div>
+              <div class="column">{{ poll_global.response_content }}</div>
               {% endif %}
             </div>
             <div class="columns bottom-m-10">
               <div class="column is-2 has-text-right">{% trans 'Date:'%}</div>
-              <div class="column">{{ poll.poll_date|date:"m/d/Y" }}</div>
+              <div class="column">{{ poll_global.poll_date|date:"m/d/Y" }}</div>
             </div>
             <div class="columns bottom-m-10">
               <div class="column is-2 has-text-right">{% trans 'Linked SDGs:'%}</div>
               <div class="column">
-                {% for sdg in poll.questions.distinct|get_value_in_qs:'sdgs' %}
+                {% for sdg in all_sdgs %}
                 <span class="tag sdg-{{ sdg }} right-m-5 bottom-m-5">{{ sdg }} {{ sdg|get_sdg }}</span>
                 {% endfor %}
               </div>
             </div>
-            <div class="columns bottom-m-10">
-              <div class="column is-2 has-text-right">{% trans 'Last answer:'%}</div>
-              <div class="column">{{ poll|get_poll_sync_status }}</div>
-            </div>
           </div>
         </div>
-
-        {% for question in poll.get_questions %}
-          <div class="global-survey-card box is-paddingless" x-data="accordion()" data-question-sdgs="{{ question.sdgs|join:"," }}">
-            <div class="survey-question">
-              <div class="survey-question__number">{{ forloop.counter }}</div>
-              <div class="survey-question__info">
-                <span class="survey-question__info__title">{{ question.title }}</span>
-                <div class="top-m-20">
-                  <span class="right-m-30">{% trans 'Answered:'%} {{ question.get_responded|intcomma }}</span>
-                  <span>{% trans 'Polled:'%} {{ question.get_polled|intcomma }}</span>
-                </div>
-                <div class="top-m-30 flex space-between">
-                  <div>
-                    {% for sdg in question.sdgs %}
-                      <span class="tag sdg-{{ sdg }} right-m-5 bottom-m-5">{{ sdg }} {{ sdg|get_sdg }}</span>
-                    {% endfor %}
-                  </div>
-                  <div class="accordion-btn" x-on:click="open()">
-                    <span x-show="!isOpen()">
-                      More
-                      <i class="material-icons">keyboard_arrow_down</i>
-                    </span>
-                    <span x-show="isOpen()">
-                      Less
-                      <i class="material-icons">keyboard_arrow_up</i>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="global-survey-chart" x-show="isOpen()" x-on:click.away="close()">
-              <div class="columns is-marginless">
-                <div class="column border-top border-bottom p-30 has-text-centered">
-                  <img class="right-m-5" src="{% static 'svg/business-affiliate-network.svg' %}" alt="">
-                  <span class="has-text-weight-bold right-m-10 left-m-10">60%</span>
-                  <span>{% trans "Participating UNCT" %}</span>
-                </div>
-                {% if not question.is_open_ended %}
-                  <div class="column border-top border-bottom border-left p-30 has-text-centered">
-                    <div class="dropdown is-hoverable is-right">
-                      <div class="dropdown-trigger">
-                        <div aria-haspopup="true" aria-controls="dropdown-menu">
-                          <span>{% trans "Segment by" %}</span>
-                          <span class="icon is-small">
-                            <i class="fas fa-angle-down" aria-hidden="true"></i>
-                          </span>
-                        </div>
-                      </div>
-                      <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                        <div class="dropdown-content">
-                          <a href="javascript:showChart('statistics', {{ question.pk }});" class="dropdown-item statistics">{% trans "All" %}</a>
-                          {% if not is_iorg and show_gender_stats %}
-                          <a href="javascript:showChart('gender', {{ question.pk }});" class="dropdown-item gender">{% trans "Gender" %}</a>
-                          {% endif %}
-                          {% if not is_iorg and show_age_stats %}
-                          <a href="javascript:showChart('age', {{ question.pk }});" class="dropdown-item age">{% trans "Age" %}</a>
-                          {% endif %}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                {% endif %}
-              </div>
-
-              <div class="columns p-30">
-                <div class="column">
-                  <div class="has-text-weight-bold">Global</div>
-                  {% if not question.is_open_ended %}
-                    <canvas
-                      id="chart-question-{{ question.pk }}"
-                      width="300"
-                      height="300"
-                      data-question="{{ question.pk }}"
-                      data-question-type="chart"
-                      class="has-text-centered">
-                    </canvas>
-                  {% else %}
-                    <div
-                      class="has-text-centered"
-                      id="chart-question-cloud-{{ question.pk }}"
-                      data-question="{{ question.pk }}"
-                      data-question-type="cloud">
-                    </div>
-                  {% endif %}
-                </div>
-                <div class="column">
-                  <div class="has-text-weight-bold">UNCT</div>
-                  {% if not question.is_open_ended %}
-                  <canvas
-                          id="chart-question-{{ question.pk }}"
-                          width="300"
-                          height="300"
-                          data-question="{{ question.pk }}"
-                          data-question-type="chart"
-                          class="has-text-centered">
-                  </canvas>
-                  {% else %}
-                  <div
-                          class="has-text-centered"
-                          id="chart-question-cloud-{{ question.pk }}"
-                          data-question="{{ question.pk }}"
-                          data-question-type="cloud">
-                  </div>
-                  {% endif %}
-                </div>
-              </div>
-            </div>
+        <div id="no-unct-match" class="global-survey-card box is-paddingless" style="display: none;">
+          <div class="column border-top border-bottom p-30 has-text-centered">
+            <strong>No Survey found for this Global Survey.</strong>
           </div>
-        {% endfor %}
+        </div>
+        <div id="chart-questions">
+          
+        </div>
       </div>
     </div>
   </div>
@@ -251,6 +136,10 @@
 {% block js_extra %}
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/calebporzio/project-x@v0.4.0/dist/project-x.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.3/d3.min.js"></script>
+  <script src="{% static 'plugins/wordcloud/d3.layout.cloud.js' %}"></script>
 
   <script type="text/javascript">
     $("input:checkbox").click(function() {
@@ -285,5 +174,244 @@
             isOpen() { return this.show === true },
         }
     }
+
+
+
+    let globalDataChart;
+    let localDataChart;
+
+    function loadDataCountry(id_country, tab, first_access){
+      if (id_country == -1){
+        $("#no-unct-match").css("display", "block");
+      }else{
+        $("#no-unct-match").css("display", "none");
+      }
+
+      $.ajax({
+        url: "data/" + id_country,
+      })
+      .done(function( data ) {
+        let local = data.questions_local;
+
+        $("#number-questions").html(data.number_questions);
+
+        let data_local;
+        let data_global;
+        let sdgs = data.sdgs;
+
+        $('#chart-questions').empty();
+
+        local.map(function(value, index){
+          $("#chart-questions").append(
+            `
+              <div class="global-survey-card box is-paddingless" x-data="accordion()" data-question-sdgs="${value.sdgs.join(",")}">
+                  <div class="survey-question">
+                    <div class="survey-question__number">${index+1}</div>
+                    <div class="survey-question__info">
+                      <span class="survey-question__info__title">${value.title}</span>
+                      <div class="top-m-20">
+                        <span class="right-m-30">Answered: ${value.get_responded}</span>
+                        <span>Polled: ${value.get_polled}</span>
+                      </div>
+                      <div class="top-m-30 flex space-between">
+                        <div id="sdgs-question-${value.id}"></div>
+                        <div class="accordion-btn" x-on:click="open()">
+                          <span x-show="!isOpen()">
+                            More
+                            <i class="material-icons">keyboard_arrow_down</i>
+                          </span>
+                          <span x-show="isOpen()">
+                            Less
+                            <i class="material-icons">keyboard_arrow_up</i>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="global-survey-chart" x-show="isOpen()" x-on:click.away="close()">
+                    <div class="columns is-marginless">
+                      <div class="column border-top border-bottom p-30 has-text-centered">
+                        <img class="right-m-5" src="{% static 'svg/business-affiliate-network.svg' %}" alt="">
+                        <span class="has-text-weight-bold right-m-10 left-m-10">{{participating_unct}}%</span>
+                        <span>Participating UNCT</span>
+                      </div>
+                      {% if not question.is_open_ended %}
+                        <div class="column border-top border-bottom border-left p-30 has-text-centered">
+                          <div class="dropdown is-hoverable is-right">
+                            <div class="dropdown-trigger">
+                              <div aria-haspopup="true" aria-controls="dropdown-menu">
+                                <span>Segment by</span>
+                                <span class="icon is-small">
+                                  <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                              </div>
+                            </div>
+                            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                              <div class="dropdown-content">
+                                <a href="javascript:loadDataCountry(${id_country}, 'statistics', 'nao');" class="dropdown-item statistics">All</a>
+                                <a href="javascript:loadDataCountry(${id_country}, 'gender', 'nao');" class="dropdown-item gender">Gender</a>
+                                <a href="javascript:loadDataCountry(${id_country}, 'age', 'nao');" class="dropdown-item age">Age</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      {% endif %}
+                    </div>
+
+                    <div class="columns p-30">
+                      <div class="column">
+                        <div class="has-text-weight-bold">Global</div>
+                        {% if not question.is_open_ended %}
+                          <canvas
+                            id="global-chart-question-${data.questions_global[value.ruleset_label].id}"
+                            width="300"
+                            height="300"
+                            data-question="${data.questions_global[value.ruleset_label].id}"
+                            data-question-type="chart"
+                            class="has-text-centered">
+                          </canvas>
+                        {% else %}
+                          <div
+                            class="has-text-centered"
+                            id="chart-question-cloud-${data.questions_global[value.ruleset_label].id}"
+                            data-question="${data.questions_global[value.ruleset_label].id}"
+                            data-question-type="cloud">
+                          </div>
+                        {% endif %}
+                      </div>
+                      <div class="column column-unct">
+                        <div class="has-text-weight-bold">${value.local_poll_title}</div>
+                        {% if not question.is_open_ended %}
+                        <canvas
+                                id="chart-question-${value.id}"
+                                width="300"
+                                height="300"
+                                data-question="${value.id}"
+                                data-question-type="chart"
+                                class="has-text-centered">
+                        </canvas>
+                        {% else %}
+                        <div
+                                class="has-text-centered"
+                                id="chart-question-cloud-${value.id}"
+                                data-question="${value.id}"
+                                data-question-type="cloud">
+                        </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              `
+          )
+
+          $(`#sdgs-question-${value.id}`).html(value.sdgs.map(function(item){
+              return `<span class="tag sdg-${item} right-m-5 bottom-m-5"> ${item} ${sdgs[item]} </span>`
+            })
+          );
+          
+          data_local = value.statistics.counts;
+          data_global = data.questions_global[value.ruleset_label].statistics.counts;
+          
+          if (tab == 'statistics'){
+
+            globalDataChart = new Chart($('#global-chart-question-' + data.questions_global[value.ruleset_label].id), {
+              type: "doughnut",
+              data: {
+                datasets: [{
+                  data: data_global,
+                  backgroundColor: RTMConfigs.availableColors,
+                  borderColor: "rgba(255, 255, 255, 0.1)",
+                }],
+                labels: data.questions_global[value.ruleset_label].statistics.labels,
+              },
+              options: {
+                legend: {
+                  labels: {
+                    usePointStyle: true,
+                  }
+                },
+                tooltips: {
+                  bodyFontSize: 16,
+                  titleFontSize: 16,
+                },
+                plugins: {
+                  datalabels: {
+                    font: {
+                      size: 20,
+                      weight: 'bold',
+                    },
+                    formatter:(value, ctx) => {
+                      let sum = 0;
+                      let dataArr = ctx.chart.data.datasets[0].data;
+                      dataArr.map(data => {
+                        sum += data;
+                      });
+                      let percentage = parseInt((value * 100 / sum));
+                      return percentage > 0 ? percentage + "%" : "";
+                    },
+                    color: "#fff",
+                  }
+                }
+              },
+            });
+
+            localDataChart = new Chart($('#chart-question-' + value.id), {
+              type: "doughnut",
+              data: {
+                datasets: [{
+                  data: data_local,
+                  backgroundColor: RTMConfigs.availableColors,
+                  borderColor: "rgba(255, 255, 255, 0.1)",
+                }],
+                labels: value.statistics.labels,
+              },
+              options: {
+                legend: {
+                  labels: {
+                    usePointStyle: true,
+                  }
+                },
+                tooltips: {
+                  bodyFontSize: 16,
+                  titleFontSize: 16,
+                },
+                plugins: {
+                  datalabels: {
+                    font: {
+                      size: 20,
+                      weight: 'bold',
+                    },
+                    formatter:(value, ctx) => {
+                      let sum = 0;
+                      let dataArr = ctx.chart.data.datasets[0].data;
+                      dataArr.map(data => {
+                        sum += data;
+                      });
+                      let percentage = parseInt((value * 100 / sum));
+                      return percentage > 0 ? percentage + "%" : "";
+                    },
+                    color: "#fff",
+                  }
+                }
+              },
+            });
+          }else if (tab == "age"){
+            console.log("AGE");
+          } else if (tab == "gender"){
+            console.log("GENDER");
+          }
+
+          if (first_access == 'sim'){
+            $(".column-unct").css("visibility", "hidden");
+          }
+
+        });
+      });
+    }   
+
+    $(document).ready(function() {
+      loadDataCountry({{ poll_initial }}, 'statistics', 'sim');
+    });
   </script>
 {% endblock %}
