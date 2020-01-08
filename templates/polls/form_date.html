@@ -63,8 +63,10 @@
         </div>
         <div class="columns wrapper-buttons">
           <div class="column">
-            <a href="{% url 'polls.poll_update' poll.id %}" class="button primary-reverse">{% trans "Back" %}</a>
-            <button type="submit" class="button is-primary is-pulled-right">{% trans "Save" %}</button>
+            <div class="flex flex-end">
+              <a href="{% url 'polls.poll_update' poll.id %}" class="button primary-reverse right-m-5">{% trans "Back" %}</a>
+              <button type="submit" class="button is-primary">{% trans "Next" %}</button>
+            </div>
           </div>
         </div>
       </form>
