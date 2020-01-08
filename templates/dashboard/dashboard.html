@@ -11,9 +11,31 @@
 
 {% block content %}
   <section class="section">
-    <h1 class="title">
-        {% if access_level == 'local' %}{{ request.org }} {% else %} {% trans "Global Dashboard" %} {% endif %}
+    <h1 class="title bottom-m-0">
+      {% if access_level == 'local' %}{{ request.org }} {% else %} {% trans "Global Dashboard" %} {% endif %}
     </h1>
+
+  <div class="flex space-between">
+      <div class="has-text-grey-light" id="all_filter"></div>
+        <div class="dropdown is-hoverable">
+          <div class="dropdown-trigger">
+            <div aria-haspopup="true" aria-controls="dropdown-menu">
+              <span>{% trans "Filter by" %}</span>
+              <span class="icon is-small">
+              <i class="fas fa-angle-down" aria-hidden="true"></i>
+            </span>
+            </div>
+      </div>
+      <div class="dropdown-menu" id="dropdown-menu" role="menu">
+        <div class="dropdown-content">
+          <a href="javascript:loadAllChart('week')" class="dropdown-item">{% trans "Last 7 days" %}</a>
+          <a href="javascript:loadAllChart('month')" class="dropdown-item">{% trans "Last 30 days" %}</a>
+          <a href="javascript:loadAllChart('year')" class="dropdown-item">{% trans "Last 12 months" %}</a>
+          <a href="javascript:loadAllChart('inception')" class="dropdown-item">{% trans "Since Inception" %}</a>
+        </div>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="section">
@@ -829,12 +851,30 @@
     });
   }
 
+  function loadAllChart(filterBy) {
+    loadChartTracked(filterBy);
+    loadChartMessageMetrics(filterBy);
+    loadChartMostUsedChannels(filterBy);
+    
+    let textAgo = "{% trans 'Since Inception' %}";
+    if (filterBy === "month") {
+      textAgo = "{% trans 'Last 30 days' %}";
+    } else if (filterBy === "week") {
+      textAgo = "{% trans 'Last 7 days' %}";
+    } else if (filterBy === "year") {
+      textAgo = "{% trans 'Last 12 months' %}";
+    }
+
+    $("#all_filter").html(textAgo);
+  }
+
   $(document).ready(function() {
     loadChartTracked("year");
     loadChartPartialResults();
     loadChartMessageMetrics("year");
     loadChartMostUsedChannels("year");
     loadChartRapidProContacts();
+    $("#all_filter").html("{% trans 'Last 12 months' %}");
 
     $(window).scroll(function(){
       if ($(this).scrollTop() > 100) {

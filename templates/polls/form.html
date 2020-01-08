@@ -10,8 +10,18 @@
 {% endblock %}
 
 {% block content %}
+<section class="section top-p-0 bottom-p-0">
+  <nav class="breadcrumb" aria-label="breadcrumbs">
+    <ul>
+      <li><a href="{% url 'polls.poll_list' %}">{% trans 'Surveys' %}</a></li>
+      <li class="is-active"><a href="#" aria-current="page">{{ page_subtitle }}</a></li>
+    </ul>
+  </nav>
+</section>
+
 <section class="section">
   <h1 class="title">{% trans "Surveys" %}</h1>
+  <h2 class="subtitle">{{ page_subtitle }}</h2>
 </section>
 
 <section class="section">
@@ -87,7 +97,8 @@
 
         <div class="columns wrapper-buttons">
           <div class="column">
-            <button type="submit" class="button is-primary is-pulled-right">{% trans "Save" %}</button>
+            <a href="{% url 'polls.poll_list' %}" class="button primary-reverse is-pulled-right">{% trans "Cancel" %}</a> 
+            <button type="submit" class="button is-primary is-pulled-right right-m-20">{% trans "Save" %}</button>
           </div>
         </div>
       </form>

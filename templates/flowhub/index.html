@@ -58,6 +58,7 @@
           </div>
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
+              <a href="{% url 'flowhub.flow_list' %}" class="dropdown-item">{% trans "None" %}</a>
               {% for id, name in sdgs %}
               <a href="?sdg={{ id }}&lang={{ language }}" class="dropdown-item">{{ name }}</a>
               {% endfor %}
@@ -73,6 +74,7 @@
           </div>
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
+              <a href="{% url 'flowhub.flow_list' %}" class="dropdown-item">{% trans "None" %}</a>
               {% for id, name in languages %}
               <a href="?sdg={{ sdg }}&lang={{ id }}" class="dropdown-item">{{ name }}</a>
               {% endfor %}

@@ -11,136 +11,132 @@
 
 {% block content %}
 <section class="section top-p-0 bottom-p-0">
-    <nav class="breadcrumb" aria-label="breadcrumbs">
-        <ul>
-            <li><a href="{% url 'polls_global.poll_list' %}">{% trans 'Global Surveys'%}</a></li>
-            <li class="is-active"><a href="#" aria-current="page">{{ poll.title }}</a></li>
-        </ul>
-    </nav>
+  <nav class="breadcrumb" aria-label="breadcrumbs">
+    <ul>
+      <li><a href="{% url 'polls_global.poll_list' %}">{% trans 'Global Surveys'%}</a></li>
+      <li class="is-active"><a href="#" aria-current="page">{{ poll.title }}</a></li>
+    </ul>
+  </nav>
 </section>
 
 <section class="section">
-    <h1 class="title">{% trans 'Survey Results'%}</h1>
+  <h1 class="title">{% trans 'Survey Results'%}</h1>
 </section>
 
 <div class="section">
-    <div class="columns is-mobile">
-        <div class="column is-one-third-mobile is-one-quarter">
-            <aside class="survey-filters">
-                <div class="border-bottom p-30">
-                    <h3 class="bottom-m-10">
-                        <img class="right-m-5" src="{% static 'svg/unct.svg' %}" alt="">
-                        <span>UNCTs</span>
-                    </h3>
-                    <div class="control has-icons-left">
-                        <form>
-                            <input class="input is-medium search" name="query" placeholder="{% trans 'Search'%}"
-                                   value="{{ query }}">
-                            <span class="icon is-left">
+  <div class="columns is-mobile">
+    <div class="column is-one-third-mobile is-one-quarter">
+      <aside class="survey-filters">
+        <div class="border-bottom p-30">
+          <h3 class="bottom-m-10">
+            <img class="right-m-5" src="{% static 'svg/unct.svg' %}" alt="">
+            <span>UNCTs</span>
+          </h3>
+          <div class="control has-icons-left">
+            <form>
+              <input class="input is-medium search" name="query" placeholder="{% trans 'Search'%}" value="{{ query }}">
+              <span class="icon is-left">
                 <i class="material-icons">search</i>
               </span>
-                        </form>
-                    </div>
-                </div>
-                <div class="survey-filters-content p-30">
-                    <h3 class="bottom-m-10">
-                        <img class="right-m-5" src="{% static 'svg/sdg.svg' %}" alt="">
-                        <span>SDG</span>
-                    </h3>
-
-                    {% for sdg in sdgs %}
-                    <div class="sdg-checkbox">
-                        <input class="is-checkradio" name="sdgs" type="checkbox" value="{{ sdg.0 }}"
-                               id="sdg{{ sdg.0 }}"/>
-                        <label for="sdg{{ sdg.0 }}" title="{{ sdg.1 }}"><strong>{{ sdg.0 }}</strong> {{ sdg.1 }}</label>
-                    </div>
-                    {% endfor %}
-                </div>
-            </aside>
+            </form>
+          </div>
         </div>
-
-        <div class="column">
-            <div id="notification-select-unct" class="notification is-warning has-text-centered">
-                <button class="delete" onclick="remove_notification();"></button>
-                Select a Survey in "Countries" to compare with Global Data
+        <div class="survey-filters-content p-30">
+          <h3 class="bottom-m-10">
+            <img class="right-m-5" src="{% static 'svg/sdg.svg' %}" alt="">
+            <span>SDG</span>
+          </h3>
+          {% for sdg in sdgs %}
+            <div class="sdg-checkbox">
+              <input class="is-checkradio" name="sdgs" type="checkbox" value="{{ sdg.0 }}" id="sdg{{ sdg.0 }}"/>
+              <label for="sdg{{ sdg.0 }}" title="{{ sdg.1 }}"><strong>{{ sdg.0 }}</strong> {{ sdg.1 }}</label>
             </div>
-
-            <div id="loaderDiv" class="has-text-centered">
-                <img src="{% static 'img/loading.gif' %}" width="30px" height="30px">
-            </div>
-
-            <div class="box is-paddingless">
-                <nav class="level is-paddingless border-bottom is-mobile">
-                    <div class="level-item border-right">
-                        <span class="title right-m-10 left-m-10" id="number-questions"></span>
-                        <span>{% trans "Question" %}{{ poll.get_questions.count|pluralize }}</span>
-                        <span class="tooltip top left-m-10">
-                <i class="material-icons info-icon">info</i>
-                <span class="tooltip-content">{% trans 'The amount of questions in this survey'%}</span>
-              </span>
-                    </div>
-                    <div class="level-item">
-                        <img class="right-m-5" src="{% static 'svg/earth-globe.svg' %}" alt="">
-                        <div class="dropdown is-hoverable">
-                            <div class="dropdown-trigger">
-                  <span aria-haspopup="true" aria-controls="countries-dropdown">
-                    <span class="title right-m-10 left-m-10">{{num_countries}}</span>
-                    <span>{% trans "Countries" %}</span>
-                    <span class="icon is-small">
-                      <i class="fas fa-angle-down" aria-hidden="true"></i>
-                    </span>
-                  </span>
-                            </div>
-                            <div class="dropdown-menu" id="countries-dropdown" role="menu">
-                                <div class="dropdown-content">
-                                    {% for country in all_local_polls %}
-                                    <a href="#" class="dropdown-item"
-                                       onclick="loadDataCountry({{country.id}}, 'statistics', 'nao');">{{country.title}}</a>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-                        <span class="tooltip top left-m-10">
-                <i class="material-icons info-icon">info</i>
-                <span class="tooltip-content">{% trans 'Countries participating in this global survey'%}</span>
-              </span>
-                    </div>
-                </nav>
-                <div class="bottom-p-20">
-                    <div class="columns bottom-m-10">
-                        <div class="column is-2 has-text-right">{% trans 'Title:'%}</div>
-                        <div class="column">{{ poll_global.title }}</div>
-                    </div>
-                    <div class="columns bottom-m-10">
-                        {% if poll_global.response_content %}
-                        <div class="column is-2 has-text-right">{% trans 'Description:'%}</div>
-                        <div class="column">{{ poll_global.response_content }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="columns bottom-m-10">
-                        <div class="column is-2 has-text-right">{% trans 'Date:'%}</div>
-                        <div class="column">{{ poll_global.poll_date|date:"m/d/Y" }}</div>
-                    </div>
-                    <div class="columns bottom-m-10">
-                        <div class="column is-2 has-text-right">{% trans 'Linked SDGs:'%}</div>
-                        <div class="column">
-                            {% for sdg in all_sdgs %}
-                            <span class="tag sdg-{{ sdg }} right-m-5 bottom-m-5">{{ sdg }} {{ sdg|get_sdg }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="no-unct-match" class="global-survey-card box is-paddingless" style="display: none;">
-                <div class="column border-top border-bottom p-30 has-text-centered">
-                    <strong>No Survey found for this Global Survey.</strong>
-                </div>
-            </div>
-            <div id="chart-questions">
-
-            </div>
+          {% endfor %}
         </div>
+      </aside>
     </div>
+
+    <div class="column">
+      <div id="notification-select-unct" class="notification is-warning has-text-centered">
+        <button class="delete" onclick="remove_notification();"></button>
+        Select a Survey in "Countries" to compare with Global Data
+      </div>
+
+      <div id="loaderDiv" class="has-text-centered">
+        <img src="{% static 'img/loading.gif' %}" width="30px" height="30px">
+      </div>
+
+      <div class="box is-paddingless">
+        <nav class="level is-paddingless border-bottom is-mobile">
+          <div class="level-item border-right">
+            <span class="title right-m-10 left-m-10" id="number-questions"></span>
+            <span>{% trans "Question" %}{{ poll.get_questions.count|pluralize }}</span>
+            <span class="tooltip top left-m-10">
+              <i class="material-icons info-icon">info</i>
+              <span class="tooltip-content">{% trans 'The amount of questions in this survey'%}</span>
+            </span>
+          </div>
+          <div class="level-item">
+            <img class="right-m-5" src="{% static 'svg/earth-globe.svg' %}" alt="">
+            <div class="dropdown is-hoverable">
+              <div class="dropdown-trigger">
+                <span aria-haspopup="true" aria-controls="countries-dropdown">
+                  <span class="title right-m-10 left-m-10">{{num_countries}}</span>
+                  <span>{% trans "Countries" %}</span>
+                  <span class="icon is-small">
+                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                  </span>
+                </span>
+              </div>
+              <div class="dropdown-menu" id="countries-dropdown" role="menu">
+                <div class="dropdown-content">
+                  {% for country in all_local_polls %}
+                    <a href="#" class="dropdown-item" onclick="loadDataCountry({{country.id}}, 'statistics', 'nao');">
+                      {{country.title}}
+                    </a>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+            <span class="tooltip top left-m-10">
+              <i class="material-icons info-icon">info</i>
+              <span class="tooltip-content">{% trans 'Countries participating in this global survey'%}</span>
+            </span>
+          </div>
+        </nav>
+        <div class="bottom-p-20">
+          <div class="columns bottom-m-10">
+            <div class="column is-2 has-text-right">{% trans 'Title:'%}</div>
+            <div class="column">{{ poll_global.title }}</div>
+          </div>
+          <div class="columns bottom-m-10">
+            {% if poll_global.response_content %}
+              <div class="column is-2 has-text-right">{% trans 'Description:'%}</div>
+              <div class="column">{{ poll_global.response_content }}</div>
+            {% endif %}
+          </div>
+          <div class="columns bottom-m-10">
+            <div class="column is-2 has-text-right">{% trans 'Date:'%}</div>
+            <div class="column">{{ poll_global.poll_date|date:"m/d/Y" }}</div>
+          </div>
+          <div class="columns bottom-m-10">
+            <div class="column is-2 has-text-right">{% trans 'Linked SDGs:'%}</div>
+            <div class="column">
+              {% for sdg in all_sdgs %}
+                <span class="tag sdg-{{ sdg }} right-m-5 bottom-m-5">{{ sdg }} {{ sdg|get_sdg }}</span>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="no-unct-match" class="global-survey-card box is-paddingless" style="display: none;">
+        <div class="column border-top border-bottom p-30 has-text-centered">
+          <strong>No Survey found for this Global Survey.</strong>
+        </div>
+      </div>
+      <div id="chart-questions"></div>
+    </div>
+  </div>
 </div>
 {% endblock %}
 
@@ -153,468 +149,466 @@
 <script src="{% static 'plugins/wordcloud/d3.layout.cloud.js' %}"></script>
 
 <script type="text/javascript">
-    $("input:checkbox").click(function() {
-      let isChecked = $("input:checkbox").filter(":checked");
+$("input:checkbox").click(function() {
+  let isChecked = $("input:checkbox").filter(":checked");
 
-      isChecked.map(function() {
-        let sdg = this.value;
+  isChecked.map(function() {
+    let sdg = this.value;
 
-        $("div[data-question-sdgs]").each(function() {
-          let sdgs = $(this).attr("data-question-sdgs");
+    $("div[data-question-sdgs]").each(function() {
+      let sdgs = $(this).attr("data-question-sdgs");
 
-          if (!sdgs.split(",").includes(sdg)) {
-            $(this).hide();
-          } else {
-            $(this).show();
+      if (!sdgs.split(",").includes(sdg)) {
+        $(this).hide();
+      } else {
+        $(this).show();
+      }
+    });
+  });
+
+  if (isChecked.length == 0) {
+    $("div[data-question-sdgs]").each(function() {
+      $(this).show();
+    });
+  }
+});
+
+function accordion() {
+    return {
+        show: false,
+        open() { this.show = true },
+        close() { this.show = false },
+        isOpen() { return this.show === true },
+    }
+}
+
+let globalDataChart = {};
+let localDataChart = {};
+let globalData;
+let localData;
+
+function showChart(local_question, ruleset_label, tab){
+  let data_question_global = globalData[ruleset_label];
+  let data_question_local = localData[local_question];
+
+  let global_chart = $("#global-chart-question-"+data_question_global["id"]);
+  let local_chart = $("#chart-question-"+data_question_local["id"]);
+
+  if((globalDataChart[ruleset_label] != "") && (localDataChart[ruleset_label] != "")){
+    globalDataChart[ruleset_label].destroy();
+    localDataChart[ruleset_label].destroy();
+  }
+
+  if(tab == "statistics"){
+
+    globalDataChart[ruleset_label] = new Chart(global_chart, {
+      type: "doughnut",
+      data: {
+        datasets: [{
+          data: data_question_global["statistics"]["counts"],
+          backgroundColor: RTMConfigs.availableColors,
+          borderColor: "rgba(255, 255, 255, 0.1)",
+        }],
+        labels: data_question_global["statistics"]["labels"]
+      },
+      options: {
+        legend: {
+          labels: {
+            usePointStyle: true,
           }
-        });
-      });
+        },
+        tooltips: {
+          bodyFontSize: 16,
+          titleFontSize: 16,
+        },
+        plugins: {
+          datalabels: {
+            font: {
+              size: 20,
+              weight: 'bold',
+            },
+            formatter:(value, ctx) => {
+              let sum = 0;
+              let dataArr = ctx.chart.data.datasets[0].data;
+              dataArr.map(data => {
+                sum += data;
+              });
+              let percentage = parseInt((value * 100 / sum)) + "%";
+              return percentage;
+            },
+            color: "#fff",
+          }
+        }
+      },
+    });
+    localDataChart[ruleset_label] = new Chart(local_chart, {
+      type: "doughnut",
+      data: {
+        datasets: [{
+          data: data_question_local["statistics"]["counts"],
+          backgroundColor: RTMConfigs.availableColors,
+          borderColor: "rgba(255, 255, 255, 0.1)",
+        }],
+        labels: data_question_local["statistics"]["labels"]
+      },
+      options: {
+        legend: {
+          labels: {
+            usePointStyle: true,
+          }
+        },
+        tooltips: {
+          bodyFontSize: 16,
+          titleFontSize: 16,
+        },
+        plugins: {
+          datalabels: {
+            font: {
+              size: 20,
+              weight: 'bold',
+            },
+            formatter:(value, ctx) => {
+              let sum = 0;
+              let dataArr = ctx.chart.data.datasets[0].data;
+              dataArr.map(data => {
+                sum += data;
+              });
+              let percentage = parseInt((value * 100 / sum)) + "%";
+              return percentage;
+            },
+            color: "#fff",
+          }
+        }
+      },
+    });
 
-      if (isChecked.length == 0) {
-        $("div[data-question-sdgs]").each(function() {
-          $(this).show();
-        });
+  }else if(tab == "age"){
+
+    globalDataChart[ruleset_label] = new Chart(global_chart, {
+      type: "horizontalBar",
+      data: {
+        labels: data_question_global["age"]["categories"],
+        datasets: data_question_global["age"]["series"],
+      },
+      options: {
+        legend: {
+          labels: {
+            usePointStyle: true,
+          }
+        },
+        plugins: {
+          datalabels: {
+            display: false,
+          }
+        },
+        tooltips: {
+          bodyFontSize: 16,
+          titleFontSize: 16,
+        },
+        scales: {
+          xAxes: [{
+            stacked: true,
+            ticks: {
+              stepSize: 20,
+            },
+          }],
+          yAxes: [{
+            stacked: true,
+            gridLines: {
+              color: "rgba(0, 0, 0, 0)",
+            }
+          }]
+        }
       }
     });
 
-    function accordion() {
-        return {
-            show: false,
-            open() { this.show = true },
-            close() { this.show = false },
-            isOpen() { return this.show === true },
+    localDataChart[ruleset_label] = new Chart(local_chart, {
+      type: "horizontalBar",
+      data: {
+        labels: data_question_local["age"]["categories"],
+        datasets: data_question_local["age"]["series"],
+      },
+      options: {
+        legend: {
+          labels: {
+            usePointStyle: true,
+          }
+        },
+        plugins: {
+          datalabels: {
+            display: false,
+          }
+        },
+        tooltips: {
+          bodyFontSize: 16,
+          titleFontSize: 16,
+        },
+        scales: {
+          xAxes: [{
+            stacked: true,
+            ticks: {
+              stepSize: 20,
+            },
+          }],
+          yAxes: [{
+            stacked: true,
+            gridLines: {
+              color: "rgba(0, 0, 0, 0)",
+            },
+          }]
         }
-    }
-
-
-
-    let globalDataChart = {};
-    let localDataChart = {};
-    let globalData;
-    let localData;
-
-    function showChart(local_question, ruleset_label, tab){
-      let data_question_global = globalData[ruleset_label];
-      let data_question_local = localData[local_question];
-
-      let global_chart = $("#global-chart-question-"+data_question_global["id"]);
-      let local_chart = $("#chart-question-"+data_question_local["id"]);
-
-      if((globalDataChart[ruleset_label] != "") && (localDataChart[ruleset_label] != "")){
-        globalDataChart[ruleset_label].destroy();
-        localDataChart[ruleset_label].destroy();
       }
+    });
 
-      if(tab == "statistics"){
+  }else if(tab == "gender"){
 
-        globalDataChart[ruleset_label] = new Chart(global_chart, {
-          type: "doughnut",
-          data: {
-            datasets: [{
-              data: data_question_global["statistics"]["counts"],
-              backgroundColor: RTMConfigs.availableColors,
-              borderColor: "rgba(255, 255, 255, 0.1)",
-            }],
-            labels: data_question_global["statistics"]["labels"]
-          },
-          options: {
-            legend: {
-              labels: {
-                usePointStyle: true,
-              }
-            },
-            tooltips: {
-              bodyFontSize: 16,
-              titleFontSize: 16,
-            },
-            plugins: {
-              datalabels: {
-                font: {
-                  size: 20,
-                  weight: 'bold',
-                },
-                formatter:(value, ctx) => {
-                  let sum = 0;
-                  let dataArr = ctx.chart.data.datasets[0].data;
-                  dataArr.map(data => {
-                    sum += data;
-                  });
-                  let percentage = parseInt((value * 100 / sum)) + "%";
-                  return percentage;
-                },
-                color: "#fff",
-              }
-            }
-          },
-        });
-        localDataChart[ruleset_label] = new Chart(local_chart, {
-          type: "doughnut",
-          data: {
-            datasets: [{
-              data: data_question_local["statistics"]["counts"],
-              backgroundColor: RTMConfigs.availableColors,
-              borderColor: "rgba(255, 255, 255, 0.1)",
-            }],
-            labels: data_question_local["statistics"]["labels"]
-          },
-          options: {
-            legend: {
-              labels: {
-                usePointStyle: true,
-              }
-            },
-            tooltips: {
-              bodyFontSize: 16,
-              titleFontSize: 16,
-            },
-            plugins: {
-              datalabels: {
-                font: {
-                  size: 20,
-                  weight: 'bold',
-                },
-                formatter:(value, ctx) => {
-                  let sum = 0;
-                  let dataArr = ctx.chart.data.datasets[0].data;
-                  dataArr.map(data => {
-                    sum += data;
-                  });
-                  let percentage = parseInt((value * 100 / sum)) + "%";
-                  return percentage;
-                },
-                color: "#fff",
-              }
-            }
-          },
-        });
-
-      }else if(tab == "age"){
-
-        globalDataChart[ruleset_label] = new Chart(global_chart, {
-          type: "horizontalBar",
-          data: {
-            labels: data_question_global["age"]["categories"],
-            datasets: data_question_global["age"]["series"],
-          },
-          options: {
-            legend: {
-              labels: {
-                usePointStyle: true,
-              }
-            },
-            plugins: {
-              datalabels: {
-                display: false,
-              }
-            },
-            tooltips: {
-              bodyFontSize: 16,
-              titleFontSize: 16,
-            },
-            scales: {
-              xAxes: [{
-                stacked: true,
-                ticks: {
-                  stepSize: 20,
-                },
-              }],
-              yAxes: [{
-                stacked: true,
-                gridLines: {
-                  color: "rgba(0, 0, 0, 0)",
-                }
-              }]
-            }
+    globalDataChart[ruleset_label] = new Chart(global_chart, {
+      type: "horizontalBar",
+      data: {
+        labels: data_question_global["gender"]["categories"],
+        datasets: data_question_global["gender"]["series"]
+      },
+      options: {
+        legend: {
+          labels: {
+            usePointStyle: true,
           }
-        });
-
-        localDataChart[ruleset_label] = new Chart(local_chart, {
-          type: "horizontalBar",
-          data: {
-            labels: data_question_local["age"]["categories"],
-            datasets: data_question_local["age"]["series"],
-          },
-          options: {
-            legend: {
-              labels: {
-                usePointStyle: true,
-              }
-            },
-            plugins: {
-              datalabels: {
-                display: false,
-              }
-            },
-            tooltips: {
-              bodyFontSize: 16,
-              titleFontSize: 16,
-            },
-            scales: {
-              xAxes: [{
-                stacked: true,
-                ticks: {
-                  stepSize: 20,
-                },
-              }],
-              yAxes: [{
-                stacked: true,
-                gridLines: {
-                  color: "rgba(0, 0, 0, 0)",
-                },
-              }]
-            }
+        },
+        plugins: {
+          datalabels: {
+            display: false,
           }
-        });
-
-      }else if(tab == "gender"){
-
-        globalDataChart[ruleset_label] = new Chart(global_chart, {
-          type: "horizontalBar",
-          data: {
-            labels: data_question_global["gender"]["categories"],
-            datasets: data_question_global["gender"]["series"]
-          },
-          options: {
-            legend: {
-              labels: {
-                usePointStyle: true,
-              }
+        },
+        tooltips: {
+          bodyFontSize: 16,
+          titleFontSize: 16,
+        },
+        scales: {
+          xAxes: [{
+            stacked: true,
+            ticks: {
+              stepSize: 20,
             },
-            plugins: {
-              datalabels: {
-                display: false,
-              }
+          }],
+          yAxes: [{
+            stacked: true,
+            gridLines: {
+              color: "rgba(0, 0, 0, 0)",
             },
-            tooltips: {
-              bodyFontSize: 16,
-              titleFontSize: 16,
-            },
-            scales: {
-              xAxes: [{
-                stacked: true,
-                ticks: {
-                  stepSize: 20,
-                },
-              }],
-              yAxes: [{
-                stacked: true,
-                gridLines: {
-                  color: "rgba(0, 0, 0, 0)",
-                },
-              }]
-            }
-          }
-        });
-
-        localDataChart[ruleset_label] = new Chart(local_chart, {
-          type: "horizontalBar",
-          data: {
-            labels: data_question_local["gender"]["categories"],
-            datasets: data_question_local["gender"]["series"],
-          },
-          options: {
-            legend: {
-              labels: {
-                usePointStyle: true,
-              }
-            },
-            plugins: {
-              datalabels: {
-                display: false,
-              }
-            },
-            tooltips: {
-              bodyFontSize: 16,
-              titleFontSize: 16,
-            },
-            scales: {
-              xAxes: [{
-                stacked: true,
-                ticks: {
-                  stepSize: 20,
-                },
-              }],
-              yAxes: [{
-                stacked: true,
-                gridLines: {
-                  color: "rgba(0, 0, 0, 0)",
-                },
-              }]
-            }
-          }
-        });
-
+          }]
+        }
       }
-    };
+    });
 
-
-
-    function loadDataCountry(id_country, tab, first_access){
-      if (id_country == -1){
-        $("#no-unct-match").css("display", "block");
-        $("#notification-select-unct").css("display", "none");
-        $("#loaderDiv").css("display", "none");
-        return 0;
-      }else{
-        $("#no-unct-match").css("display", "none");
-      }
-
-      $.ajax({
-        url: "data/" + id_country,
-        beforeSend: function() {
-              $("#loaderDiv").show();
-          },
-          success: function(data) {
-              $("#loaderDiv").hide();
+    localDataChart[ruleset_label] = new Chart(local_chart, {
+      type: "horizontalBar",
+      data: {
+        labels: data_question_local["gender"]["categories"],
+        datasets: data_question_local["gender"]["series"],
+      },
+      options: {
+        legend: {
+          labels: {
+            usePointStyle: true,
           }
-      })
-      .done(function( data ) {
-        localData = data.questions_local;
-        globalData = data.questions_global;
+        },
+        plugins: {
+          datalabels: {
+            display: false,
+          }
+        },
+        tooltips: {
+          bodyFontSize: 16,
+          titleFontSize: 16,
+        },
+        scales: {
+          xAxes: [{
+            stacked: true,
+            ticks: {
+              stepSize: 20,
+            },
+          }],
+          yAxes: [{
+            stacked: true,
+            gridLines: {
+              color: "rgba(0, 0, 0, 0)",
+            },
+          }]
+        }
+      }
+    });
 
-        $("#number-questions").html(data.number_questions);
+  }
+};
 
-        let data_local;
-        let data_global;
-        let sdgs = data.sdgs;
 
-        $('#chart-questions').empty();
 
-        localData.map(function(value, index){
-          $("#chart-questions").append(
-            `
-              <div class="global-survey-card box is-paddingless" x-data="accordion()" data-question-sdgs="${value.sdgs.join(",")}">
-                  <div class="survey-question">
-                    <div class="survey-question__number">${index+1}</div>
-                    <div class="survey-question__info">
-                      <span class="survey-question__info__title">${value.title}</span>
-                      <div class="top-m-20">
-                        <span class="right-m-30">Answered: ${value.get_responded}</span>
-                        <span>Polled: ${value.get_polled}</span>
-                      </div>
-                      <div class="top-m-30 flex space-between">
-                        <div id="sdgs-question-${value.id}"></div>
-                        <div class="accordion-btn" x-on:click="open()">
-                          <span x-show="!isOpen()">
-                            More
-                            <i class="material-icons">keyboard_arrow_down</i>
-                          </span>
-                          <span x-show="isOpen()">
-                            Less
-                            <i class="material-icons">keyboard_arrow_up</i>
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+function loadDataCountry(id_country, tab, first_access){
+  if (id_country == -1){
+    $("#no-unct-match").css("display", "block");
+    $("#notification-select-unct").css("display", "none");
+    $("#loaderDiv").css("display", "none");
+    return 0;
+  }else{
+    $("#no-unct-match").css("display", "none");
+  }
+
+  $.ajax({
+    url: "data/" + id_country,
+    beforeSend: function() {
+        $("#loaderDiv").show();
+      },
+      success: function(data) {
+          $("#loaderDiv").hide();
+      }
+  })
+  .done(function( data ) {
+    localData = data.questions_local;
+    globalData = data.questions_global;
+
+    $("#number-questions").html(data.number_questions);
+
+    let data_local;
+    let data_global;
+    let sdgs = data.sdgs;
+
+    $('#chart-questions').empty();
+
+    localData.map(function(value, index){
+      $("#chart-questions").append(
+        `
+          <div class="global-survey-card box is-paddingless" x-data="accordion()" data-question-sdgs="${value.sdgs.join(",")}">
+              <div class="survey-question">
+                <div class="survey-question__number">${index+1}</div>
+                <div class="survey-question__info">
+                  <span class="survey-question__info__title">${value.title}</span>
+                  <div class="top-m-20">
+                    <span class="right-m-30">Answered: ${value.get_responded}</span>
+                    <span>Polled: ${value.get_polled}</span>
                   </div>
-                  <div class="global-survey-chart" x-show="isOpen()" x-on:click.away="close()">
-                    <div class="columns is-marginless">
-                      <div class="column border-top border-bottom p-30 has-text-centered">
-                        <img class="right-m-5" src="{% static 'svg/business-affiliate-network.svg' %}" alt="">
-                        <span class="has-text-weight-bold right-m-10 left-m-10">{{participating_unct}}%</span>
-                        <span>Participating UNCT</span>
-                      </div>
-                      {% if not question.is_open_ended %}
-                        <div class="column border-top border-bottom border-left p-30 has-text-centered">
-                          <div class="dropdown is-hoverable is-right">
-                            <div class="dropdown-trigger">
-                              <div aria-haspopup="true" aria-controls="dropdown-menu">
-                                <span>Segment by</span>
-                                <span class="icon is-small">
-                                  <i class="fas fa-angle-down" aria-hidden="true"></i>
-                                </span>
-                              </div>
-                            </div>
-                            <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                              <div class="dropdown-content">
-                                <a href="javascript:showChart(${index}, '${value.ruleset_label}', 'statistics');" class="dropdown-item statistics">All</a>
-                                <a href="javascript:showChart(${index}, '${value.ruleset_label}', 'gender');" class="dropdown-item gender">Gender</a>
-                                <a href="javascript:showChart(${index}, '${value.ruleset_label}', 'age');" class="dropdown-item age">Age</a>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      {% endif %}
-                    </div>
-
-                    <div class="columns p-30">
-                      <div class="column">
-                        <div class="has-text-weight-bold">Global</div>
-                        {% if not question.is_open_ended %}
-                          <canvas
-                            id="global-chart-question-${data.questions_global[value.ruleset_label].id}"
-                            width="300"
-                            height="300"
-                            data-question="${data.questions_global[value.ruleset_label].id}"
-                            data-question-type="chart"
-                            class="has-text-centered">
-                          </canvas>
-                        {% else %}
-                          <div
-                            class="has-text-centered"
-                            id="chart-question-cloud-${data.questions_global[value.ruleset_label].id}"
-                            data-question="${data.questions_global[value.ruleset_label].id}"
-                            data-question-type="cloud">
-                          </div>
-                        {% endif %}
-                      </div>
-                      <div class="column column-unct">
-                        <div class="has-text-weight-bold">${value.local_poll_title}</div>
-                        {% if not question.is_open_ended %}
-                        <canvas
-                                id="chart-question-${value.id}"
-                                width="300"
-                                height="300"
-                                data-question="${value.id}"
-                                data-question-type="chart"
-                                class="has-text-centered">
-                        </canvas>
-                        {% else %}
-                        <div
-                                class="has-text-centered"
-                                id="chart-question-cloud-${value.id}"
-                                data-question="${value.id}"
-                                data-question-type="cloud">
-                        </div>
-                        {% endif %}
-                      </div>
+                  <div class="top-m-30 flex space-between">
+                    <div id="sdgs-question-${value.id}"></div>
+                    <div class="accordion-btn" x-on:click="open()">
+                      <span x-show="!isOpen()">
+                        More
+                        <i class="material-icons">keyboard_arrow_down</i>
+                      </span>
+                      <span x-show="isOpen()">
+                        Less
+                        <i class="material-icons">keyboard_arrow_up</i>
+                      </span>
                     </div>
                   </div>
                 </div>
-              `
-          )
+              </div>
+              <div class="global-survey-chart" x-show="isOpen()" x-on:click.away="close()">
+                <div class="columns is-marginless">
+                  <div class="column border-top border-bottom p-30 has-text-centered">
+                    <img class="right-m-5" src="{% static 'svg/business-affiliate-network.svg' %}" alt="">
+                    <span class="has-text-weight-bold right-m-10 left-m-10">{{participating_unct}}%</span>
+                    <span>Participating UNCT</span>
+                  </div>
+                  {% if not question.is_open_ended %}
+                    <div class="column border-top border-bottom border-left p-30 has-text-centered">
+                      <div class="dropdown is-hoverable is-right">
+                        <div class="dropdown-trigger">
+                          <div aria-haspopup="true" aria-controls="dropdown-menu">
+                            <span>Segment by</span>
+                            <span class="icon is-small">
+                              <i class="fas fa-angle-down" aria-hidden="true"></i>
+                            </span>
+                          </div>
+                        </div>
+                        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                          <div class="dropdown-content">
+                            <a href="javascript:showChart(${index}, '${value.ruleset_label}', 'statistics');" class="dropdown-item statistics">All</a>
+                            <a href="javascript:showChart(${index}, '${value.ruleset_label}', 'gender');" class="dropdown-item gender">Gender</a>
+                            <a href="javascript:showChart(${index}, '${value.ruleset_label}', 'age');" class="dropdown-item age">Age</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  {% endif %}
+                </div>
 
-          $(`#sdgs-question-${value.id}`).html(value.sdgs.map(function(item){
-              return `<span class="tag sdg-${item} right-m-5 bottom-m-5"> ${item} ${sdgs[item]} </span>`
-            })
-          );
-          
-          data_local = value.statistics.counts;
-          data_global = data.questions_global[value.ruleset_label].statistics.counts;
+                <div class="columns p-30">
+                  <div class="column">
+                    <div class="has-text-weight-bold">Global</div>
+                    {% if not question.is_open_ended %}
+                      <canvas
+                        id="global-chart-question-${data.questions_global[value.ruleset_label].id}"
+                        width="300"
+                        height="300"
+                        data-question="${data.questions_global[value.ruleset_label].id}"
+                        data-question-type="chart"
+                        class="has-text-centered">
+                      </canvas>
+                    {% else %}
+                      <div
+                        class="has-text-centered"
+                        id="chart-question-cloud-${data.questions_global[value.ruleset_label].id}"
+                        data-question="${data.questions_global[value.ruleset_label].id}"
+                        data-question-type="cloud">
+                      </div>
+                    {% endif %}
+                  </div>
+                  <div class="column column-unct">
+                    <div class="has-text-weight-bold">${value.local_poll_title}</div>
+                    {% if not question.is_open_ended %}
+                    <canvas
+                            id="chart-question-${value.id}"
+                            width="300"
+                            height="300"
+                            data-question="${value.id}"
+                            data-question-type="chart"
+                            class="has-text-centered">
+                    </canvas>
+                    {% else %}
+                    <div
+                            class="has-text-centered"
+                            id="chart-question-cloud-${value.id}"
+                            data-question="${value.id}"
+                            data-question-type="cloud">
+                    </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          `
+      )
 
-          globalDataChart[value.ruleset_label] = "";
-          localDataChart[value.ruleset_label] = "";
+      $(`#sdgs-question-${value.id}`).html(value.sdgs.map(function(item){
+          return `<span class="tag sdg-${item} right-m-5 bottom-m-5"> ${item} ${sdgs[item]} </span>`
+        })
+      );
 
-          showChart(index, value.ruleset_label, 'statistics');
-          if (first_access == 'sim'){
-            $(".column-unct").css("visibility", "hidden");
-          }
+      data_local = value.statistics.counts;
+      data_global = data.questions_global[value.ruleset_label].statistics.counts;
 
-        });
-      }).fail(function(){
-        $("#loaderDiv").hide();
-        $("#notification-select-unct").css("display", "none");
-        $("#chart-questions").html("<div class='box p-30 has-text-centered' id='fail-ajax'>An error has occurred. Try again later</div>");
-      });
-    }
+      globalDataChart[value.ruleset_label] = "";
+      localDataChart[value.ruleset_label] = "";
 
-    function remove_notification(){
-      $("#notification-select-unct").fadeOut();
-    }
+      showChart(index, value.ruleset_label, 'statistics');
+      if (first_access == 'sim'){
+        $(".column-unct").css("visibility", "hidden");
+      }
 
-    $(document).ready(function() {
-      loadDataCountry({{ poll_initial }}, 'statistics', 'sim');
     });
+  }).fail(function(){
+    $("#loaderDiv").hide();
+    $("#notification-select-unct").css("display", "none");
+    $("#chart-questions").html("<div class='box p-30 has-text-centered' id='fail-ajax'>An error has occurred. Try again later</div>");
+  });
+}
+
+function remove_notification(){
+  $("#notification-select-unct").fadeOut();
+}
+
+$(document).ready(function() {
+  loadDataCountry({{ poll_initial }}, 'statistics', 'sim');
+});
 
 </script>
 {% endblock %}

@@ -13,7 +13,7 @@
     <div class="column auto">
       <div class="control has-icons-left">
         <form>
-          <input class="input is-medium search" name="query" placeholder="Search" value="{{ query }}">
+          <input class="input is-medium search is-borderless" name="query" placeholder="Search" value="{{ query }}">
           <span class="icon is-left">
             <i class="material-icons">search</i>
           </span>
@@ -51,7 +51,7 @@
             </a>
           </td>
           <td>
-            <button class="button-no-bg" onclick=openModal('{{org.pk}}','{{user.pk}}');> 
+            <button class="button-no-bg" onclick=openModal('{{org.pk}}','{{user.pk}}');>
               <i class="material-icons">delete</i>
             </button>
 
@@ -76,7 +76,7 @@
                 </footer>
               </div>
             </div>
-            
+
           </td>
         </tr>
       {% empty %}

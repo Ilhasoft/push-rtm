@@ -12,24 +12,7 @@ from smartmin.views import SmartReadView, SmartTemplateView
 from ureport.polls.models import Poll, PollQuestion
 from ureport.polls_global.models import PollGlobal, PollGlobalSurveys
 from ureport.polls.templatetags.ureport import question_segmented_results
-
-availableColors = [
-    "#7bcff6",
-    "#03aeef",
-    "#0080ca",
-    "#004f94",
-    "#1F00F5",
-    "#02008A",
-    "#0300B0",
-    "#0400A4",
-    "#0400F0",
-    "#020063",
-    "#2709BD",
-    "#1C0B70",
-    "#320CF0",
-    "#4927F2",
-    "#170670",
-]
+from ureport.settings import AVAILABLE_COLORS
 
 
 class PollReadView(SmartReadView):
@@ -74,6 +57,9 @@ class PollGlobalReadView(SmartTemplateView):
     template_name = "results/global_poll_result.html"
     model = PollGlobal
 
+    def calculate_percent_participating_unct(self, active_uncts, all_uncts):
+        return int((active_uncts * 100) / all_uncts) if all_uncts > 0 else 0
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         poll_global = get_object_or_404(PollGlobal, pk=self.kwargs["pk"])
@@ -92,10 +78,6 @@ class PollGlobalReadView(SmartTemplateView):
             if org.is_active:
                 active_orgs.append(org)
 
-        all_orgs = len(set(all_orgs))
-        active_orgs = len(set(active_orgs))
-        percent_participating_unct = int((active_orgs * 100) / all_orgs) if all_orgs > 0 else 0
-
         all_sdgs = []
         for sdg_array in all_sdgs_arrays:
             [all_sdgs.append(sdg) for sdg in sdg_array]
@@ -103,8 +85,11 @@ class PollGlobalReadView(SmartTemplateView):
         all_sdgs = list(set(all_sdgs))
         all_sdgs.sort()
 
+        all_orgs = len(set(all_orgs))
+        active_orgs = len(set(active_orgs))
+
         context["poll_initial"] = polls_local[0].id if len(polls_local) > 0 else -1
-        context["participating_unct"] = percent_participating_unct
+        context["participating_unct"] = self.calculate_percent_participating_unct(active_orgs, all_orgs)
         context["poll_global"] = poll_global
         context["all_local_polls"] = list(polls_local)
         context["num_countries"] = len(polls_local)
@@ -124,18 +109,18 @@ class PollGlobalDataView(View):
             categories.append(result.get("label"))
 
             for category in result.get("categories"):
-                if category.get("label") in label:
-                    index_label = label.index(category.get("label"))
-                    data[index_label].append(category.get("count"))
-                else:
+                if category.get("label") not in label:
                     label.append(category.get("label"))
                     data.append([category.get("count"), ])
+                else:
+                    index_label = label.index(category.get("label"))
+                    data[index_label].append(category.get("count"))
 
         for item in label:
             series.append({
                 "label": item,
                 "data": data[label.index(item)],
-                "backgroundColor": availableColors[label.index(item)],
+                "backgroundColor": AVAILABLE_COLORS[label.index(item)],
                 "borderColor": "rgba(255, 255, 255, 0.1)",
             })
 
@@ -149,10 +134,19 @@ class PollGlobalDataView(View):
         global_survey = self.kwargs["pk"]
         unct = self.kwargs["unct"]
 
-        global_poll_local_id = PollGlobalSurveys.objects.filter(poll_global=global_survey, is_joined=True).values_list(
-            'poll_local_id', flat=True)
-        global_polls_questions = PollQuestion.objects.filter(is_active=True, poll_id__in=list(global_poll_local_id),
-                                                             poll__is_active=True)
+        global_poll_local_id = PollGlobalSurveys.objects.filter(
+            poll_global=global_survey,
+            is_joined=True
+        ).values_list(
+            'poll_local_id',
+            flat=True
+        )
+
+        global_polls_questions = PollQuestion.objects.filter(
+            is_active=True,
+            poll_id__in=list(global_poll_local_id),
+            poll__is_active=True
+        )
 
         response = dict()
         questions = dict()
@@ -170,7 +164,10 @@ class PollGlobalDataView(View):
                 for category in question.get_results()[0].get("categories"):
                     count = category.get("count")
                     word_cloud.append(
-                        {"text": category.get("label").upper(), "size": count if count > 10 else 20 + count}
+                        {
+                            "text": category.get("label").upper(),
+                            "size": count if count > 10 else 20 + count
+                        }
                     )
             else:
                 labels = []
