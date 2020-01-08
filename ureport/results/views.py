@@ -5,13 +5,13 @@ from django.conf import settings
 from django.views.generic import View
 from django.http import JsonResponse
 from django.urls import reverse
+from django.shortcuts import get_object_or_404
 
 from smartmin.views import SmartReadView, SmartTemplateView
 
 from ureport.polls.models import Poll, PollQuestion
 from ureport.polls_global.models import PollGlobal, PollGlobalSurveys
 from ureport.polls.templatetags.ureport import question_segmented_results
-
 
 availableColors = [
     "#7bcff6",
@@ -76,10 +76,10 @@ class PollGlobalReadView(SmartTemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        poll_global = PollGlobal.objects.get(pk=self.kwargs["pk"])
+        poll_global = get_object_or_404(PollGlobal, pk=self.kwargs["pk"])
 
         polls_local = []
-        polls_global_surveys = poll_global.polls_global.all()
+        polls_global_surveys = poll_global.polls_global.filter(is_joined=True)
         all_sdgs_arrays = polls_global_surveys.values_list('poll_local__questions__sdgs', flat=True)
 
         all_orgs = []
@@ -94,7 +94,7 @@ class PollGlobalReadView(SmartTemplateView):
 
         all_orgs = len(set(all_orgs))
         active_orgs = len(set(active_orgs))
-        percent_participating_unct = int((active_orgs * 100) / all_orgs)
+        percent_participating_unct = int((active_orgs * 100) / all_orgs) if all_orgs > 0 else 0
 
         all_sdgs = []
         for sdg_array in all_sdgs_arrays:
@@ -149,8 +149,10 @@ class PollGlobalDataView(View):
         global_survey = self.kwargs["pk"]
         unct = self.kwargs["unct"]
 
-        global_poll_local_id = PollGlobalSurveys.objects.filter(poll_global=global_survey).values_list('poll_local_id', flat=True)
-        global_polls_questions = PollQuestion.objects.filter(is_active=True, poll_id__in=list(global_poll_local_id), poll__is_active=True)
+        global_poll_local_id = PollGlobalSurveys.objects.filter(poll_global=global_survey, is_joined=True).values_list(
+            'poll_local_id', flat=True)
+        global_polls_questions = PollQuestion.objects.filter(is_active=True, poll_id__in=list(global_poll_local_id),
+                                                             poll__is_active=True)
 
         response = dict()
         questions = dict()
@@ -196,16 +198,20 @@ class PollGlobalDataView(View):
                 values_in_array_age = question_dict.get('age').get('series')
                 for values in values_in_array_age:
                     current_value = values.get('data')
-                    loop_value = formated_segmented_results_age.get('series')[values_in_array_age.index(values)].get('data')
+                    loop_value = formated_segmented_results_age.get('series')[values_in_array_age.index(values)].get(
+                        'data')
                     new_values_in_array_age = list(map(lambda x, y: x + y, current_value, loop_value))
-                    questions[question.ruleset_label]['age']['series'][values_in_array_age.index(values)]['data'] = new_values_in_array_age
+                    questions[question.ruleset_label]['age']['series'][values_in_array_age.index(values)][
+                        'data'] = new_values_in_array_age
 
                 values_in_array_gender = question_dict.get('gender').get('series')
                 for values in values_in_array_gender:
                     current_value = values.get('data')
-                    loop_value = formated_segmented_results_gender.get('series')[values_in_array_gender.index(values)].get('data')
+                    loop_value = formated_segmented_results_gender.get('series')[
+                        values_in_array_gender.index(values)].get('data')
                     new_values_in_array_gender = list(map(lambda x, y: x + y, current_value, loop_value))
-                    questions[question.ruleset_label]['gender']['series'][values_in_array_gender.index(values)]['data'] = new_values_in_array_gender
+                    questions[question.ruleset_label]['gender']['series'][values_in_array_gender.index(values)][
+                        'data'] = new_values_in_array_gender
             else:
                 questions[question.ruleset_label] = ({
                     "id": question.pk,
@@ -229,7 +235,7 @@ class PollGlobalDataView(View):
                 })
 
         local_poll_questions = PollQuestion.objects.filter(is_active=True, poll_id__in=unct, poll__is_active=True)
-        local_poll_title = local_poll_questions[0].poll.title
+        local_poll_title = local_poll_questions[0].poll.title if local_poll_questions else None
 
         local_question = []
         for question in local_poll_questions:
