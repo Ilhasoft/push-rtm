@@ -100,7 +100,25 @@ class PollGlobalReadView(SmartTemplateView):
 
 class PollGlobalDataView(View):
 
-    def format_segmented_results(self, results):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self._response = {}
+        self._global_questions = {}
+        self._local_questions = []
+
+    def _get_question_segmented_results(self, question, tag):
+        """
+        Get question data sorted by tag.
+        Tag's example: All, Age, Gender.
+        """
+        return question_segmented_results(question, tag)
+
+    def _get_formated_question_segmented_results(self, question, tag):
+        """
+        Get the segmented data and format in a dictionary.
+        Dictionary data is used for graphics in template.
+        """
+        results = self._get_question_segmented_results(question, tag)
         categories = []
         series = []
         label = []
@@ -130,6 +148,32 @@ class PollGlobalDataView(View):
         }
         return dict_result
 
+    def _sum_values_arrays(self, array_one, array_two):
+        """Sum values ​​from two arrays."""
+        return list(map(lambda x, y: x + y, array_one, array_two))
+
+    def _generate_global_data(self, question, tag):
+        """Get data from a specific question and add to the overall results."""
+        question_dict = self._global_questions.get(question.ruleset_label)
+        values = question_dict.get(tag).get('series')
+        values_to_return = []
+        for value in values:
+            current_value = value.get('data')
+            loop_value = self._get_formated_question_segmented_results(question, tag).get('series')[values.index(value)].get(
+                'data')
+            new_values_in_array = self._sum_values_arrays(current_value, loop_value)
+            values_to_return.append(new_values_in_array)
+
+        return values_to_return
+
+    def _update_global_data(self, question, tag):
+        """Get the data of a question added to the global ones and update data global."""
+        new_values = self._generate_global_data(question, tag)
+        for values in new_values:
+            self._global_questions[question.ruleset_label][tag]['series'][new_values.index(values)]['data'] = values
+
+        return self._global_questions
+
     def get(self, request, *args, **kwargs):
         global_survey = self.kwargs["pk"]
         unct = self.kwargs["unct"]
@@ -149,14 +193,10 @@ class PollGlobalDataView(View):
         )
 
         response = dict()
-        questions = dict()
 
         for question in global_polls_questions:
-            results_gender = question_segmented_results(question, "gender")
-            results_age = question_segmented_results(question, "age")
-
-            formated_segmented_results_age = self.format_segmented_results(results_age)
-            formated_segmented_results_gender = self.format_segmented_results(results_gender)
+            formated_segmented_results_age = self._get_formated_question_segmented_results(question, "age")
+            formated_segmented_results_gender = self._get_formated_question_segmented_results(question, "gender")
 
             statistics = {}
             word_cloud = []
@@ -185,32 +225,18 @@ class PollGlobalDataView(View):
                 statistics["series"] = series
                 statistics["counts"] = counts
 
-            question_dict = questions.get(question.ruleset_label)
+            question_dict = self._global_questions.get(question.ruleset_label)
 
             if question_dict:
                 values_in_array_statistics = question_dict.get('statistics').get('counts')
-                new_values_in_array_statistics = list(map(lambda x, y: x + y, values_in_array_statistics, counts))
-                questions[question.ruleset_label]['statistics']['counts'] = new_values_in_array_statistics
+                new_values_in_array_statistics = self._sum_values_arrays(values_in_array_statistics, counts)
+                self._global_questions[question.ruleset_label]['statistics']['counts'] = new_values_in_array_statistics
 
-                values_in_array_age = question_dict.get('age').get('series')
-                for values in values_in_array_age:
-                    current_value = values.get('data')
-                    loop_value = formated_segmented_results_age.get('series')[values_in_array_age.index(values)].get(
-                        'data')
-                    new_values_in_array_age = list(map(lambda x, y: x + y, current_value, loop_value))
-                    questions[question.ruleset_label]['age']['series'][values_in_array_age.index(values)][
-                        'data'] = new_values_in_array_age
+                self._update_global_data(question, 'age')
+                self._update_global_data(question, 'gender')
 
-                values_in_array_gender = question_dict.get('gender').get('series')
-                for values in values_in_array_gender:
-                    current_value = values.get('data')
-                    loop_value = formated_segmented_results_gender.get('series')[
-                        values_in_array_gender.index(values)].get('data')
-                    new_values_in_array_gender = list(map(lambda x, y: x + y, current_value, loop_value))
-                    questions[question.ruleset_label]['gender']['series'][values_in_array_gender.index(values)][
-                        'data'] = new_values_in_array_gender
             else:
-                questions[question.ruleset_label] = ({
+                self._global_questions[question.ruleset_label] = ({
                     "id": question.pk,
                     "is_active": question.is_active,
                     "created_on": question.created_on,
@@ -234,13 +260,9 @@ class PollGlobalDataView(View):
         local_poll_questions = PollQuestion.objects.filter(is_active=True, poll_id__in=unct, poll__is_active=True)
         local_poll_title = local_poll_questions[0].poll.title if local_poll_questions else None
 
-        local_question = []
         for question in local_poll_questions:
-            results_gender = question_segmented_results(question, "gender")
-            results_age = question_segmented_results(question, "age")
-
-            formated_segmented_results_age = self.format_segmented_results(results_age)
-            formated_segmented_results_gender = self.format_segmented_results(results_gender)
+            formated_segmented_results_age = self._get_formated_question_segmented_results(question, "age")
+            formated_segmented_results_gender = self._get_formated_question_segmented_results(question, "gender")
 
             statistics = {}
             word_cloud = []
@@ -266,7 +288,7 @@ class PollGlobalDataView(View):
                 statistics["series"] = series
                 statistics["counts"] = counts
 
-            local_question.append(
+            self._local_questions.append(
                 {
                     "id": question.pk,
                     "is_active": question.is_active,
@@ -290,9 +312,9 @@ class PollGlobalDataView(View):
                 }
             )
 
-        response['questions_global'] = questions
-        response['questions_local'] = local_question
-        response['number_questions'] = len(local_question)
+        response['questions_global'] = self._global_questions
+        response['questions_local'] = self._local_questions
+        response['number_questions'] = len(self._local_questions)
         response['sdgs'] = dict(settings.SDG_LIST)
 
         return JsonResponse(response)
