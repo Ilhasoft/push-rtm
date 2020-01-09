@@ -29,9 +29,11 @@
         <li><a class="pagination-link" href="{% qurl request.get_full_path page=paginator.paginator.num_pages %}">{{ paginator.paginator.num_pages }}</a></li>
       {% endif %}
     {% endif %}
-  </ul>
 
-  {% if paginator.has_next %}
-    <a class="pagination-next" href="{% qurl request.get_full_path page=paginator.next_page_number %}">{% trans "Next" %}</a>
-  {% endif %}
+    {% if paginator.has_next %}
+      <li>
+        <a class="pagination-next" href="{% qurl request.get_full_path page=paginator.next_page_number %}">{% trans "Next" %}</a>
+      </li>
+    {% endif %}
+  </ul>
 </nav>
