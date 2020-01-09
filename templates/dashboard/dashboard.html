@@ -254,6 +254,10 @@
     // Clean up the charts.
     d3.select('#bubbleChart').selectAll('*').remove();
 
+    let tooltip = d3.select("#bubbleChart")
+        .append("div")
+        .attr('class', 'tooltip');
+
     let svg = d3.select("#bubbleChart")
       .append("svg")
       .attr("width", diameter)
@@ -288,11 +292,17 @@
       .attr("class", "node")
       .attr("transform", function(d) {
         return "translate(" + d.x + "," + d.y + ")";
-      });
-
-    node.append("title")
-      .text(function(d) {
-        return d.data.sdg + ': ' + (d.data.count).toLocaleString() + ' messages received';
+      })
+      .on("mouseover", function(d) {
+        return tooltip.style("visibility", "visible")
+            .text(d.data.sdg + ': ' + (d.data.count).toLocaleString() + ' messages received');
+      })
+      .on("mousemove", function() {
+        return tooltip.style("top", (event.pageY - 110) + "px")
+            .style("left", (event.pageX - 250) + "px");
+      })
+      .on("mouseout", function() {
+        return tooltip.style("visibility", "hidden");
       });
 
     node
@@ -855,7 +865,7 @@
     loadChartTracked(filterBy);
     loadChartMessageMetrics(filterBy);
     loadChartMostUsedChannels(filterBy);
-    
+
     let textAgo = "{% trans 'Since Inception' %}";
     if (filterBy === "month") {
       textAgo = "{% trans 'Last 30 days' %}";
