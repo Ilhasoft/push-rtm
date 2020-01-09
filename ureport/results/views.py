@@ -80,7 +80,8 @@ class PollGlobalReadView(SmartTemplateView):
 
         all_sdgs = []
         for sdg_array in all_sdgs_arrays:
-            [all_sdgs.append(sdg) for sdg in sdg_array]
+            if sdg_array:
+                [all_sdgs.append(sdg) for sdg in sdg_array]
 
         all_sdgs = list(set(all_sdgs))
         all_sdgs.sort()
@@ -128,7 +129,9 @@ class PollGlobalDataView(View):
             categories = results.get("categories")
             for category in categories:
                 labels.append(category.get("label"))
-                series.append("{0:.0f}".format(category.get("count") / results.get("set") * 100))
+                series.append("{0:.0f}".format(
+                    (category.get("count") / results.get("set") * 100) if results.get("set") else 0
+                ))
                 counts.append(category.get("count"))
 
             statistics["labels"] = labels
@@ -264,7 +267,7 @@ class PollGlobalDataView(View):
             else:
                 self._global_questions[question.ruleset_label] = (self._get_results_in_dict(question))
 
-        local_poll_questions = PollQuestion.objects.filter(is_active=True, poll_id__in=unct, poll__is_active=True)
+        local_poll_questions = PollQuestion.objects.filter(is_active=True, poll_id=unct, poll__is_active=True)
         local_poll_title = local_poll_questions[0].poll.title if local_poll_questions else None
         for question in local_poll_questions:
             local_results = self._get_results_in_dict(question)
