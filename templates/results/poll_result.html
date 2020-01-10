@@ -332,14 +332,9 @@
                   sum += data;
                 });
                 let percentage = (value * 100 / sum);
-                if(percentage<5){
-                  return "";
-                }else if (percentage == 100.00){
-                  percentage = parseInt(percentage) + "%";
-                }else{
-                  percentage = percentage.toFixed(2) + "%";
-                }
-                return percentage;
+                if (percentage < 5) return "";
+                if (percentage === 100.00) return parseInt(percentage) + "%";
+                return percentage.toFixed(2) + "%";
               },
               color: "#fff",
             }
@@ -390,14 +385,9 @@
                     sum += data;
                   });
                   let percentage = (value * 100 / sum);
-                  if(percentage<5){
-                    return "";
-                  }else if (percentage == 100.00){
-                    percentage = parseInt(percentage) + "%";
-                  }else{
-                    percentage = percentage.toFixed(2) + "%";
-                  }
-                  return percentage;
+                  if (percentage < 5) return "";
+                  if (percentage === 100.00) return parseInt(percentage) + "%";
+                  return percentage.toFixed(2) + "%";
                 },
                 color: "#fff",
               }
