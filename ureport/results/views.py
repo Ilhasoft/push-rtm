@@ -183,20 +183,20 @@ class PollGlobalDataView(View):
         }
         return dict_result
 
-    def _sum_values_arrays(self, array_one, array_two):
+    def _sum_values_arrays(self, array_all_values, array_local_values):
         """ Sum values ​​from two arrays. """
-        return list(map(lambda x, y: x + y, array_one, array_two))
+        return list(map(lambda x, y: x + y, array_all_values, array_local_values))
 
     def _generate_global_data(self, question, tag):
         """ Get data from a specific question and add to the overall results. """
         question_dict = self._global_questions.get(question.ruleset_label)
-        values = question_dict.get(tag).get('series')
+        values = question_dict.get(tag).get("series")
         values_to_return = []
         for value in values:
-            current_value = value.get('data')
-            loop_value = self._get_formated_question_segmented_results(question, tag).get('series')[
+            current_value = value.get("data")
+            loop_value = self._get_formated_question_segmented_results(question, tag).get("series")[
                 values.index(value)].get(
-                'data')
+                "data")
             new_values_in_array = self._sum_values_arrays(current_value, loop_value)
             values_to_return.append(new_values_in_array)
 
@@ -206,7 +206,7 @@ class PollGlobalDataView(View):
         """ Get the data of a question added to the global ones and update data global. """
         new_values = self._generate_global_data(question, tag)
         for values in new_values:
-            self._global_questions[question.ruleset_label][tag]['series'][new_values.index(values)]['data'] = values
+            self._global_questions[question.ruleset_label][tag]["series"][new_values.index(values)]["data"] = values
 
         return self._global_questions
 
@@ -240,10 +240,10 @@ class PollGlobalDataView(View):
         unct = self.kwargs["unct"]
 
         global_poll_local_id = PollGlobalSurveys.objects.filter(
-            poll_global=global_survey,
+            poll_global_id=global_survey,
             is_joined=True
         ).values_list(
-            'poll_local_id',
+            "poll_local_id",
             flat=True
         )
 
@@ -257,13 +257,13 @@ class PollGlobalDataView(View):
             if question_dict:
                 value_current_question_array = self._get_question_results_without_segment(question).get(
                     "statistics").get("counts")
-                values_in_array_statistics = question_dict.get('statistics').get('counts')
+                values_in_array_statistics = question_dict.get("statistics").get("counts")
 
                 new_values_in_array_statistics = self._sum_values_arrays(values_in_array_statistics,
                                                                          value_current_question_array)
-                self._global_questions[question.ruleset_label]['statistics']['counts'] = new_values_in_array_statistics
-                self._update_global_data(question, 'age')
-                self._update_global_data(question, 'gender')
+                self._global_questions[question.ruleset_label]["statistics"]["counts"] = new_values_in_array_statistics
+                self._update_global_data(question, "age")
+                self._update_global_data(question, "gender")
             else:
                 self._global_questions[question.ruleset_label] = (self._get_results_in_dict(question))
 
@@ -275,9 +275,9 @@ class PollGlobalDataView(View):
 
             self._local_questions.append(local_results)
 
-        self._response['questions_global'] = self._global_questions
-        self._response['questions_local'] = self._local_questions
-        self._response['number_questions'] = len(self._local_questions)
-        self._response['sdgs'] = dict(settings.SDG_LIST)
+        self._response["questions_global"] = self._global_questions
+        self._response["questions_local"] = self._local_questions
+        self._response["number_questions"] = len(self._local_questions)
+        self._response["sdgs"] = dict(settings.SDG_LIST)
 
         return JsonResponse(self._response)
