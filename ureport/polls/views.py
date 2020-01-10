@@ -150,9 +150,6 @@ class PollFlowForm(forms.ModelForm):
         if not poll_date:
             poll_date = timezone.now()
 
-        if not poll_end_date:
-            poll_end_date = poll_date
-
         cleaned_data["poll_date"] = poll_date
         cleaned_data["poll_end_date"] = poll_end_date
         return cleaned_data
