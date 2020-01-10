@@ -12,7 +12,7 @@ class PollGlobalForm(forms.ModelForm):
 
     poll_date = forms.DateField(
         label=_("Start Date"),
-        required=False,
+        required=True,
         widget=forms.DateInput(
             attrs={"placeholder": _("Please set the date"), "class": "input", "autocomplete": "off"}),
     )
