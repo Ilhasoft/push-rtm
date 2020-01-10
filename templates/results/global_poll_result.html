@@ -233,8 +233,10 @@ function showChart(local_question, ruleset_label, tab){
               dataArr.map(data => {
                 sum += data;
               });
-              let percentage = parseInt((value * 100 / sum)) + "%";
-              return percentage;
+              let percentage = (value * 100 / sum);
+              if (percentage < 5) return "";
+              if (percentage === 100.00) return parseInt(percentage) + "%";
+              return percentage.toFixed(2) + "%";
             },
             color: "#fff",
           }
@@ -273,8 +275,10 @@ function showChart(local_question, ruleset_label, tab){
               dataArr.map(data => {
                 sum += data;
               });
-              let percentage = parseInt((value * 100 / sum)) + "%";
-              return percentage;
+              let percentage = (value * 100 / sum);
+              if (percentage < 5) return "";
+              if (percentage === 100.00) return parseInt(percentage) + "%";
+              return percentage.toFixed(2) + "%";
             },
             color: "#fff",
           }
