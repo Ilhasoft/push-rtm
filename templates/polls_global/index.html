@@ -50,7 +50,17 @@
     <tbody class="has-header">
       {% for poll in polls %}
         <tr class="{% if not poll.is_active %} is-poll-inactive {% endif %}">
-          <td>{{ poll.title }}</td>
+          <td>
+
+
+            <a href="{% url 'results.global_poll_read' poll.id %}">
+              <span class="tooltip right">
+                {{ poll.title }}
+              </span>
+            </a>
+
+
+          </td>
           <td>{{ poll.poll_date|date:"m/d/Y" }} </td>
           <td>{{ poll.poll_end_date|date:"m/d/Y" }}</td>
           <td class="poll-status">
@@ -78,7 +88,7 @@
       {% endfor %}
     </tbody>
   </table>
-  <div class="is-pulled-right bottom-m-50">
+  <div class="bottom-m-50">
     {% include "paginator.html" with paginator=polls %}
   </div>
 </section>

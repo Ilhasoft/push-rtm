@@ -38,7 +38,7 @@ class FlowForm(forms.ModelForm):
     tags = forms.MultipleChoiceField(
         choices=[],
         label=_("Tags"),
-        required=True,
+        required=False,
         widget=forms.SelectMultiple(attrs={"data-placeholder": _("Select one or more Tags.")}),
     )
 

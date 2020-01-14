@@ -11,9 +11,31 @@
 
 {% block content %}
   <section class="section">
-    <h1 class="title">
-        {% if access_level == 'local' %}{{ request.org }} {% else %} {% trans "Global Dashboard" %} {% endif %}
+    <h1 class="title bottom-m-0">
+      {% if access_level == 'local' %}{{ request.org }} {% else %} {% trans "Global Dashboard" %} {% endif %}
     </h1>
+
+  <div class="flex space-between">
+      <div class="has-text-grey-light" id="all_filter"></div>
+        <div class="dropdown is-hoverable">
+          <div class="dropdown-trigger">
+            <div aria-haspopup="true" aria-controls="dropdown-menu">
+              <span>{% trans "Filter by" %}</span>
+              <span class="icon is-small">
+              <i class="fas fa-angle-down" aria-hidden="true"></i>
+            </span>
+            </div>
+      </div>
+      <div class="dropdown-menu" id="dropdown-menu" role="menu">
+        <div class="dropdown-content">
+          <a href="javascript:loadAllChart('week')" class="dropdown-item">{% trans "Last 7 days" %}</a>
+          <a href="javascript:loadAllChart('month')" class="dropdown-item">{% trans "Last 30 days" %}</a>
+          <a href="javascript:loadAllChart('year')" class="dropdown-item">{% trans "Last 12 months" %}</a>
+          <a href="javascript:loadAllChart('inception')" class="dropdown-item">{% trans "Since Inception" %}</a>
+        </div>
+      </div>
+    </div>
+  </div>
   </section>
 
   <section class="section">
@@ -232,6 +254,10 @@
     // Clean up the charts.
     d3.select('#bubbleChart').selectAll('*').remove();
 
+    let tooltip = d3.select("#bubbleChart")
+        .append("div")
+        .attr('class', 'tooltip');
+
     let svg = d3.select("#bubbleChart")
       .append("svg")
       .attr("width", diameter)
@@ -266,11 +292,17 @@
       .attr("class", "node")
       .attr("transform", function(d) {
         return "translate(" + d.x + "," + d.y + ")";
-      });
-
-    node.append("title")
-      .text(function(d) {
-        return d.data.sdg + ': ' + (d.data.count).toLocaleString() + ' messages received';
+      })
+      .on("mouseover", function(d) {
+        return tooltip.style("visibility", "visible")
+            .text(d.data.sdg + ': ' + (d.data.count).toLocaleString() + ' messages received');
+      })
+      .on("mousemove", function() {
+        return tooltip.style("top", (event.pageY - 110) + "px")
+            .style("left", (event.pageX - 250) + "px");
+      })
+      .on("mouseout", function() {
+        return tooltip.style("visibility", "hidden");
       });
 
     node
@@ -436,8 +468,10 @@
                   dataArr.map(data => {
                       sum += data;
                   });
-                  let percentage = parseInt((value * 100 / sum));
-                  return percentage > 0 ? percentage + "%" : "";
+                  let percentage = (value * 100 / sum);
+                  if (percentage < 5) return "";
+                  if (percentage === 100.00) return parseInt(percentage) + "%";
+                  return percentage.toFixed(2) + "%";
                 },
                 color: "#fff",
               }
@@ -670,8 +704,10 @@
                     dataArr.map(data => {
                       sum += data;
                     });
-                    let percentage = parseInt((value * 100 / sum));
-                    return percentage > 0 ? percentage + "%" : "";
+                    let percentage = (value * 100 / sum);
+                    if (percentage < 5) return "";
+                    if (percentage === 100.00) return parseInt(percentage) + "%";
+                    return percentage.toFixed(1) + "%";
                   },
                   color: "#fff",
                 }
@@ -721,8 +757,10 @@
                   dataArr.map(data => {
                       sum += data;
                   });
-                  let percentage = parseInt((value * 100 / sum));
-                  return percentage > 0 ? percentage + "%" : "";
+                  let percentage = (value * 100 / sum);
+                  if (percentage < 5) return "";
+                  if (percentage === 100.00) return parseInt(percentage) + "%";
+                  return percentage.toFixed(1) + "%";
                 },
                 color: "#fff",
               }
@@ -829,12 +867,30 @@
     });
   }
 
+  function loadAllChart(filterBy) {
+    loadChartTracked(filterBy);
+    loadChartMessageMetrics(filterBy);
+    loadChartMostUsedChannels(filterBy);
+
+    let textAgo = "{% trans 'Since Inception' %}";
+    if (filterBy === "month") {
+      textAgo = "{% trans 'Last 30 days' %}";
+    } else if (filterBy === "week") {
+      textAgo = "{% trans 'Last 7 days' %}";
+    } else if (filterBy === "year") {
+      textAgo = "{% trans 'Last 12 months' %}";
+    }
+
+    $("#all_filter").html(textAgo);
+  }
+
   $(document).ready(function() {
     loadChartTracked("year");
     loadChartPartialResults();
     loadChartMessageMetrics("year");
     loadChartMostUsedChannels("year");
     loadChartRapidProContacts();
+    $("#all_filter").html("{% trans 'Last 12 months' %}");
 
     $(window).scroll(function(){
       if ($(this).scrollTop() > 100) {

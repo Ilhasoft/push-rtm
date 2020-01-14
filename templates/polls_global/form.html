@@ -10,12 +10,24 @@
 {% endblock %}
 
 {% block content %}
+<section class="section top-p-0 bottom-p-0">
+  <nav class="breadcrumb" aria-label="breadcrumbs">
+    <ul>
+      <li><a href="{% url 'polls_global.poll_list' %}">{% trans 'Global Surveys' %}</a></li>
+      <li class="is-active"><a href="#" aria-current="page">{{ page_subtitle }}</a></li>
+    </ul>
+  </nav>
+</section>
+
+<section class="section">
+  <h1 class="title">{% trans "Global Surveys" %}</h1>
+  <h2 class="subtitle">{{ page_subtitle }}</h2>
+</section>
+
 <section class="section">
   <div class="columns">
-    <div class="column box is-three-fifths is-offset-one-fifth">
+    <div class="column box is-paddingless">
       <form class="generic-form" method="post">
-          <h1 class="title">{% trans "Global Surveys" %}</h1>
-          <h2 class="subtitle has-text-grey-light">{{ page_subtitle }}</h2>
         {% csrf_token %}
         <div class="field bottom-m-20">
           <label class="label">{{ form.title.label }}</label>
@@ -24,26 +36,32 @@
             {{ form.title.errors }}
           </div>
         </div>
-        <div class="field">
-          <label class="label">
-            {{ form.poll_date.label }}
-          </label>
-          <div class="control has-icons-right">
-            {{ form.poll_date }}
-            <span class="icon is-small is-right">
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label">
+                {{ form.poll_date.label }}
+              </label>
+              <div class="control has-icons-right">
+                {{ form.poll_date }}
+                <span class="icon is-small is-right">
               <i class="material-icons">calendar_today</i>
             </span>
-            {{ form.poll_date.errors }}
+                {{ form.poll_date.errors }}
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="field">
-          <label class="label">{{ form.poll_end_date.label }}</label>
-          <div class="control has-icons-right">
-            {{ form.poll_end_date }}
-            <span class="icon is-small is-right">
+          <div class="column">
+            <div class="field">
+              <label class="label">{{ form.poll_end_date.label }}</label>
+              <div class="control has-icons-right">
+                {{ form.poll_end_date }}
+                <span class="icon is-small is-right">
               <i class="material-icons">calendar_today</i>
             </span>
-            {{ form.poll_end_date.errors }}
+                {{ form.poll_end_date.errors }}
+              </div>
+            </div>
           </div>
         </div>
         <div class="field bottom-m-20">
@@ -60,8 +78,10 @@
           </div>
           <p class="help">{{ field.help_text }}</p>
         {% endif %}
-        <button type="submit" class="button is-medium is-info right-m-20">{% trans "OK" %}</button>
-        <a href="{% url 'polls_global.poll_list' %}" class="button is-medium primary-reverse l-m-10">{% trans "Cancel" %}</a>
+        <div class="top-m-20">
+          <button type="submit" class="button is-medium is-info right-m-5">{% trans "OK" %}</button>
+          <a href="{% url 'polls_global.poll_list' %}" class="button is-medium primary-reverse l-m-10">{% trans "Cancel" %}</a>
+        </div>
       </form>
     </div>
   </div>

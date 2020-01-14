@@ -119,7 +119,7 @@ class ListView(FlowBaseListView):
         context["flow_section_id"] = "flowhub-all"
 
         page = self.request.GET.get("page", 1)
-        context["flows"] = get_paginator(list(set(self.get_queryset())), page)
+        context["flows"] = get_paginator(list(self.get_queryset()), page)
         context["query"] = self.query
         context["back_to"] = reverse("flowhub.flow_list")
         context["redirect_to"] = str(base64.b64encode(
@@ -184,7 +184,7 @@ class MyOrgListView(FlowBaseListView):
         context["flow_section_id"] = "flowhub-my-org"
 
         page = self.request.GET.get("page", 1)
-        context["flows"] = get_paginator(list(set(self.get_queryset())), page)
+        context["flows"] = get_paginator(list(self.get_queryset()), page)
         context["query"] = self.query
         context["back_to"] = reverse("flowhub.my_org_flow_list")
         context["redirect_to"] = str(base64.b64encode(

@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 from dash.orgs.models import Org
 from dash.orgs.views import OrgObjPermsMixin, OrgPermsMixin
 from smartmin.views import SmartTemplateView
-from ureport.utils import get_paginator, log_save
+from ureport.utils import get_paginator
 
 from .forms import AccountForm, GlobalAccountForm
 
@@ -53,6 +53,7 @@ class ListView(OrgObjPermsMixin, SmartTemplateView):
         context["users"] = get_paginator(queryset.filter(**filters, is_active=True).order_by(sortered), page)
         context["query"] = query
         context["org"] = org
+        context["title"] = org.name
         context["back_to"] = reverse("accounts.user_list")
         return context
 
@@ -77,7 +78,6 @@ class CreateView(OrgObjPermsMixin, SmartTemplateView):
                 self.request.org = Org.objects.get(pk=kwargs.get("org"))
             instance = form.save(self.request)
             messages.success(request, _("User created with success!"))
-            log_save(self.request.user, instance, 1)
             if request.user.is_superuser and kwargs.get("org"):
                 return redirect(reverse("accounts.user_org_list", args=[self.request.org.id]))
             return redirect(reverse("accounts.user_list"))
@@ -119,7 +119,6 @@ class EditView(OrgObjPermsMixin, SmartTemplateView):
                 self.request.org = Org.objects.get(pk=kwargs.get("org"))
             instance = form.save(self.request)
             messages.success(request, _("User edited with success!"))
-            log_save(self.request.user, instance, 2)
             if request.user.is_superuser and kwargs.get("org"):
                 return redirect(reverse("accounts.user_org_list", args=[self.request.org.id]))
             return redirect(reverse("accounts.user_list"))
@@ -145,15 +144,11 @@ class DeleteView(SmartTemplateView):
         if request.user.is_superuser and kwargs.get("org"):
             self.request.org = Org.objects.get(pk=kwargs.get("org"))
 
-        user.is_active = False
-        user.save()
-
         if user in self.request.org.get_org_users():
             self.request.org.administrators.remove(user)
             self.request.org.editors.remove(user)
             self.request.org.viewers.remove(user)
 
-        log_save(self.request.user, user, 3)
         return redirect(self.request.META.get("HTTP_REFERER"))
 
 

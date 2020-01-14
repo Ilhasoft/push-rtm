@@ -51,27 +51,19 @@
   <table class="table is-fullwidth is-hoverable">
     <thead>
       <tr class="is-tr">
-        <th></th>
         <th>{% autosort title _("Name") %}</th>
         <th>{% trans "Questions" %}</th>
         <th>{% autosort runs_count _("Runs") %}</th>
         <th>{% trans "SDGs" %}</th>
         <th>{% trans "Global" %}</th>
         <th>{% autosort is_active _("Status") %}</th>
+        <th></th>
       </tr>
     </thead>
     <tbody class="has-header">
 
       {% for poll in polls %}
       <tr class="{% if not poll.is_active %} is-poll-inactive {% endif %}">
-        <td>
-          <a href="{% url 'polls.poll_update' poll.id %}">
-            <span class="tooltip right">
-              <i class="material-icons">insert_drive_file</i>
-              <span class="tooltip-content">Edit survey</span>
-            </span>
-          </a>
-        </td>
         <td>
           {%if poll.is_active %}
             <a href="{% url 'results.poll_read' poll.id %}">
@@ -126,6 +118,14 @@
             {% trans 'Inactive' %}
           {% endif %}
         </td>
+        <td>
+          <a href="{% url 'polls.poll_update' poll.id %}">
+            <span class="tooltip right">
+              <i class="material-icons">border_color</i>
+              <span class="tooltip-content">Edit survey</span>
+            </span>
+          </a>
+        </td>
       </tr>
       {% empty %}
       <tr>
@@ -134,7 +134,7 @@
       {% endfor %}
     </tbody>
   </table>
-  <div class="is-pulled-right bottom-m-50">
+  <div class="bottom-m-50">
     {% include "paginator.html" with paginator=polls %}
   </div>
 </section>

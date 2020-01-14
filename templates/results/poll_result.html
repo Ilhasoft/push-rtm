@@ -10,14 +10,10 @@
 {% endblock %}
 
 {% block content %}
-  <section class="section top-p-0">
+  <section class="section top-p-0 bottom-p-0">
     <nav class="breadcrumb" aria-label="breadcrumbs">
       <ul>
-        {% if request.user.is_superuser %}
-        <li><a href="{% url 'polls_global.poll_list' %}">{% trans 'Global Surveys'%}</a></li>
-        {% else %}
         <li><a href="{% url 'polls.poll_list' %}">{% trans 'Surveys'%}</a></li>
-        {% endif %}
         <li class="is-active"><a href="#" aria-current="page">{% trans 'Survey Results'%}</a></li>
       </ul>
     </nav>
@@ -66,7 +62,7 @@
       <div class="column">
         <div class="box is-paddingless">
           <nav class="level is-paddingless border-bottom is-mobile">
-            <div class="level-item border-right">
+            <div class="level-item">
               <span class="title right-m-10 left-m-10">{{ poll.get_questions.count }}</span>
               <span>{% trans "Question" %}{{ poll.get_questions.count|pluralize }}</span>
               <span class="tooltip top left-m-10">
@@ -74,6 +70,7 @@
                 <span class="tooltip-content">{% trans 'The amount of questions in this survey'%}</span>
               </span>
             </div>
+            <!--
             <div class="level-item">
               <i class="material-icons export-icon right-m-5">save_alt</i>
               <span>Export</span>
@@ -82,6 +79,7 @@
               <span class="tooltip-content">{% trans 'Export results on .csv format'%}</span>
             </span>
             </div>
+            -->
           </nav>
           <div class="bottom-p-20">
             <div class="columns bottom-m-10">
@@ -333,8 +331,10 @@
                 dataArr.map(data => {
                   sum += data;
                 });
-                let percentage = parseInt((value * 100 / sum));
-                return percentage > 0 ? percentage + "%" : "";
+                let percentage = (value * 100 / sum);
+                if (percentage < 5) return "";
+                if (percentage === 100.00) return parseInt(percentage) + "%";
+                return percentage.toFixed(2) + "%";
               },
               color: "#fff",
             }
@@ -384,8 +384,10 @@
                   dataArr.map(data => {
                     sum += data;
                   });
-                  let percentage = parseInt((value * 100 / sum)) + "%";
-                  return percentage;
+                  let percentage = (value * 100 / sum);
+                  if (percentage < 5) return "";
+                  if (percentage === 100.00) return parseInt(percentage) + "%";
+                  return percentage.toFixed(2) + "%";
                 },
                 color: "#fff",
               }

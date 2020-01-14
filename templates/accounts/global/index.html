@@ -5,7 +5,7 @@
 
 {% block content %}
 <section class="section">
-  <h1 class="title">{% trans "Users" %}</h1>
+  <h1 class="title">Global {% trans "Users" %}</h1>
 </section>
 
 <section class="section">
@@ -23,18 +23,6 @@
             </a>
           {% endif %}
         </form>
-      </div>
-    </div>
-    <div class="column is-narrow">
-      <div class="control">
-        <a
-          class="button is-medium is-info"
-          href="{% url 'accounts.global_user_create' %}">
-          <span class="icon">
-            <i class="material-icons">add</i>
-          </span>
-          <span>{% trans "User" %}</span>
-        </a>
       </div>
     </div>
   </div>
@@ -75,7 +63,7 @@
       {% endfor %}
     </tbody>
   </table>
-  <div class="is-pulled-right">
+  <div>
     {% include "paginator.html" with paginator=users %}
   </div>
 </section>
