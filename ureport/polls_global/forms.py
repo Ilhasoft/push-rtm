@@ -1,10 +1,16 @@
 from django import forms
 from django.utils.translation import gettext as _
+from dash.orgs.models import Org, OrgBackend
 
 from .models import PollGlobal
 
 
 class PollGlobalForm(forms.ModelForm):
+    flow_uuid = forms.ChoiceField(
+        label=_("Select a flow on RapidPro that will shape your global survey"), help_text=_(
+            "Select a flow on RapidPro that will shape your global survey"), required=True, choices=[]
+    )
+
     title = forms.CharField(
         max_length=255, widget=forms.TextInput(attrs={"placeholder": _(
             "Insert the survey name"), "class": "input"})
@@ -36,10 +42,26 @@ class PollGlobalForm(forms.ModelForm):
     )
 
     class Meta:
-        fields = ["title", "poll_date", "poll_end_date", "is_active", "description"]
+        fields = ["flow_uuid", "title", "poll_date", "poll_end_date", "is_active", "description"]
         model = PollGlobal
 
+    def __init__(self, *args, **kwargs):
+        #self.org = kwargs["org"]
+        #del kwargs["org"]
+        #self.backend = kwargs["backend"]
+        #del kwargs["backend"]
+        super(PollGlobalForm, self).__init__(*args, **kwargs)
+
+        org = Org.objects.get(pk=1)
+        backend = OrgBackend.objects.get(pk=1)
+        flows = org.get_flows(backend)
+        self.fields["flow_uuid"].choices = [
+            (f["uuid"], f["name"] + " (" + f.get("date_hint", "--") + ")")
+            for f in sorted(flows.values(), key=lambda k: k["name"].lower().strip())
+        ]
+
     def save(self, user):
+        #self.org = Org.objects.get(pk=1)
         instance = super().save(commit=False)
         instance.created_by = user
         instance.modified_by = user

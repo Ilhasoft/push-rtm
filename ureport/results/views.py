@@ -239,19 +239,23 @@ class PollGlobalDataView(View):
         global_survey = self.kwargs["pk"]
         unct = self.kwargs["unct"]
 
-        global_poll_local_id = PollGlobalSurveys.objects.filter(
+        polls_local = PollGlobalSurveys.objects.filter(
             poll_global_id=global_survey,
             is_joined=True
-        ).values_list(
-            "poll_local_id",
-            flat=True
         )
+
+        global_poll_local_id = polls_local.values_list("poll_local_id", flat=True)
 
         global_polls_questions = PollQuestion.objects.filter(
             is_active=True,
             poll_id__in=list(global_poll_local_id),
             poll__is_active=True
         )
+
+        global_survey = polls_local[0].poll_global
+        global_flow = global_survey.get_flow().get("results", None)
+        global_flow_uuids = [question.get("node_uuids")[0] for question in global_flow]
+
         for question in global_polls_questions:
             question_dict = self._global_questions.get(question.ruleset_label)
             if question_dict:
@@ -269,11 +273,12 @@ class PollGlobalDataView(View):
 
         local_poll_questions = PollQuestion.objects.filter(is_active=True, poll_id=unct, poll__is_active=True)
         local_poll_title = local_poll_questions[0].poll.title if local_poll_questions else None
-        for question in local_poll_questions:
-            local_results = self._get_results_in_dict(question)
-            local_results["local_poll_title"] = local_poll_title
 
-            self._local_questions.append(local_results)
+        for question in local_poll_questions:
+            if question.ruleset_uuid in global_flow_uuids:
+                local_results = self._get_results_in_dict(question)
+                local_results["local_poll_title"] = local_poll_title
+                self._local_questions.append(local_results)
 
         self._response["questions_global"] = self._global_questions
         self._response["questions_local"] = self._local_questions

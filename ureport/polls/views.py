@@ -17,12 +17,14 @@ from django.conf import settings
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.timesince import timesince
 from django.utils.translation import ugettext_lazy as _
+from django.views.generic import View
 
+from dash.orgs.models import Org, OrgBackend
 from ureport.utils import json_date_to_datetime, get_paginator
 from ureport.polls_global.models import PollGlobal, PollGlobalSurveys
 
@@ -38,7 +40,10 @@ class PollForm(forms.ModelForm):
     )
 
     flow_uuid = forms.ChoiceField(
-        label=_("Select a flow on RapidPro"), help_text=_("Select a flow on RapidPro"), choices=[]
+        label=_("Select a flow on RapidPro"),
+        help_text=_("Select a flow on RapidPro"),
+        choices=[],
+        widget=forms.Select(attrs={"id": "flow_uuid"})
     )
 
     response_content = forms.CharField(
@@ -82,7 +87,6 @@ class PollForm(forms.ModelForm):
         ]
 
     def clean(self):
-
         cleaned_data = self.cleaned_data
 
         if not self.org.backends.filter(is_active=True).exists():
@@ -750,3 +754,44 @@ class PollCRUDL(SmartCRUDL):
             kwargs = super(PollCRUDL.Import, self).get_form_kwargs()
             kwargs["org"] = self.request.org
             return kwargs
+
+
+class FlowDataView(View):
+    def get_percent_compatibility(self, id_global_survey, local_flow_uuid, subdomain_org):
+        """Get a global flow and a local flow and return the compatibility percentage between both."""
+        try:
+            global_survey = PollGlobal.objects.get(pk=id_global_survey)
+            global_flow = global_survey.get_flow().get("results", None)
+            global_flow_uuids = [question.get("node_uuids") for question in global_flow]
+
+            org_local = Org.objects.get(subdomain=subdomain_org)
+            backend = OrgBackend.objects.get(pk=1)
+            local_flow = org_local.get_flows(backend=backend).get(local_flow_uuid).get("results", None)
+            local_flow_uuids = [local_question.get("node_uuids") for local_question in local_flow if
+                                local_question.get("node_uuids") in global_flow_uuids]
+
+            amount_global_flow_uuids = len(global_flow_uuids)
+            amount_local_flow_uuids = len(local_flow_uuids)
+
+            percent_compatibility = ((amount_local_flow_uuids * 100) / amount_global_flow_uuids)
+
+        except ZeroDivisionError:
+            percent_compatibility = 0
+        except Exception:
+            percent_compatibility = None
+
+        return percent_compatibility
+
+    def get(self, request, *args, **kwargs):
+        global_survey = self.kwargs["global_survey"]
+        local_flow_uuid = self.kwargs["flow_uuid"]
+        subdomain_org = request.META.get("HTTP_HOST").split(".")[0]
+
+        percent_compatibility = self.get_percent_compatibility(global_survey, local_flow_uuid, subdomain_org)
+        status_code = 200 if percent_compatibility is not None else 500
+
+        percent_compatibility_dict = {
+            "percent_compatibility": percent_compatibility,
+        }
+
+        return JsonResponse(percent_compatibility_dict, status=status_code)

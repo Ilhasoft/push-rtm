@@ -94,9 +94,16 @@
         {% endif %}
 
         <div class="notification is-warning is-hidden" id="global_survey_description"></div>
+        <div id="loaderDiv" style="display: none;" class="has-text-centered">
+          <img src="{% static 'img/loading.gif' %}" width="30px" height="30px">
+          <br>
+          Calculating percentage...
+        </div>
+        <div id="result-percent"></div>
 
         <div class="columns wrapper-buttons">
           <div class="column">
+            <button type="button" class="button is-primary is-pulled-left" id="calculate-percent">Calcular percents</button>
             <div class="flex flex-end">
               <a href="{% url 'polls.poll_list' %}" class="button primary-reverse right-m-5">{% trans "Cancel" %}</a>
               <button type="submit" class="button is-primary">{% trans "Next" %}</button>
@@ -161,6 +168,43 @@ $(document).ready(function() {
       $("#global_survey_description").removeClass("is-hidden");
     }
   }
+
+  $("#calculate-percent").click(function(){
+    let global_survey_id = $("#id_global_survey").val();
+    let flow_uuid = $("#flow_uuid").val();
+
+    if(!global_survey_id){
+      alert("Please, select a Global Survey");
+      return;
+    }
+
+    $.ajax({
+        url: window.location.origin + "/surveys/data/" + global_survey_id + "/" + flow_uuid,
+        beforeSend: function() {
+          $("#loaderDiv").show();
+          $("#result-percent").hide();
+          $("#result-percent").empty();
+          $("#calculate-percent").attr("disabled", true);
+        },
+        success: function(data) {
+          $("#loaderDiv").hide();
+          $("#calculate-percent").attr("disabled", false);
+        }
+    })
+    .done(function( data ) {
+      $("#result-percent").show();
+      let percent = parseInt(data.percent_compatibility);
+      $("#result-percent").html(`The survey compatibility percentage selected with Global Survey is: ${percent}%`);
+    })
+    .fail(function(){
+      $("#calculate-percent").attr("disabled", false);
+      $("#result-percent").show();
+      $("#result-percent").html("An error occured with the request. Try again later.");
+      $("#loaderDiv").hide();
+    });
+
+
+  });
 });
 </script>
 {% endblock %}

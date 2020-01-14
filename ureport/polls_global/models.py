@@ -2,12 +2,20 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
+from dash.orgs.models import Org, OrgBackend
 from smartmin.models import SmartModel
 
 from ureport.polls.models import Poll
 
 
 class PollGlobal(SmartModel):
+    #VAI TER UMA ORG ATRELADA
+    '''org = models.ForeignKey(
+        Org, on_delete=models.PROTECT, related_name="polls", help_text=_("The organization this poll is part of")
+    )'''
+
+    flow_uuid = models.CharField(max_length=36, help_text=_("The Flow this Poll is based on"))
+
     poll_date = models.DateField(
         help_text=_("The date to display for this survey.")
     )
@@ -23,6 +31,15 @@ class PollGlobal(SmartModel):
 
     def __str__(self):
         return self.title
+
+    def get_flow(self):
+        """
+        Returns the underlying flow for this poll
+        """
+        org = Org.objects.get(pk=1)
+        backend = OrgBackend.objects.get(pk=1)
+        flows_dict = org.get_flows(backend=backend)
+        return flows_dict.get(self.flow_uuid, None)
 
 
 class PollGlobalSurveys(models.Model):
