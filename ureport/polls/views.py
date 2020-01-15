@@ -15,6 +15,7 @@ from smartmin.views import SmartCreateView, SmartCRUDL, SmartCSVImportView, Smar
 from django import forms
 from django.conf import settings
 from django.core.cache import cache
+from django.db.models import Q
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 from django.http import HttpResponseRedirect, JsonResponse
@@ -66,9 +67,10 @@ class PollForm(forms.ModelForm):
         label=_("Select a global survey"),
         help_text=_("Select a global survey"),
         queryset=PollGlobal.objects.filter(
-            is_active=True,
+            Q(poll_end_date__gte=timezone.now()) |
+            Q(poll_end_date__isnull=True),
             poll_date__lte=timezone.now(),
-            poll_end_date__gte=timezone.now(),
+            is_active=True,
         )
     )
 
