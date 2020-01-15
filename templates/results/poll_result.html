@@ -13,7 +13,14 @@
   <section class="section top-p-0 bottom-p-0">
     <nav class="breadcrumb" aria-label="breadcrumbs">
       <ul>
-        <li><a href="{% url 'polls.poll_list' %}">{% trans 'Surveys'%}</a></li>
+        <li><a href="javascript:(function() {
+          if (window.location.search.includes('source=global&grantList=')) {
+            const id = location.search.slice(1).split('&')[1].split('=')[1];
+            window.location = '/surveys-global/' + id + '/grant/';
+          } else {
+            window.location = '/surveys/poll/list/';
+          }
+        })();">{% trans 'Surveys'%}</a></li>
         <li class="is-active"><a href="#" aria-current="page">{% trans 'Survey Results'%}</a></li>
       </ul>
     </nav>
