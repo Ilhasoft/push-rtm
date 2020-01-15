@@ -53,7 +53,11 @@
       {% for poll in polls_pending %}
         <tr>
           <td>
-            <a href="{% url 'results.poll_read' poll.poll_local.pk %}" target="blank">{{ poll.poll_local.title }}</a>
+            <a
+              href="{% url 'results.poll_read' poll.poll_local.pk %}?source=global&grantList={{ poll.poll_global.pk }}"
+              target="_blank">
+              {{ poll.poll_local.title }}
+            </a>
           </td>
           <td class="has-text-centered">{{ poll.poll_local.get_questions.count }}</td>
           <td class="has-text-centered">{{ poll.poll_local.org.name }}</td>
