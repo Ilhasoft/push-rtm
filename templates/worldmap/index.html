@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static sass_tags %}
+
+{% block css_extra %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jqvmap.min.css">
+  <link rel="stylesheet" href="{% sass_src 'plugins/worldmap/style.scss' %}">
+{% endblock %}
+
+{% block content %}
+  <div id="vmap" style="height: 100vh"></div>
+{% endblock %}
+
+{% block js_extra %}
+  <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jquery.vmap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/maps/jquery.vmap.world.js" charset="utf-8"></script>
+  <script src="{% static 'plugins/worldmap/jquery.vmap.sampledata.js' %}" charset="utf-8"></script>
+
+  <script>
+    jQuery(document).ready(function() {
+      jQuery('#vmap').vectorMap({
+        map: 'world_en',
+        backgroundColor: '#fff',
+        color: '#ffffff',
+        hoverOpacity: 0.7,
+        scaleColors: ['#C8EEFF', '#006491'],
+        borderColor: '#ececec',
+        borderWidth: .9,
+        enableZoom: true,
+        hoverColor: '#c9dfaf',
+        normalizeFunction: 'linear',
+        selectedRegions: null,
+        selectedColor: '#e2e2e2',
+        showTooltip: true,
+        values: sample_data,
+        onRegionClick: function(element, code, region)
+        {
+          console.log(code, region);
+        },
+        onLabelShow: function(event, label, code) {
+          states = Object.keys(sample_data);
+          if (states.indexOf(code) <= -1) {
+            event.preventDefault();
+          } else {
+            label[0].innerHTML = '<div class="tooltip">'
+            + '<h1>' + label[0].innerHTML + '</h1>'
+            + '<div class="bottom-m-5"><span class="tag sdg-1">1 NO POVERTY</span></div>'
+            + '<div><span class="tag sdg-2">2 ZERO HUNGER</span></div>'
+            + '</div>';
+          }
+        },
+      });
+    });
+  </script>
+{% endblock %}
