@@ -194,7 +194,7 @@ $(document).ready(function() {
     .done(function( data ) {
       $("#result-percent").show();
       let percent = parseInt(data.percent_compatibility);
-      $("#result-percent").html(`The survey compatibility percentage selected with Global Survey is: ${percent}%`);
+      $("#result-percent").html(`> Total by ${percent}% (${data.amount_local_flow_uuids} of ${data.amount_global_flow_uuids} surveys questions)`);
     })
     .fail(function(){
       $("#calculate-percent").attr("disabled", false);

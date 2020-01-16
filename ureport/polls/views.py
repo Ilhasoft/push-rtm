@@ -761,6 +761,9 @@ class PollCRUDL(SmartCRUDL):
 class FlowDataView(View):
     def get_percent_compatibility(self, id_global_survey, local_flow_uuid, subdomain_org):
         """Get a global flow and a local flow and return the compatibility percentage between both."""
+        amount_local_flow_uuids = 0
+        amount_global_flow_uuids = 0
+
         try:
             global_survey = PollGlobal.objects.get(pk=id_global_survey)
             global_flow = global_survey.get_flow().get("results", None)
@@ -782,7 +785,11 @@ class FlowDataView(View):
         except Exception:
             percent_compatibility = None
 
-        return percent_compatibility
+        return {
+            "percent_compatibility": percent_compatibility,
+            "amount_global_flow_uuids": amount_global_flow_uuids,
+            "amount_local_flow_uuids": amount_local_flow_uuids
+        }
 
     def get(self, request, *args, **kwargs):
         global_survey = self.kwargs["global_survey"]
@@ -792,8 +799,4 @@ class FlowDataView(View):
         percent_compatibility = self.get_percent_compatibility(global_survey, local_flow_uuid, subdomain_org)
         status_code = 200 if percent_compatibility is not None else 500
 
-        percent_compatibility_dict = {
-            "percent_compatibility": percent_compatibility,
-        }
-
-        return JsonResponse(percent_compatibility_dict, status=status_code)
+        return JsonResponse(percent_compatibility, status=status_code)

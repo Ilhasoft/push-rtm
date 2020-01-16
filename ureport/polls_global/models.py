@@ -45,7 +45,7 @@ class PollGlobal(SmartModel):
 class PollGlobalSurveys(models.Model):
     poll_global = models.ForeignKey(to=PollGlobal, related_name="polls_global", on_delete=models.PROTECT)
 
-    poll_local = models.ForeignKey(to=Poll, related_name="polls_global", on_delete=models.PROTECT)
+    poll_local = models.ForeignKey(to=Poll, related_name="polls_local", on_delete=models.PROTECT)
 
     is_joined = models.BooleanField(default=False)
 
