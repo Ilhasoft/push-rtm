@@ -107,16 +107,16 @@
       box-shadow: none;
     }
   }
+}
 
-  .bubble-tooltip {
-    background-color: #ffffff;
-    border: 1px solid #cecece;
-    border-radius: 4px;
-    color: #555555;
-    padding: 4px 6px;
-    position: absolute;
-    text-align: center;
-    visibility: hidden;
-    z-index: 10;
-  }
+#page-dashboard #bubbleChart .bubble-tooltip {
+  background-color: #ffffff;
+  border: 1px solid #cecece;
+  border-radius: 4px;
+  color: #555555;
+  padding: 4px 6px;
+  position: absolute;
+  text-align: center;
+  visibility: hidden;
+  z-index: 10;
 }
