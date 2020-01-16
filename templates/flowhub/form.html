@@ -61,7 +61,7 @@
     </div>
     <div class="field">
       <label class="label">{% trans "Languages" %}</label>
-      <div class="control">
+      <div class="control {% if form.languages.errors %}multiple-choices-input{% endif %}">
         {{ form.languages}}
         {{ form.languages.errors }}
       </div>
@@ -82,7 +82,8 @@
     </div>
     <div class="field">
       <label class="label">{% trans "SDGs" %}</label>
-      <div class="choices__item choices__item--choice choices__item--selectable is-highlighted">
+      <div
+        class="choices__item choices__item--choice choices__item--selectable is-highlighted {% if form.sdgs.errors %}multiple-choices-input{% endif %}">
         {{ form.sdgs }}
         {{ form.sdgs.errors }}
       </div>
