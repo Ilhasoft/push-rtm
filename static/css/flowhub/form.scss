@@ -26,3 +26,9 @@
 .choice-padding {
   padding: 5px;
 }
+
+.multiple-choices-error {
+  .choices__inner {
+    border-color: red !important;
+  }
+}
