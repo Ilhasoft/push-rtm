@@ -25,7 +25,7 @@ from django.utils.timesince import timesince
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import View
 
-from dash.orgs.models import Org, OrgBackend
+from dash.orgs.models import OrgBackend
 from ureport.utils import json_date_to_datetime, get_paginator
 from ureport.polls_global.models import PollGlobal, PollGlobalSurveys
 
@@ -74,6 +74,13 @@ class PollForm(forms.ModelForm):
         )
     )
 
+    percent_compability = forms.FloatField(
+        required=False,
+        widget=forms.HiddenInput(
+            attrs={"id": "percent-compability-hidden"}
+        )
+    )
+
     def __init__(self, *args, **kwargs):
         self.org = kwargs["org"]
         del kwargs["org"]
@@ -82,11 +89,16 @@ class PollForm(forms.ModelForm):
 
         super(PollForm, self).__init__(*args, **kwargs)
 
-        flows = self.org.get_flows(self.backend)
-        self.fields["flow_uuid"].choices = [
-            (f["uuid"], f["name"] + " (" + f.get("date_hint", "--") + ")")
-            for f in sorted(flows.values(), key=lambda k: k["name"].lower().strip())
-        ]
+        instance_form = kwargs.get("instance")
+        if instance_form:
+            self.fields["flow_uuid"].widget = forms.HiddenInput(attrs={"id": "flow_uuid"})
+            self.fields["flow_uuid"].choices = [(instance_form.flow_uuid, instance_form.flow_uuid)]
+        else:
+            flows = self.org.get_flows(self.backend)
+            self.fields["flow_uuid"].choices = [
+                (f["uuid"], f["name"] + " (" + f.get("date_hint", "--") + ")")
+                for f in sorted(flows.values(), key=lambda k: k["name"].lower().strip())
+            ]
 
     def clean(self):
         cleaned_data = self.cleaned_data
@@ -294,7 +306,7 @@ class PollCRUDL(SmartCRUDL):
         permission = "polls.poll_create"
         default_template = "polls/form.html"
         fields = ("title", "flow_uuid", "response_content",
-                  "connect_global", "global_survey")
+                  "connect_global", "global_survey", "percent_compability")
         success_message = _(
             "Your survey has been created, now adjust the poll date.")
         title = _("Create Survey")
@@ -361,7 +373,8 @@ class PollCRUDL(SmartCRUDL):
 
             if self.form.cleaned_data["connect_global"]:
                 PollGlobalSurveys.objects.create(poll_global=self.form.cleaned_data[
-                    "global_survey"], poll_local=obj)
+                    "global_survey"], poll_local=obj,
+                    percent_compability=self.form.cleaned_data["percent_compability"])
 
             return obj
 
@@ -648,7 +661,8 @@ class PollCRUDL(SmartCRUDL):
 
     class Update(OrgObjPermsMixin, SmartUpdateView):
         form_class = PollForm
-        fields = ("is_active", "title", "response_content", "connect_global", "global_survey")
+        fields = ("is_active", "flow_uuid", "title", "response_content",
+                  "connect_global", "global_survey", "percent_compability")
         success_url = "id@polls.poll_poll_date"
         default_template = "polls/form.html"
         success_message = _(
@@ -694,10 +708,12 @@ class PollCRUDL(SmartCRUDL):
                 try:
                     global_survey = PollGlobalSurveys.objects.get(poll_local=self.object)
                     global_survey.poll_global = self.form.cleaned_data["global_survey"]
+                    global_survey.percent_compability = self.form.cleaned_data["percent_compability"]
                     global_survey.save()
                 except PollGlobalSurveys.DoesNotExist:
                     PollGlobalSurveys.objects.create(poll_global=self.form.cleaned_data[
-                        "global_survey"], poll_local=obj)
+                        "global_survey"], poll_local=obj,
+                        percent_compability=self.form.cleaned_data["percent_compability"])
             else:
                 global_survey = PollGlobalSurveys.objects.filter(poll_local=self.object).first()
                 if global_survey and not global_survey.is_joined:
@@ -759,17 +775,17 @@ class PollCRUDL(SmartCRUDL):
 
 
 class FlowDataView(View):
-    def get_percent_compatibility(self, id_global_survey, local_flow_uuid, subdomain_org):
+    def get_percent_compatibility(self, id_global_survey, local_flow_uuid):
         """Get a global flow and a local flow and return the compatibility percentage between both."""
         amount_local_flow_uuids = 0
         amount_global_flow_uuids = 0
+        org_local = self.request.org
 
         try:
             global_survey = PollGlobal.objects.get(pk=id_global_survey)
             global_flow = global_survey.get_flow().get("results", None)
             global_flow_uuids = [question.get("node_uuids") for question in global_flow]
 
-            org_local = Org.objects.get(subdomain=subdomain_org)
             backend = OrgBackend.objects.get(pk=1)
             local_flow = org_local.get_flows(backend=backend).get(local_flow_uuid).get("results", None)
             local_flow_uuids = [local_question.get("node_uuids") for local_question in local_flow if
@@ -794,9 +810,8 @@ class FlowDataView(View):
     def get(self, request, *args, **kwargs):
         global_survey = self.kwargs["global_survey"]
         local_flow_uuid = self.kwargs["flow_uuid"]
-        subdomain_org = request.META.get("HTTP_HOST").split(".")[0]
 
-        percent_compatibility = self.get_percent_compatibility(global_survey, local_flow_uuid, subdomain_org)
+        percent_compatibility = self.get_percent_compatibility(global_survey, local_flow_uuid)
         status_code = 200 if percent_compatibility is not None else 500
 
         return JsonResponse(percent_compatibility, status=status_code)

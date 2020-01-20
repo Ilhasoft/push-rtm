@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n static ureport sass_tags %}
+{% load i18n static ureport sass_tags utils_extra %}
 
 {% block nav_item %}page-surveys-global{% endblock %}
 
@@ -43,6 +43,7 @@
       <tr class="is-tr">
         <th>{% trans "Name" %}</th>
         <th class="has-text-centered">{% trans "Questions" %}</th>
+        <th class="has-text-centered">{% trans "Compatibility" %}</th>
         <th class="has-text-centered">{% trans "UNCT" %}</th>
         <th class="has-text-centered">{% trans "Date" %}</th>
         <th></th>
@@ -56,6 +57,7 @@
             <a href="{% url 'results.poll_read' poll.poll_local.pk %}" target="blank">{{ poll.poll_local.title }}</a>
           </td>
           <td class="has-text-centered">{{ poll.poll_local.get_questions.count }}</td>
+          <td class="has-text-centered">{{ poll.percent_compability|format_to_percent }}</td>
           <td class="has-text-centered">{{ poll.poll_local.org.name }}</td>
           <td class="has-text-centered">{{ poll.created_on|date:"m/d/Y" }}</td>
           <td>
@@ -81,6 +83,7 @@
     <tr class="is-tr">
       <th>{% trans "Name" %}</th>
       <th class="has-text-centered">{% trans "Questions" %}</th>
+      <th class="has-text-centered">{% trans "Compatibility" %}</th>
       <th class="has-text-centered">{% trans "UNCT" %}</th>
       <th class="has-text-centered">{% trans "Joined" %}</th>
       <th></th>
@@ -93,6 +96,7 @@
         <a href="{% url 'results.poll_read' poll.poll_local.pk %}" target="blank">{{ poll.poll_local.title }}</a>
       </td>
       <td class="has-text-centered">{{ poll.poll_local.get_questions.count }}</td>
+      <td class="has-text-centered">{{ poll.percent_compability|format_to_percent }}</td>
       <td class="has-text-centered">{{ poll.poll_local.org.name }}</td>
       <td class="has-text-centered">{{ poll.created_on|date:"m/d/Y" }}</td>
       <td>

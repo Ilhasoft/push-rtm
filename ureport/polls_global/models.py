@@ -9,7 +9,6 @@ from ureport.polls.models import Poll
 
 
 class PollGlobal(SmartModel):
-    #VAI TER UMA ORG ATRELADA
     '''org = models.ForeignKey(
         Org, on_delete=models.PROTECT, related_name="polls", help_text=_("The organization this poll is part of")
     )'''
@@ -51,6 +50,8 @@ class PollGlobalSurveys(models.Model):
 
     created_on = models.DateTimeField(default=timezone.now, editable=False, blank=True,
                                       help_text="When this item was originally created")
+
+    percent_compability = models.FloatField(blank=True, null=True)
 
     class Meta:
         unique_together = ["poll_global", "poll_local"]
