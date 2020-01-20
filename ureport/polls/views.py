@@ -245,6 +245,11 @@ class PollCRUDL(SmartCRUDL):
             kwargs["flow"] = self.object
             return kwargs
 
+        def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            context["page_subtitle"] = _(self.request.session.get("action_save", "Edit"))
+            return context
+
     class PollFlow(OrgObjPermsMixin, SmartUpdateView):
         form_class = PollFlowForm
         title = _("Configure flow")
@@ -370,6 +375,7 @@ class PollCRUDL(SmartCRUDL):
             obj = super(PollCRUDL.Create, self).post_save(obj)
             obj.update_or_create_questions(user=self.request.user)
             Poll.pull_poll_results_task(obj)
+            self.request.session["action_save"] = "New"
 
             if self.form.cleaned_data["connect_global"]:
                 PollGlobalSurveys.objects.create(poll_global=self.form.cleaned_data[
@@ -451,6 +457,11 @@ class PollCRUDL(SmartCRUDL):
         form_class = QuestionForm
         success_message = _("Your survey has been updated.")
         default_template = "polls/form_questions.html"
+
+        def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            context["page_subtitle"] = _(self.request.session.get("action_save", "Edit"))
+            return context
 
         def derive_fields(self):
             questions = self.object.questions.all()
@@ -704,6 +715,7 @@ class PollCRUDL(SmartCRUDL):
         def post_save(self, obj):
             obj = super(PollCRUDL.Update, self).post_save(obj)
             obj.update_or_create_questions(user=self.request.user)
+            self.request.session["action_save"] = "Edit"
             if self.form.cleaned_data["connect_global"]:
                 try:
                     global_survey = PollGlobalSurveys.objects.get(poll_local=self.object)
