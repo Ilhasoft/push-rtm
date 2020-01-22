@@ -445,15 +445,15 @@ function showChart(local_question, ruleset_label, tab){
   }
 };
 
-let countries = [];
+let polls = [];
 
-{% for country in all_countries %}
-  countries.push({label: "{{country}}", value: "{{country.id}}"});
+{% for poll in all_local_polls %}
+  polls.push({label: "{{poll.org.name}}", value: "{{poll.id}}"});
 {% endfor %}
 
 window.choices = new Choices(chs, {
   searchPlaceholderValue: "Search UNCT",
-  choices: countries,
+  choices: polls,
 });
 
 chs.addEventListener(
