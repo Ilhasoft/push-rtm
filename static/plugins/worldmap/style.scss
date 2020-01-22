@@ -1,9 +1,8 @@
 .tooltip {
   background-color: white;
-  border: 1px solid #fff;
-  color: #cecece;
-  padding: 2rem;
-  box-shadow: 0 0 5px #cecece;
+  color: #707070;
+  padding: 1rem;
+  font-size: 13px;
 
   h1 {
     color: #555;
@@ -14,6 +13,12 @@
 
 .jqvmap-label {
   background-color: #fff;
+  box-shadow: 0 2px 4px #0000002A;
+
+  img {
+    height: 16px;
+    vertical-align: top;
+  }
 }
 
 .jqvmap-zoomin, .jqvmap-zoomout {

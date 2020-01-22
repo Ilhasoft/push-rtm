@@ -21,16 +21,16 @@
       jQuery('#vmap').vectorMap({
         map: 'world_en',
         backgroundColor: '#fff',
-        color: '#ffffff',
-        hoverOpacity: 0.7,
-        scaleColors: ['#C8EEFF', '#006491'],
+        color: '#e3ecf1',
+        hoverOpacity: 1,
+        scaleColors: ['#bee8fa', '#2c619a'],
         borderColor: '#ececec',
-        borderWidth: .9,
+        borderWidth: .1,
         enableZoom: true,
         hoverColor: '#c9dfaf',
         normalizeFunction: 'linear',
         selectedRegions: null,
-        selectedColor: '#e2e2e2',
+        selectedColor: null,
         showTooltip: true,
         values: sample_data,
         onRegionClick: function(element, code, region)
@@ -42,11 +42,15 @@
           if (states.indexOf(code) <= -1) {
             event.preventDefault();
           } else {
-            label[0].innerHTML = '<div class="tooltip">'
-            + '<h1>' + label[0].innerHTML + '</h1>'
-            + '<div class="bottom-m-5"><span class="tag sdg-1">1 NO POVERTY</span></div>'
-            + '<div><span class="tag sdg-2">2 ZERO HUNGER</span></div>'
-            + '</div>';
+            label[0].innerHTML = "<div class='tooltip'>"
+            + "<h1 class='bottom-m-10'>" + label[0].innerHTML + "</h1>"
+            + "<div class='bottom-m-10'>"
+              + "<img src=\"{% static 'svg/email.svg' %}\" alt='' class='right-m-10'>"
+              + "<span>245.6 received messages</span>" + "</div>"
+            + "<div>"
+              + "<img src=\"{% static 'svg/paper-plane.svg' %}\" alt='' class='right-m-10'>"
+              + "<span>245.6 sent messages</span>" + "</div>"
+            + "</div>";
           }
         },
       });
