@@ -8,9 +8,51 @@
 
 {% block content %}
   <div id="vmap" style="height: 80vh"></div>
+  <div x-data="{ open: false, countryName: '' }" x-on:opendetail.window="countryName = $event.detail.countryName; open = true;">
+
+    <div
+      x-show="open"
+      x-transition:leave-start="opacity-100 transform scale-100"
+      class="side-navigation">
+      <div class="flex space-between bottom-m-40">
+        <h2 x-text="countryName"></h2>
+        <img
+          src="{% static 'svg/cross.svg' %}"
+          alt=""
+          @click="open = false"
+          class="close-btn">
+      </div>
+
+      <div class="bottom-m-20">
+        <img src="{% static 'svg/sdg-1.svg' %}" alt="">
+        <span>11 SDGs being tracked</span>
+      </div>
+
+      <div class="bottom-m-20">
+        <img src="{% static 'svg/email.svg' %}" alt="">
+        <span>245.6 received messages</span>
+      </div>
+
+      <div class="bottom-m-20">
+        <img src="{% static 'svg/paper-plane.svg' %}" alt="">
+        <span>245.6 sent messages</span>
+      </div>
+
+      <div class="bottom-m-20">
+        <img src="{% static 'svg/multiple-users-silhouette.svg' %}" alt="">
+        <span>50.000 contacts reached</span>
+      </div>
+
+      <div class="flex space-between btn-group">
+        <button class="button primary-reverse">Survey Results</button>
+        <button class="button is-primary">Dashboard</button>
+      </div>
+    </div>
+  </div>
 {% endblock %}
 
 {% block js_extra %}
+  <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v1.9.5/dist/alpine.js" defer></script>
   <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jquery.vmap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/maps/jquery.vmap.world.js" charset="utf-8"></script>
@@ -33,9 +75,17 @@
         selectedColor: null,
         showTooltip: true,
         values: sample_data,
-        onRegionClick: function(element, code, region)
+        onRegionClick: function(element, code, label, region)
         {
-          console.log(code, region);
+          if (states.indexOf(code) <= -1) {
+            event.preventDefault();
+          } else {
+            window.dispatchEvent(new CustomEvent('opendetail', {
+              detail: {
+                countryName: label,
+              },
+            }));
+          }
         },
         onLabelShow: function(event, label, code) {
           states = Object.keys(sample_data);
