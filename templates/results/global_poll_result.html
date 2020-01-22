@@ -459,7 +459,11 @@ window.choices = new Choices(chs, {
 chs.addEventListener(
     'change',
     function(event) {
-      loadDataCountry(event.detail.value, 'statistics', 'não');
+      if (event.detail.value === "") {
+        loadDataCountry({{ poll_initial }}, 'statistics', 'sim');
+      } else {
+        loadDataCountry(event.detail.value, 'statistics', 'não');
+      }
     },
     false,
 );
@@ -470,7 +474,7 @@ function loadDataCountry(id_country, tab, first_access){
     $("#notification-select-unct").css("display", "none");
     $("#loaderDiv").css("display", "none");
     return 0;
-  }else{
+  } else {
     $("#no-unct-match").css("display", "none");
   }
 
