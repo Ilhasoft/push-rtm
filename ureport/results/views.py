@@ -86,14 +86,15 @@ class PollGlobalReadView(SmartTemplateView):
         all_sdgs = list(set(all_sdgs))
         all_sdgs.sort()
 
-        all_orgs = len(set(all_orgs))
-        active_orgs = len(set(active_orgs))
+        amount_all_orgs = len(set(all_orgs))
+        amount_active_orgs = len(set(active_orgs))
 
         context["poll_initial"] = polls_local[0].id if len(polls_local) > 0 else -1
-        context["participating_unct"] = self.calculate_percent_participating_unct(active_orgs, all_orgs)
+        context["participating_unct"] = self.calculate_percent_participating_unct(amount_active_orgs, amount_all_orgs)
         context["poll_global"] = poll_global
         context["all_local_polls"] = list(polls_local)
-        context["num_countries"] = len(polls_local)
+        context["all_countries"] = list(set(all_orgs))
+        context["num_countries"] = amount_all_orgs
         context["sdgs"] = settings.SDG_LIST
         context["all_sdgs"] = all_sdgs
         return context
