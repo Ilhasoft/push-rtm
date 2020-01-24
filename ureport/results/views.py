@@ -110,16 +110,14 @@ class PollGlobalDataView(View):
     def _get_question_results_without_segment(self, question):
         """ Get question data without segment. """
         statistics = {}
-        word_cloud = []
+        word_cloud = {}
         if question.is_open_ended():
             for category in question.get_results()[0].get("categories"):
                 count = category.get("count")
-                word_cloud.append(
-                    {
+                word_cloud[category.get("label").upper()] = {
                         "text": category.get("label").upper(),
                         "size": count if count > 10 else 20 + count
                     }
-                )
         else:
             labels = []
             series = []
@@ -259,15 +257,34 @@ class PollGlobalDataView(View):
         for question in global_polls_questions:
             question_dict = self._global_questions.get(question.ruleset_label)
             if question_dict:
-                value_current_question_array = self._get_question_results_without_segment(question).get(
-                    "statistics").get("counts")
-                values_in_array_statistics = question_dict.get("statistics").get("counts")
+                results_question = self._get_question_results_without_segment(question)
+                local_data_word_cloud = results_question.get("word_cloud", None)
 
-                new_values_in_array_statistics = self._sum_values_arrays(values_in_array_statistics,
-                                                                         value_current_question_array)
-                self._global_questions[question.ruleset_label]["statistics"]["counts"] = new_values_in_array_statistics
-                self._update_global_data(question, "age")
-                self._update_global_data(question, "gender")
+                if local_data_word_cloud:
+                    global_data_word_cloud = question_dict.get("word_cloud")
+                    #for local_value in local_data_word_cloud:
+                    for key, value in local_data_word_cloud.items():
+                        local_label = value.get("text")
+                        global_value = global_data_word_cloud.get(local_label, None)
+                        if global_value:
+                            new_value = global_value.get("size", 0) + value.get("size", 0)
+                            self._global_questions[question.ruleset_label]["word_cloud"][local_label]["size"] = new_value
+                        else:
+                            self._global_questions[question.ruleset_label][local_label] = {
+                                "text": local_label,
+                                "size": value.get("size")
+                            }
+
+                else:
+                    value_current_question_array = results_question.get(
+                        "statistics").get("counts")
+                    values_in_array_statistics = question_dict.get("statistics").get("counts")
+
+                    new_values_in_array_statistics = self._sum_values_arrays(values_in_array_statistics,
+                                                                             value_current_question_array)
+                    self._global_questions[question.ruleset_label]["statistics"]["counts"] = new_values_in_array_statistics
+                    self._update_global_data(question, "age")
+                    self._update_global_data(question, "gender")
             else:
                 self._global_questions[question.ruleset_label] = (self._get_results_in_dict(question))
 

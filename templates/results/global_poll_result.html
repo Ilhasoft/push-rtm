@@ -134,6 +134,7 @@
           <strong>No Survey found for this Global Survey.</strong>
         </div>
       </div>
+      <div id="teste"></div>
       <div id="chart-questions"></div>
     </div>
   </div>
@@ -146,6 +147,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.3/d3.min.js"></script>
+<script src="{% static 'plugins/wordcloud/d3.js' %}"></script>
 <script src="{% static 'plugins/wordcloud/d3.layout.cloud.js' %}"></script>
 
 <script type="text/javascript">
@@ -597,6 +599,73 @@ function loadDataCountry(id_country, tab, first_access){
       if (first_access == 'sim'){
         $(".column-unct").css("visibility", "hidden");
       }
+
+
+      if(!($.isEmptyObject(value.word_cloud))){
+        words_global = []
+        words_local = []
+
+        $("#chart-question-" + value.id).replaceWith(`<div id='chart-question-${value.id}'></div>`);
+        $("#global-chart-question-" + data.questions_global[value.ruleset_label].id).replaceWith(`<div id='global-chart-question-${data.questions_global[value.ruleset_label].id}'></div>`);
+
+        $.each(value.word_cloud, function(key, data_word){
+          words_local.push(data_word);
+          words_global.push(data.questions_global[value.ruleset_label].word_cloud[key]);
+        });
+
+        const fillWordColor = function(d, i) {
+          return RTMConfigs.availableColors[i % RTMConfigs.availableColors.length];
+        };
+
+        let width = 300, height = 300;
+        let wordCloud = d3.scale.category20();
+        d3.layout.cloud()
+          .words(words_local)
+          .rotate(function() { return ~~(Math.random() * 2) * 90; })
+          .font("Impact")
+          .fontSize(function(d) { return d.size; })
+          .on("end", function(words){return draw(words, "#chart-question-" + value.id);})
+          .start();
+
+
+         d3.layout.cloud()
+          .words(words_global)
+          .rotate(function() { return ~~(Math.random() * 2) * 90; })
+          .font("Impact")
+          .fontSize(function(d) { return d.size; })
+          .on("end", function(words){return draw(words, "#global-chart-question-" + data.questions_global[value.ruleset_label].id);})
+          .start();
+
+
+          function draw(words, id_element) {
+            d3.select(id_element)
+            .append("svg")
+            .attr("width", "70%")
+            .attr("height", "70%")
+            .attr("viewBox","0 0 " + Math.min(width,height) + " " + Math.min(width,height))
+            .attr("preserveAspectRatio", "xMinYMin")
+            .append("g")
+            .attr("transform", "translate(" + Math.min(width,height) / 2 + "," + Math.min(width,height) / 2 + ")")
+            .selectAll("text")
+            .data(words)
+            .enter().append("text")
+            .style("font-size", function(d) {
+              return d.size + "px";
+            })
+            .style("font-family", "Roboto", "sans-serif")
+            .style("fill", function(d, i) {
+              return wordCloud(i);
+            })
+            .attr("text-anchor", "middle")
+            .attr("transform", function(d) {
+              return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+            })
+            .style('fill', fillWordColor)
+            .text(function(d) {
+              return d.text;
+            });
+          }
+        }
 
     });
   }).fail(function(){

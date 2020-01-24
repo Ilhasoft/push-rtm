@@ -35,7 +35,7 @@ class PollGlobal(SmartModel):
         """
         Returns the underlying flow for this poll
         """
-        org = Org.objects.get(pk=1)
+        org = Org.objects.get(pk=3)
         backend = OrgBackend.objects.get(pk=1)
         flows_dict = org.get_flows(backend=backend)
         return flows_dict.get(self.flow_uuid, None)

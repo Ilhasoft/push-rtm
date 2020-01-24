@@ -52,7 +52,7 @@ class PollGlobalForm(forms.ModelForm):
         #del kwargs["backend"]
         super(PollGlobalForm, self).__init__(*args, **kwargs)
 
-        org = Org.objects.get(pk=1)
+        org = Org.objects.get(pk=3)
         backend = OrgBackend.objects.get(pk=1)
         flows = org.get_flows(backend)
         self.fields["flow_uuid"].choices = [
