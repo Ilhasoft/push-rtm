@@ -10,7 +10,7 @@
 {% block content %}
   <div class="worldmap">
     <div id="vmap" style="height: 80vh"></div>
-    <div class="map-legend">
+    <div id="mapLegend" class="map-legend">
       <div>UNCTs Engagement (%)</div>
       <div class="map-legend__inner">
         <div>0</div>
@@ -26,9 +26,9 @@
   <div x-data="{ open: false, countryName: '' }" x-on:opendetail.window="countryName = $event.detail.countryName; open = true;">
 
   <div
-          x-show="open"
-          x-transition:leave-start="opacity-100 transform scale-100"
-          class="side-navigation">
+      x-show="open"
+      x-transition:leave-start="opacity-100 transform scale-100"
+      class="side-navigation">
     <div class="flex space-between bottom-m-40">
       <h2 x-text="countryName"></h2>
       <img
@@ -119,6 +119,7 @@
           }
         },
       });
+      jQuery('#mapLegend').css('display', 'block');
     });
   </script>
 {% endblock %}
