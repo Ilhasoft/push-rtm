@@ -4,51 +4,66 @@
 {% block css_extra %}
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jqvmap.min.css">
   <link rel="stylesheet" href="{% sass_src 'plugins/worldmap/style.scss' %}">
+  <link rel="stylesheet" href="{% sass_src 'css/worldmap/index.scss' %}">
 {% endblock %}
 
 {% block content %}
-  <div id="vmap" style="height: 80vh"></div>
-  <div x-data="{ open: false, countryName: '' }" x-on:opendetail.window="countryName = $event.detail.countryName; open = true;">
-
-    <div
-      x-show="open"
-      x-transition:leave-start="opacity-100 transform scale-100"
-      class="side-navigation">
-      <div class="flex space-between bottom-m-40">
-        <h2 x-text="countryName"></h2>
-        <img
-          src="{% static 'svg/cross.svg' %}"
-          alt=""
-          @click="open = false"
-          class="close-btn">
-      </div>
-
-      <div class="bottom-m-20">
-        <img src="{% static 'svg/sdg-1.svg' %}" alt="">
-        <span>11 SDGs being tracked</span>
-      </div>
-
-      <div class="bottom-m-20">
-        <img src="{% static 'svg/email.svg' %}" alt="">
-        <span>245.6 received messages</span>
-      </div>
-
-      <div class="bottom-m-20">
-        <img src="{% static 'svg/paper-plane.svg' %}" alt="">
-        <span>245.6 sent messages</span>
-      </div>
-
-      <div class="bottom-m-20">
-        <img src="{% static 'svg/multiple-users-silhouette.svg' %}" alt="">
-        <span>50.000 contacts reached</span>
-      </div>
-
-      <div class="flex space-between btn-group">
-        <button class="button primary-reverse">Survey Results</button>
-        <button class="button is-primary">Dashboard</button>
+  <div class="worldmap">
+    <div id="vmap" style="height: 80vh"></div>
+    <div class="map-legend">
+      <div>UNCTs Engagement (%)</div>
+      <div class="map-legend__inner">
+        <div>0</div>
+        <div class="map-legend__inner__block__lighter"></div>
+        <div class="map-legend__inner__block__light"></div>
+        <div class="map-legend__inner__block__normal"></div>
+        <div class="map-legend__inner__block__dark"></div>
+        <div class="map-legend__inner__block__darker"></div>
+        <div>100</div>
       </div>
     </div>
   </div>
+  <div x-data="{ open: false, countryName: '' }" x-on:opendetail.window="countryName = $event.detail.countryName; open = true;">
+
+  <div
+          x-show="open"
+          x-transition:leave-start="opacity-100 transform scale-100"
+          class="side-navigation">
+    <div class="flex space-between bottom-m-40">
+      <h2 x-text="countryName"></h2>
+      <img
+              src="{% static 'svg/cross.svg' %}"
+              alt=""
+              @click="open = false"
+              class="close-btn">
+    </div>
+
+    <div class="bottom-m-20">
+      <img src="{% static 'svg/sdg-1.svg' %}" alt="">
+      <span>11 SDGs being tracked</span>
+    </div>
+
+    <div class="bottom-m-20">
+      <img src="{% static 'svg/email.svg' %}" alt="">
+      <span>245.6 received messages</span>
+    </div>
+
+    <div class="bottom-m-20">
+      <img src="{% static 'svg/paper-plane.svg' %}" alt="">
+      <span>245.6 sent messages</span>
+    </div>
+
+    <div class="bottom-m-20">
+      <img src="{% static 'svg/multiple-users-silhouette.svg' %}" alt="">
+      <span>50.000 contacts reached</span>
+    </div>
+
+    <div class="flex space-between btn-group">
+      <button class="button primary-reverse">Survey Results</button>
+      <button class="button is-primary">Dashboard</button>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block js_extra %}
