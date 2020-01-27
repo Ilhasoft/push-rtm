@@ -43,7 +43,7 @@
         <h2 class="subtitle has-text-grey-dark">{% trans "Fill the fields below" %}</h2>
 
         {% if form.flow_uuid %}
-        <div class="field">
+        <div class="field" id="field-flow-uuid">
           <label class="label">{{ form.flow_uuid.label }}</label>
           <div class="select is-fullwidth">
             {{ form.flow_uuid }}
@@ -78,7 +78,6 @@
           </div>
           <p class="help">{{ field.help_text }}</p>
         {% endif %}
-
         {% if show_connect_global %}
           <div class="control">
             {{ form.connect_global }}
@@ -91,15 +90,20 @@
               {{ form.global_survey }}
             </div>
           </div>
+          {{ form.percent_compability }}
         {% endif %}
-
         <div class="notification is-warning is-hidden" id="global_survey_description"></div>
+        <div id="loaderDiv" style="display: none;">
+          <img src="{% static 'img/loading.gif' %}" id="image-load" width="15px" height="15px">
+          Checking surveys compatibility...
+        </div>
+        <div id="result-percent" style="display: none"></div>
 
         <div class="columns wrapper-buttons">
           <div class="column">
             <div class="flex flex-end">
               <a href="{% url 'polls.poll_list' %}" class="button primary-reverse right-m-5">{% trans "Cancel" %}</a>
-              <button type="submit" class="button is-primary">{% trans "Next" %}</button>
+              <button type="submit" class="button is-primary" id="button-submit">{% trans "Next" %}</button>
             </div>
           </div>
         </div>
@@ -114,6 +118,10 @@
 <script src="{% static 'js/forms/errors.js' %}"></script>
 <script type="text/javascript">
 $(document).ready(function() {
+  if ($("#flow_uuid").is(":hidden")){
+    $("#field-flow-uuid").css("display", "none");
+  }
+
   const surveys_global = [];
   {% for survey in global_survey %}
     surveys_global[{{ survey.pk }}] = "{{ survey.description|linebreaksbr }}";
@@ -161,6 +169,51 @@ $(document).ready(function() {
       $("#global_survey_description").removeClass("is-hidden");
     }
   }
+
+  $("#id_global_survey").change(function(){
+    let global_survey_id = $("#id_global_survey").val();
+    let flow_uuid = $("#flow_uuid").val();
+    if(!global_survey_id){
+      alert("Please, select a Global Survey");
+      return;
+    }
+
+    $.ajax({
+        url: window.location.origin + "/surveys/data/" + global_survey_id + "/" + flow_uuid,
+        beforeSend: function() {
+          $("#loaderDiv").show();
+          $("#result-percent").hide();
+          $("#result-percent").empty();
+          $("#percent-compability-hidden").val("");
+          $("#id_global_survey").attr("disabled", true);
+          $("#button-submit").attr("disabled", true);
+        },
+    })
+    .done(function( data ) {
+      $("#loaderDiv").hide();
+      $("#id_global_survey").attr("disabled", false);
+      $("#button-submit").attr("disabled", false);
+      $("#result-percent").show();
+      let percent = parseInt(data.percent_compatibility);
+      $("#percent-compability-hidden").val(percent);
+      $("#result-percent").html(
+        `
+        > Checked total compatility <br>
+        > Total by ${percent}% (${data.amount_local_flow_uuids} of ${data.amount_global_flow_uuids} surveys questions)
+        `
+      );
+    })
+    .fail(function(){
+      $("#id_global_survey").attr("disabled", false);
+      $("#button-submit").attr("disabled", false);
+      $("#result-percent").show();
+      $("#percent-compability-hidden").val("");
+      $("#result-percent").html("An error occured with the request. Try again later.");
+      $("#loaderDiv").hide();
+    });
+
+
+  });
 });
 </script>
 {% endblock %}

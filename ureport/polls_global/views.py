@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.urls import reverse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import gettext as _
+
 from smartmin.views import SmartTemplateView
 from ureport.utils import get_paginator
 from ureport.polls.models import Poll
