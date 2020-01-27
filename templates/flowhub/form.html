@@ -163,6 +163,8 @@
   document.getElementById("id_flow").onchange = ((e) => {
     if (e.srcElement.files.length > 0) {
       document.getElementById("file_name").innerText = e.srcElement.files.item(0).name;
+    }else{
+      document.getElementById("file_name").innerText = "Select your json file";
     }
   });
   {% for field in form.errors %}
