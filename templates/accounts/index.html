@@ -4,6 +4,11 @@
 {% block nav_item %}page-users{% endblock %}
 
 {% block content %}
+<section class="section top-p-0 bottom-p-0">
+  <nav class="breadcrumb" aria-label="breadcrumbs" id="breadcrumbs">
+  </nav>
+</section>
+
 <section class="section">
   <h1 class="title">{{title}} {% trans "Users" %}</h1>
 </section>
@@ -103,5 +108,15 @@
       let modal = document.getElementById("deleteModal-" + orgPk+ "-" + userId);
       modal.classList.add("is-active");
     }
+
+    document.addEventListener("DOMContentLoaded", function(event) {
+      if (window.location.search.includes('source=unct')) {
+        var node = document.getElementById("breadcrumbs");
+        node.innerHTML = '<ul>'
+            + '<li><a href="{% url 'uncts.unct_list' %}">{% trans 'UNCTs'%}</a></li>'
+            + '<li class="is-active"><a href="#" aria-current="page">{% trans 'Users'%}</a></li>'
+            + '</ul>';
+      }
+    });
 </script>
 {% endblock %}
