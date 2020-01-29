@@ -79,11 +79,49 @@
 
           </td>
         </tr>
-      {% empty %}
+      {% endfor %}
+      {% for inactive_user in log_permission_users %}
+        <tr class="is-tr is-user-inactive">
+          <td>{{ inactive_user.user.first_name }} </td>
+          <td>{{ inactive_user.user.username }} </td>
+          <td>{{ inactive_user.user.email }} </td>
+          <td>{% trans 'No Permission' %}</td>
+          <td>
+            <button class="button-no-bg" onclick=openModalActive('{{org.pk}}','{{inactive_user.user.pk}}');>
+              <i class="material-icons">check_circle_outline</i>
+            </button>
+
+            <div id="activeModal-{{org.pk}}-{{inactive_user.user.pk}}" class="modal">
+              <div class="modal-background"></div>
+              <div class="modal-card">
+                <header class="modal-card-head">
+                  <p class="modal-card-title">{% trans 'Are you sure?' %}</p>
+                  <button class="delete" aria-label="close" onclick=closeModalActive('{{org.pk}}','{{inactive_user.user.pk}}');></button>
+                </header>
+                <section class="modal-card-body">
+                  {% trans 'Do you really want to active the user' %} "{{inactive_user.user.username}}" ?
+                </section>
+                <footer class="modal-card-foot">
+                  <form action="{% url 'accounts.user_org_activate' org.pk inactive_user.user.pk %}"
+                   method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" value="{{ redirect_to }}" name="redirect_to"/>
+                    <button class="button is-danger right-m-5" type="submit">{% trans 'Confirm' %}</button>
+                  </form>
+                  <button class="button dark-reverse" onclick=closeModalActive('{{org.pk}}','{{inactive_user.user.pk}}');>{% trans 'Cancel' %}</button>
+                </footer>
+              </div>
+            </div>
+
+          </td>
+        </tr>
+      {%empty%}
+      {% endfor %}
+      {% if not log_permission_users and not users %}
         <tr>
           <td colspan="6" class="has-text-centered">{% trans "No results found" %}</td>
         </tr>
-      {% endfor %}
+      {% endif %}
     </tbody>
   </table>
   <div>
@@ -101,6 +139,16 @@
 
     function openModal(orgPk, userId){
       let modal = document.getElementById("deleteModal-" + orgPk+ "-" + userId);
+      modal.classList.add("is-active");
+    }
+
+    function closeModalActive(orgPk, userId){
+      let modal = document.getElementById("activeModal-" + orgPk+ "-" + userId);
+      modal.classList.remove("is-active");
+    }
+
+    function openModalActive(orgPk, userId){
+      let modal = document.getElementById("activeModal-" + orgPk+ "-" + userId);
       modal.classList.add("is-active");
     }
 </script>

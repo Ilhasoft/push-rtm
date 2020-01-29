@@ -87,11 +87,6 @@ class AccountForm(forms.ModelForm):
         instance = super().save(commit=False)
         instance.save()
 
-        new_password = self.cleaned_data["new_password"]
-        if new_password:
-            instance.set_password(new_password)
-            instance.save()
-
         instance.groups.clear()
         instance.groups.add(self.cleaned_data.get("groups"))
         group = str(self.cleaned_data.get("groups")).lower()
