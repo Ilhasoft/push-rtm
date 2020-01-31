@@ -134,9 +134,11 @@
         selectedColor: null,
         showTooltip: true,
         values: data_map,
-        onRegionClick: function(element, code, label, region)
+        onRegionClick: function(element, code, label)
         {
-          if (states.indexOf(code) <= -1) {
+          let data_country = data_countries_map[code];
+
+          if (states.indexOf(code) <= -1 || data_country === undefined) {
             event.preventDefault();
           } else {
             window.dispatchEvent(new CustomEvent('opendetail', {
@@ -144,18 +146,13 @@
                 countryName: label,
               },
             }));
-            let data_country = data_countries_map[code];
-            if(data_country != undefined){
-              $("#dashboard").val(data_country["org_subdomain"]);
-              $("#survey-results").val(data_country["org_subdomain"]);
-              $("#details-country").show();
-              $("#sdgs-tracked").html(data_country["amount_sdgs"] + " SDGs being tracked");
-              $("#received-messages").html(data_country["received"] + " received messages");
-              $("#sent-messages").html(data_country["sent"] + " sent messages");
-              $("#contacts-reached").html(data_country["amount_contacts"] + " contacts reached");
-            }else{
-              $("#details-country").hide();
-            }
+            $("#dashboard").val(data_country["org_subdomain"]);
+            $("#survey-results").val(data_country["org_subdomain"]);
+            $("#details-country").show();
+            $("#sdgs-tracked").html(data_country["amount_sdgs"] + " SDGs being tracked");
+            $("#received-messages").html(data_country["received"] + " received messages");
+            $("#sent-messages").html(data_country["sent"] + " sent messages");
+            $("#contacts-reached").html(data_country["amount_contacts"] + " contacts reached");
           }
         },
         onLabelShow: function(event, label, code) {
@@ -163,9 +160,8 @@
           if (states.indexOf(code) <= -1) {
             event.preventDefault();
           } else {
-
             data_country = data_countries_map[code];
-            if(data_country != undefined){
+            if(data_country !== undefined){
               sent = data_country["sent"];
               received = data_country["received"];
 
@@ -178,7 +174,8 @@
                   + "<img src=\"{% static 'svg/paper-plane.svg' %}\" alt='' class='right-m-10'>"
                   + "<span>" + sent + " sent messages</span>" + "</div>"
                 + "</div>";
-            }else{
+            } else {
+              // event.preventDefault();
               label[0].innerHTML = "<div class='tooltip'>"
                 + "<h1 class='bottom-m-10'>" + label[0].innerHTML + "</h1></div>";
             }
