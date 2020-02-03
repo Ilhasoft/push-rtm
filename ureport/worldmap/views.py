@@ -1,6 +1,7 @@
 import pycountry
 
 from django.db.models import Sum
+from django.core.exceptions import ObjectDoesNotExist
 
 from smartmin.views import SmartTemplateView
 from dash.orgs.models import Org
@@ -26,21 +27,25 @@ class ListView(SmartTemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         all_orgs = Org.objects.all()
-        countries_code_alpha2 = {country.name: country.alpha_2 for country in pycountry.countries}
 
         data_engagement = {}
         data_countries = {}
 
         for org in all_orgs:
             sent = ChannelDailyStats.objects.filter(msg_direction="O", channel__org=org).aggregate(total=Sum("count"))
-            sent = sent.get("total", 0)
+            sent = sent.get("total", 0) or 0
 
             received = ChannelDailyStats.objects.filter(msg_direction="I", channel__org=org).aggregate(total=Sum("count"))
-            received = received.get("total", 0)
+            received = received.get("total", 0) or 0
 
             engagement = (100 * received) / sent if sent > 0 else 0
 
-            code = countries_code_alpha2.get(org.name).lower()
+            code = None
+            try:
+                code = org.org_country_code.org_country_code.lower()
+            except ObjectDoesNotExist:
+                pass
+
             if code:
 
                 sdgs_org = self.get_sdgs_from_org(org)
