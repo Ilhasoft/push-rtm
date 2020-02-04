@@ -51,15 +51,16 @@
       {% for poll in polls %}
         <tr class="{% if not poll.is_active %} is-poll-inactive {% endif %}">
           <td>
-
-
-            <a href="{% url 'results.global_poll_read' poll.id %}">
-              <span class="tooltip right">
-                {{ poll.title }}
-              </span>
-            </a>
-
-
+            {%if poll.is_active %}
+              <a href="{% url 'results.global_poll_read' poll.id %}">
+                  <span class="tooltip right">
+                    {{ poll.title }}
+                    <span class="tooltip-content">See the results</span>
+                  </span>
+              </a>
+            {% else %}
+              {{ poll.title }}
+            {% endif %}
           </td>
           <td>{{ poll.poll_date|date:"m/d/Y" }} </td>
           <td>{{ poll.poll_end_date|date:"m/d/Y" }}</td>
