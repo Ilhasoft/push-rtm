@@ -3,23 +3,17 @@
 
 {% block content %}
 <section class="section top-p-0 bottom-p-0">
-  <nav class="breadcrumb" aria-label="breadcrumbs" id="breadcrumbs">
+  <nav class="breadcrumb" aria-label="breadcrumbs" id="breadcrumbss">
     <ul>
-      <li><a href="">{% trans 'All Flows'%}</a></li>
-      <li class="is-active"><a href="#" aria-current="page">Nome do Fluxo</a></li>
-    </ul>
-    <ul>
-      <li><a href="">{% trans 'UNCTs'%}</a></li>
-      <li class="is-active"><a href="#" aria-current="page">Nome da Org</a></li>
-    </ul>
-    <ul>
-      <li><a href="">{% trans 'UNCTs'%}</a></li>
-      <li><a href="">Nome da Org</a></li>
-      <li class="is-active"><a href="#" aria-current="page">Nome do Fluxo</a></li>
-    </ul>
-    <ul>
-      <li><a href="">{% trans 'My UNCT'%}</a></li>
-      <li class="is-active"><a href="#" aria-current="page">Nome do Fluxo</a></li>
+      <li><a href="{% url 'flowhub.flow_list' %}">{% trans 'Repository' %}</a></li>
+      {% if breadcrumbs.previous.path %}
+        <li><a href="{{breadcrumbs.previous.url}}" aria-current="page">{{breadcrumbs.previous.path}}</a></li>
+      {% endif %}
+      {% if breadcrumbs.current.path %}
+        <li class="is-active"><a href="" aria-current="page">{{breadcrumbs.current.path}}</a></li>
+      {% else %}
+        <li class="is-active"><a href="">{{subtitle}}</a></li>
+      {% endif %}
     </ul>
   </nav>
 </section>
