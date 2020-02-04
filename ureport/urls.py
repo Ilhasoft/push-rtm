@@ -65,6 +65,7 @@ urlpatterns = [
     url(r"^", include("ureport.dashboard.urls")),
     url(r"^authentication/", include("ureport.authentication.urls")),
     url(r"^surveys-global/", include("ureport.polls_global.urls")),
+    url(r"^worldmap/", include("ureport.worldmap.urls")),
     url(r'^docs/', include("docs.urls")),
 ]
 

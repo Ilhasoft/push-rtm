@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+{% load static sass_tags %}
+
+{% block css_extra %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jqvmap.min.css">
+  <link rel="stylesheet" href="{% sass_src 'plugins/worldmap/style.scss' %}">
+  <link rel="stylesheet" href="{% sass_src 'css/worldmap/index.scss' %}">
+{% endblock %}
+
+{% block content %}
+  <div class="worldmap">
+    <div id="vmap" style="height: 80vh"></div>
+    <div id="mapLegend" class="map-legend">
+      <div>UNCTs Engagement (%)</div>
+      <div class="map-legend__inner">
+        <div>0</div>
+        <div class="map-legend__inner__block__lighter"></div>
+        <div class="map-legend__inner__block__light"></div>
+        <div class="map-legend__inner__block__normal"></div>
+        <div class="map-legend__inner__block__dark"></div>
+        <div class="map-legend__inner__block__darker"></div>
+        <div>100</div>
+      </div>
+    </div>
+  </div>
+  <div x-data="{ open: false, countryName: '' }" x-on:opendetail.window="countryName = $event.detail.countryName; open = true;">
+
+  <div
+      x-show="open"
+      x-transition:leave-start="opacity-100 transform scale-100"
+      class="side-navigation">
+    <div class="flex space-between bottom-m-40">
+      <h2 x-text="countryName"></h2>
+      <img
+              src="{% static 'svg/cross.svg' %}"
+              alt=""
+              @click="open = false"
+              class="close-btn">
+    </div>
+
+    <div id="details-country">
+      <div class="bottom-m-20">
+        <img src="{% static 'svg/sdg-1.svg' %}" alt="">
+        <span id="sdgs-tracked"></span>
+      </div>
+
+      <div class="bottom-m-20">
+        <img src="{% static 'svg/email.svg' %}" alt="">
+        <span id="received-messages"></span>
+      </div>
+
+      <div class="bottom-m-20">
+        <img src="{% static 'svg/paper-plane.svg' %}" alt="">
+        <span id="sent-messages"></span>
+      </div>
+
+      <div class="bottom-m-20">
+        <img src="{% static 'svg/multiple-users-silhouette.svg' %}" alt="">
+        <span id="contacts-reached"></span>
+      </div>
+
+      <div class="flex space-between btn-group">
+        <button id="survey-results" class="button-details-country button primary-reverse">Survey Results</button>
+        <button id="dashboard" class="button-details-country button is-primary">Dashboard</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block js_extra %}
+  <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v1.9.5/dist/alpine.js" defer></script>
+  <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jquery.vmap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/maps/jquery.vmap.world.js" charset="utf-8"></script>
+  <script src="{% static 'plugins/worldmap/jquery.vmap.sampledata.js' %}" charset="utf-8"></script>
+
+  <script>
+    function add_subdomain_to_url(url, subdomain){
+      url_splitted_https = url.split("//");
+      subdomain = "//" + subdomain + ".";
+      url_splitted_https.splice(1, 0, subdomain);
+      new_url_string = url_splitted_https.join("");
+
+      return new_url_string;
+    };
+
+    $(".button-details-country").click(function(e){
+      subdomain = e.toElement.value;
+      url_origin = window.location.origin;
+      url = add_subdomain_to_url(url_origin, subdomain);
+
+      if (e.toElement.id == "survey-results"){
+        url = url + "/surveys/poll/list/";
+      }
+
+      window.open(url, '_blank');
+      return false;
+    });
+
+    let data_map = {};
+    {% for key, value in data_engagement.items %}
+      data_map["{{key}}"] = parseInt("{{value}}");
+    {% endfor %}
+
+    let data_countries_map = {};
+    {% for key, value in data_countries.items %}
+      data_countries_map["{{key}}"] = {
+        "org_id": "{{value.org.id}}",
+        "org_subdomain": "{{value.org.subdomain}}",
+        "engagement": "{{value.engagement}}",
+        "sent": "{{value.sent}}",
+        "received": "{{value.received}}",
+        "amount_sdgs": "{{value.amount_sdgs}}",
+        "sdgs": "{{value.sdgs}}",
+        "amount_contacts": "{{value.amount_contacts}}",
+      };
+    {% endfor %}
+
+    jQuery(document).ready(function() {
+      jQuery('#vmap').vectorMap({
+        map: 'world_en',
+        backgroundColor: '#fff',
+        color: '#e3ecf1',
+        hoverOpacity: 1,
+        scaleColors: ['#bee8fa', '#2c619a'],
+        borderColor: '#ececec',
+        borderWidth: .1,
+        enableZoom: true,
+        hoverColor: '#c9dfaf',
+        normalizeFunction: 'linear',
+        selectedRegions: null,
+        selectedColor: null,
+        showTooltip: true,
+        values: data_map,
+        onRegionClick: function(element, code, label)
+        {
+          let data_country = data_countries_map[code];
+
+          if (states.indexOf(code) <= -1 || data_country === undefined) {
+            event.preventDefault();
+          } else {
+            window.dispatchEvent(new CustomEvent('opendetail', {
+              detail: {
+                countryName: label,
+              },
+            }));
+            $("#dashboard").val(data_country["org_subdomain"]);
+            $("#survey-results").val(data_country["org_subdomain"]);
+            $("#details-country").show();
+            $("#sdgs-tracked").html(data_country["amount_sdgs"] + " SDGs being tracked");
+            $("#received-messages").html(data_country["received"] + " received messages");
+            $("#sent-messages").html(data_country["sent"] + " sent messages");
+            $("#contacts-reached").html(data_country["amount_contacts"] + " contacts reached");
+          }
+        },
+        onLabelShow: function(event, label, code) {
+          states = Object.keys(sample_data);
+          if (states.indexOf(code) <= -1) {
+            event.preventDefault();
+          } else {
+            data_country = data_countries_map[code];
+            if(data_country !== undefined){
+              sent = data_country["sent"];
+              received = data_country["received"];
+
+              label[0].innerHTML = "<div class='tooltip'>"
+                + "<h1 class='bottom-m-10'>" + label[0].innerHTML + "</h1>"
+                + "<div class='bottom-m-10'>"
+                  + "<img src=\"{% static 'svg/email.svg' %}\" alt='' class='right-m-10'>"
+                  + "<span>" + received + " received messages</span>" + "</div>"
+                + "<div>"
+                  + "<img src=\"{% static 'svg/paper-plane.svg' %}\" alt='' class='right-m-10'>"
+                  + "<span>" + sent + " sent messages</span>" + "</div>"
+                + "</div>";
+            } else {
+              // event.preventDefault();
+              label[0].innerHTML = "<div class='tooltip'>"
+                + "<h1 class='bottom-m-10'>" + label[0].innerHTML + "</h1></div>";
+            }
+          }
+        },
+      });
+      jQuery('#mapLegend').css('display', 'block');
+    });
+  </script>
+{% endblock %}
