@@ -22,6 +22,11 @@
           <span class="icon is-left icon-search">
             <i class="material-icons">search</i>
           </span>
+          {% if query %}
+            <a class="clear-search-icon" href="{% url 'polls_global.poll_list' %}">
+              <i class="material-icons">clear</i>
+            </a>
+          {% endif %}
         </form>
       </div>
     </div>
