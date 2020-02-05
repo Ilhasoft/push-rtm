@@ -248,7 +248,7 @@ class DashboardDataView(View):
                     registered_on__gte=datetime.datetime.utcnow().replace(tzinfo=utc) - datetime.timedelta(days=180)
                 )
                 .annotate(month=ExtractMonth("registered_on"), year=ExtractYear("registered_on"))
-                .order_by("month")
+                .order_by("year", "month")
                 .values("month", "year")
                 .annotate(total=Count("*"))
                 .values("month", "year", "total", "org")
@@ -272,13 +272,16 @@ class DashboardDataView(View):
                 if self.request.org and contact.get("org") == self.request.org.id:
                     scope = "local"
 
-                series[scope][key] = contact.get("total")
+                if series["global"].get(key):
+                    series["global"][key] += contact.get("total")
+                else:
+                    series[scope][key] = contact.get("total")
 
             response["contacts_over_time"] = {"labels": list(dict.fromkeys(labels)), "series": series}
 
             response["global_total_contacts"] = {
                 "local": Contact.objects.filter(org=self.request.org).count(),
-                "global": Contact.objects.exclude(org=self.request.org).count(),
+                "global": Contact.objects.all().count(),
             }
 
         return JsonResponse(response)
