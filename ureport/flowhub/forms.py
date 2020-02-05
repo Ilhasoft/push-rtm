@@ -59,7 +59,7 @@ class FlowForm(forms.ModelForm):
     flow = forms.FileField(
         validators=[MimetypeValidator("application/json")],
         help_text=_("Upload a JSON file"),
-        widget=forms.ClearableFileInput(attrs={"class": "file-input"}),
+        widget=forms.ClearableFileInput(attrs={"class": "file-input", "accept": "application/json"}),
     )
 
     sdgs = forms.MultipleChoiceField(
