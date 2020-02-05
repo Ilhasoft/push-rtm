@@ -94,6 +94,10 @@
 <script src="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/scripts/choices.min.js"></script>
 <script type="text/javascript">
 $("select").each(function() {
+  /*if($(this).hasClass("send-message")){
+    return;
+  };*/
+
   let id = $(this).attr("id");
   new Choices("#" + id, {
     removeItemButton: true,
