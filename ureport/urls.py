@@ -7,7 +7,7 @@ from django.conf.urls import include, url
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 from django.views import static
-from django.views.generic import RedirectView
+from django.views.generic import RedirectView, TemplateView
 from django.views.i18n import JavaScriptCatalog
 
 admin.autodiscover()
@@ -67,6 +67,7 @@ urlpatterns = [
     url(r"^surveys-global/", include("ureport.polls_global.urls")),
     url(r"^worldmap/", include("ureport.worldmap.urls")),
     url(r'^docs/', include("docs.urls")),
+    url(r'^blocked/', TemplateView.as_view(template_name="blocked_user.html"), name="blocked"),
 ]
 
 if settings.DEBUG:

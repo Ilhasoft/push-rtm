@@ -32,17 +32,17 @@ class LoginAuthView(SmartTemplateView):
         code = self.request.GET.get("code")
         org = self.request.org
 
-        """oauth = OAuth2Session(
+        oauth = OAuth2Session(
             settings.OAUTHLIB_CLIENT_ID,
             redirect_uri=settings.OAUTHLIB_REDIRECT_URI,
             scope="openid email profile",
             state=str(base64.b64encode(org.subdomain.encode("utf-8")), "utf-8") if hasattr(org, "subdomain") else None,
-        )"""
+        )
         if code:
             try:
                 context["org"] = org
 
-                """fetch_token = oauth.fetch_token(
+                fetch_token = oauth.fetch_token(
                     settings.OAUTHLIB_TOKEN_URL,
                     code=code,
                     include_client_id=settings.OAUTHLIB_CLIENT_ID,
@@ -67,12 +67,6 @@ class LoginAuthView(SmartTemplateView):
                 )
 
                 extra_data = json.loads(response.text).get("data")
-                workspace = extra_data.get("workspace")"""
-                extra_data = {
-                    "workspace": ["cri", "ecu", "lso"],
-                    "email": "mail@mail.com",
-                    "userid": "testactive"
-                }
                 workspace = extra_data.get("workspace")
 
                 if self.request.org.subdomain in workspace:
@@ -81,16 +75,9 @@ class LoginAuthView(SmartTemplateView):
                         user = get_user_model().objects.get(
                             email=extra_data.get("email"), username=extra_data.get("userid")
                         )
-                        if not user.is_active:
-                            messages.error(self.request, _("Your account is disabled. Contact the Global Administrator"))
-                            #TODO: return redirect template usuario bloqueado
-                            return redirect(reverse("authentication.login"))
+                        if not user.is_active or not self.user_has_permission(user):
+                            return redirect(reverse("blocked"))
 
-                        if not self.user_has_permission(user):
-                            print("nao tem permissao")
-                            #TODO: return redirect template usuario bloqueado
-                            pass
-                        print("tem permissao")
                     except get_user_model().DoesNotExist:
                         user = get_user_model().objects.create(
                             username=extra_data.get("userid"),
@@ -108,24 +95,20 @@ class LoginAuthView(SmartTemplateView):
 
                     login(self.request, user)
                     if is_global_user(user):
-                        print("é global user")
-                        #TODO: redirecionar para o worldmap
-                        return redirect(reverse("dashboard"))
+                        return redirect(reverse("worldmap.map_list"))
                     else:
                         return redirect(reverse("dashboard"))
 
                 else:
-                    messages.error(self.request, _("You do not have permission to access this UNCT"))
-                    #TODO: redirecionar para o template de usuario que nao tem acesso.
-                    redirect(reverse("authentication.login"))
+                    return redirect(reverse("blocked"))
+
             except Exception as e:
                 print(e)
                 messages.error(self.request, _("Please try again."))
                 return redirect(reverse("authentication.login"))
         else:
-            pass
-            """authorization_url, state = oauth.authorization_url(settings.OAUTHLIB_AUTHORIZATION_URL)
-            context["authorization_url"] = authorization_url"""
+            authorization_url, state = oauth.authorization_url(settings.OAUTHLIB_AUTHORIZATION_URL)
+            context["authorization_url"] = authorization_url
 
         return self.render_to_response(context)
 
