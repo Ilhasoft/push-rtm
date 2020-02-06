@@ -1,0 +1,71 @@
+{% load i18n sass_tags static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Blocked User</title>
+  <link rel="stylesheet" href="{% sass_src 'css/index.scss' %}" />
+  <style>
+    body {
+      margin: 0;
+    }
+
+    .intro {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+      padding: 0;
+      text-align: center;
+      color: white;
+      background: url('/sitestatic/user-blocked-background.png') no-repeat center center scroll;
+      background-color: #e9e8e7;
+      -webkit-background-size: contain;
+      -moz-background-size: contain;
+      background-size: contain;
+      -o-background-size: contain;
+      position: relative;
+    }
+
+    .blocked-card {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+
+    .content {
+      background-color: #ffffff;
+      padding: 2rem;
+      box-shadow: 0 2px 4px #0000002B;
+    }
+
+    h1.title {
+      font-size: 20px;
+    }
+
+    h1.title, p {
+      color: #707070;
+    }
+
+    a {
+      color: #03AEEF;
+    }
+  </style>
+</head>
+<body>
+<div class="intro">
+  <div class="blocked-card">
+    <div class="content">
+      <img src="{% static 'svg/access-denied.svg' %}" alt="">
+      <h1 class="title">Access Denied</h1>
+      <p>You don't have access to this area. Contact an administrator to verify their permission</p>
+      <div class="is-pulled-right">
+        <a href="">Close</a>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

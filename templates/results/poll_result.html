@@ -206,21 +206,25 @@
     $("input:checkbox").click(function() {
       let isChecked = $("input:checkbox").filter(":checked");
 
+      if (isChecked.length > 0) {
+        $("div[data-question-sdgs").each(function() {
+          $(this).hide();
+        });
+      }
+
       isChecked.map(function() {
         let sdg = this.value;
 
         $("div[data-question-sdgs").each(function() {
           let sdgs = $(this).attr("data-question-sdgs");
 
-          if (!sdgs.split(",").includes(sdg)) {
-            $(this).hide();
-          } else {
+          if (sdgs.split(",").includes(sdg)) {
             $(this).show();
           }
         });
       });
 
-      if (isChecked.length == 0) {
+      if (isChecked.length === 0) {
         $("div[data-question-sdgs").each(function() {
           $(this).show();
         });

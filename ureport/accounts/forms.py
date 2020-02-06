@@ -197,6 +197,7 @@ class GlobalAccountForm(forms.ModelForm):
             instance.is_superuser = True
             instance.save()
         if group == 2:
+            instance.is_superuser = False
             group = Group.objects.get(name="Global Viewers")
             instance.groups.add(group)
 

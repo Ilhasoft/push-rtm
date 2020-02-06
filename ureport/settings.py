@@ -99,6 +99,7 @@ INSTALLED_APPS += (
     "ureport.channels",
     "ureport.authentication",
     "ureport.polls_global",
+    "ureport.worldmap",
 )
 
 SITE_ALLOW_NO_ORG += (
@@ -133,6 +134,7 @@ SITE_ALLOW_NO_ORG += (
     "results.poll_read",
     "results.global_poll_read",
     "results.global_poll_data",
+    "worldmap.map_list",
 )
 
 SDG_LIST = (
