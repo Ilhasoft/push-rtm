@@ -109,6 +109,16 @@
       modal.classList.add("is-active");
     }
 
+    function closeModalActive(orgPk, userId){
+      let modal = document.getElementById("activeModal-" + orgPk+ "-" + userId);
+      modal.classList.remove("is-active");
+    }
+
+    function openModalActive(orgPk, userId){
+      let modal = document.getElementById("activeModal-" + orgPk+ "-" + userId);
+      modal.classList.add("is-active");
+    }
+
     document.addEventListener("DOMContentLoaded", function(event) {
       if (window.location.search.includes('source=unct')) {
         var node = document.getElementById("breadcrumbs");
