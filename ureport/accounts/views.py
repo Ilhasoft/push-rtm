@@ -4,6 +4,8 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.db.models import Q
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
+from django.views.generic import View
 
 from dash.orgs.models import Org
 from dash.orgs.views import OrgObjPermsMixin, OrgPermsMixin
@@ -11,6 +13,7 @@ from smartmin.views import SmartTemplateView
 from ureport.utils import get_paginator
 
 from .forms import AccountForm, GlobalAccountForm
+from .models import LogPermissionUser
 
 
 class ListView(OrgObjPermsMixin, SmartTemplateView):
@@ -50,7 +53,10 @@ class ListView(OrgObjPermsMixin, SmartTemplateView):
 
         queryset = queryset.filter(Q(org_admins=org) | Q(org_editors=org) | Q(org_viewers=org))
 
+        log_permission = LogPermissionUser.objects.filter(org=org)
+
         context["users"] = get_paginator(queryset.filter(**filters, is_active=True).order_by(sortered), page)
+        context["log_permission_users"] = log_permission
         context["query"] = query
         context["org"] = org
         context["title"] = org.name
@@ -130,12 +136,10 @@ class EditView(OrgObjPermsMixin, SmartTemplateView):
             return render(request, self.template_name, context)
 
 
-class DeleteView(SmartTemplateView):
-    template_name = "accounts/info.html"
+class DeleteView(OrgObjPermsMixin, View):
     permission = "orgs.org_manage_accounts"
 
     def post(self, request, *args, **kwargs):
-        super().get_context_data(**kwargs)
         user = get_user_model().objects.filter(pk=self.kwargs["user"]).first()
 
         if not user:
@@ -145,9 +149,45 @@ class DeleteView(SmartTemplateView):
             self.request.org = Org.objects.get(pk=kwargs.get("org"))
 
         if user in self.request.org.get_org_users():
+            group_permission = user.groups.first()
+            log = LogPermissionUser.objects.create(user=user, org=self.request.org, permission=group_permission)
+
             self.request.org.administrators.remove(user)
             self.request.org.editors.remove(user)
             self.request.org.viewers.remove(user)
+
+        return redirect(self.request.META.get("HTTP_REFERER"))
+
+
+class ActivateView(OrgObjPermsMixin, View):
+    permission = "orgs.org_manage_accounts"
+
+    def post(self, request, *args, **kwargs):
+        user = get_object_or_404(get_user_model(), pk=self.kwargs["user"])
+
+        if not user:
+            return redirect(self.request.META.get("HTTP_REFERER"))
+
+        if request.user.is_superuser and kwargs.get("org"):
+            self.request.org = Org.objects.get(pk=kwargs.get("org"))
+
+        group = user.logs_permission_user.filter(org=self.request.org).first()
+        group_permission = None
+        group_name = ""
+
+        if group:
+            group_permission = group.permission
+            group_name = group_permission.name if group_permission else None
+
+        if group_name == "Administrators":
+            self.request.org.administrators.add(user)
+        else:
+            self.request.org.viewers.add(user)
+
+        log = user.logs_permission_user.filter(org=self.request.org, permission=group_permission).first()
+
+        if log:
+            log.delete()
 
         return redirect(self.request.META.get("HTTP_REFERER"))
 
@@ -183,7 +223,10 @@ class GlobalListView(OrgPermsMixin, SmartTemplateView):
         queryset = (
             get_user_model()
             .objects.all()
-            .filter(Q(is_superuser=True) | Q(groups__name="Global Viewers"))
+            .filter(Q(is_superuser=True) |
+                    Q(groups__name="Global Viewers") |
+                    Q(logs_permission_user__permission_id__name="Global Viewers")
+                    )
             .exclude(password=None)
             .exclude(email__exact="")
         )
@@ -262,3 +305,56 @@ class GlobalEditView(OrgObjPermsMixin, SmartTemplateView):
             messages.error(request, _("Sorry, you did not complete the registration."))
             messages.error(request, form.non_field_errors())
             return render(request, self.template_name, context)
+
+
+class GlobalDeleteView(OrgObjPermsMixin, View):
+    permission = "orgs.org_manage_accounts"
+
+    def get(self, request, *args, **kwargs):
+        if not self.request.user.is_superuser:
+            return redirect(reverse("accounts.user_list"))
+        return super().get(request)
+
+    def post(self, request, *args, **kwargs):
+        user = get_object_or_404(get_user_model(), pk=self.kwargs["user"])
+
+        if not user:
+            return redirect(self.request.META.get("HTTP_REFERER"))
+
+        if not self.request.user.is_superuser:
+            return redirect(reverse("accounts.user_list"))
+
+        group = Group.objects.get(name="Global Viewers")
+        if group in user.groups.all():
+            user.groups.remove(group)
+
+        log = LogPermissionUser.objects.create(user=user, permission=group)
+
+        return redirect(self.request.META.get("HTTP_REFERER"))
+
+
+class GlobalActivateView(OrgObjPermsMixin, View):
+    permission = "orgs.org_manage_accounts"
+
+    def get(self, request, *args, **kwargs):
+        if not self.request.user.is_superuser:
+            return redirect(reverse("accounts.user_list"))
+        return super().get(request)
+
+    def post(self, request, *args, **kwargs):
+        user = get_object_or_404(get_user_model(), pk=self.kwargs["user"])
+
+        if not user:
+            return redirect(self.request.META.get("HTTP_REFERER"))
+
+        if not self.request.user.is_superuser:
+            return redirect(reverse("accounts.user_list"))
+
+        group = Group.objects.get(name="Global Viewers")
+        user.groups.add(group)
+
+        log = LogPermissionUser.objects.filter(user=user, permission=group).first()
+        if log:
+            log.delete()
+
+        return redirect(self.request.META.get("HTTP_REFERER"))

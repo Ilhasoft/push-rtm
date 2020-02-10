@@ -195,6 +195,7 @@ $(document).ready(function() {
       $("#button-submit").attr("disabled", false);
       $("#result-percent").show();
       let percent = parseInt(data.percent_compatibility);
+      percent = Number.isNaN(percent) ? 0 : percent;
       $("#percent-compability-hidden").val(percent);
       $("#result-percent").html(
         `
