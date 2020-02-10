@@ -52,10 +52,12 @@
             {% endif %}
           </td>
           <td>
+            {% if not user.logs_permission_user.all %}
             <a
               href="{% url 'accounts.global_user_update' user.pk %}">
               <i class="material-icons">border_color</i>
             </a>
+            {% endif %}
           </td>
           {% if not user.is_superuser %}
 
