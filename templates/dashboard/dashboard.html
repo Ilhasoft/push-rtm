@@ -81,7 +81,9 @@
           <div id="empty_bubble_chart">
             <div>{% trans 'There is no data for this filter' %}</div>
           </div>
-          <div id="bubbleChart"></div>
+          <div id="bubbleChart">
+            <div class="bubble-tooltip"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -256,7 +258,7 @@
 
     let tooltip = d3.select("#bubbleChart")
         .append("div")
-        .attr('class', 'tooltip');
+        .attr('class', 'bubble-tooltip');
 
     let svg = d3.select("#bubbleChart")
       .append("svg")
@@ -695,7 +697,7 @@
               plugins: {
                 datalabels: {
                   font: {
-                    size: 20,
+                    size: 18,
                     weight: "bold",
                   },
                   formatter: (value, ctx) => {
@@ -748,7 +750,7 @@
             plugins: {
               datalabels: {
                 font: {
-                  size: 20,
+                  size: 18,
                   weight: "bold",
                 },
                 formatter: (value, ctx) => {

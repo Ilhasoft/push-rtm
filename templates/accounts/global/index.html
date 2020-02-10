@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n static ureport %}
+{% load i18n static ureport utils_extra_accounts %}
 
 {% block nav_item %}page-users{% endblock %}
 
@@ -45,16 +45,78 @@
           <td>
             {% if user.is_superuser %}
               {% trans "Global Admin" %}
-            {% else %}
+            {% elif user|is_global_viewer_active %}
               {% trans "Global Viewers" %}
+            {% else %}
+              {% trans "No Permission" %}
             {% endif %}
           </td>
           <td>
+            {% if not user.logs_permission_user.all %}
             <a
               href="{% url 'accounts.global_user_update' user.pk %}">
               <i class="material-icons">border_color</i>
             </a>
+            {% endif %}
           </td>
+          {% if not user.is_superuser %}
+
+            <td>
+
+              {% if user|is_global_viewer_active %}
+                <button class="button-no-bg" onclick=openModal('{{user.pk}}');>
+                  <i class="material-icons">delete</i>
+                </button>
+
+                <div id="deleteModal-{{user.pk}}" class="modal">
+                  <div class="modal-background"></div>
+                  <div class="modal-card">
+                    <header class="modal-card-head">
+                      <p class="modal-card-title">{% trans 'Are you sure?' %}</p>
+                      <button class="delete" aria-label="close" onclick=closeModal('{{user.pk}}');></button>
+                    </header>
+                    <section class="modal-card-body">
+                      {% trans 'Do you really want to delete the user' %} "{{user.username}}" ?
+                    </section>
+                    <footer class="modal-card-foot">
+                      <form action="{% url 'accounts.global_user_delete' user.pk %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{ redirect_to }}" name="redirect_to"/>
+                        <button class="button is-danger right-m-5" type="submit">{% trans 'Confirm' %}</button>
+                      </form>
+                      <button class="button dark-reverse" onclick=closeModal('{{user.pk}}');>{% trans 'Cancel' %}</button>
+                    </footer>
+                  </div>
+                </div>
+              {% else %}
+                <button class="button-no-bg" onclick=openModalActive('{{user.pk}}');>
+                  <i class="material-icons">check_circle_outline</i>
+                </button>
+
+                <div id="activeModal-{{user.pk}}" class="modal">
+                  <div class="modal-background"></div>
+                  <div class="modal-card">
+                    <header class="modal-card-head">
+                      <p class="modal-card-title">{% trans 'Are you sure?' %}</p>
+                      <button class="delete" aria-label="close" onclick=closeModalActive('{{user.pk}}');></button>
+                    </header>
+                    <section class="modal-card-body">
+                      {% trans 'Do you really want to active the user' %} "{{user.username}}" ?
+                    </section>
+                    <footer class="modal-card-foot">
+                      <form action="{% url 'accounts.global_user_activate' user.pk %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{ redirect_to }}" name="redirect_to"/>
+                        <button class="button is-danger right-m-5" type="submit">{% trans 'Confirm' %}</button>
+                      </form>
+                      <button class="button dark-reverse" onclick=closeModalActive('{{user.pk}}');>{% trans 'Cancel' %}</button>
+                    </footer>
+                  </div>
+                </div>
+              {% endif %}
+
+            </td>
+          {% endif %}
         </tr>
       {% empty %}
         <tr>
@@ -67,4 +129,28 @@
     {% include "paginator.html" with paginator=users %}
   </div>
 </section>
+{% endblock %}
+
+{% block js_extra %}
+<script>
+    function closeModal(userId){
+      let modal = document.getElementById("deleteModal-" + userId);
+      modal.classList.remove("is-active");
+    }
+
+    function openModal(userId){
+      let modal = document.getElementById("deleteModal-" + userId);
+      modal.classList.add("is-active");
+    }
+
+    function closeModalActive(userId){
+      let modal = document.getElementById("activeModal-" + userId);
+      modal.classList.remove("is-active");
+    }
+
+    function openModalActive(userId){
+      let modal = document.getElementById("activeModal-" + userId);
+      modal.classList.add("is-active");
+    }
+</script>
 {% endblock %}

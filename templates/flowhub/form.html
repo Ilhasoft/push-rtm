@@ -21,7 +21,7 @@
     <div class="p-30">
       <div class="has-text-weight-bold is-size-5 bottom-p-5">{{ subtitle }}</div>
       <div class="has-text-grey-light">
-        Add polls you have used to the global repository. Other UNCTs will be able to see the questions you used. The results are not included on the files and will not be shared.
+        Add surveys you have used to the global repository. Other UNCTs will be able to see the questions you used. The results are not included on the files and will not be shared.
       </div>
     </div>
   </div>
@@ -61,7 +61,7 @@
     </div>
     <div class="field">
       <label class="label">{% trans "Languages" %}</label>
-      <div class="control">
+      <div class="control {% if form.languages.errors %}multiple-choices-error{% endif %}">
         {{ form.languages}}
         {{ form.languages.errors }}
       </div>
@@ -82,7 +82,8 @@
     </div>
     <div class="field">
       <label class="label">{% trans "SDGs" %}</label>
-      <div class="choices__item choices__item--choice choices__item--selectable is-highlighted">
+      <div
+        class="choices__item choices__item--choice choices__item--selectable is-highlighted {% if form.sdgs.errors %}multiple-choices-error{% endif %}">
         {{ form.sdgs }}
         {{ form.sdgs.errors }}
       </div>
@@ -162,6 +163,8 @@
   document.getElementById("id_flow").onchange = ((e) => {
     if (e.srcElement.files.length > 0) {
       document.getElementById("file_name").innerText = e.srcElement.files.item(0).name;
+    }else{
+      document.getElementById("file_name").innerText = "Select your json file";
     }
   });
   {% for field in form.errors %}

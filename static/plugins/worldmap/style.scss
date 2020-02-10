@@ -1,0 +1,44 @@
+.tooltip {
+  background-color: white;
+  color: #707070;
+  padding: 1rem;
+  font-size: 13px;
+
+  h1 {
+    color: #555;
+    font-size: 20px;
+    font-weight: bold;
+  }
+}
+
+.jqvmap-label {
+  background-color: #fff;
+  box-shadow: 0 2px 4px #0000002A;
+
+  img {
+    height: 16px;
+    vertical-align: top;
+  }
+}
+
+.jqvmap-zoomin, .jqvmap-zoomout {
+  background-color: #fff;
+  box-shadow: 0 2px 4px #00000025;
+  color: #A9A9A9;
+  height: 30px;
+  width: 30px;
+  right: 25px;
+  left: auto;
+  top: auto;
+  font-weight: bold;
+  font-size: 22px;
+  padding: 10px 0;
+}
+
+.jqvmap-zoomin {
+  bottom: 60px;
+}
+
+.jqvmap-zoomout {
+  bottom: 26px;
+}

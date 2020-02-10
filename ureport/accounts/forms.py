@@ -87,11 +87,6 @@ class AccountForm(forms.ModelForm):
         instance = super().save(commit=False)
         instance.save()
 
-        new_password = self.cleaned_data["new_password"]
-        if new_password:
-            instance.set_password(new_password)
-            instance.save()
-
         instance.groups.clear()
         instance.groups.add(self.cleaned_data.get("groups"))
         group = str(self.cleaned_data.get("groups")).lower()
@@ -200,10 +195,18 @@ class GlobalAccountForm(forms.ModelForm):
         group = int(self.cleaned_data.get("groups"))
         if group == 1:
             instance.is_superuser = True
+            log_permission = instance.logs_permission_user.all().first()
+            if log_permission:
+                log_permission.delete()
             instance.save()
         if group == 2:
+            instance.is_superuser = False
             group = Group.objects.get(name="Global Viewers")
             instance.groups.add(group)
+            log_permission = instance.logs_permission_user.filter(permission=group).first()
+            if log_permission:
+                log_permission.delete()
+            instance.save()
 
         return instance
 

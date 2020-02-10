@@ -99,6 +99,7 @@ INSTALLED_APPS += (
     "ureport.channels",
     "ureport.authentication",
     "ureport.polls_global",
+    "ureport.worldmap",
 )
 
 SITE_ALLOW_NO_ORG += (
@@ -117,10 +118,13 @@ SITE_ALLOW_NO_ORG += (
     "accounts.global_list",
     "accounts.global_user_create",
     "accounts.global_user_update",
+    "accounts.global_user_delete",
+    "accounts.global_user_activate",
     "accounts.user_org_list",
     "accounts.user_org_create",
     "accounts.user_org_update",
     "accounts.user_org_delete",
+    "accounts.user_org_activate",
     "authentication.login",
     "authentication.callback",
     "polls_global.poll_list",
@@ -130,6 +134,8 @@ SITE_ALLOW_NO_ORG += (
     "results.poll_read",
     "results.global_poll_read",
     "results.global_poll_data",
+    "worldmap.map_list",
+    "blocked",
 )
 
 SDG_LIST = (

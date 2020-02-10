@@ -16,6 +16,9 @@
   {% if user_permissions %}
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
+        {% if request.user.is_superuser %}
+          <a class="navbar-item worldmap" href="{% url 'worldmap.map_list' %}">World Map</a>
+        {% endif %}
         <a class="navbar-item dashboard" href="{% url 'dashboard' %}">Dashboard</a>
         {% if request.user.is_superuser %}
           <a class="navbar-item uncts" href="{% url 'uncts.unct_list' %}">UNCTs</a>

@@ -2,6 +2,7 @@ import base64
 import json
 import operator
 from functools import reduce
+from urllib.parse import urlparse
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -21,7 +22,71 @@ from .models import Flow
 from .forms import FlowForm
 
 
-class SearchSmartListViewMixin(SmartTemplateView):
+class FlowBreadCrumbListView(SmartTemplateView):
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["breadcrumbs"] = self.get_breadcrumb()
+
+        return context
+
+    def get_breadcrumb(self):
+        path_and_url = {
+            "previous": {
+                "url": self.get_previous_url(),
+                "path": self.get_previous_path()
+            },
+            "current": {
+                "path": self.get_current_path()
+            }
+        }
+        return path_and_url
+
+    def get_previous_path(self):
+        previous_url = self.get_previous_url()
+        cleaned_path = self.clean_path(previous_url)
+        return cleaned_path
+
+    def get_previous_url(self):
+        return self.request.META.get("HTTP_REFERER")
+
+    def get_current_path(self):
+        current_url = self.get_current_url()
+        cleaned_path = self.clean_path(current_url)
+        return cleaned_path
+
+    def get_current_url(self):
+        return self.request.build_absolute_uri()
+
+    def clean_path(self, url):
+        url_parse = urlparse(url or self.get_current_url())
+        cleaned_path = url_parse.path.replace("flowhub", "").replace("/", "")
+        cleaned_path = self.replace_path(cleaned_path)
+        if url_parse.query:
+            try:
+                pk = int(url_parse.query.replace("unct=", ""))
+                cleaned_path = Org.objects.get(pk=pk).name
+            except Exception:
+                cleaned_path = ""
+
+        if not cleaned_path:
+            cleaned_path = ""
+
+        return cleaned_path
+
+    def replace_path(self, path):
+        paths = ["My Org", "Create", "UNCTS", "Info", "Update"]
+        path = path.replace("my-org", "My Org").replace("uncts", "UNCTS")
+        path = path.replace("create", "Create").replace("info", "Info")
+        path = path.replace("update", "Update")
+
+        if path not in paths:
+            path = ""
+
+        return path
+
+
+class SearchSmartListViewMixin(FlowBreadCrumbListView):
     search_query_name = "search"
 
     def search(self, queryset):
@@ -193,7 +258,7 @@ class MyOrgListView(FlowBaseListView):
         return context
 
 
-class CreateView(SmartTemplateView):
+class CreateView(FlowBreadCrumbListView):
     template_name = "flowhub/form.html"
     success_url = reverse_lazy("flowhub.flow_list")
 
@@ -221,7 +286,7 @@ class CreateView(SmartTemplateView):
             return render(request, self.template_name, context)
 
 
-class EditView(SmartTemplateView):
+class EditView(FlowBreadCrumbListView):
     template_name = "flowhub/form.html"
 
     def get_context_data(self, **kwargs):
@@ -259,7 +324,7 @@ class EditView(SmartTemplateView):
             return render(request, self.template_name, context)
 
 
-class DownloadView(SmartTemplateView):
+class DownloadView(FlowBreadCrumbListView):
     template_name = "flowhub/info.html"
 
     def get(self, request, *args, **kwargs):
@@ -285,7 +350,7 @@ class DownloadView(SmartTemplateView):
         return response
 
 
-class StarView(SmartTemplateView):
+class StarView(FlowBreadCrumbListView):
     template_name = "flowhub/info.html"
 
     def get(self, request, *args, **kwargs):
@@ -301,7 +366,7 @@ class StarView(SmartTemplateView):
         return redirect(self.request.META.get("HTTP_REFERER"))
 
 
-class DeleteView(SmartTemplateView):
+class DeleteView(FlowBreadCrumbListView):
     template_name = "flowhub/info.html"
 
     def post(self, request, *args, **kwargs):
@@ -327,7 +392,7 @@ class DeleteView(SmartTemplateView):
         return redirect(self.request.META.get("HTTP_REFERER"))
 
 
-class InfoView(SmartTemplateView):
+class InfoView(FlowBreadCrumbListView):
     template_name = "flowhub/info.html"
 
     def get_context_data(self, **kwargs):

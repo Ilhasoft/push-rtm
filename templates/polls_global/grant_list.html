@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n static ureport sass_tags %}
+{% load i18n static ureport sass_tags utils_extra %}
 
 {% block nav_item %}page-surveys-global{% endblock %}
 
@@ -43,6 +43,7 @@
       <tr class="is-tr">
         <th>{% trans "Name" %}</th>
         <th class="has-text-centered">{% trans "Questions" %}</th>
+        <th class="has-text-centered">{% trans "Compatibility" %}</th>
         <th class="has-text-centered">{% trans "UNCT" %}</th>
         <th class="has-text-centered">{% trans "Date" %}</th>
         <th></th>
@@ -53,9 +54,13 @@
       {% for poll in polls_pending %}
         <tr>
           <td>
-            <a href="{% url 'results.poll_read' poll.poll_local.pk %}" target="blank">{{ poll.poll_local.title }}</a>
+            <a
+              href="{% url 'results.poll_read' poll.poll_local.pk %}?source=global&grantList={{ poll.poll_global.pk }}">
+              {{ poll.poll_local.title }}
+            </a>
           </td>
           <td class="has-text-centered">{{ poll.poll_local.get_questions.count }}</td>
+          <td class="has-text-centered">{{ poll.percent_compability|format_to_percent }}</td>
           <td class="has-text-centered">{{ poll.poll_local.org.name }}</td>
           <td class="has-text-centered">{{ poll.created_on|date:"m/d/Y" }}</td>
           <td>
@@ -71,7 +76,7 @@
         </tr>
       {% empty %}
         <tr>
-          <td colspan="6" class="has-text-centered">{% trans "No results found" %}</td>
+          <td colspan="7" class="has-text-centered">{% trans "No results found" %}</td>
         </tr>
       {% endfor %}
     </tbody>
@@ -81,6 +86,7 @@
     <tr class="is-tr">
       <th>{% trans "Name" %}</th>
       <th class="has-text-centered">{% trans "Questions" %}</th>
+      <th class="has-text-centered">{% trans "Compatibility" %}</th>
       <th class="has-text-centered">{% trans "UNCT" %}</th>
       <th class="has-text-centered">{% trans "Joined" %}</th>
       <th></th>
@@ -90,9 +96,10 @@
     {% for poll in polls_accepted %}
     <tr>
       <td>
-        <a href="{% url 'results.poll_read' poll.poll_local.pk %}" target="blank">{{ poll.poll_local.title }}</a>
+        <a href="{% url 'results.poll_read' poll.poll_local.pk %}?source=global&grantList={{ poll.poll_global.pk }}">{{ poll.poll_local.title }}</a>
       </td>
       <td class="has-text-centered">{{ poll.poll_local.get_questions.count }}</td>
+      <td class="has-text-centered">{{ poll.percent_compability|format_to_percent }}</td>
       <td class="has-text-centered">{{ poll.poll_local.org.name }}</td>
       <td class="has-text-centered">{{ poll.created_on|date:"m/d/Y" }}</td>
       <td>

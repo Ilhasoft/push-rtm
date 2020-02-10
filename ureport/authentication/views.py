@@ -14,8 +14,18 @@ from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 
 
+def is_global_user(user):
+    global_viewer = Group.objects.get(name="Global Viewers")
+    user_groups = user.groups.all()
+
+    return user.is_superuser or global_viewer in user_groups
+
+
 class LoginAuthView(SmartTemplateView):
     template_name = "authentication/login.html"
+
+    def user_has_permission(self, user):
+        return is_global_user(user) or user in self.request.org.get_org_users()
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
@@ -28,7 +38,6 @@ class LoginAuthView(SmartTemplateView):
             scope="openid email profile",
             state=str(base64.b64encode(org.subdomain.encode("utf-8")), "utf-8") if hasattr(org, "subdomain") else None,
         )
-
         if code:
             try:
                 context["org"] = org
@@ -66,9 +75,8 @@ class LoginAuthView(SmartTemplateView):
                         user = get_user_model().objects.get(
                             email=extra_data.get("email"), username=extra_data.get("userid")
                         )
-                        if not user.is_active:
-                            messages.error(self.request, _("Your account is disabled. Contact the Global Administrator"))
-                            redirect(reverse("authentication.login"))
+                        if not user.is_active or not self.user_has_permission(user):
+                            return redirect(reverse("blocked"))
 
                     except get_user_model().DoesNotExist:
                         user = get_user_model().objects.create(
@@ -86,12 +94,16 @@ class LoginAuthView(SmartTemplateView):
                         self.request.org.viewers.add(user)
 
                     login(self.request, user)
-                    return redirect(reverse("dashboard"))
+                    if is_global_user(user):
+                        return redirect(reverse("worldmap.map_list"))
+                    else:
+                        return redirect(reverse("dashboard"))
 
                 else:
-                    messages.error(self.request, _("You do not have permission to access this UNCT"))
-                    redirect(reverse("authentication.login"))
-            except Exception:
+                    return redirect(reverse("blocked"))
+
+            except Exception as e:
+                print(e)
                 messages.error(self.request, _("Please try again."))
                 return redirect(reverse("authentication.login"))
         else:

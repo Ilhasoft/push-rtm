@@ -105,7 +105,7 @@
           {% endif%}
         </td>
         <td>
-          {% if poll.polls_global.count %}
+          {% if poll.polls_local.count %}
             {% trans "Yes" %}
           {% else %}
             {% trans "No" %}
@@ -119,12 +119,14 @@
           {% endif %}
         </td>
         <td>
+          {% if request.user|is_admin_user or request.user.is_superuser %}
           <a href="{% url 'polls.poll_update' poll.id %}">
             <span class="tooltip right">
               <i class="material-icons">border_color</i>
               <span class="tooltip-content">Edit survey</span>
             </span>
           </a>
+          {% endif %}
         </td>
       </tr>
       {% empty %}
