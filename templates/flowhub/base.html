@@ -2,6 +2,22 @@
 {% load i18n static ureport %}
 
 {% block content %}
+<section class="section top-p-0 bottom-p-0">
+  <nav class="breadcrumb" aria-label="breadcrumbs" id="breadcrumbs">
+    <ul>
+      <li><a href="{% url 'flowhub.flow_list' %}">{% trans 'Repository' %}</a></li>
+      {% if breadcrumbs.previous.path %}
+        <li><a href="{{breadcrumbs.previous.url}}" aria-current="page">{{breadcrumbs.previous.path}}</a></li>
+      {% endif %}
+      {% if breadcrumbs.current.path %}
+        <li class="is-active"><a href="" aria-current="page">{{breadcrumbs.current.path}}</a></li>
+      {% else %}
+        <li class="is-active"><a href="">{{subtitle}}</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+</section>
+
 <section class="section">
   <h1 class="title">{% trans "Repository" %}</h1>
   <h2 class="subtitle top-p-5">Survey library for finding and sharing questions or surveys among UNCTs</h2>
