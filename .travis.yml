@@ -48,16 +48,16 @@ before_install:
 
 install:
   - pip install --upgrade pip
-  - pip install -r pip-freeze.txt --upgrade
+  - pip install -r requirements.txt --upgrade
   - pip install coveralls
   - pip install flake8
   - npm install -g less
   - npm install -g coffee-script
 
 before_script:
-  - psql -U postgres -c "CREATE USER ureport WITH PASSWORD 'nyaruka';"
-  - psql -U postgres -c "ALTER ROLE ureport WITH SUPERUSER;"
-  - psql -U ureport postgres -c "CREATE DATABASE ureport;"
+  - psql -U postgres -c "CREATE USER rtm WITH PASSWORD 'ilhasoft@1q2w3e';"
+  - psql -U postgres -c "ALTER ROLE rtm WITH SUPERUSER;"
+  - psql -U rtm postgres -c "CREATE DATABASE rtm;"
   - ln -s $TRAVIS_BUILD_DIR/ureport/settings.py.postgres $TRAVIS_BUILD_DIR/ureport/settings.py
 
 script:
