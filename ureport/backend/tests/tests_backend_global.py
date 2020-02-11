@@ -4,7 +4,7 @@ from django.conf import settings
 from temba_client.clients import CursorQuery
 from temba_client.v2 import TembaClient
 
-from .models import RapidProBackendGlobal
+from ureport.backend.rapidpro import RapidProBackendGlobal
 
 
 class TestRapidProBackendGlobal(unittest.TestCase):
@@ -18,7 +18,7 @@ class TestRapidProBackendGlobal(unittest.TestCase):
 
     def test_get_token(self):
         self.assertEqual(
-            self.backend_global.get_token(), "8e8ff83e267e0dd0d12ca9de22d57c4846d3364f"
+            self.backend_global.get_token(), settings.TOKEN_WORKSPACE_GLOBAL
         )
 
     def test_get_temba_client(self):
@@ -27,5 +27,7 @@ class TestRapidProBackendGlobal(unittest.TestCase):
     def test_query_get_flow(self):
         return isinstance(self.backend_global.query_get_flow, CursorQuery)
 
-    def test_get_all_flow(self):
-        temba_client = TembaClient()
+    def test_get_all_flows(self):
+        temba_client = TembaClient(host=settings.SITE_API_HOST, token=settings.TOKEN_WORKSPACE_GLOBAL)
+
+        return len(temba_client.get_flows().all()) == len(self.backend_global.get_all_flows())
