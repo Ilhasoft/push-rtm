@@ -138,6 +138,8 @@ SITE_ALLOW_NO_ORG += (
     "blocked",
     "results.export_csv",
     "results.global_export_csv",
+    "results.export_json",
+    "results.global_export_json",
 )
 
 SDG_LIST = (

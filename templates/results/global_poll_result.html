@@ -116,7 +116,7 @@
                 <div class="dropdown-menu" role="menu">
                   <div class="dropdown-content">
                   {% comment %} //TODO add logic to handle export types {% endcomment %}
-                    <a><span class="dropdown-item">JSON</span></a>
+                    <a href="{% url 'results.global_export_json' poll_global.pk %}"><span class="dropdown-item">JSON</span></a>
                     <a href="{% url 'results.global_export_csv' poll_global.pk %}" target="_blank"><span class="dropdown-item">CSV</span></a>
                     <a><span class="dropdown-item">PDF</span></a>
                   </div>

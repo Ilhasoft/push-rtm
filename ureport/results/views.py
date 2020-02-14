@@ -7,10 +7,12 @@ from django.views.generic import View
 from django.http import JsonResponse
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
+from django.core import serializers
 
 from smartmin.views import SmartReadView, SmartTemplateView
 
 from ureport.polls.models import Poll, PollQuestion, PollResult
+from ureport.polls.serializers import PollResultSerializer
 from ureport.polls_global.models import PollGlobal, PollGlobalSurveys
 from ureport.polls.templatetags.ureport import question_segmented_results
 from ureport.settings import AVAILABLE_COLORS
@@ -307,7 +309,7 @@ class PollGlobalDataView(View):
         return JsonResponse(self._response)
 
 
-class PollResultsCSV(View):
+class ExportPollResultsBase(View):
     def _get_headers(self):
         return "contact", "category", "text"
 
@@ -321,6 +323,7 @@ class PollResultsCSV(View):
             flow_uuid = poll.flow_uuid
             poll_results = PollResult.objects.filter(flow=flow_uuid).select_related().values_list(
                 "contact", "category", "text")
+
         else:
             flows_uuid = set()
             global_surveys = PollGlobalSurveys.objects.filter(poll_global=pk)
@@ -331,6 +334,12 @@ class PollResultsCSV(View):
                 "contact", "category", "text")
 
         return poll_results
+
+
+class PollResultsCSV(ExportPollResultsBase):
+    """def _get_poll_results_data(self):
+        poll_results = super()._get_poll_results_data()
+        return poll_results"""
 
     def get(self, *args, **kwargs):
         response = HttpResponse(content_type="text/csv")
@@ -343,4 +352,19 @@ class PollResultsCSV(View):
         for result in poll_results:
             writer.writerow(result)
 
+        return response
+
+
+class PollResultsJSON(ExportPollResultsBase):
+    """def _get_poll_results_data(self):
+        poll_results = super()._get_poll_results_data()
+        return poll_results"""
+
+    def get(self, *args, **kwargs):
+        poll_results = self._get_poll_results_data()
+
+        #json_str = serializers.serialize('json', poll_results, fields=("contact", "category", "text"))
+        json_str = PollResultSerializer(poll_results, many=True).data
+        response = HttpResponse(json_str, content_type='application/json')
+        response['Content-Disposition'] = 'attachment; filename=export.json'
         return response

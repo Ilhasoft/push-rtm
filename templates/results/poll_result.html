@@ -90,7 +90,7 @@
                 </div>
                 <div class="dropdown-menu" role="menu">
                   <div class="dropdown-content">
-                    <a><span class="dropdown-item">JSON</span></a>
+                    <a href="{% url 'results.export_json' poll.pk %}"><span class="dropdown-item">JSON</span></a>
                     <a href="{% url 'results.export_csv' poll.pk %}" target="_blank"><span class="dropdown-item">CSV</span></a>
                     <a><span class="dropdown-item">PDF</span></a>
                   </div>
