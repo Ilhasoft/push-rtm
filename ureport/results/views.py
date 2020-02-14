@@ -1,4 +1,5 @@
 import json
+import csv
 
 from django.http import HttpResponse
 from django.conf import settings
@@ -9,7 +10,7 @@ from django.shortcuts import get_object_or_404
 
 from smartmin.views import SmartReadView, SmartTemplateView
 
-from ureport.polls.models import Poll, PollQuestion
+from ureport.polls.models import Poll, PollQuestion, PollResult
 from ureport.polls_global.models import PollGlobal, PollGlobalSurveys
 from ureport.polls.templatetags.ureport import question_segmented_results
 from ureport.settings import AVAILABLE_COLORS
@@ -304,3 +305,42 @@ class PollGlobalDataView(View):
         self._response["sdgs"] = dict(settings.SDG_LIST)
 
         return JsonResponse(self._response)
+
+
+class PollResultsCSV(View):
+    def _get_headers(self):
+        return "contact", "category", "text"
+
+    def _is_unct(self):
+        return self.request.org
+
+    def _get_poll_results_data(self):
+        pk = self.kwargs["pk"]
+        if self._is_unct():
+            poll = Poll.objects.get(pk=pk)
+            flow_uuid = poll.flow_uuid
+            poll_results = PollResult.objects.filter(flow=flow_uuid).select_related().values_list(
+                "contact", "category", "text")
+        else:
+            flows_uuid = set()
+            global_surveys = PollGlobalSurveys.objects.filter(poll_global=pk)
+            for global_survey in global_surveys:
+                flow_uuid = {global_survey.poll_local.flow_uuid}
+                flows_uuid = flows_uuid | flow_uuid
+            poll_results = PollResult.objects.filter(flow__in=list(flows_uuid)).select_related().values_list(
+                "contact", "category", "text")
+
+        return poll_results
+
+    def get(self, *args, **kwargs):
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = "attachment;filename='test.csv'"
+
+        writer = csv.writer(response)
+        writer.writerow(self._get_headers())
+
+        poll_results = self._get_poll_results_data()
+        for result in poll_results:
+            writer.writerow(result)
+
+        return response

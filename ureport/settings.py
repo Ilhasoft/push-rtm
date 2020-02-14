@@ -136,6 +136,8 @@ SITE_ALLOW_NO_ORG += (
     "results.global_poll_data",
     "worldmap.map_list",
     "blocked",
+    "results.export_csv",
+    "results.global_export_csv",
 )
 
 SDG_LIST = (

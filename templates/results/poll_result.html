@@ -77,16 +77,30 @@
                 <span class="tooltip-content">{% trans 'The amount of questions in this survey'%}</span>
               </span>
             </div>
-            <!--
             <div class="level-item">
               <i class="material-icons export-icon right-m-5">save_alt</i>
-              <span>Export</span>
+              <div class="dropdown is-hoverable">
+                <div class="dropdown-trigger">
+                  <span aria-haspopup="true" aria-controls="export-dropdown">
+                    <span>{% trans "Export" %}</span>
+                    <span class="icon is-small">
+                      <i class="fas fa-angle-down" aria-hidden="true"></i>
+                    </span>
+                  </span>
+                </div>
+                <div class="dropdown-menu" role="menu">
+                  <div class="dropdown-content">
+                    <a><span class="dropdown-item">JSON</span></a>
+                    <a href="{% url 'results.export_csv' poll.pk %}" target="_blank"><span class="dropdown-item">CSV</span></a>
+                    <a><span class="dropdown-item">PDF</span></a>
+                  </div>
+                </div>
+              </div>
               <span class="tooltip top left-m-10">
-              <i class="material-icons info-icon">info</i>
-              <span class="tooltip-content">{% trans 'Export results on .csv format'%}</span>
-            </span>
+                <i class="material-icons info-icon">info</i>
+                  <span class="tooltip-content">{% trans 'Export surveys results'%}</span>
+              </span>
             </div>
-            -->
           </nav>
           <div class="bottom-p-20">
             <div class="columns bottom-m-10">
