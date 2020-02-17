@@ -1,0 +1,149 @@
+{% extends "docs.html" %}
+{% load i18n static sass_tags humanize ureport %}
+
+{% block content_doc %}
+<article class="p-30">
+  <div class="has-text-grey-light">
+    {% trans 'Global Documentation' %}
+  </div>
+  <div class="has-text-weight-bold is-size-5 bottom-p-5">
+    Users
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p>Account's management area that allows access level control and account removal.
+      On your first login, you'll receive viewer access permission.
+      If you want new user access, a UN Info administrator needs to change your access.</p><br>
+      <p>The home page for all logged accounts is the Dashboard.</p>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      Viewer
+    </p>
+    <p>Allowed to access Global's Dashboard and Repository a viewer
+      account can only see the data already there.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/uncts_viewer.png' %}" target="_blank">
+        <img src="{% static 'img/uncts_viewer.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      Administrator
+    </p>
+    <p>Administrators' accounts have full access to all tools.
+      Additionally, a user tab is offered to administrate accounts' access
+      level and availability.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/uncts_viewer.png' %}" target="_blank">
+        <img src="{% static 'img/uncts_viewer.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      Editing an account
+    </p>
+    <p>In the image below you can see different sample accounts.
+      As you mouse over the pencil icon it will highlight and clicking
+      will allow editing that account's access level.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/uncts_viewer.png' %}" target="_blank">
+        <img src="{% static 'img/uncts_viewer.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <p>Changes take effect immediately but if the modified account is
+      still logging while being edited a fresh login may be needed.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/uncts_viewer.png' %}" target="_blank">
+        <img src="{% static 'img/uncts_viewer.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      Disabling an account
+    </p>
+    <p>Account disabling feature yet to be added.</p>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      Enabling an account
+    </p>
+    <p>Account enabling feature yet to be developed.</p>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      User search tool
+    </p>
+    <p>The search bar uses the account's name to query and you
+      just need to type and press enter. It's case insensitive and
+      capable of searching for strings' fragments.</p><br>
+    <p> It's also possible to clear the query just by clicking
+      the X button at the search bar.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/uncts_viewer.png' %}" target="_blank">
+        <img src="{% static 'img/uncts_viewer.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      Sorting
+    </p>
+    <p>It's possible to order contacts by Name,
+      ascending or descending, just by clicking the columm's title.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/uncts_viewer.png' %}" target="_blank">
+        <img src="{% static 'img/uncts_viewer.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+{% endblock %}
+
+{% block js_extra %}
+<script>
+    document.getElementById("global_users").classList.add("activate");
+</script>
+{% endblock %}

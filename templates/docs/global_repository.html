@@ -1,0 +1,189 @@
+{% extends "docs.html" %}
+{% load i18n static sass_tags humanize ureport %}
+
+{% block content_doc %}
+<article class="p-30">
+  <div class="has-text-grey-light">
+    {% trans 'Global Documentation' %}
+  </div>
+  <div class="has-text-weight-bold is-size-5 bottom-p-5">
+    Repository
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p>The Global RTM Repository module provides access to all
+        shared survey flows template files.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/uncts_viewer.png' %}" target="_blank">
+        <img src="{% static 'img/uncts_viewer.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      Viewer and Administrator perspectives
+    </p>
+    <p>In this particular case, features for both account
+        levels are the same, let's walk through each one.</p>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <ul class="ul-docs">
+      <li class="has-text-weight-bold is-size-6 bottom-p-5">All flows</li>
+    </ul>
+    <p>This is the Repository's homepage, where all available flows to download
+        are listed. It will present the survey title, the UNCT that uploaded
+        it and a short description provided by the administrator who created that flow.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/uncts_viewer.png' %}" target="_blank">
+        <img src="{% static 'img/uncts_viewer.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <ul class="ul-docs">
+      <li class="has-text-weight-bold is-size-6 bottom-p-5">UNCTs</li>
+    </ul>
+    <p>See a list of all registered UNCTs to sort only its flows and easily download.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/uncts_viewer.png' %}" target="_blank">
+        <img src="{% static 'img/uncts_viewer.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      Search
+    </p>
+    <p>There's a search bar to find surveys, you just need to type and
+        press enter. It's case insensitive and capable of searching for
+        strings' fragments at the survey name or description.
+        In the example below the search was "flow" and it found five surveys
+        where the string was found in different spots from multiple workspaces.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/uncts_viewer.png' %}" target="_blank">
+        <img src="{% static 'img/uncts_viewer.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <p>Besides survey flows it's possible to search for UNCTs names.
+        See below a search for "brasil".</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/uncts_viewer.png' %}" target="_blank">
+        <img src="{% static 'img/uncts_viewer.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      Sorting
+    </p>
+    <p>It's possible to sort surveys by stars, newest or alphabetically.
+        Clicking the option once will sort ascending and the second time
+        will apply descending.</p>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <p>You can also filter the list by one specific SDG or language.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/uncts_viewer.png' %}" target="_blank">
+        <img src="{% static 'img/uncts_viewer.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/uncts_viewer.png' %}" target="_blank">
+        <img src="{% static 'img/uncts_viewer.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <p>At the UNCTs session, it's possible to sort by Newest or Alphabetically as well.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/uncts_viewer.png' %}" target="_blank">
+        <img src="{% static 'img/uncts_viewer.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      Star Score
+    </p>
+    <p>Given the number of stars of a shared survey may assist you to
+        choose one by popularity. The ones you've starred will show a filled star.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/uncts_viewer.png' %}" target="_blank">
+        <img src="{% static 'img/uncts_viewer.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      Download
+    </p>
+    <p>After choosing the survey flow you want, just click Download and
+        you'll save the JSON file to your computer.</p>
+    <p>There's a download counter for how many hits the button has been clicked.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/uncts_viewer.png' %}" target="_blank">
+        <img src="{% static 'img/uncts_viewer.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+{% endblock %}
+
+{% block js_extra %}
+<script>
+    document.getElementById("global_repository").classList.add("activate");
+</script>
+{% endblock %}
