@@ -3,6 +3,7 @@ from django.utils.translation import gettext as _
 from dash.orgs.models import Org, OrgBackend
 
 from .models import PollGlobal
+from ureport.backend.rapidpro import RapidProBackendGlobal
 
 
 class PollGlobalForm(forms.ModelForm):
@@ -46,22 +47,16 @@ class PollGlobalForm(forms.ModelForm):
         model = PollGlobal
 
     def __init__(self, *args, **kwargs):
-        #self.org = kwargs["org"]
-        #del kwargs["org"]
-        #self.backend = kwargs["backend"]
-        #del kwargs["backend"]
         super(PollGlobalForm, self).__init__(*args, **kwargs)
 
-        org = Org.objects.first()
-        backend = OrgBackend.objects.get(pk=1)
-        flows = org.get_flows(backend)
+        rapidpro_workspace_global = RapidProBackendGlobal()
+        flows = rapidpro_workspace_global.format_all_flows_structure()
         self.fields["flow_uuid"].choices = [
             (f["uuid"], f["name"] + " (" + f.get("date_hint", "--") + ")")
             for f in sorted(flows.values(), key=lambda k: k["name"].lower().strip())
         ]
 
     def save(self, user):
-        #self.org = Org.objects.get(pk=1)
         instance = super().save(commit=False)
         instance.created_by = user
         instance.modified_by = user

@@ -207,6 +207,8 @@ CHANNEL_TYPES = {
 
 STATICFILES_FINDERS += ("sass_processor.finders.CssFinder",)
 
+TOKEN_WORKSPACE_GLOBAL = "94fd5c1bd39368833f60150054cb99cb84799fe1"
+
 SASS_PROCESSOR_INCLUDE_FILE_PATTERN = r"^.+\.scss$"
 
 LOGIN_URL = "/users/login/"
