@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static sass_tags %}
+{% load static sass_tags utils_extra_accounts %}
 
 {% block css_extra %}
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jqvmap.min.css">
@@ -59,7 +59,7 @@
         <span id="contacts-reached"></span>
       </div>
 
-      <div class="flex space-between btn-group">
+      <div class="flex space-between btn-group group-button-map">
         <button id="survey-results" class="button-details-country button primary-reverse">Survey Results</button>
         <button id="dashboard" class="button-details-country button is-primary">Dashboard</button>
       </div>
@@ -77,7 +77,13 @@
   <script src="{% static 'plugins/worldmap/jquery.vmap.sampledata.js' %}" charset="utf-8"></script>
 
   <script>
+    function get_subdomain(){
+      return "{{ request.org.subdomain }}";
+    };
+
     function add_subdomain_to_url(url, subdomain){
+      current_subdomain = "{{request.org.subdomain}}" + ".";
+      url = url.replace(current_subdomain, "");
       url_splitted_https = url.split("//");
       subdomain = "//" + subdomain + ".";
       url_splitted_https.splice(1, 0, subdomain);
@@ -136,6 +142,7 @@
         values: data_map,
         onRegionClick: function(element, code, label)
         {
+
           let data_country = data_countries_map[code];
 
           if (states.indexOf(code) <= -1 || data_country === undefined) {
@@ -146,8 +153,21 @@
                 countryName: label,
               },
             }));
-            $("#dashboard").val(data_country["org_subdomain"]);
-            $("#survey-results").val(data_country["org_subdomain"]);
+            $("#dashboard").hide();
+            $("#survey-results").hide();
+            let subdomain = get_subdomain();
+            if (subdomain == data_country["org_subdomain"]){
+              $("#dashboard").val(data_country["org_subdomain"]);
+              $("#dashboard").show();
+              $("#survey-results").val(data_country["org_subdomain"]);
+              $("#survey-results").show();
+            };
+            {% if request.user.is_superuser or request.user|is_global_viewer_active %}
+              $("#dashboard").val(data_country["org_subdomain"]);
+              $("#dashboard").show();
+              $("#survey-results").val(data_country["org_subdomain"]);
+              $("#survey-results").show();
+            {% endif %}
             $("#details-country").show();
             $("#sdgs-tracked").html(data_country["amount_sdgs"] + " SDGs being tracked");
             $("#received-messages").html(data_country["received"] + " received messages");
