@@ -1014,17 +1014,20 @@ class RapidProBackendGlobal(object):
         self._token: str = settings.TOKEN_WORKSPACE_GLOBAL
         self._temba_client = TembaClient(host=self._host, token=self._token)
 
-    def get_host(self) -> str:
+    @property
+    def host(self) -> str:
         return self._host
 
-    def get_token(self) -> str:
+    @property
+    def token(self) -> str:
         """Get the Global Workspace access Token
 
         :return: a str containing the Token
         """
         return self._token
 
-    def get_temba_client(self) -> TembaClient:
+    @property
+    def temba_client(self) -> TembaClient:
         """Get a object that represents the connection with rapidpro
 
         :return: a TembaClient object
