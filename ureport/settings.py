@@ -136,6 +136,16 @@ SITE_ALLOW_NO_ORG += (
     "results.global_poll_data",
     "worldmap.map_list",
     "blocked",
+    "docs.login",
+    "docs.uncts_users",
+    "docs.uncts_repository",
+    "docs.uncts_surveys",
+    "docs.uncts_dashboard",
+    "docs.global_uncts",
+    "docs.global_users",
+    "docs.global_repository",
+    "docs.global_surveys",
+    "docs.global_dashboard",
 )
 
 SDG_LIST = (

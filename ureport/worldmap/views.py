@@ -10,7 +10,6 @@ from ureport.channels.models import ChannelDailyStats
 
 class ListView(SmartTemplateView):
     template_name = "worldmap/index.html"
-    permission = "polls_global.poll_list"
 
     def get_sdgs_from_org(self, org):
         org_sdgs = set()
