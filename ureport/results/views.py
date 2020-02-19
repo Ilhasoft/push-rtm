@@ -314,15 +314,15 @@ class ExportPollResultsBase(View):
         return "contact", "category", "text"
 
     def _is_unct(self):
-        return self.request.org
+        return True if self.request.org else False
 
     def _get_poll_results_data(self):
-        pk = self.kwargs["pk"]
+        pk = self.kwargs.get("pk")
+        print(self._is_unct())
         if self._is_unct():
             poll = Poll.objects.get(pk=pk)
             flow_uuid = poll.flow_uuid
-            poll_results = PollResult.objects.filter(flow=flow_uuid).select_related().values_list(
-                "contact", "category", "text")
+            poll_results = PollResult.objects.filter(flow=flow_uuid).select_related()
 
         else:
             flows_uuid = set()
@@ -330,16 +330,16 @@ class ExportPollResultsBase(View):
             for global_survey in global_surveys:
                 flow_uuid = {global_survey.poll_local.flow_uuid}
                 flows_uuid = flows_uuid | flow_uuid
-            poll_results = PollResult.objects.filter(flow__in=list(flows_uuid)).select_related().values_list(
-                "contact", "category", "text")
+            poll_results = PollResult.objects.filter(flow__in=list(flows_uuid)).select_related()
 
         return poll_results
 
 
 class PollResultsCSV(ExportPollResultsBase):
-    """def _get_poll_results_data(self):
-        poll_results = super()._get_poll_results_data()
-        return poll_results"""
+    def _get_poll_results_data(self):
+        poll_results = super()._get_poll_results_data().values_list(
+                "contact", "category", "text")
+        return poll_results
 
     def get(self, *args, **kwargs):
         response = HttpResponse(content_type="text/csv")
@@ -356,15 +356,12 @@ class PollResultsCSV(ExportPollResultsBase):
 
 
 class PollResultsJSON(ExportPollResultsBase):
-    """def _get_poll_results_data(self):
-        poll_results = super()._get_poll_results_data()
-        return poll_results"""
 
     def get(self, *args, **kwargs):
         poll_results = self._get_poll_results_data()
 
-        #json_str = serializers.serialize('json', poll_results, fields=("contact", "category", "text"))
-        json_str = PollResultSerializer(poll_results, many=True).data
-        response = HttpResponse(json_str, content_type='application/json')
+        serializer_obj = PollResultSerializer(poll_results, many=True).data
+        obj_json = json.dumps(serializer_obj, ensure_ascii=False)
+        response = HttpResponse(obj_json, content_type='application/json')
         response['Content-Disposition'] = 'attachment; filename=export.json'
         return response
