@@ -151,10 +151,6 @@
               {% endfor %}
             </div>
           </div>
-          <button onclick="funcaoTest();">exportar</button>
-          <div id="testImage"></div>
-          <button onclick="testIframe();">rkl</button>
-          <iframe id="iframee"></iframe>
         </div>
       </div>
       <div id="no-unct-match" class="global-survey-card box is-paddingless" style="display: none;">
@@ -162,7 +158,6 @@
           <strong>No Survey found for this Global Survey.</strong>
         </div>
       </div>
-      <div id="teste"></div>
       <div id="chart-questions"></div>
     </div>
   </div>
@@ -178,41 +173,8 @@
 <script src="{% static 'plugins/wordcloud/d3.js' %}"></script>
 <script src="{% static 'plugins/wordcloud/d3.layout.cloud.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
 
 <script type="text/javascript">
-function testIframe(){
-  let canvas = $("#global-chart-question-3");
-  let iframe = $("#iframee");
-
-  iframe.ready(function() {
-     iframe.contents().find("body").append(canvas);
-  });
-}
-
-
-function funcaoTest(){
-  /*let graph = $("canvas")[0];
-  let base64 = globalDataChart.Participate.toBase64Image();
-  let div_img = $("#testImage");
-  var image = new Image();
-  image.src = base64;
-  div_img.append(image);
-
-
-
-  let canvas = $("#global-chart-question-3");
-  var canvasImg = image;
-  var doc = new jsPDF('landscape');
-  doc.setFontSize(20);
-  doc.text(15, 15, "Cool Chart");
-  doc.addImage(canvasImg, 'JPEG', 10, 10, 280, 150 );
-  doc.save('canvas.pdf');
-
-  let url_base64jp = graph.toDataURL("image/jpg");
-  $("#link2").href = url_base64jp;*/
-};
-
 $("input:checkbox").click(function() {
   let isChecked = $("input:checkbox").filter(":checked");
 
@@ -234,6 +196,9 @@ $("input:checkbox").click(function() {
     });
   });
 
+    """def _get_poll_results_data(self):
+        poll_results = super()._get_poll_results_data()
+        return poll_results"""
   if (isChecked.length === 0) {
     $("div[data-question-sdgs]").each(function() {
       $(this).show();
