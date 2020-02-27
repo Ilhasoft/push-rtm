@@ -191,7 +191,7 @@
 <script src="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/scripts/choices.min.js"></script>
 <script type="text/javascript">
 $(".send-message").prop("checked", false);
-
+$("textarea").prop("disabled", true);
 
 $(".edit-send-message").change(function(){
   let id_question = $(this).val();
@@ -214,7 +214,7 @@ $(".send-message").change(function(){
   let checkbox_element = $(this);
 
   $("textarea").each(function(){
-    if($(this).attr("name").indexOf(id_question) > -1){ //verificar se id_questoin esta no id text area
+    if($(this).attr("name").indexOf(id_question) > -1){
       if (checkbox_element.is(':checked')) {
         new_value = $(this).val() + " " + text;
         $(this).val(new_value);

@@ -561,7 +561,7 @@ class PollCRUDL(SmartCRUDL):
                 title_field_initial = initial.get(title_field_name, "")
                 title_field = forms.CharField(
                     label=_("Question"),
-                    disabled=True,
+                    #disabled=True,
                     widget=forms.Textarea(
                         attrs={
                             "class": "textarea",
