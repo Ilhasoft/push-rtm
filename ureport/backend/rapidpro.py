@@ -7,17 +7,21 @@ import json
 import logging
 import time
 from collections import defaultdict
-
 import pytz
 import requests
+from typing import Dict, List
+
+from django.core.cache import cache
+from django.utils import timezone
+from django.conf import settings
+
 from dash.utils import is_dict_equal
 from dash.utils.sync import BaseSyncer, sync_local_to_changes, sync_local_to_set
 from django_redis import get_redis_connection
 from temba_client.exceptions import TembaRateExceededError
-from temba_client.v2.types import Run
-
-from django.core.cache import cache
-from django.utils import timezone
+from temba_client.v2.types import Run, Flow
+from temba_client.v2 import TembaClient
+from temba_client.clients import CursorQuery
 
 from ureport.contacts.models import Contact, ContactField
 from ureport.locations.models import Boundary
@@ -1000,3 +1004,80 @@ class RapidProBackend(BaseBackend):
             datetime_to_json_date(timezone.now()),
             Poll.POLL_RESULTS_LAST_OTHER_POLLS_SYNCED_CACHE_TIMEOUT,
         )
+
+
+class RapidProBackendGlobal(object):
+    """Connects to a Global Workspace at RapidPro"""
+
+    def __init__(self):
+        self._host: str = settings.SITE_API_HOST
+        self._token: str = settings.TOKEN_WORKSPACE_GLOBAL
+        self._temba_client = TembaClient(host=self._host, token=self._token)
+
+    @property
+    def host(self) -> str:
+        return self._host
+
+    @property
+    def token(self) -> str:
+        """Get the Global Workspace access Token
+
+        :return: a str containing the Token
+        """
+        return self._token
+
+    @property
+    def temba_client(self) -> TembaClient:
+        """Get a object that represents the connection with rapidpro
+
+        :return: a TembaClient object
+        """
+        return self._temba_client
+
+    def query_get_flow(self) -> CursorQuery:
+        """Get a CursorQuery object from TembaClient object
+
+        :return: a CursorQuery object
+        """
+        return self._temba_client.get_flows()
+
+    def get_all_flows(self) -> List[Flow]:
+        """Uses a Cursor Query object to get all flows from the global workspace
+
+        :return: a list of Flow's
+        """
+        query_get_flow: CursorQuery = self.query_get_flow()
+        return query_get_flow.all()
+
+    def format_all_flows_structure(self) -> Dict:
+        """Formats all flows to a new dict with flow's id as a key
+
+        :return: a dict containing all formatted flows
+        """
+        all_flows = dict()
+        flows: List[Flow] = self.get_all_flows()
+        for flow in flows:
+            flow_json = dict()
+            flow_json["uuid"] = flow.uuid
+            flow_json["date_hint"] = flow.created_on.strftime("%Y-%m-%d")
+            flow_json["created_on"] = datetime_to_json_date(flow.created_on)
+            flow_json["name"] = flow.name
+            flow_json["archived"] = flow.archived
+            flow_json["runs"] = flow.runs.active + flow.runs.expired + flow.runs.completed + flow.runs.interrupted
+            flow_json["completed_runs"] = flow.runs.completed
+            flow_json["results"] = [
+                {"key": result.key, "name": result.name, "categories": result.categories, "node_uuids": result.node_uuids}
+                for result in flow.results
+            ]
+
+            all_flows[flow.uuid] = flow_json
+        return all_flows
+
+    def get_flow(self, flow_uuid: str) -> Dict:
+        """Gets a specific flow from all flows
+
+        :param flow_uuid: flow id to be filtered
+        :return: dict of a specific flow
+        """
+        all_flows: Dict = self.format_all_flows_structure()
+        return all_flows.get(flow_uuid, {})

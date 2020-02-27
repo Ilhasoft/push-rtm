@@ -2,10 +2,10 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
-from dash.orgs.models import Org, OrgBackend
 from smartmin.models import SmartModel
 
 from ureport.polls.models import Poll
+from ureport.backend.rapidpro import RapidProBackendGlobal
 
 
 class PollGlobal(SmartModel):
@@ -35,10 +35,8 @@ class PollGlobal(SmartModel):
         """
         Returns the underlying flow for this poll
         """
-        org = Org.objects.first()
-        backend = OrgBackend.objects.get(pk=1)
-        flows_dict = org.get_flows(backend=backend)
-        return flows_dict.get(self.flow_uuid, None)
+        rapidpro_workspace_global = RapidProBackendGlobal()
+        return rapidpro_workspace_global.get_flow(self.flow_uuid)
 
 
 class PollGlobalSurveys(models.Model):

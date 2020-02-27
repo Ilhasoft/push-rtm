@@ -1,0 +1,178 @@
+{% extends "docs.html" %}
+{% load i18n static sass_tags humanize ureport %}
+
+{% block content_doc %}
+<article class="p-30">
+  <div class="has-text-grey-light">
+    {% trans 'Global Documentation' %}
+  </div>
+  <div class="has-text-weight-bold is-size-5 bottom-p-5">
+    UNCTs
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      List
+    </p>
+    <p>The homepage of UNCTs' session is a list of all registered UNCTs.
+        Where some actions are available, let's walk through it all.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_uncts_list_01.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_uncts_list_01.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <ul class="ul-docs">
+      <li class="has-text-weight-bold is-size-6 bottom-p-5">Sorting</li>
+    </ul>
+    <p>You can choose to sort by Name, Timezone or Language. The first click will apply
+        alphabetically descending order and the second ascending.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_uncts_list_02.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_uncts_list_02.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <ul class="ul-docs">
+      <li class="has-text-weight-bold is-size-6 bottom-p-5">Search</li>
+    </ul>
+    <p>There's a search bar to find registered UNCTs, you just need to type and press
+        enter. It's case insensitive and capable of searching for strings' fragments
+        at the name field. In the example below the search was "L" and it found three
+        UNCTs where the string was found in different spots. You can disengage the
+        search filter by clicking the X at the right of the bar</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_uncts_list_03.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_uncts_list_03.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      Adding a new UNCT
+    </p>
+    <p>By clicking the + UNCT button the process of registering a new UNCT will start.</p>
+    <br>
+    <p>First inputs are relative to platform properties. Name and Language are free
+        to choose, but RapidPro URL, RapidPro Token and Timezone should match exactly
+        the values from the respective RapidPro workspace. Slug is a subdomain that
+        will be used to access the workspace.</p><br>
+
+        <p>EG. sandbox will create https://sandbox.rtm.ilhasoft.mobi</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_uncts_adding_a_new_unct_01.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_uncts_adding_a_new_unct_01.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <p>Backend configuration should be customized with the respective contact
+        settings on RapidPro. Fill Contact group with the main group name,
+        where registered contacts are. The other fields should be filled with
+        the respective contact field's title for each piece of information: </p>
+      <br>
+      <p>- Born Label for the year of born; </p><br>
+      <p>- Gender Label for gender; </p><br>
+      <p>- Occupation Label for the profession (optional);</p><br>
+      <p>- Registration Label for contact's registration date;</p><br>
+      <p>- State Label for the first region level, generally State;</p><br>
+      <p>- District Label for the second region level (optional);</p><br>
+      <p>- Ward Label for the third region level (optional);</p><br>
+      <p>Male Label and Female Label should be filled with the values that are
+          representing each gender. </p><br>
+      <p>EG. Male and Female, respectively.</p>
+      <p>Save clicking OK and it will take effect immediately.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_uncts_adding_a_new_unct_02.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_uncts_adding_a_new_unct_02.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      Editing
+    </p>
+    <p>You can start editing UNCTs just by clicking the pencil icon
+        on its right side. You will have access to all fields.</p>
+    <br>
+    <ul class="ul-docs">
+      <li class="has-text-weight-bold is-size-6 bottom-p-5">CAUTION!!!</li>
+    </ul>
+    <p>Pay attention to the field you're editing. Saving incorrect values will
+        make the UNCT workspace become inaccessible and may affect values accuracy.
+        Editing RapidPro Token or Backend configuration values is strongly not
+        recommended and should be done only if oriented by a support member in
+        very specific situations.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_uncts_editing.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_uncts_editing.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      UNCT users
+    </p>
+    <p>It's possible to edit UNCT's account levels directly from Global workspace,
+        just click the group icon on its right side and those UNCT users' list will
+        be loaded.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_uncts_unct_users_01.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_uncts_unct_users_01.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <p>Then you just have to click at the user's pencil icon and edit its access
+        level, similar to editing on a Local workspace.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_uncts_unct_users_02.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_uncts_unct_users_02.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+{% endblock %}
+
+{% block js_extra %}
+<script>
+    document.getElementById("global_uncts").classList.add("activate");
+</script>
+{% endblock %}

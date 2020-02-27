@@ -28,6 +28,8 @@
 
   <section class="section">
     <h1 class="title">{% trans 'Survey Results'%}</h1>
+    <button onclick="generatePdf();">aa</button>
+    <div id="canvas"></div>
   </section>
 
   <section class="section">
@@ -77,16 +79,30 @@
                 <span class="tooltip-content">{% trans 'The amount of questions in this survey'%}</span>
               </span>
             </div>
-            <!--
             <div class="level-item">
               <i class="material-icons export-icon right-m-5">save_alt</i>
-              <span>Export</span>
+              <div class="dropdown is-hoverable">
+                <div class="dropdown-trigger">
+                  <span aria-haspopup="true" aria-controls="export-dropdown">
+                    <span>{% trans "Export" %}</span>
+                    <span class="icon is-small">
+                      <i class="fas fa-angle-down" aria-hidden="true"></i>
+                    </span>
+                  </span>
+                </div>
+                <div class="dropdown-menu" role="menu">
+                  <div class="dropdown-content">
+                    <a href="{% url 'results.export_json' poll.pk %}"><span class="dropdown-item">JSON</span></a>
+                    <a href="{% url 'results.export_csv' poll.pk %}" target="_blank"><span class="dropdown-item">CSV</span></a>
+                    <a><span class="dropdown-item">PDF</span></a>
+                  </div>
+                </div>
+              </div>
               <span class="tooltip top left-m-10">
-              <i class="material-icons info-icon">info</i>
-              <span class="tooltip-content">{% trans 'Export results on .csv format'%}</span>
-            </span>
+                <i class="material-icons info-icon">info</i>
+                  <span class="tooltip-content">{% trans 'Export surveys results'%}</span>
+              </span>
             </div>
-            -->
           </nav>
           <div class="bottom-p-20">
             <div class="columns bottom-m-10">
@@ -120,7 +136,7 @@
 
         <div class="columns is-multiline">
           {% for question in poll.get_questions %}
-          <div class="column is-half-desktop" data-question-sdgs="{{ question.sdgs|join:"," }}">
+          <div class="column is-half-desktop div-data-question" data-question-sdgs="{{ question.sdgs|join:"," }}">
             <div class="survey-card box is-paddingless">
               <div class="survey-question">
                 <div class="survey-question__number">{{ forloop.counter }}</div>
@@ -201,8 +217,46 @@
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
   <script src="{% static 'plugins/wordcloud/d3.js' %}"></script>
   <script src="{% static 'plugins/wordcloud/d3.layout.cloud.js' %}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
 
   <script type="text/javascript">
+    function generatePdf(){
+      let pdf = new jsPDF();
+      let graphs = $(".div-data-question");
+      let width = pdf.internal.pageSize.getWidth();
+      let height = pdf.internal.pageSize.getHeight();
+
+      for(let i = 0; i < graphs.length; i++){
+
+        html2canvas(graphs[i], {
+          onrendered: function(canvas) {
+              canvasImg = canvas.toDataURL("image/jpeg", 1.0);
+              $("#canvas").append(canvas);
+              pdf.addImage(canvasImg, 'JPEG', 0, 0, width, height);
+          },
+        });
+      };
+      pdf.save("wb.pdf");
+
+
+
+
+
+
+
+      /*var pdf = new jsPDF();
+      var graphs = $("#graphs");
+      var options = {
+        pagesplit: true
+      };
+
+      pdf.addHTML(graphs, options, function() {
+          pdf.save('web.pdf');
+      });*/
+    }
+
+
     $("input:checkbox").click(function() {
       let isChecked = $("input:checkbox").filter(":checked");
 

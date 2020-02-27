@@ -24,8 +24,8 @@ RUN npm install --global --unsafe-perm \
 COPY ./package.json /app
 RUN npm install
 
-COPY ./pip-freeze.txt /app
-RUN pip install --no-cache-dir -r pip-freeze.txt
+COPY ./requirements.txt /app
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 COPY ./docker/start.sh /start.sh
