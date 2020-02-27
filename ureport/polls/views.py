@@ -537,7 +537,7 @@ class PollCRUDL(SmartCRUDL):
                 include_field_name = "ruleset_%s_include" % question.ruleset_uuid
                 include_field_initial = initial.get(include_field_name, True)
                 include_field = forms.BooleanField(
-                    label=_("Display"),
+                    label=_("Allow display of survey results"),
                     required=False,
                     initial=include_field_initial,
                     help_text=_(
@@ -561,18 +561,21 @@ class PollCRUDL(SmartCRUDL):
                 title_field_initial = initial.get(title_field_name, "")
                 title_field = forms.CharField(
                     label=_("Question"),
+                    disabled=True,
                     widget=forms.Textarea(
-                        attrs={"class": "textarea", "rows": 3, "placeholder": _(
-                            "Put a title here for your question")}
+                        attrs={
+                            "class": "textarea",
+                            "rows": 2,
+                            "placeholder": _("Put a title here for your question"),
+                        }
                     ),
                     required=False,
-                    initial=title_field_initial,
+                    initial="",
                     help_text=_(
                         "The question posed to your audience, will be displayed publicly"),
                 )
 
                 send_messages_field_name = "ruleset_%s_send_messages" % question.ruleset_uuid
-                send_messages_field_initial = ""  # initial.get(send_messages_field_name, "")
 
                 send_messages_choices = []
                 send_messages_list = initial.get(send_messages_field_name, "")
@@ -581,12 +584,11 @@ class PollCRUDL(SmartCRUDL):
 
                 send_messages_choices = tuple(send_messages_choices)
 
-                send_messages_field = forms.ChoiceField(
-                    label=_("Select a send message for your 'Question'..."),
+                send_messages_field = forms.MultipleChoiceField(
+                    label=_("Send Messages"),
                     choices=send_messages_choices,
-                    initial=send_messages_field_initial,
                     required=False,
-                    widget=forms.Select(
+                    widget=forms.CheckboxSelectMultiple(
                         attrs={
                             "class": "form-control send-message",
                         }
@@ -603,7 +605,7 @@ class PollCRUDL(SmartCRUDL):
                     widget=forms.SelectMultiple(
                         attrs={
                             "multiple": True,
-                            "class": "chosen-select form-control",
+                            "class": "chosen-select form-control sdgs-select",
                             "data": "chosen-select",
                             "data-placeholder": _("Select one or more Tags."),
                         }
@@ -612,8 +614,8 @@ class PollCRUDL(SmartCRUDL):
 
                 counter += 1
                 self.form.fields[label_field_name] = label_field
-                self.form.fields[title_field_name] = title_field
                 self.form.fields[send_messages_field_name] = send_messages_field
+                self.form.fields[title_field_name] = title_field
                 self.form.fields[sdgs_field_name] = sdgs_field
                 self.form.fields[include_field_name] = include_field
 
@@ -621,6 +623,7 @@ class PollCRUDL(SmartCRUDL):
 
         def save(self, obj):
             data = self.form.cleaned_data
+            print(data)
             poll = self.object
             questions = self.get_questions()
 
