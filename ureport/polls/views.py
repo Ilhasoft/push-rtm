@@ -558,7 +558,6 @@ class PollCRUDL(SmartCRUDL):
                 )
 
                 title_field_name = "ruleset_%s_title" % question.ruleset_uuid
-                title_field_initial = initial.get(title_field_name, "")
                 title_field = forms.CharField(
                     label=_("Question"),
                     disabled=True,
@@ -623,7 +622,6 @@ class PollCRUDL(SmartCRUDL):
 
         def save(self, obj):
             data = self.form.cleaned_data
-            print(data)
             poll = self.object
             questions = self.get_questions()
 
