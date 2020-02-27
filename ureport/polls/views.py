@@ -558,6 +558,7 @@ class PollCRUDL(SmartCRUDL):
                 )
 
                 title_field_name = "ruleset_%s_title" % question.ruleset_uuid
+                title_field_initial = initial.get(title_field_name, "")
                 title_field = forms.CharField(
                     label=_("Question"),
                     disabled=True,
@@ -569,7 +570,7 @@ class PollCRUDL(SmartCRUDL):
                         }
                     ),
                     required=False,
-                    initial="",
+                    initial=title_field_initial,
                     help_text=_(
                         "The question posed to your audience, will be displayed publicly"),
                 )

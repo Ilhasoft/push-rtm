@@ -255,7 +255,7 @@ class PollGlobalDataView(View):
         )
 
         global_survey = polls_local[0].poll_global
-        global_flow = global_survey.get_flow().get("results", None)
+        global_flow = global_survey.get_flow().get("results", [])
         global_flow_uuids = [question.get("node_uuids")[0] for question in global_flow]
 
         for question in global_polls_questions:
