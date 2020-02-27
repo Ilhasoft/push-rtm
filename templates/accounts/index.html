@@ -57,7 +57,7 @@
           </td>
           <td>
             <button class="button-no-bg" onclick=openModal('{{org.pk}}','{{user.pk}}');>
-              <i class="material-icons">delete</i>
+              <img class="lock-user" src="{% static 'svg/lock.svg' %}">
             </button>
 
             <div id="deleteModal-{{org.pk}}-{{user.pk}}" class="modal">
@@ -68,7 +68,7 @@
                   <button class="delete" aria-label="close" onclick=closeModal('{{org.pk}}','{{user.pk}}');></button>
                 </header>
                 <section class="modal-card-body">
-                  {% trans 'Do you really want to delete the user' %} "{{user.username}}" ?
+                  {% trans 'Do you really want to block the user' %} "{{user.username}}" ?
                 </section>
                 <footer class="modal-card-foot">
                   <form action="{% if request.user.is_superuser %}{% url 'accounts.user_org_delete' org.pk user.pk %}{% else %}{% url 'accounts.user_delete' user.pk %}{% endif %}"
@@ -91,9 +91,10 @@
           <td>{{ inactive_user.user.username }} </td>
           <td>{{ inactive_user.user.email }} </td>
           <td>{% trans 'No Permission' %}</td>
+          <td></td>
           <td>
             <button class="button-no-bg" onclick=openModalActive('{{org.pk}}','{{inactive_user.user.pk}}');>
-              <i class="material-icons">check_circle_outline</i>
+              <img class="unlock-user" src="{% static 'svg/unlock.svg' %}">
             </button>
 
             <div id="activeModal-{{org.pk}}-{{inactive_user.user.pk}}" class="modal">

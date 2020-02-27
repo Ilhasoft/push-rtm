@@ -7,7 +7,80 @@
 <link rel="stylesheet" href="{% sass_src 'plugins/choices/choices.scss' %}">
 <link rel="stylesheet" href="{% sass_src 'css/polls/survey_form.scss' %}">
 <link rel="stylesheet" href="{% sass_src 'plugins/tooltip/tooltip.scss' %}">
+<link rel="stylesheet" href="{% sass_src 'css/flowhub/common.scss' %}">
 <link rel="stylesheet" href="{% static 'plugins/checkbox/checkbox.min.css' %}">
+<style>
+  .multiselect {
+  width: 100%;
+}
+
+.selectBox {
+  position: relative;
+}
+
+.selectBox select {
+  min-height: 44px;
+  width: 100%;
+  padding: 7.5px 7.5px 1.75px;
+  box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.1);
+  border: 1px solid #c9c9c9;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 14px;
+  color: #707070;
+  -webkit-appearance: none;
+  background:url('http://www.free-icons-download.net/images/small-down-arrow-icon-15593.png');
+  background-repeat:no-repeat;
+  background-size:16px 17px;
+  background-position:right 10px center;
+}
+
+.overSelect {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.checkboxes {
+  height: 300px;
+  overflow-y: auto;
+  position: absolute;
+  display: none;
+  border: 1px #dadada solid;
+  z-index: 1000;
+  background-color: white;
+}
+
+.checkboxes label {
+  display: block;
+  z-index: 1000;
+  position: relative;
+  padding: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.checkboxes label:hover {
+  background-color: #1e90ff;
+}
+
+.textarea[disabled] {
+  background-color: whitesmoke;
+  color: rgb(170, 170, 170);
+}
+
+.send-message{
+  transform: scale(1.2);
+  margin-right: 10px;
+  margin-left: 5px;
+}
+
+.visible-flow{
+  margin-bottom: 10px;
+}
+</style>
 {% endblock %}
 
 {% block content %}
@@ -52,26 +125,50 @@
           {% if field.field.widget.input_type != "hidden" %}
           <div class="field left-p-30 right-p-30 top-p-20">
             {% if field.field.widget.input_type != 'checkbox' %}
-            <label class="label" for="{{ field.auto_id }}">
-              {{ field.label }}
               {% if field.label == 'Question' %}
-                <span class="tooltip top left-m-10">
-                  <i class="material-icons info-icon">info</i>
-                  <span class="tooltip-content">{% trans "You can change the tittle to appear diferently from the RapidPro version" %}</span>
-                </span>
+                <div class="visible-flow">
+                  <label class="switch">
+                    <input value="{{field.name}}" class="edit-send-message" type="checkbox">
+                    <span class="slider round"></span>
+                  </label>
+                  <span>Edit the selected title(s)</span>
+                </div>
+              {% else %}
+                <label class="label" for="{{ field.auto_id }}">{{ field.label }}</label>
               {% endif %}
-            </label>
             {% endif %}
 
             <div class="{% if field.field.widget.input_type == 'select' %}is-fullwidth{% else %}control{% endif %}">
-              {{ field }}
               {% if field.field.widget.input_type == 'checkbox' %}
-              <label class="label" for="{{ field.auto_id }}">{{ field.label }}</label>
+                {% if field.label == 'Send Messages' %}
+                  <span>Select the title corresponding to the question</span>
+                  <div class="multiselect">
+                    <div class="selectBox" onclick="showCheckboxes('{{field.auto_id}}')">
+                      <select>
+                        <option>Select the title(s)</option>
+                      </select>
+                      <div class="overSelect"></div>
+                    </div>
+                    <div class="checkboxes" id="{{field.auto_id}}">
+                      {% for row in field %}
+                        {{row}}
+                      {% endfor %}
+                    </div>
+                  </div>
+                {% else %}
+                  {{ field }}
+                  <label class="label" for="{{ field.auto_id }}">{{ field.label }}</label>
+                {% endif %}
+              {% else %}
+                {{ field }}
               {% endif %}
+
+
+
             </div>
           </div>
           {% endif %}
-          {% if field.label == 'Display' %}
+          {% if field.label == 'Allow display of survey results' %}
             <hr class="top-m-40 bottom-m-40">
           {% endif %}
         {% endfor %}
@@ -93,7 +190,66 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/scripts/choices.min.js"></script>
 <script type="text/javascript">
-$("select").each(function() {
+$(".send-message").prop("checked", false);
+
+
+$(".edit-send-message").change(function(){
+  let id_question = $(this).val();
+  let switch_checkbox = $(this);
+  $("textarea").each(function(){
+    if($(this).attr("name").indexOf(id_question) > -1){
+      if (switch_checkbox.is(':checked')) {
+        $(this).removeAttr("disabled");
+      }else{
+        $(this).attr("disabled", true);
+      }
+    }
+  })
+});
+
+$(".send-message").change(function(){
+  let text = $(this).val();
+  let id_send_message = $(this).attr("name");
+  let id_question = id_send_message.replace("_send_messages", "");
+  let checkbox_element = $(this);
+
+  $("textarea").each(function(){
+    if($(this).attr("name").indexOf(id_question) > -1){ //verificar se id_questoin esta no id text area
+      if (checkbox_element.is(':checked')) {
+        new_value = $(this).val() + " " + text;
+        $(this).val(new_value);
+        $(this).text(new_value);
+      }else{
+        current_text = $(this).val();
+        new_text = current_text.replace(text, "");
+        $(this).val(new_text);
+        $(this).text(new_text);
+      }
+    }
+  })
+
+});
+
+
+
+var expanded = false;
+function showCheckboxes(id) {
+  var checkboxes = document.getElementById(id);
+  if (!expanded) {
+    checkboxes.style.display = "block";
+    expanded = true;
+  } else {
+    checkboxes.style.display = "none";
+    expanded = false;
+  }
+}
+
+//$("select").each(function() {
+$(".sdgs-select").each(function() {
+  /*if($(this).hasClass("send-message")){
+    return;
+  };*/
+
   let id = $(this).attr("id");
   new Choices("#" + id, {
     removeItemButton: true,

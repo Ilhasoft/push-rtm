@@ -140,6 +140,16 @@ SITE_ALLOW_NO_ORG += (
     "results.global_export_csv",
     "results.export_json",
     "results.global_export_json",
+    "docs.login",
+    "docs.uncts_users",
+    "docs.uncts_repository",
+    "docs.uncts_surveys",
+    "docs.uncts_dashboard",
+    "docs.global_uncts",
+    "docs.global_users",
+    "docs.global_repository",
+    "docs.global_surveys",
+    "docs.global_dashboard",
 )
 
 SDG_LIST = (
@@ -210,6 +220,8 @@ CHANNEL_TYPES = {
 }
 
 STATICFILES_FINDERS += ("sass_processor.finders.CssFinder",)
+
+TOKEN_WORKSPACE_GLOBAL = "94fd5c1bd39368833f60150054cb99cb84799fe1"
 
 SASS_PROCESSOR_INCLUDE_FILE_PATTERN = r"^.+\.scss$"
 

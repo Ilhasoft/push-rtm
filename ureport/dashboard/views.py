@@ -13,6 +13,7 @@ from django.views.generic import View
 from django.http import JsonResponse
 
 from smartmin.views import SmartTemplateView
+from dash.orgs.models import Org
 
 from ureport.polls.models import PollQuestion, Poll
 from ureport.channels.models import ChannelStats, ChannelDailyStats
@@ -420,5 +421,8 @@ class Dashboard(SmartTemplateView):
         if self.access_level == "local":
             context["surveys_local_total"] = Poll.objects.filter(org=self.request.org, is_active=True).count()
             context["surveys_global_total"] = Poll.objects.exclude(org=self.request.org).filter(is_active=True).count()
+        else:
+            context["orgs_total"] = Org.objects.all().count()
+            context["orgs_name"] = Org.objects.all().values_list("name", flat=True).order_by("name")
 
         return context

@@ -470,6 +470,7 @@ class PollCRUDL(SmartCRUDL):
             for question in questions:
                 fields.append("ruleset_%s_label" % question.ruleset_uuid)
                 fields.append("ruleset_%s_title" % question.ruleset_uuid)
+                fields.append("ruleset_%s_send_messages" % question.ruleset_uuid)
                 fields.append("ruleset_%s_include" % question.ruleset_uuid)
                 fields.append("ruleset_%s_sdgs" % question.ruleset_uuid)
 
@@ -477,6 +478,50 @@ class PollCRUDL(SmartCRUDL):
 
         def get_questions(self):
             return self.object.questions.all().order_by("-priority", "pk")
+
+        def get_flow_definition(self):
+            temba_client = self.request.org.get_temba_client()
+            definitions = temba_client.get_definitions(flows=self.object.flow_uuid)
+            flow_definitions = definitions.flows
+
+            return flow_definitions
+
+        def get_send_messages(self):
+            flows = self.get_flow_definition()
+
+            send_msgs = []
+            nodes = []
+            action_sets = []
+            for flow in flows:
+                nodes_flow = flow.get("nodes", [])
+                for node in nodes_flow:
+                    nodes.append(node)
+
+                action_sets_flow = flow.get("action_sets", [])
+                for action_set in action_sets_flow:
+                    action_sets.append(action_set)
+
+            for node in nodes:
+                actions = node.get("actions")
+
+                for action in actions:
+                    text = action.get("text")
+                    if text:
+                        send_msgs.append(text)
+
+            for action_set in action_sets:
+                actions = action_set.get("actions")
+
+                for action in actions:
+                    msg = action.get("msg")
+                    if msg:
+                        text = msg.values()
+                        send_msgs.append(list(text)[0])
+
+            if not send_msgs:
+                send_msgs = ""
+
+            return list(set(send_msgs))
 
         def get_form(self):
             form = super(PollCRUDL.Questions, self).get_form()
@@ -492,7 +537,7 @@ class PollCRUDL(SmartCRUDL):
                 include_field_name = "ruleset_%s_include" % question.ruleset_uuid
                 include_field_initial = initial.get(include_field_name, True)
                 include_field = forms.BooleanField(
-                    label=_("Display"),
+                    label=_("Allow display of survey results"),
                     required=False,
                     initial=include_field_initial,
                     help_text=_(
@@ -513,17 +558,40 @@ class PollCRUDL(SmartCRUDL):
                 )
 
                 title_field_name = "ruleset_%s_title" % question.ruleset_uuid
-                title_field_initial = initial.get(title_field_name, "")
                 title_field = forms.CharField(
                     label=_("Question"),
+                    disabled=True,
                     widget=forms.Textarea(
-                        attrs={"class": "textarea", "rows": 3, "placeholder": _(
-                            "Put a title here for your question")}
+                        attrs={
+                            "class": "textarea",
+                            "rows": 2,
+                            "placeholder": _("Put a title here for your question"),
+                        }
                     ),
                     required=False,
-                    initial=title_field_initial,
+                    initial="",
                     help_text=_(
                         "The question posed to your audience, will be displayed publicly"),
+                )
+
+                send_messages_field_name = "ruleset_%s_send_messages" % question.ruleset_uuid
+
+                send_messages_choices = []
+                send_messages_list = initial.get(send_messages_field_name, "")
+                for send_message in send_messages_list:
+                    send_messages_choices.append((send_message, send_message))
+
+                send_messages_choices = tuple(send_messages_choices)
+
+                send_messages_field = forms.MultipleChoiceField(
+                    label=_("Send Messages"),
+                    choices=send_messages_choices,
+                    required=False,
+                    widget=forms.CheckboxSelectMultiple(
+                        attrs={
+                            "class": "form-control send-message",
+                        }
+                    ),
                 )
 
                 sdgs_field_name = "ruleset_%s_sdgs" % question.ruleset_uuid
@@ -536,7 +604,7 @@ class PollCRUDL(SmartCRUDL):
                     widget=forms.SelectMultiple(
                         attrs={
                             "multiple": True,
-                            "class": "chosen-select form-control",
+                            "class": "chosen-select form-control sdgs-select",
                             "data": "chosen-select",
                             "data-placeholder": _("Select one or more Tags."),
                         }
@@ -545,6 +613,7 @@ class PollCRUDL(SmartCRUDL):
 
                 counter += 1
                 self.form.fields[label_field_name] = label_field
+                self.form.fields[send_messages_field_name] = send_messages_field
                 self.form.fields[title_field_name] = title_field
                 self.form.fields[sdgs_field_name] = sdgs_field
                 self.form.fields[include_field_name] = include_field
@@ -582,6 +651,7 @@ class PollCRUDL(SmartCRUDL):
         def derive_initial(self):
             initial = dict()
             questions = self.get_questions()
+            send_messages = self.get_send_messages()
 
             for question in questions:
                 initial["ruleset_%s_include" %
@@ -590,6 +660,8 @@ class PollCRUDL(SmartCRUDL):
                         question.ruleset_uuid] = question.ruleset_label
                 initial["ruleset_%s_title" %
                         question.ruleset_uuid] = question.title
+                initial["ruleset_%s_send_messages" %
+                        question.ruleset_uuid] = send_messages
                 initial["ruleset_%s_sdgs" %
                         question.ruleset_uuid] = question.sdgs
 

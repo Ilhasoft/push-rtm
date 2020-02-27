@@ -1,6 +1,6 @@
 
 {% extends "base.html" %}
-{% load i18n static humanize sass_tags ureport %}
+{% load i18n static humanize sass_tags ureport utils_extra_accounts %}
 
 {% block nav_item %}page-dashboard{% endblock %}
 
@@ -10,33 +10,101 @@
 {% endblock %}
 
 {% block content %}
-  <section class="section">
-    <h1 class="title bottom-m-0">
-      {% if access_level == 'local' %}{{ request.org }} {% else %} {% trans "Global Dashboard" %} {% endif %}
-    </h1>
-
-  <div class="flex space-between">
-      <div class="has-text-grey-light" id="all_filter"></div>
-        <div class="dropdown is-hoverable">
-          <div class="dropdown-trigger">
-            <div aria-haspopup="true" aria-controls="dropdown-menu">
-              <span>{% trans "Filter by" %}</span>
-              <span class="icon is-small">
-              <i class="fas fa-angle-down" aria-hidden="true"></i>
-            </span>
-            </div>
-      </div>
-      <div class="dropdown-menu" id="dropdown-menu" role="menu">
-        <div class="dropdown-content">
-          <a href="javascript:loadAllChart('week')" class="dropdown-item">{% trans "Last 7 days" %}</a>
-          <a href="javascript:loadAllChart('month')" class="dropdown-item">{% trans "Last 30 days" %}</a>
-          <a href="javascript:loadAllChart('year')" class="dropdown-item">{% trans "Last 12 months" %}</a>
-          <a href="javascript:loadAllChart('inception')" class="dropdown-item">{% trans "Since Inception" %}</a>
+    {% if access_level == 'local' %}
+    <section class="section">
+      <h1 class="title bottom-m-0">
+        {{ request.org }}
+      </h1>
+      <div class="flex space-between">
+        <div class="has-text-grey-light" id="all_filter"></div>
+          <div class="dropdown is-hoverable">
+            <div class="dropdown-trigger">
+              <div aria-haspopup="true" aria-controls="dropdown-menu">
+                <span>{% trans "Filter by" %}</span>
+                <span class="icon is-small">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+              </span>
+              </div>
+        </div>
+        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+          <div class="dropdown-content">
+            <a href="javascript:loadAllChart('week')" class="dropdown-item">{% trans "Last 7 days" %}</a>
+            <a href="javascript:loadAllChart('month')" class="dropdown-item">{% trans "Last 30 days" %}</a>
+            <a href="javascript:loadAllChart('year')" class="dropdown-item">{% trans "Last 12 months" %}</a>
+            <a href="javascript:loadAllChart('inception')" class="dropdown-item">{% trans "Since Inception" %}</a>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-  </section>
+      </div>
+    </section>
+    {% else %}
+    <section class="section section-global-dashboard">
+      <div class="box box-global-dashboard is-shadowless left-p-40">
+        <h1 class="title bottom-m-0">
+          {% trans "Global Dashboard" %}
+        </h1>
+        <div class="flex space-between">
+          <div class="has-text-grey-light" id="all_filter"></div>
+            <div class="dropdown is-hoverable">
+              <div class="dropdown-trigger">
+                <div aria-haspopup="true" aria-controls="dropdown-menu">
+                  <span>{% trans "Filter by" %}</span>
+                  <span class="icon is-small">
+                  <i class="fas fa-angle-down" aria-hidden="true"></i>
+                </span>
+                </div>
+          </div>
+          <div class="dropdown-menu" id="dropdown-menu" role="menu">
+            <div class="dropdown-content">
+              <a href="javascript:loadAllChart('week')" class="dropdown-item">{% trans "Last 7 days" %}</a>
+              <a href="javascript:loadAllChart('month')" class="dropdown-item">{% trans "Last 30 days" %}</a>
+              <a href="javascript:loadAllChart('year')" class="dropdown-item">{% trans "Last 12 months" %}</a>
+              <a href="javascript:loadAllChart('inception')" class="dropdown-item">{% trans "Since Inception" %}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+        <hr class="top-m-5 bottom-m-5">
+        <div class="columns is-multiline">
+          <div class="column is-one-fifth">
+            <div class="flex">
+              <div class="tooltip top flex align-center">
+                <div class="right-m-10">
+                  <img src="{% static 'svg/flag.svg' %}">
+                </div>
+                <div class="left-m-20">
+                  <div class="flex align-center">
+                    <span class="is-size-6 has-text-grey-light">{% trans "UNCTs tracked" %}</span>
+                  </div>
+                  <span class="is-size-4">{{orgs_total}}</span>
+                </div>
+              </div>
+            </div>
+            <hr class="bottom-m-5 top-m-5">
+            <div class="has-text-centered">
+              <a class="is-size-7" onclick="showModal();">See all</a>
+            </div>
+            <div class="modal" id="modal-uncts-global">
+              <div class="modal-background"></div>
+              <div class="modal-card">
+                <header class="modal-card-head">
+                  <p class="modal-card-title">UNCTs Tracked</p>
+                  <button class="delete" onclick="showModal();" aria-label="close"></button>
+                </header>
+                <section class="modal-card-body">
+                  <ul>
+                    {% for name in orgs_name %}
+                      <li class="border-bottom p-5">{{name}}</li>
+                    {% endfor %}
+                  </ul>
+                </section>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    {% endif %}
 
   <section class="section">
     <div class="box is-shadowless p-40 bottom-m-20">
@@ -220,6 +288,10 @@
 <script src="{% static 'plugins/wordcloud/d3.layout.cloud.js' %}"></script>
 
 <script type="text/javascript">
+  function showModal(){
+    $("#modal-uncts-global").toggleClass("is-active");
+  }
+
   const dataUrl = "{% url 'dashboard_data' %}";
   let sdgsChart = null;
   let partialChart = null;

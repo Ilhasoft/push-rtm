@@ -66,7 +66,7 @@ urlpatterns = [
     url(r"^authentication/", include("ureport.authentication.urls")),
     url(r"^surveys-global/", include("ureport.polls_global.urls")),
     url(r"^worldmap/", include("ureport.worldmap.urls")),
-    url(r'^docs/', include("docs.urls")),
+    url(r'^docs/', include("ureport.docs.urls")),
     url(r'^blocked/', TemplateView.as_view(template_name="blocked_user.html"), name="blocked"),
 ]
 

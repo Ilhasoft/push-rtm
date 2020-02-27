@@ -1,0 +1,76 @@
+{% extends "docs.html" %}
+{% load i18n static sass_tags humanize ureport %}
+
+{% block content_doc %}
+<article class="p-30">
+  <div class="has-text-grey-light">
+    {% trans 'Global Documentation' %}
+  </div>
+  <div class="has-text-weight-bold is-size-5 bottom-p-5">
+    Login
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <p>You may access the RTM platform by entering credentials at <a>UN Info portal</a>.
+      Type your username, password and hit Log in.</p>
+  </div>
+  <div class="column">
+    <div>
+      <figure class="image is-16by9">
+        <a href="{% static 'img/docs/login_01.png' %}" target="_blank">
+          <img src="{% static 'img/docs/login_01.png' %}">
+        </a>
+      </figure>
+    </div>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p>Upon successful login you'll be redirected to the UN Info home screen.
+      Now choose <strong>REAL TIME MONITORING</strong> option
+      and click the UNCT you want to access.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/login_02.png' %}" target="_blank">
+        <img src="{% static 'img/docs/login_02.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p>A redirect window will open to take you to the requested UNCT workspace.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/login_03.png' %}" target="_blank">
+        <img src="{% static 'img/docs/login_03.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p>If you fail to login for five consecutive attempts, the account will be blocked
+      for 10 minutes.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/login_04.png' %}" target="_blank">
+        <img src="{% static 'img/docs/login_04.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+{% endblock %}
+
+{% block js_extra %}
+<script>
+    document.getElementById("login").classList.add("activate");
+</script>
+{% endblock %}

@@ -1,0 +1,314 @@
+{% extends "docs.html" %}
+{% load i18n static sass_tags humanize ureport %}
+
+{% block content_doc %}
+<article class="p-30">
+  <div class="has-text-grey-light">
+    {% trans 'Global Documentation' %}
+  </div>
+  <div class="has-text-weight-bold is-size-5 bottom-p-5">
+    Global Surveys
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      Global Surveys List
+    </p>
+    <p>Add description here</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_global_surveys_global_survey_list.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_global_surveys_global_survey_list.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      Starting a Global Survey
+    </p>
+    <p>Clicking the + Global Surveys button will allow you to start a new event.
+        Where all it's needed is to provide a Title, Date range and a Description.
+        The title is how UNCTs' workspaces are going to choose which global survey
+        to connect, so it's a good practice to make it short and self-explained.
+        Start Date and End Date will set the results' range considered as relevant
+        for this event. A description will explain the survey at the Surveys Result page.
+    </p>
+    <p>Before clicking OK make sure you have checked the Is active option or the survey
+        will be saved with deactivated status.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_global_surveys_starting_a_global_survey_01.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_global_surveys_starting_a_global_survey_01.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <p>When you've completed this process, the global survey will become available
+        for connection at UNCTs' workspaces by activating Connect to on
+        ongoing global survey.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_global_surveys_start_a_global_survey_02.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_global_surveys_start_a_global_survey_02.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      Connection evaluation
+    </p>
+    <p>Clicking the + icon on the survey right side will open the evaluation module.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_global_surveys_conection_evaluation_01.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_global_surveys_conection_evaluation_01.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <p>Than you'll see two tabs, Pending and Approved. On Pending there's a
+        list of all surveys requests. Clicking the survey Name will open the
+        UNCT's respective content and the icons on its right side will
+        approve or deny the request, respectivelly.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_global_surveys_connection_evaluation_02.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_global_surveys_connection_evaluation_02.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <p>On Approved you can also load the respective content by clicking the survey name.
+        The X button will unlink that survey from the global event.
+    </p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_global_surveys_connection_evaluation_03.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_global_surveys_connection_evaluation_03.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      Searching
+    </p>
+    <p>There's a search bar to find surveys, you just need to type and press enter.
+        It's case insensitive and capable of searching for strings' fragments at
+        the name of active or inactive surveys. In the example below the search
+        was "global" and it found three surveys where the string was found in
+        different spots. </p>
+    <p>You can disengage the search filter by clicking the
+        X at the right of the bar.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_global_surveys_searching.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_global_surveys_searching.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      Sorting
+    </p>
+    <p>It's possible to sort surveys by Name, Date and Status.
+        Clicking the option once will sort ascending and the second
+        time will apply descending. </p><br>
+    <p>Sorting can be a very useful tool
+        as your survey's list grow bigger, in the example below there's
+        a search for "global" and it's also sorting the list by Initial Date.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_global_surveys_sorting.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_global_surveys_sorting.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+      <p class="has-text-weight-bold is-size-5 bottom-p-5">
+        Disabled Surveys
+      </p>
+      <p>A grayed survey line means that it has been disabled and become inaccessible.
+          A disabled survey won't have its results synchronized.
+          In most cases disabling a survey means that the result is no
+          longer necessary or something went wrong with it.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_global_surveys_disabled_surveys.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_global_surveys_disabled_surveys.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+      <p class="has-text-weight-bold is-size-5 bottom-p-5">
+        Surveys' results
+      </p>
+      <p>Here, you will find all surveys that were registered as Global on UNCTs.
+          Survey results can be analyzed by selecting a survey on the survey's list.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_global_surveys_surveys_results_01.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_global_surveys_surveys_results_01.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+      <p>When choosing a survey on the list you will be redirected to the survey
+          results page, which displays all details and charts.
+          It will show you how many questions have the selected survey,
+          its Title, Description, Date and Linked SDGs.
+          There's also a counter for applied UNCTs in this Global survey.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_global_surveys_surveys_results_02.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_global_surveys_surveys_results_02.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+      <p>It's also possible to use the left panel and filter by SDG displaying only
+          the questions that match the ones selected.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_global_surveys_surveys_results_03.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_global_surveys_surveys_results_03.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+      <p class="has-text-weight-bold is-size-5 bottom-p-5">
+        Search bar
+      </p>
+      <p>Searching for UNTCs will allow confronting Global results against Local.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_global_surveys_search_bar.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_global_surveys_search_bar.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+      <p class="has-text-weight-bold is-size-5 bottom-p-5">
+        Results' balance
+      </p>
+      <p>By clicking Countries arrow option a list of connected UNCTs
+          will load so you may choose one to balance the results.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_global_surveys_results_balance_01.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_global_surveys_results_balance_01.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+      <p>Now, it's possible to collate each question's result by clicking the More arrow.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_global_surveys_results_balance_02.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_global_surveys_results_balance_02.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+      <p>For each question, there's engagement counter, for applied UNCTs'
+          surveys that has this question, and a segment by option to
+          filter results by Age or Gender.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_global_surveys_results_balance_03.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_global_surveys_results_balance_03.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+      <p class="has-text-weight-bold is-size-5 bottom-p-5">
+        Editing
+      </p>
+      <p>You can edit a Global survey anytime just by clicking the
+          pencil icon on its right side.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_global_surveys_editing_01.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_global_surveys_editing_01.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+      <p>The edition session will also allow you to deactivate that survey.</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_global_surveys_editing_02.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_global_surveys_editing_02.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+{% endblock %}
+
+{% block js_extra %}
+<script>
+    document.getElementById("global_surveys").classList.add("activate");
+</script>
+{% endblock %}
