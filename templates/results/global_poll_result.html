@@ -74,7 +74,7 @@
               <span class="tooltip-content">{% trans 'The amount of questions in this survey'%}</span>
             </span>
           </div>
-          <div class="level-item">
+          <div class="level-item border-right">
             <img class="right-m-5" src="{% static 'svg/earth-globe.svg' %}" alt="">
             <div class="dropdown is-hoverable">
               <div class="dropdown-trigger">
@@ -102,6 +102,31 @@
               <span class="tooltip-content">{% trans 'Countries participating in this global survey'%}</span>
             </span>
           </div>
+          <div class="level-item">
+              <i class="material-icons export-icon right-m-5">save_alt</i>
+              <div class="dropdown is-hoverable">
+                <div class="dropdown-trigger">
+                  <span aria-haspopup="true" aria-controls="export-dropdown">
+                    <span>{% trans "Export" %}</span>
+                    <span class="icon is-small">
+                      <i class="fas fa-angle-down" aria-hidden="true"></i>
+                    </span>
+                  </span>
+                </div>
+                <div class="dropdown-menu" role="menu">
+                  <div class="dropdown-content">
+                  {% comment %} //TODO add logic to handle export types {% endcomment %}
+                    <a href="{% url 'results.global_export_json' poll_global.pk %}"><span class="dropdown-item">JSON</span></a>
+                    <a href="{% url 'results.global_export_csv' poll_global.pk %}" target="_blank"><span class="dropdown-item">CSV</span></a>
+                    <a><span class="dropdown-item">PDF</span></a>
+                  </div>
+                </div>
+              </div>
+              <span class="tooltip top left-m-10">
+                <i class="material-icons info-icon">info</i>
+                  <span class="tooltip-content">{% trans 'Export surveys results'%}</span>
+              </span>
+            </div>
         </nav>
         <div class="bottom-p-20">
           <div class="columns bottom-m-10">
@@ -133,7 +158,6 @@
           <strong>No Survey found for this Global Survey.</strong>
         </div>
       </div>
-      <div id="teste"></div>
       <div id="chart-questions"></div>
     </div>
   </div>
@@ -172,6 +196,9 @@ $("input:checkbox").click(function() {
     });
   });
 
+    """def _get_poll_results_data(self):
+        poll_results = super()._get_poll_results_data()
+        return poll_results"""
   if (isChecked.length === 0) {
     $("div[data-question-sdgs]").each(function() {
       $(this).show();
