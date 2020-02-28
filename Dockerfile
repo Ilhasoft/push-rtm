@@ -12,20 +12,10 @@ RUN apt-get install -y \
   postgresql-client \
   postgresql \
   gettext \
-  nodejs \
-  npm \
   git \
   software-properties-common \
   curl \
   supervisor
-
-RUN npm i npm@latest -g \
-  npm install --global --unsafe-perm \
-  coffeescript \
-  less \
-  yarn
-
-RUN npm install
 
 COPY ./requirements.txt /app
 RUN pip install --no-cache-dir -r requirements.txt
