@@ -3,9 +3,9 @@
 set -o errexit
 set -o nounset
 
-python manage.py collectstatic --noinput
+python ./manage.py collectstatic --noinput
 if [ "${COMPRESS_ENABLED}" = true ]; then
-    python manage.py compress --extension=.html
+    python ./manage.py compress --extension=.html
 fi
 
 /usr/local/bin/gunicorn ureport.wsgi --bind 0.0.0.0:8000 --log-level=debug --access-logfile=./gunicorn.access --error-logfile=./gunicorn.errors --capture-output --chdir=/app

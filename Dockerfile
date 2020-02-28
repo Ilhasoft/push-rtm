@@ -3,27 +3,20 @@ FROM python:3.6
 ARG COMPRESS_ENABLED
 
 ENV PYTHONUNBUFFERED 1
+ENV COMPRESS_ENABLED=$COMPRESS_ENABLED
+ENV COMPRESS_OFFLINE=true
+
 WORKDIR /app
 
-RUN apt-get update -y && \
-    apt-get upgrade -y
+RUN apt-get update -y
+RUN apt-get install -y supervisor
 
-RUN apt-get install -y \
-  postgresql-client \
-  postgresql \
-  gettext \
-  git \
-  software-properties-common \
-  curl \
-  supervisor
-
-COPY ./requirements.txt /app
+COPY . .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY start /start
-RUN sed -i 's/\r$//g' /start
-RUN chmod +x /start
+RUN sed -i 's/\r$//g' ./start
+RUN chmod +x ./start
 
 EXPOSE 8000
 
-ENTRYPOINT ["/start"]
+ENTRYPOINT ["./start"]
