@@ -176,7 +176,7 @@
           <div class="column">
             <div class="flex flex-end">
               <a href="{% url 'polls.poll_poll_date' poll.id %}" class="button primary-reverse right-m-5">{% trans "Back" %}</a>
-              <button type="submit" class="button is-primary">{% trans "Save" %}</button>
+              <button onclick="enableTextArea();" type="submit" class="button is-primary">{% trans "Save" %}</button>
             </div>
           </div>
         </div>
@@ -192,6 +192,10 @@
 <script type="text/javascript">
 $(".send-message").prop("checked", false);
 $("textarea").prop("disabled", true);
+
+function enableTextArea(){
+  $("textarea").prop("disabled", false);
+}
 
 $(".edit-send-message").change(function(){
   let id_question = $(this).val();
