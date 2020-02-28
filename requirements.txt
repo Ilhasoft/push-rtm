@@ -72,7 +72,6 @@ phonenumbers==8.9.10
 Pillow==5.2.0
 pip-tools==2.0.2
 pisa==3.0.33
-pkg-resources==0.0.0
 plotly==4.4.1
 pockets==0.9.1
 polib==1.1.0

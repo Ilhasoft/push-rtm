@@ -4,8 +4,8 @@ services:
   rtm-web:
     image: ${DOCKER_IMAGE_NAME:-uninfo/rtm}:${TAG:-latest}
     build:
-      context: ..
-      dockerfile: ./docker/Dockerfile
+      context: .
+      dockerfile: Dockerfile
     ports:
       - 8000:8000
     environment:
