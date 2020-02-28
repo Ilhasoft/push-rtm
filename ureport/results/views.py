@@ -255,7 +255,7 @@ class PollGlobalDataView(View):
         )
 
         global_survey = polls_local[0].poll_global
-        global_flow = global_survey.get_flow().get("results", None)
+        global_flow = global_survey.get_flow().get("results", [])
         global_flow_uuids = [question.get("node_uuids")[0] for question in global_flow]
 
         for question in global_polls_questions:
@@ -316,9 +316,18 @@ class ExportPollResultsBase(View):
     def _is_unct(self):
         return True if self.request.org else False
 
+    def _get_object_survey(self):
+        pk = self.kwargs.get("pk")
+        cls = Poll if self._is_unct() else PollGlobal
+        return cls.objects.get(pk=pk)
+
+    def _get_file_name(self):
+        obj = self._get_object_survey()
+        return obj.title or "results_survey"
+
     def _get_poll_results_data(self):
         pk = self.kwargs.get("pk")
-        print(self._is_unct())
+
         if self._is_unct():
             poll = Poll.objects.get(pk=pk)
             flow_uuid = poll.flow_uuid
@@ -343,7 +352,6 @@ class PollResultsCSV(ExportPollResultsBase):
 
     def get(self, *args, **kwargs):
         response = HttpResponse(content_type="text/csv")
-        response["Content-Disposition"] = "attachment;filename='test.csv'"
 
         writer = csv.writer(response)
         writer.writerow(self._get_headers())
@@ -351,6 +359,9 @@ class PollResultsCSV(ExportPollResultsBase):
         poll_results = self._get_poll_results_data()
         for result in poll_results:
             writer.writerow(result)
+
+        filename = self._get_file_name()
+        response["Content-Disposition"] = f"attachment;filename={filename}.csv"
 
         return response
 
@@ -362,6 +373,8 @@ class PollResultsJSON(ExportPollResultsBase):
 
         serializer_obj = PollResultSerializer(poll_results, many=True).data
         obj_json = json.dumps(serializer_obj, ensure_ascii=False)
-        response = HttpResponse(obj_json, content_type='application/json')
-        response['Content-Disposition'] = 'attachment; filename=export.json'
+
+        filename = self._get_file_name()
+        response = HttpResponse(obj_json, content_type="application/json")
+        response["Content-Disposition"] = f"attachment; filename={filename}.json"
         return response

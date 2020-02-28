@@ -842,7 +842,7 @@ class PollQuestion(SmartModel):
     poll = models.ForeignKey(
         Poll, on_delete=models.PROTECT, related_name="questions", help_text=_("The poll this question is part of")
     )
-    title = models.CharField(max_length=255, help_text=_("The title of this question"))
+    title = models.TextField(help_text=_("The title of this question"))
     ruleset_uuid = models.CharField(max_length=36, help_text=_("The RuleSet this question is based on"))
 
     ruleset_type = models.CharField(max_length=32, default="wait_message")

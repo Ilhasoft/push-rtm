@@ -118,7 +118,7 @@
                   {% comment %} //TODO add logic to handle export types {% endcomment %}
                     <a href="{% url 'results.global_export_json' poll_global.pk %}"><span class="dropdown-item">JSON</span></a>
                     <a href="{% url 'results.global_export_csv' poll_global.pk %}" target="_blank"><span class="dropdown-item">CSV</span></a>
-                    <a><span class="dropdown-item">PDF</span></a>
+                    <!--<a><span class="dropdown-item">PDF</span></a>-->
                   </div>
                 </div>
               </div>
@@ -196,9 +196,6 @@ $("input:checkbox").click(function() {
     });
   });
 
-    """def _get_poll_results_data(self):
-        poll_results = super()._get_poll_results_data()
-        return poll_results"""
   if (isChecked.length === 0) {
     $("div[data-question-sdgs]").each(function() {
       $(this).show();
