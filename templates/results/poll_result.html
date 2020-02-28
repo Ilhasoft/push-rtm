@@ -28,7 +28,6 @@
 
   <section class="section">
     <h1 class="title">{% trans 'Survey Results'%}</h1>
-    <button onclick="generatePdf();">aa</button>
     <div id="canvas"></div>
   </section>
 
@@ -94,7 +93,7 @@
                   <div class="dropdown-content">
                     <a href="{% url 'results.export_json' poll.pk %}"><span class="dropdown-item">JSON</span></a>
                     <a href="{% url 'results.export_csv' poll.pk %}" target="_blank"><span class="dropdown-item">CSV</span></a>
-                    <a><span class="dropdown-item">PDF</span></a>
+                    <!--<a><span class="dropdown-item">PDF</span></a>-->
                   </div>
                 </div>
               </div>

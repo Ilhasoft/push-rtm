@@ -176,7 +176,7 @@
           <div class="column">
             <div class="flex flex-end">
               <a href="{% url 'polls.poll_poll_date' poll.id %}" class="button primary-reverse right-m-5">{% trans "Back" %}</a>
-              <button type="submit" class="button is-primary">{% trans "Save" %}</button>
+              <button onclick="enableTextArea();" type="submit" class="button is-primary">{% trans "Save" %}</button>
             </div>
           </div>
         </div>
@@ -191,7 +191,11 @@
 <script src="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/scripts/choices.min.js"></script>
 <script type="text/javascript">
 $(".send-message").prop("checked", false);
+$("textarea").prop("disabled", true);
 
+function enableTextArea(){
+  $("textarea").prop("disabled", false);
+}
 
 $(".edit-send-message").change(function(){
   let id_question = $(this).val();
@@ -214,7 +218,7 @@ $(".send-message").change(function(){
   let checkbox_element = $(this);
 
   $("textarea").each(function(){
-    if($(this).attr("name").indexOf(id_question) > -1){ //verificar se id_questoin esta no id text area
+    if($(this).attr("name").indexOf(id_question) > -1){
       if (checkbox_element.is(':checked')) {
         new_value = $(this).val() + " " + text;
         $(this).val(new_value);
