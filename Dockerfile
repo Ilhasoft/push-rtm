@@ -9,7 +9,7 @@ ENV COMPRESS_OFFLINE=true
 WORKDIR /app
 
 RUN apt-get update -y
-RUN apt-get install -y supervisor
+RUN apt-get install -y supervisor gdal-bin
 
 COPY . .
 RUN pip install --no-cache-dir -r requirements.txt
