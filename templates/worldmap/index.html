@@ -77,25 +77,19 @@
   <script src="{% static 'plugins/worldmap/jquery.vmap.sampledata.js' %}" charset="utf-8"></script>
 
   <script>
-    function get_subdomain(){
-      return "{{ request.org.subdomain }}";
-    };
-
-    function add_subdomain_to_url(url, subdomain){
-      current_subdomain = "{{request.org.subdomain}}" + ".";
-      url = url.replace(current_subdomain, "");
-      url_splitted_https = url.split("//");
-      subdomain = "//" + subdomain + ".";
-      url_splitted_https.splice(1, 0, subdomain);
-      new_url_string = url_splitted_https.join("");
-
-      return new_url_string;
-    };
-
     $(".button-details-country").click(function(e){
-      subdomain = e.toElement.value;
-      url_origin = window.location.origin;
-      url = add_subdomain_to_url(url_origin, subdomain);
+      let current_subdomain = "{{request.org.subdomain}}";
+      let subdomain_button = e.toElement.value;
+      let url = window.location.origin;
+
+      if(current_subdomain){
+        url = url.replace(current_subdomain, subdomain_button);
+      }else{
+        url_splitted_https = url.split("//");
+        subdomain = "//" + subdomain_button + ".";
+        url_splitted_https.splice(1, 0, subdomain);
+        url = url_splitted_https.join("");
+      };
 
       if (e.toElement.id == "survey-results"){
         url = url + "/surveys/poll/list/";
