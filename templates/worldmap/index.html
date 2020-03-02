@@ -77,6 +77,10 @@
   <script src="{% static 'plugins/worldmap/jquery.vmap.sampledata.js' %}" charset="utf-8"></script>
 
   <script>
+    function get_subdomain(){
+      return "{{ request.org.subdomain }}";
+    };
+
     $(".button-details-country").click(function(e){
       let current_subdomain = "{{request.org.subdomain}}";
       let subdomain_button = e.toElement.value;
