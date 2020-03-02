@@ -256,7 +256,7 @@ class PollGlobalDataView(View):
 
         global_survey = polls_local[0].poll_global
         global_flow = global_survey.get_flow().get("results", [])
-        global_flow_uuids = [question.get("node_uuids")[0] for question in global_flow]
+        global_flow_keys = [question.get("key") for question in global_flow]
 
         for question in global_polls_questions:
             question_dict = self._global_questions.get(question.ruleset_label)
@@ -296,7 +296,8 @@ class PollGlobalDataView(View):
         local_poll_title = local_poll_questions[0].poll.title if local_poll_questions else None
 
         for question in local_poll_questions:
-            if question.ruleset_uuid in global_flow_uuids:
+            key = question.ruleset_label.replace(" ", "_").lower()
+            if key in global_flow_keys:
                 local_results = self._get_results_in_dict(question)
                 local_results["local_poll_title"] = local_poll_title
                 self._local_questions.append(local_results)

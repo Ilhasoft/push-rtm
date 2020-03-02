@@ -869,12 +869,12 @@ class FlowDataView(View):
         try:
             global_survey = PollGlobal.objects.get(pk=id_global_survey)
             global_flow = global_survey.get_flow().get("results", None)
-            global_flow_uuids = [question.get("node_uuids") for question in global_flow]
+            global_flow_uuids = [question.get("key") for question in global_flow]
 
             backend = OrgBackend.objects.get(pk=1)
             local_flow = org_local.get_flows(backend=backend).get(local_flow_uuid).get("results", None)
-            local_flow_uuids = [local_question.get("node_uuids") for local_question in local_flow if
-                                local_question.get("node_uuids") in global_flow_uuids]
+            local_flow_uuids = [local_question.get("key") for local_question in local_flow if
+                                local_question.get("key") in global_flow_uuids]
 
             amount_global_flow_uuids = len(global_flow_uuids)
             amount_local_flow_uuids = len(local_flow_uuids)
