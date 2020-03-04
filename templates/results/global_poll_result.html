@@ -118,7 +118,7 @@
                   {% comment %} //TODO add logic to handle export types {% endcomment %}
                     <a href="{% url 'results.global_export_json' poll_global.pk %}"><span class="dropdown-item">JSON</span></a>
                     <a href="{% url 'results.global_export_csv' poll_global.pk %}" target="_blank"><span class="dropdown-item">CSV</span></a>
-                    <!--<a><span class="dropdown-item">PDF</span></a>-->
+                    <a onclick="generatePdf('aa');"><span class="dropdown-item">PDF</span></a>
                   </div>
                 </div>
               </div>
@@ -173,8 +173,35 @@
 <script src="{% static 'plugins/wordcloud/d3.js' %}"></script>
 <script src="{% static 'plugins/wordcloud/d3.layout.cloud.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
 
 <script type="text/javascript">
+function generatePdf(pollTitle){
+  var buttons = $(".accordion-btn");
+
+  buttons.each(function(){
+    console.log($(this).children()[0].style.display === "none")
+    if($(this).children()[0].style.display === "none"){
+      return;
+    };
+    $(this).trigger("click");
+  });
+
+  var graphs = $("#chart-questions");
+  var pdf = new jsPDF('p', 'pt', 'a4');
+  pdf.internal.scaleFactor = 1.75;
+  var options = {
+    pagesplit: true
+  };
+
+  pdf.addHTML(graphs, options, function(){
+    pdf.save(pollTitle + ".pdf");
+  });
+
+}
+
+
 $("input:checkbox").click(function() {
   let isChecked = $("input:checkbox").filter(":checked");
 
