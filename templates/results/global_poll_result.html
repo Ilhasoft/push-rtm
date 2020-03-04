@@ -178,10 +178,10 @@
 
 <script type="text/javascript">
 function generatePdf(pollTitle){
-  $("#page-surveys").trigger("click");
   var buttons = $(".accordion-btn");
 
   buttons.each(function(){
+    console.log($(this).children()[0].style.display === "none")
     if($(this).children()[0].style.display === "none"){
       return;
     };
