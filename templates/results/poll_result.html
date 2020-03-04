@@ -22,14 +22,12 @@
           }
         })();">{% trans 'Surveys'%}</a></li>
         <li class="is-active"><a href="#" aria-current="page">{% trans 'Survey Results'%}</a></li>
-        <button onclick="generatePdf();">PDF</button>
       </ul>
     </nav>
   </section>
 
   <section class="section">
     <h1 class="title">{% trans 'Survey Results'%}</h1>
-    <div id="canvas"></div>
   </section>
 
   <section class="section">
@@ -94,7 +92,7 @@
                   <div class="dropdown-content">
                     <a href="{% url 'results.export_json' poll.pk %}"><span class="dropdown-item">JSON</span></a>
                     <a href="{% url 'results.export_csv' poll.pk %}" target="_blank"><span class="dropdown-item">CSV</span></a>
-                    <!--<a><span class="dropdown-item">PDF</span></a>-->
+                    <a onclick="generatePdf('{{poll.title}}');"><span class="dropdown-item">PDF</span></a>
                   </div>
                 </div>
               </div>
@@ -221,7 +219,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
 
   <script type="text/javascript">
-    function generatePdf(){
+    function generatePdf(pollTitle){
       var graphs = $(".div-graphs");
       var pdf = new jsPDF('p', 'pt', 'a4');
       pdf.internal.scaleFactor = 1.75;
@@ -230,7 +228,7 @@
       };
 
       pdf.addHTML(graphs, options, function(){
-        pdf.save("test.pdf");
+        pdf.save(pollTitle + ".pdf");
       });
     }
 
