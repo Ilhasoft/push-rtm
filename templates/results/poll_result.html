@@ -22,6 +22,7 @@
           }
         })();">{% trans 'Surveys'%}</a></li>
         <li class="is-active"><a href="#" aria-current="page">{% trans 'Survey Results'%}</a></li>
+        <button onclick="generatePdf();">PDF</button>
       </ul>
     </nav>
   </section>
@@ -133,7 +134,7 @@
           </div>
         </div>
 
-        <div class="columns is-multiline">
+        <div class="columns is-multiline div-graphs">
           {% for question in poll.get_questions %}
           <div class="column is-half-desktop div-data-question" data-question-sdgs="{{ question.sdgs|join:"," }}">
             <div class="survey-card box is-paddingless">
@@ -221,28 +222,82 @@
 
   <script type="text/javascript">
     function generatePdf(){
-      let pdf = new jsPDF();
-      let graphs = $(".div-data-question");
-      let width = pdf.internal.pageSize.getWidth();
-      let height = pdf.internal.pageSize.getHeight();
+      var graphs = $(".div-graphs");
+      var pdf = new jsPDF('p', 'pt', 'a4');
+      pdf.internal.scaleFactor = 1.75;
+      var options = {
+        pagesplit: true
+      };
 
-      for(let i = 0; i < graphs.length; i++){
+      pdf.addHTML(graphs, options, function(){
+        pdf.save("test.pdf");
+      });
 
+
+
+
+
+      /*var graphs = $(".div-data-question");
+      var pdf = new jsPDF();
+      var count = 1;
+      var htmlCanvas = "";
+
+      graphs.each(function(){
+        //pdf.addHTML($(this));
+        //aa = $(this).html(); is without css
+        html2canvas($(this), {
+          onrendered: function(canvas) {
+            htmlCanvas = canvas;
+            console.log(htmlCanvas);
+          },
+        });
+
+        pdf.fromHTML(htmlCanvas, count*10, count*10, {});
+        if(count === 4){
+          pdf.addPage();
+          count = 0;
+        }
+        count++;
+      });
+      pdf.save();*/
+
+
+
+      /*var graphs = $(".div-data-question");
+      var pdf = new jsPDF();
+
+      graphs.each(function(){
+        pdf.addHTML($(this), {pagesplit: true}, function(){
+          pdf.addPage();
+        });
+      });
+
+      pdf.save();*/
+
+      /*html2canvas(graphs, {
+        onrendered: function(canvas) {
+          canvasImg = canvas.toDataURL("image/jpeg", 1.0);
+          $("#canvas").append('<img src="' + canvasImg + '" class="images-graph">');
+          let pdf = new jsPDF();
+          pdf.addImage(canvasImg, "JPEG", 0, 0);
+          pdf.save();
+        },
+      });*/
+
+      /*for(let i = 0; i < graphs.length; i++){
+        let pdf = new jsPDF();
         html2canvas(graphs[i], {
           onrendered: function(canvas) {
               canvasImg = canvas.toDataURL("image/jpeg", 1.0);
-              $("#canvas").append(canvas);
-              pdf.addImage(canvasImg, 'JPEG', 0, 0, width, height);
+              //$("#canvas").append('<img src="' + canvasImg + '" class="images-graph">');
+              console.log(pdf);
+              pdf.addImage(canvasImg, "JPEG", 0, 0);
+              pdf.save();
           },
         });
-      };
-      pdf.save("wb.pdf");
-
-
-
-
-
-
+        break;
+      };*/
+    }
 
       /*var pdf = new jsPDF();
       var graphs = $("#graphs");
@@ -253,7 +308,6 @@
       pdf.addHTML(graphs, options, function() {
           pdf.save('web.pdf');
       });*/
-    }
 
 
     $("input:checkbox").click(function() {
