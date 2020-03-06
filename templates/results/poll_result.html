@@ -253,13 +253,13 @@
     }
 
     function showModal(question_title){
-      var iframe_url = window.location.hostname + "{% url 'results.iframe' %}";
+      var iframe_url = window.location.protocol + "//" + window.location.hostname + "{% url 'results.iframe' %}";
       var params = "?scope-type=local&" +
                     "poll-title={{poll.title}}&question-title=" + question_title;
 
       var url = iframe_url + params;
       var element_iframe = `
-        &#60;iframe src=${url} width="430" height="500" frameborder="0"&#62;&#60;/iframe&#62;
+        &#60;iframe src="${url}" width="430" height="500" frameborder="0"&#62;&#60;/iframe&#62;
       `;
       $("#url-iframe").html(element_iframe);
       $("#modal-chart").toggleClass("is-active");
