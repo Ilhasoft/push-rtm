@@ -6,8 +6,8 @@ from django.conf import settings
 from django.views.generic import View
 from django.http import JsonResponse
 from django.urls import reverse
-from django.shortcuts import get_object_or_404
-from django.core import serializers
+from django.contrib import messages
+from django.shortcuts import get_object_or_404, render
 
 from smartmin.views import SmartReadView, SmartTemplateView
 
@@ -107,7 +107,6 @@ class PollGlobalDataView(View):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self._response = {}
         self._global_questions = {}
         self._local_questions = []
 
@@ -237,9 +236,8 @@ class PollGlobalDataView(View):
         }
         return result_dict
 
-    def get(self, request, *args, **kwargs):
-        global_survey = self.kwargs["pk"]
-        unct = self.kwargs["unct"]
+    def _get_response_data(self, global_survey, unct):
+        response = {}
 
         polls_local = PollGlobalSurveys.objects.filter(
             poll_global_id=global_survey,
@@ -266,7 +264,6 @@ class PollGlobalDataView(View):
 
                 if local_data_word_cloud:
                     global_data_word_cloud = question_dict.get("word_cloud")
-                    #for local_value in local_data_word_cloud:
                     for key, value in local_data_word_cloud.items():
                         local_label = value.get("text")
                         global_value = global_data_word_cloud.get(local_label, None)
@@ -302,12 +299,58 @@ class PollGlobalDataView(View):
                 local_results["local_poll_title"] = local_poll_title
                 self._local_questions.append(local_results)
 
-        self._response["questions_global"] = self._global_questions
-        self._response["questions_local"] = self._local_questions
-        self._response["number_questions"] = len(self._local_questions)
-        self._response["sdgs"] = dict(settings.SDG_LIST)
+        response["questions_global"] = self._global_questions
+        response["questions_local"] = self._local_questions
+        response["number_questions"] = len(self._local_questions)
+        response["sdgs"] = dict(settings.SDG_LIST)
 
-        return JsonResponse(self._response)
+        return response
+
+    def get(self, request, *args, **kwargs):
+        global_survey = self.kwargs["pk"]
+        unct = self.kwargs["unct"]
+        response = self._get_response_data(global_survey, unct)
+
+        return JsonResponse(response)
+
+
+class ResultsIFrame(PollGlobalDataView):
+    def get(self, request, *args, **kwargs):
+        scope_type = request.GET.get("scope-type")
+        poll_title = request.GET.get("poll-title")
+        question_title = request.GET.get("question-title")
+        print(request)
+
+        try:
+            if scope_type == "local":
+                question = PollQuestion.objects.filter(title=question_title, poll__title=poll_title).first()
+                context = self._get_results_in_dict(question)
+
+            elif scope_type == "global":
+                poll_global = PollGlobal.objects.get(title=poll_title)
+                id_poll_global = poll_global.id or None
+                response_complete = self._get_response_data(id_poll_global, 0)
+                global_response = response_complete.get("questions_global", {})
+                context = global_response.get(question_title)
+            else:
+                raise
+
+        except Exception as e:
+            print(e)
+            messages.error(request, "Sorry, an error occurred in the request.")
+            context = {}
+
+        data_chart = {
+            "word_cloud": context.get("word_cloud", {}),
+            "statistics": context.get("statistics", {}),
+            "age": context.get("age", {}),
+            "gender": context.get("gender", {}),
+        }
+
+        return render(request, "results/iframe.html", {
+            "context": context,
+            "data_chart": json.dumps(data_chart)
+        })
 
 
 class ExportPollResultsBase(View):

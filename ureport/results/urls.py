@@ -6,7 +6,8 @@ from .views import (
     PollGlobalReadView,
     PollGlobalDataView,
     PollResultsCSV,
-    PollResultsJSON
+    PollResultsJSON,
+    ResultsIFrame
 )
 
 
@@ -19,4 +20,5 @@ urlpatterns = [
     url(r'^survey-global/(?P<pk>[0-9]+)/data/(?P<unct>[0-9]+)/$', PollGlobalDataView.as_view(), name="results.global_poll_data"),
     url(r"^survey-global/(?P<pk>\d+)/export-csv/$", PollResultsCSV.as_view(), name="results.global_export_csv"),
     url(r"^survey-global/(?P<pk>\d+)/export-json/$", PollResultsJSON.as_view(), name="results.global_export_json"),
+    url(r"^iframe/$", ResultsIFrame.as_view(), name="results.iframe"),
 ]

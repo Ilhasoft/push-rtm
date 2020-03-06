@@ -1,3 +1,4 @@
+window.RTMConfigs = {};
 window.RTMConfigs.availableColors = [
     "#7bcff6",
     "#03aeef",
