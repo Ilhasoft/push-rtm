@@ -56,9 +56,9 @@
                 </div>
                 <div class="dropdown-menu" id="dropdown-menu" role="menu">
                   <div class="dropdown-content">
-                    <a class="dropdown-item statistics">All</a>
-                    <a class="dropdown-item gender">Gender</a>
-                    <a class="dropdown-item age">Age</a>
+                    <a onclick="showChart('statistics');" class="dropdown-item statistics">All</a>
+                    <a onclick="showChart('gender');" class="dropdown-item gender">Gender</a>
+                    <a onclick="showChart('age');" class="dropdown-item age">Age</a>
                   </div>
                 </div>
               </div>
@@ -94,59 +94,142 @@
 <script src="{% static 'js/availableColors.js' %}"></script>
 
 <script type="text/javascript">
-
+    var myChart;
     var data_chart = {{data_chart|safe}};
     var element_canvas_chart = $("#chart-question");
 
-    if($.isEmptyObject(data_chart["word_cloud"])){
-        var myChart = new Chart(element_canvas_chart, {
-            type: "doughnut",
-            data: {
-                datasets: [{
-                  data: data_chart["statistics"]["counts"],
-                  backgroundColor: RTMConfigs.availableColors,
-                  //backgroundColor: 'rgb(255, 99, 132)',
-                  borderColor: "rgba(255, 255, 255, 0.1)",
-                }],
-                labels: data_chart["statistics"]["labels"]
-            },
-            options: {
+    function showChart(type_chart){
+        if(!($.isEmptyObject(myChart))){
+            myChart.destroy();
+        }
+
+        if(type_chart == "statistics"){
+            myChart = new Chart(element_canvas_chart, {
+                type: "doughnut",
+                data: {
+                    datasets: [{
+                      data: data_chart["statistics"]["counts"],
+                      backgroundColor: RTMConfigs.availableColors,
+                      borderColor: "rgba(255, 255, 255, 0.1)",
+                    }],
+                    labels: data_chart["statistics"]["labels"]
+                },
+                options: {
+                    legend: {
+                      labels: {
+                        usePointStyle: true,
+                      }
+                    },
+                    tooltips: {
+                      bodyFontSize: 16,
+                      titleFontSize: 16,
+                    },
+                    plugins: {
+                      datalabels: {
+                        font: {
+                          size: 20,
+                          weight: 'bold',
+                        },
+                        formatter:(value, element_canvas_chart) => {
+                          let sum = 0;
+                          let dataArr = element_canvas_chart.chart.data.datasets[0].data;
+                          dataArr.map(data => {
+                            sum += data;
+                          });
+                          let percentage = (value * 100 / sum);
+                          if (percentage < 5) return "";
+                          if (percentage === 100.00) return parseInt(percentage) + "%";
+                          return percentage.toFixed(2) + "%";
+                        },
+                        color: "#fff",
+                      }
+                    }
+                },
+            });
+        }else if(type_chart == "gender"){
+            myChart = new Chart(element_canvas_chart, {
+              type: "horizontalBar",
+              data: {
+                labels: data_chart["gender"]["categories"],
+                datasets: data_chart["gender"]["series"]
+              },
+              options: {
                 legend: {
                   labels: {
                     usePointStyle: true,
+                  }
+                },
+                plugins: {
+                  datalabels: {
+                    display: false,
                   }
                 },
                 tooltips: {
                   bodyFontSize: 16,
                   titleFontSize: 16,
                 },
+                scales: {
+                  xAxes: [{
+                    stacked: true,
+                    ticks: {
+                      stepSize: 20,
+                    },
+                  }],
+                  yAxes: [{
+                    stacked: true,
+                    gridLines: {
+                      color: "rgba(0, 0, 0, 0)",
+                    },
+                  }]
+                }
+              }
+            });
+        }else{
+            myChart = new Chart(element_canvas_chart, {
+              type: "horizontalBar",
+              data: {
+                labels: data_chart["age"]["categories"],
+                datasets: data_chart["age"]["series"],
+              },
+              options: {
+                legend: {
+                  labels: {
+                    usePointStyle: true,
+                  }
+                },
                 plugins: {
                   datalabels: {
-                    font: {
-                      size: 20,
-                      weight: 'bold',
-                    },
-                    formatter:(value, element_canvas_chart) => {
-                      let sum = 0;
-                      let dataArr = element_canvas_chart.chart.data.datasets[0].data;
-                      dataArr.map(data => {
-                        sum += data;
-                      });
-                      let percentage = (value * 100 / sum);
-                      if (percentage < 5) return "";
-                      if (percentage === 100.00) return parseInt(percentage) + "%";
-                      return percentage.toFixed(2) + "%";
-                    },
-                    color: "#fff",
+                    display: false,
                   }
+                },
+                tooltips: {
+                  bodyFontSize: 16,
+                  titleFontSize: 16,
+                },
+                scales: {
+                  xAxes: [{
+                    stacked: true,
+                    ticks: {
+                      stepSize: 20,
+                    },
+                  }],
+                  yAxes: [{
+                    stacked: true,
+                    gridLines: {
+                      color: "rgba(0, 0, 0, 0)",
+                    }
+                  }]
                 }
-            },
-        });
-    }else{
-        console.log("FALTA IMPLEMENTAR WORD CHART");
+              }
+            });
+        }
     }
 
-
+    if($.isEmptyObject(data_chart["word_cloud"])){
+        showChart("statistics");
+    }else{
+        console.log("IMPLEMENTAR WORD CLOUD");
+    }
 
     /*let globalDataChart = {};
     let localDataChart = {};
@@ -212,83 +295,11 @@
 
       }else if(tab == "age"){
 
-        globalDataChart[ruleset_label] = new Chart(global_chart, {
-          type: "horizontalBar",
-          data: {
-            labels: data_question_global["age"]["categories"],
-            datasets: data_question_global["age"]["series"],
-          },
-          options: {
-            legend: {
-              labels: {
-                usePointStyle: true,
-              }
-            },
-            plugins: {
-              datalabels: {
-                display: false,
-              }
-            },
-            tooltips: {
-              bodyFontSize: 16,
-              titleFontSize: 16,
-            },
-            scales: {
-              xAxes: [{
-                stacked: true,
-                ticks: {
-                  stepSize: 20,
-                },
-              }],
-              yAxes: [{
-                stacked: true,
-                gridLines: {
-                  color: "rgba(0, 0, 0, 0)",
-                }
-              }]
-            }
-          }
-        });
+        globalDataChart[ruleset_label] =
 
       }else if(tab == "gender"){
 
-        globalDataChart[ruleset_label] = new Chart(global_chart, {
-          type: "horizontalBar",
-          data: {
-            labels: data_question_global["gender"]["categories"],
-            datasets: data_question_global["gender"]["series"]
-          },
-          options: {
-            legend: {
-              labels: {
-                usePointStyle: true,
-              }
-            },
-            plugins: {
-              datalabels: {
-                display: false,
-              }
-            },
-            tooltips: {
-              bodyFontSize: 16,
-              titleFontSize: 16,
-            },
-            scales: {
-              xAxes: [{
-                stacked: true,
-                ticks: {
-                  stepSize: 20,
-                },
-              }],
-              yAxes: [{
-                stacked: true,
-                gridLines: {
-                  color: "rgba(0, 0, 0, 0)",
-                },
-              }]
-            }
-          }
-        });
+        globalDataChart[ruleset_label] =
       }
     };
 

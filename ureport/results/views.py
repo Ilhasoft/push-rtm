@@ -332,6 +332,8 @@ class ResultsIFrame(PollGlobalDataView):
                 response_complete = self._get_response_data(id_poll_global, 0)
                 global_response = response_complete.get("questions_global", {})
                 context = global_response.get(question_title)
+            else:
+                raise
 
         except Exception as e:
             print(e)
