@@ -7,6 +7,17 @@
   <link rel="stylesheet" href="{% static 'plugins/checkbox/checkbox.min.css' %}">
   <link rel="stylesheet" href="{% sass_src 'plugins/tooltip/tooltip.scss' %}">
   <link rel="stylesheet" href="{% sass_src 'css/polls/survey_results.scss' %}"/>
+  <style>
+    #modal-chart{
+      z-index: 10001;
+    }
+    #url-iframe {
+      color: #707070;
+    }
+    #Bold{
+      fill: #28b533;
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
@@ -28,7 +39,6 @@
 
   <section class="section">
     <h1 class="title">{% trans 'Survey Results'%}</h1>
-    <div id="canvas"></div>
   </section>
 
   <section class="section">
@@ -93,7 +103,7 @@
                   <div class="dropdown-content">
                     <a href="{% url 'results.export_json' poll.pk %}"><span class="dropdown-item">JSON</span></a>
                     <a href="{% url 'results.export_csv' poll.pk %}" target="_blank"><span class="dropdown-item">CSV</span></a>
-                    <!--<a><span class="dropdown-item">PDF</span></a>-->
+                    <a onclick="generatePdf('{{poll.title}}');"><span class="dropdown-item">PDF</span></a>
                   </div>
                 </div>
               </div>
@@ -133,14 +143,16 @@
           </div>
         </div>
 
-        <div class="columns is-multiline">
+        <div class="columns is-multiline div-graphs">
           {% for question in poll.get_questions %}
-          <div class="column is-half-desktop div-data-question" data-question-sdgs="{{ question.sdgs|join:"," }}">
+          <div class="column is-half-desktop div-data-question" data-question-sdgs="{{ question.sdgs|join:',' }}">
             <div class="survey-card box is-paddingless">
               <div class="survey-question">
                 <div class="survey-question__number">{{ forloop.counter }}</div>
                 <div class="survey-question__info">
                   <span class="survey-question__info__title">{{ question.title }}</span>
+                  <a onclick="showModal('title-hidden-{{ question.pk }}');"><i class="material-icons">code</i></a>
+                  <span style="display: none;" id="title-hidden-{{ question.pk }}">{{question.title}}</span>
                   <div class="top-m-20">
                     <span class="right-m-30">{% trans 'Answered:'%} {{ question.get_responded|intcomma }}</span>
                     <span>{% trans 'Polled:'%} {{ question.get_polled|intcomma }}</span>
@@ -208,6 +220,26 @@
       <i class="material-icons">keyboard_arrow_up</i>
     </a>
   </section>
+  <div class="modal" id="modal-chart">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Embed Chart</p>
+        <button class="delete is-pulled-right" onclick="showModal({{question.title}})" aria-label="close"></button>
+      </header>
+      <section class="modal-card-body">
+        <span id="url-iframe"></span>
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button primary-reverse" id="copy-iframe" onclick="copyIframe();">Copy</button>
+        <div id="check-iframe">
+          <svg id="Bold" class="check-svg" enable-background="new 0 0 24 24" height="15" viewBox="0 0 24 24" width="15" xmlns="http://www.w3.org/2000/svg">
+            <path d="m.828 13.336c-.261.304-.388.691-.357 1.091s.215.764.52 1.024l7.403 6.346c.275.235.616.361.974.361.044 0 .089-.002.134-.006.405-.036.77-.229 1.028-.542l12.662-15.411c.254-.31.373-.7.334-1.099-.04-.399-.231-.759-.541-1.014l-2.318-1.904c-.639-.524-1.585-.432-2.111.207l-9.745 11.861-3.916-3.355c-.628-.536-1.576-.465-2.115.163z"/>
+          </svg>
+        </div>
+      </footer>
+    </div>
+  </div>
 {% endblock %}
 
 {% block js_extra %}
@@ -220,41 +252,47 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
 
   <script type="text/javascript">
-    function generatePdf(){
-      let pdf = new jsPDF();
-      let graphs = $(".div-data-question");
-      let width = pdf.internal.pageSize.getWidth();
-      let height = pdf.internal.pageSize.getHeight();
+    function copyIframe(){
+      var spanIframe = $("#url-iframe");
 
-      for(let i = 0; i < graphs.length; i++){
+      var range = document.createRange();
+      range.selectNodeContents(spanIframe[0]);
+      var selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
 
-        html2canvas(graphs[i], {
-          onrendered: function(canvas) {
-              canvasImg = canvas.toDataURL("image/jpeg", 1.0);
-              $("#canvas").append(canvas);
-              pdf.addImage(canvasImg, 'JPEG', 0, 0, width, height);
-          },
-        });
-      };
-      pdf.save("wb.pdf");
+      document.execCommand('copy');
+      $("#check-iframe").fadeIn();
+    }
 
+    function showModal(id_element_question_title){
+      $("#check-iframe").css("display", "none");
+      var question_title = $("#" + id_element_question_title).html();
 
+      var iframe_url = window.location.protocol + "//" + window.location.hostname + "{% url 'results.iframe' %}";
+      var params = "?scope-type=local&" +
+                    "poll-title={{poll.title}}&question-title=" + question_title;
 
+      var url = iframe_url + params;
+      var element_iframe = `
+        &#60;iframe src="${url}" width="430" height="500" frameborder="0"&#62;&#60;/iframe&#62;
+      `;
+      $("#url-iframe").html(element_iframe);
+      $("#modal-chart").toggleClass("is-active");
+    }
 
-
-
-
-      /*var pdf = new jsPDF();
-      var graphs = $("#graphs");
+    function generatePdf(pollTitle){
+      var graphs = $(".div-graphs");
+      var pdf = new jsPDF('p', 'pt', 'a4');
+      pdf.internal.scaleFactor = 1.75;
       var options = {
         pagesplit: true
       };
 
-      pdf.addHTML(graphs, options, function() {
-          pdf.save('web.pdf');
-      });*/
+      pdf.addHTML(graphs, options, function(){
+        pdf.save(pollTitle + ".pdf");
+      });
     }
-
 
     $("input:checkbox").click(function() {
       let isChecked = $("input:checkbox").filter(":checked");
