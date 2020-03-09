@@ -1,15 +1,15 @@
-import pycountry
-
 from django.db.models import Sum
 from django.core.exceptions import ObjectDoesNotExist
 
 from smartmin.views import SmartTemplateView
+from dash.orgs.views import OrgObjPermsMixin
 from dash.orgs.models import Org
 from ureport.channels.models import ChannelDailyStats
 
 
-class ListView(SmartTemplateView):
+class ListView(OrgObjPermsMixin, SmartTemplateView):
     template_name = "worldmap/index.html"
+    permission = "orgs.org_manage_accounts"
 
     def get_sdgs_from_org(self, org):
         org_sdgs = set()
