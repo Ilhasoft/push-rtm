@@ -92,7 +92,10 @@
           </div>
           {{ form.percent_compability }}
         {% endif %}
-        <div class="notification is-warning is-hidden" id="global_survey_description"></div>
+        <div class="notification is-hidden" id="global_description">
+          <span style="font-size: 12px; color: #7F8587;">Global Survey Description</span>
+          <div id="global_survey_description"></div>
+        </div>
         <div id="loaderDiv" style="display: none;">
           <img src="{% static 'img/loading.gif' %}" id="image-load" width="15px" height="15px">
           Checking surveys compatibility...
@@ -135,7 +138,7 @@ $(document).ready(function() {
       $("#select_global_survey").addClass("is-hidden");
       $("#id_global_survey").attr("required", false);
       $("#global_survey_description").html("");
-      $("#global_survey_description").addClass("is-hidden");
+      $("#global_description").addClass("is-hidden");
       $("#id_global_survey").val("");
     }
   });
@@ -143,10 +146,11 @@ $(document).ready(function() {
   $("#id_global_survey").change(function() {
     let id = parseInt($("#id_global_survey option:selected").val());
     $("#global_survey_description").html("");
-    $("#global_survey_description").addClass("is-hidden");
+    $("#global_description").addClass("is-hidden");
     if (id) {
-      $("#global_survey_description").html(surveys_global[id]);
-      $("#global_survey_description").removeClass("is-hidden");
+     var survey_description = surveys_global[id] != undefined ? surveys_global[id] : "No description";
+     $("#global_survey_description").html(survey_description);
+     $("#global_description").removeClass("is-hidden");
     }
   });
 
@@ -166,7 +170,7 @@ $(document).ready(function() {
       $("#id_connect_global").attr("checked", true);
       $("#global_survey_description").html(surveys_global[id]);
       $("#select_global_survey").removeClass("is-hidden");
-      $("#global_survey_description").removeClass("is-hidden");
+      $("#global_description").removeClass("is-hidden");
     }
   }
 
