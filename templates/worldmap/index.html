@@ -5,21 +5,40 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jqvmap.min.css">
   <link rel="stylesheet" href="{% sass_src 'plugins/worldmap/style.scss' %}">
   <link rel="stylesheet" href="{% sass_src 'css/worldmap/index.scss' %}">
+  <link rel="stylesheet" href="{% sass_src 'plugins/tooltip/tooltip.scss' %}">
+  <style>
+    .tooltip{
+      background-color: inherit;
+    }
+    .tooltip-map{
+      width: 200px;
+      margin-bottom: -20px;
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
   <div class="worldmap">
     <div id="vmap" style="height: 80vh"></div>
     <div id="mapLegend" class="map-legend">
-      <div>UNCTs Engagement (%)</div>
-      <div class="map-legend__inner">
-        <div>0</div>
-        <div class="map-legend__inner__block__lighter"></div>
-        <div class="map-legend__inner__block__light"></div>
-        <div class="map-legend__inner__block__normal"></div>
-        <div class="map-legend__inner__block__dark"></div>
-        <div class="map-legend__inner__block__darker"></div>
-        <div>100</div>
+      <div class="tooltip top align-center">
+        <div class="is-size-6">UNCTs Engagement (%)</div>
+        <div class="map-legend__inner">
+          <div>0</div>
+          <div class="map-legend__inner__block__lighter"></div>
+          <div class="map-legend__inner__block__light"></div>
+          <div class="map-legend__inner__block__normal"></div>
+          <div class="map-legend__inner__block__dark"></div>
+          <div class="map-legend__inner__block__darker"></div>
+          <div>100</div>
+        </div>
+        <div class="tooltip-content tooltip-map channel-tooltip flex flex-center p-20">
+          <div class="flex has-text-centered">
+            Total percentage based on the amount of incoming and outgoing messages.
+            <br><br>
+            (received/sent)*100 = %
+          </div>
+        </div>
       </div>
     </div>
   </div>
