@@ -320,9 +320,10 @@ class PollCRUDL(SmartCRUDL):
             context = super().get_context_data(**kwargs)
             context["page_subtitle"] = _("New")
             context["global_survey"] = PollGlobal.objects.filter(
-                is_active=True,
+                Q(poll_end_date__gte=timezone.now()) |
+                Q(poll_end_date__isnull=True),
                 poll_date__lte=timezone.now(),
-                poll_end_date__gte=timezone.now(),
+                is_active=True
             )
             context["show_connect_global"] = True
             return context
@@ -767,9 +768,10 @@ class PollCRUDL(SmartCRUDL):
             context = super().get_context_data(**kwargs)
             context["page_subtitle"] = _("Edit")
             context["global_survey"] = PollGlobal.objects.filter(
-                is_active=True,
+                Q(poll_end_date__gte=timezone.now()) |
+                Q(poll_end_date__isnull=True),
                 poll_date__lte=timezone.now(),
-                poll_end_date__gte=timezone.now(),
+                is_active=True,
             )
             in_global = PollGlobalSurveys.objects.filter(poll_local=self.object).first()
             context["approve_pending"] = in_global

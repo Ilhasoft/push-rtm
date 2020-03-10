@@ -37,14 +37,14 @@
         <th>{% autosort name _("Name") %}</th>
         <th>{% autosort timezone _("Timezone") %}</th>
         <th>{% autosort language _("Language") %}</th>
-        <th></th>
-        <th></th>
+        <th>{% trans _("Edit") %}</th>
+        <th>{% trans _("Users") %}</th>
       </tr>
     </thead>
     <tbody class="has-header">
       {% for org in orgs %}
         <tr class="is-tr">
-          <td>{{ org.name }}</td>
+          <td><a href="{% url 'uncts.redirect' subdomain=org.subdomain %}" target="_blank">{{ org.name }}</a></td>
           <td>{{ org.timezone }} </td>
           <td>{{ org.language }}</td>
           <td>
