@@ -198,10 +198,6 @@ class QuestionForm(ModelForm):
                     raise ValidationError(
                         _("You must include a title for every included question."))
 
-                if len(cleaned[title_key]) > 255:
-                    raise ValidationError(
-                        _("Title too long. The max limit is 255 characters for each title"))
-
                 included_count += 1
 
         if not included_count:
@@ -581,6 +577,8 @@ class PollCRUDL(SmartCRUDL):
                 send_messages_choices = []
                 send_messages_list = initial.get(send_messages_field_name, "")
                 for send_message in send_messages_list:
+                    array_send_message_without_breakline = send_message.splitlines()
+                    send_message = " ".join(array_send_message_without_breakline)
                     send_messages_choices.append((send_message, send_message))
 
                 send_messages_choices = tuple(send_messages_choices)
