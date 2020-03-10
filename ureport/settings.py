@@ -150,7 +150,8 @@ SITE_ALLOW_NO_ORG += (
     "docs.global_repository",
     "docs.global_surveys",
     "docs.global_dashboard",
-    "results.iframe"
+    "results.iframe",
+    "uncts.redirect"
 )
 
 SDG_LIST = (
