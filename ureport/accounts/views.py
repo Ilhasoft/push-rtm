@@ -53,7 +53,9 @@ class ListView(OrgObjPermsMixin, SmartTemplateView):
 
         queryset = queryset.filter(Q(org_admins=org) | Q(org_editors=org) | Q(org_viewers=org))
 
-        log_permission = LogPermissionUser.objects.filter(**filters, org=org)
+        log_permission = LogPermissionUser.objects.filter(
+                                                user__first_name__icontains=query,
+                                                org=org)
 
         context["users"] = get_paginator(queryset.filter(**filters, is_active=True).order_by(sortered), page)
         context["log_permission_users"] = log_permission
