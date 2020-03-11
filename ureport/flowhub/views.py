@@ -418,6 +418,7 @@ class CreateGlobalView(CreateView):
         form = FlowGlobalForm(request.POST, request.FILES)
 
         if form.is_valid():
+            form.instance.visible_globally = True
             form.save(self.request)
             messages.success(request, _("Flow created with success!"))
             return redirect(reverse("flowhub.flow_list_global"))
