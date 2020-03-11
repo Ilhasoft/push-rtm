@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-    {% if access_level == 'local' %}
+    {% if access_level == 'local' or request.org %}
     <section class="section">
       <h1 class="title bottom-m-0">
         {{ request.org }}
