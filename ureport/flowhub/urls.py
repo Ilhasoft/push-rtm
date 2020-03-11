@@ -12,4 +12,7 @@ urlpatterns = [
     url(r"^(?P<flow>[0-9]+)/update/$", views.EditView.as_view(), name="flowhub.flow_update"),
     url(r"^(?P<flow>[0-9]+)/delete/$", views.DeleteView.as_view(), name="flowhub.flow_delete"),
     url(r"^(?P<flow>[0-9]+)/info/$", views.InfoView.as_view(), name="flowhub.flow_info"),
+    url(r"^global/$", views.ListGlobalView.as_view(), name="flowhub.flow_list_global"),
+    url(r"^create-global/$", views.CreateGlobalView.as_view(), name="flowhub.flow_create_global"),
+    url(r"^(?P<flow>[0-9]+)/update-global/$", views.EditGlobalView.as_view(), name="flowhub.flow_update_global"),
 ]

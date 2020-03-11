@@ -31,12 +31,16 @@
           <aside class="menu">
             <ul class="menu-list">
               <li><a class="all" href="{% url 'flowhub.flow_list' %}">{% trans "All flows" %}</a></li>
+              <li><a class="global" href="{% url 'flowhub.flow_list_global' %}">{% trans "Global" %}</a></li>
               <li><a class="uncts" href="{% url 'flowhub.flow_uncts' %}">{% trans "UNCTs" %}</a></li>
               {% if not request.user.is_superuser and request.org in request.user.get_user_orgs %}
                 <li><a class="my-org" href="{% url 'flowhub.my_org_flow_list' %}">{{ org.name }}</a></li>
               {% endif %}
               {% if request.user|is_admin_user %}
                 <li><a class="upload" href="{% url 'flowhub.flow_create' %}">{% trans "Upload Flow" %}</a></li>
+              {% endif %}
+              {% if request.user.is_superuser and not request.org %}
+                <li><a class="upload" href="{% url 'flowhub.flow_create_global' %}">{% trans "Upload Global Flow" %}</a></li>
               {% endif %}
             </ul>
           </aside>

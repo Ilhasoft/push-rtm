@@ -21,13 +21,15 @@ class Flow(SmartModel):
     )
     org = models.ForeignKey(
         Org,
+        null=True,
+        blank=True,
         on_delete=models.CASCADE,
         related_name="flows",
         verbose_name=_("UNCT"),
         help_text=_("The organization this flow is part of"),
     )
     tags = TaggableManager(verbose_name=_("Tags"))
-    sdgs = ArrayField(models.IntegerField(choices=settings.SDG_LIST, blank=False), verbose_name=_("SDGs"))
+    sdgs = ArrayField(models.IntegerField(choices=settings.SDG_LIST, blank=True, null=True), verbose_name=_("SDGs"))
     flow = JSONField()
     visible_globally = models.BooleanField(default=False, verbose_name=_("Visible Globally"))
     languages = ArrayField(

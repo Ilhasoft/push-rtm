@@ -5,12 +5,12 @@
     <div class="columns is-gapless">
       <div class="column is-11">
         <a href="{{ flow.get_absolute_url }}">
-          <strong>{{ flow.name }}</strong> | <i>{{ flow.org.name|default:"Global" }}</i>
+          <strong>{{ flow.name }}</strong> | <i>{% trans "Global" %}</i>
         </a>
-        {% if request.org == flow.org and request.user|is_admin_user %}
+        {% if request.user.is_superuser and not request.org %}
           <form class="form-flowhub">
             {% csrf_token %}
-            <a href="{% url 'flowhub.flow_update' flow.pk %}">
+            <a href="{% url 'flowhub.flow_update_global' flow.pk %}">
               <img src="{% static 'svg/pencil.svg' %}" alt="pencil">
             </a>
           </form>

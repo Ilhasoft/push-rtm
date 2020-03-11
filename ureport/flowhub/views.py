@@ -19,7 +19,7 @@ from smartmin.views import SmartTemplateView
 from ureport.utils import get_paginator, is_global_user
 
 from .models import Flow
-from .forms import FlowForm
+from .forms import FlowForm, FlowGlobalForm
 
 
 class FlowBreadCrumbListView(SmartTemplateView):
@@ -303,7 +303,7 @@ class EditView(FlowBreadCrumbListView):
         }
 
         context["form"] = FlowForm(data=data, flow_is_required=False)
-        context["page_subtitle"] = _("Edit")
+        context["subtitle"] = _("Edit Flow")
         return context
 
     def post(self, request, *args, **kwargs):
@@ -402,3 +402,82 @@ class InfoView(FlowBreadCrumbListView):
             self.request.META.get("HTTP_REFERER").encode("UTF-8")), "UTF-8")
         context["flow"] = queryset
         return context
+
+
+class CreateGlobalView(CreateView):
+    template_name = "flowhub/global_form.html"
+    success_url = reverse_lazy("flowhub.flow_list")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = FlowGlobalForm()
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        form = FlowGlobalForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            form.save(self.request)
+            messages.success(request, _("Flow created with success!"))
+            return redirect(reverse("flowhub.flow_list_global"))
+        else:
+            context = self.get_context_data()
+            context["form"] = form
+            messages.error(request, _(
+                "Sorry, you did not complete the registration."))
+            messages.error(request, form.non_field_errors())
+            return render(request, self.template_name, context)
+
+
+class ListGlobalView(ListView):
+    redirect_to = "flowhub.flow_list_global"
+    template_name = "flowhub/global_index.html"
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        return queryset.filter(org__isnull=True)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["subtitle"] = _("All global flows")
+        context["flow_section_id"] = "flowhub-global"
+
+        return context
+
+
+class EditGlobalView(EditView):
+    template_name = "flowhub/global_form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        flow = get_object_or_404(Flow, pk=self.kwargs["flow"])
+        data = {
+            "name": flow.name,
+            "languages": flow.languages,
+            "description": flow.description,
+            "collected_data": flow.collected_data,
+            "tags": list(flow.tags.values_list("name", flat=True)),
+        }
+
+        context["form"] = FlowGlobalForm(data=data, flow_is_required=False)
+        context["subtitle"] = _("Edit Flow")
+        return context
+
+    def post(self, request, *args, **kwargs):
+        flow = get_object_or_404(Flow, pk=self.kwargs["flow"])
+        form = FlowGlobalForm(request.POST, request.FILES,
+                        instance=flow, flow_is_required=False)
+
+        if form.is_valid():
+            form.save(self.request)
+            messages.success(request, _("Flow updated with success!"))
+            return redirect(reverse("flowhub.flow_list_global"))
+        else:
+            context = self.get_context_data()
+            context["form"] = form
+            messages.error(request, _(
+                "Sorry, you did not complete the registration."))
+            messages.error(request, form.non_field_errors())
+            return render(request, self.template_name, context)

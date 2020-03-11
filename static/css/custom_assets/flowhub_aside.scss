@@ -24,7 +24,8 @@
   #flowhub-all .all,
   #flowhub-uncts .uncts,
   #flowhub-my-org .my-org,
-  #flowhub-upload .upload {
+  #flowhub-upload .upload ,
+  #flowhub-global .global{
     border-left: 0.7rem solid $primary;
     padding-left: 2rem;
     color: $primary;
