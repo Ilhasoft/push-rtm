@@ -151,7 +151,11 @@ SITE_ALLOW_NO_ORG += (
     "docs.global_surveys",
     "docs.global_dashboard",
     "results.iframe",
-    "uncts.redirect"
+    "uncts.redirect",
+    "flowhub.flow_create_global",
+    "flowhub.flow_list_global",
+    "flowhub.flow_delete",
+    "flowhub.flow_update_global"
 )
 
 SDG_LIST = (

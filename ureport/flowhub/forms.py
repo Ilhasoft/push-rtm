@@ -116,3 +116,27 @@ class FlowForm(forms.ModelForm):
         # instance.save_m2m()
 
         return instance
+
+
+class FlowGlobalForm(FlowForm):
+    class Meta:
+        model = Flow
+        fields = [
+            "name",
+            "description",
+            "collected_data",
+            "tags",
+            "languages"
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['sdgs'].required = False
+
+    def clean(self):
+        cleaned_data = super().clean()
+        cleaned_data["org"] = None
+        cleaned_data["sdgs"] = []
+        cleaned_data["visible_globally"] = True
+
+        return cleaned_data
