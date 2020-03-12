@@ -23,10 +23,8 @@
       color: #707070;
     }
     .info-worldmap {
-      font-size: 20px !important;
-    }
-    .info-worldmap:hover{
-      color: #03AEEF;
+      vertical-align: -19%;
+      font-size: 18px !important;
     }
   </style>
 {% endblock %}
@@ -36,10 +34,10 @@
     <div id="vmap" style="height: 80vh"></div>
     <div id="mapLegend" class="map-legend">
       <div class="tooltip top align-center">
-        <div class="is-size-6">
+        <span class="is-size-6 teste">
           UNCTs Engagement
-          <i class="material-icons info-worldmap info-icon left-m-10">info</i>
-        </div>
+        </span>
+        <i class="material-icons info-worldmap info-icon left-m-10">info</i>
         <div class="map-legend__inner">
           <div>0</div>
           <div class="map-legend__inner__block__lighter"></div>
@@ -127,6 +125,12 @@
   <script src="{% static 'plugins/worldmap/jquery.vmap.sampledata.js' %}" charset="utf-8"></script>
 
   <script>
+    $(".map-legend").hover(function(){
+      $(".info-worldmap").css("color", "#03AEEF");
+    }, function(){
+      $(".info-worldmap").css("color", "#707070");
+    });
+
     function get_subdomain(){
       return "{{ request.org.subdomain }}";
     };
