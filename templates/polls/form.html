@@ -93,12 +93,12 @@
           {{ form.percent_compability }}
         {% endif %}
         <div class="notification is-hidden" id="global_description">
-          <span style="font-size: 12px; color: #7F8587;">Global Survey Description</span>
+          <span style="font-size: 12px; color: #7F8587;">{% trans "Global Survey Description" %}</span>
           <div id="global_survey_description"></div>
         </div>
         <div id="loaderDiv" style="display: none;">
           <img src="{% static 'img/loading.gif' %}" id="image-load" width="15px" height="15px">
-          Checking surveys compatibility...
+          {% trans "Checking surveys compatibility..." %}
         </div>
         <div id="result-percent" style="display: none"></div>
 

@@ -132,7 +132,7 @@
                     <input value="{{field.name}}" class="edit-send-message" type="checkbox">
                     <span class="slider round"></span>
                   </label>
-                  <span>Edit the selected title(s)</span>
+                  <span>{% trans "Edit the selected title(s)" %}</span>
                 </div>
               {% else %}
                 <label class="label" for="{{ field.auto_id }}">{{ field.label }}</label>
@@ -142,11 +142,11 @@
             <div class="{% if field.field.widget.input_type == 'select' %}is-fullwidth{% else %}control{% endif %}">
               {% if field.field.widget.input_type == 'checkbox' %}
                 {% if field.label == 'Send Messages' %}
-                  <span>Select the title corresponding to the question</span>
+                  <span>{% trans "Select the title corresponding to the question" %}</span>
                   <div class="multiselect">
                     <div class="selectBox" onclick="showCheckboxes('{{field.auto_id}}')">
                       <select>
-                        <option>Select the title(s)</option>
+                        <option>{% trans "Select the title(s)" %}</option>
                       </select>
                       <div class="overSelect"></div>
                     </div>

@@ -29,7 +29,7 @@
 
 <section class="section">
   <h1 class="title">{% trans "Repository" %}</h1>
-  <h2 class="subtitle top-p-5">Survey library for finding and sharing questions or surveys among UNCTs</h2>
+  <h2 class="subtitle top-p-5">{% trans "Survey library for finding and sharing questions or surveys among UNCTs" %}</h2>
 </section>
 
 <section class="section top-p-0" id="{% block flow_section_id %}{{ flow_section_id }}{% endblock %}">
@@ -153,9 +153,9 @@
           <form class="form-flowhub" action="{% url 'flowhub.flow_delete' flow.pk %}" method="POST">
             {% csrf_token %}
             <input type="hidden" value="{{ redirect_to }}" name="redirect_to"/>
-            <button class="button is-danger right-m-5" type="submit">Confirm</button>
+            <button class="button is-danger right-m-5" type="submit">{% trans "Confirm" %}</button>
           </form>
-          <button class="button dark-reverse" id="cancelDelete">Cancel</button>
+          <button class="button dark-reverse" id="cancelDelete">{% trans "Cancel" %}</button>
         </footer>
       </div>
     </div>

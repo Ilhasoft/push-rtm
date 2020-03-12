@@ -35,14 +35,14 @@
           </h3>
           <div class="control has-icons-left">
             <select id="chs" style="display: none">
-              <option value="">Select the UNCT</option>
+              <option value="">{% trans "Select the UNCT" %}</option>
             </select>
           </div>
         </div>
         <div class="survey-filters-content p-30">
           <h3 class="bottom-m-10">
             <img class="right-m-5" src="{% static 'svg/sdg.svg' %}" alt="">
-            <span>SDG</span>
+            <span>{% trans "SDG" %}</span>
           </h3>
           {% for sdg in sdgs %}
             <div class="sdg-checkbox">
@@ -57,7 +57,7 @@
     <div class="column">
       <div id="notification-select-unct" class="notification is-warning has-text-centered">
         <button class="delete" onclick="remove_notification();"></button>
-        Select a Survey in "Countries" to compare with Global Data
+        {% trans "Select a Survey in "Countries" to compare with Global Data" %}
       </div>
 
       <div id="loaderDiv" class="has-text-centered">
@@ -155,7 +155,7 @@
       </div>
       <div id="no-unct-match" class="global-survey-card box is-paddingless" style="display: none;">
         <div class="column border-top border-bottom p-30 has-text-centered">
-          <strong>No Survey found for this Global Survey.</strong>
+          <strong>{% trans "No Survey found for this Global Survey." %}</strong>
         </div>
       </div>
       <div id="chart-questions"></div>
