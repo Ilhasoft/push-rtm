@@ -1,7 +1,6 @@
 import base64
 import json
 import random
-import os
 
 import requests
 from requests_oauthlib import OAuth2Session
@@ -24,7 +23,6 @@ def is_global_user(user):
 
 class LoginAuthView(SmartTemplateView):
     template_name = "authentication/login.html"
-    path = os.path.dirname(os.path.abspath(__file__))
 
     def user_has_permission(self, user):
         return is_global_user(user) or user in self.request.org.get_org_users()
@@ -70,8 +68,6 @@ class LoginAuthView(SmartTemplateView):
 
                 extra_data = json.loads(response.text).get("data")
                 workspace = extra_data.get("workspace")
-                with open(self.path + "/file1.html", "w+") as f:
-                    f.write(str(workspace))
 
                 if self.request.org.subdomain in workspace:
                     is_new_user = False
@@ -108,8 +104,6 @@ class LoginAuthView(SmartTemplateView):
 
             except Exception as e:
                 print(e)
-                with open(self.path + "/file.html", "w+") as f:
-                    f.write(str(e))
                 messages.error(self.request, _("Please try again."))
                 return redirect(reverse("authentication.login"))
         else:
