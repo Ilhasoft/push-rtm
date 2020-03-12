@@ -308,6 +308,12 @@ class EditView(FlowBreadCrumbListView):
             "visible_globally": flow.visible_globally,
         }
 
+        previous_url = urlparse(self.request.META.get("HTTP_REFERER", ""))
+        previous_path = previous_url.path
+        previous_subtitle = PATH_PREVIOUS_URLS_INFO.get(previous_path, None)
+
+        context["previous_subtitle"] = previous_subtitle
+        context["previous_path"] = previous_path
         context["form"] = FlowForm(data=data, flow_is_required=False)
         context["subtitle"] = _("Edit Flow")
         return context
@@ -411,7 +417,7 @@ class InfoView(FlowBreadCrumbListView):
         previous_url = urlparse(self.request.META.get("HTTP_REFERER", ""))
         previous_path = previous_url.path
         previous_subtitle = PATH_PREVIOUS_URLS_INFO.get(previous_path, None)
-        print(previous_path)
+
         context["previous_subtitle"] = previous_subtitle
         context["previous_path"] = previous_path
         context["subtitle"] = subtitle
@@ -478,6 +484,12 @@ class EditGlobalView(EditView):
             "tags": list(flow.tags.values_list("name", flat=True)),
         }
 
+        previous_url = urlparse(self.request.META.get("HTTP_REFERER", ""))
+        previous_path = previous_url.path
+        previous_subtitle = PATH_PREVIOUS_URLS_INFO.get(previous_path, None)
+
+        context["previous_subtitle"] = previous_subtitle
+        context["previous_path"] = previous_path
         context["form"] = FlowGlobalForm(data=data, flow_is_required=False)
         context["subtitle"] = _("Edit global flow")
         return context
