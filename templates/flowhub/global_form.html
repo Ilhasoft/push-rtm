@@ -36,7 +36,7 @@
 
 <section class="section">
   <h1 class="title">{% trans "Repository" %}</h1>
-  <h2 class="subtitle top-p-5">Survey library for finding and sharing questions or surveys among UNCTs</h2>
+  <h2 class="subtitle top-p-5">{% trans "Survey library for finding and sharing questions or surveys among UNCTs" %}</h2>
 </section>
 
 <section class="section top-p-0" id="{% block flow_section_id %}{{ flow_section_id }}{% endblock %}">
@@ -68,7 +68,8 @@
         <div class="p-30">
           <div class="has-text-weight-bold is-size-5 bottom-p-5">{{ subtitle }}</div>
           <div class="has-text-grey-light">
-            Add surveys you have used to the global repository. Other UNCTs will be able to see the questions you used. The results are not included on the files and will not be shared.
+            {% trans "Add surveys you have used to the global repository. Other UNCTs will be able to see
+            the questions you used. The results are not included on the files and will not be shared." %}
           </div>
         </div>
       </div>
@@ -80,11 +81,11 @@
               {{ form.flow }}
               <span class="file-cta">
                 <span class="file-label">
-                  Search file
+                  {% trans "Search file" %}
                 </span>
               </span>
               <span class="file-name" id="file_name">
-                Select your json file
+                {% trans "Select your json file" %}
               </span>
             </label>
             <p>
@@ -121,7 +122,7 @@
           </div>
         </div>
         <div class="field">
-          <label class="label">{% trans "Add tag" %}<span style="color: #7f8587;"> (Optional)</span></label>
+          <label class="label">{% trans "Add tag" %}<span style="color: #7f8587;"> ({% trans "Optional" %})</span></label>
           <div class="control">
             {{ form.tags }}
             {{ form.tags.errors }}

@@ -29,31 +29,31 @@
     <div class="column is-one-third-mobile is-one-quarter">
       <aside class="box">
         <p class="menu-label has-text-black is-size-6">
-          Documentation
+          {% trans "Documentation" %}
         </p>
         <ul class="menu-list list-doc">
-          <li><a href="{% url 'docs.login' %}" id="login">Login</a></li>
+          <li><a href="{% url 'docs.login' %}" id="login">{% trans "Login" %}</a></li>
         </ul>
         <hr>
         <p class="menu-label has-text-black is-size-6">
-          UNCTs Documentation
+          {% trans "UNCTs Documentation" %}
         </p>
         <ul class="menu-list list-doc">
-          <li><a href="{% url 'docs.uncts_users' %}" id="uncts_users">Users</a></li>
-          <li><a href="{% url 'docs.uncts_repository' %}" id="uncts_repository">Repository</a></li>
-          <li><a href="{% url 'docs.uncts_surveys' %}" id="uncts_surveys">Surveys</a></li>
-          <li><a href="{% url 'docs.uncts_dashboard' %}" id="uncts_dashboard">Dashboard</a></li>
+          <li><a href="{% url 'docs.uncts_users' %}" id="uncts_users">{% trans "Users" %}</a></li>
+          <li><a href="{% url 'docs.uncts_repository' %}" id="uncts_repository">{% trans "Repository" %}</a></li>
+          <li><a href="{% url 'docs.uncts_surveys' %}" id="uncts_surveys">{% trans "Surveys" %}</a></li>
+          <li><a href="{% url 'docs.uncts_dashboard' %}" id="uncts_dashboard">{% trans "Dashboard" %}</a></li>
         </ul>
         <hr>
         <p class="menu-label has-text-black is-size-6">
-          Global Documentation
+          {% trans "Global Documentation" %}
         </p>
         <ul class="menu-list list-doc">
-          <li><a href="{% url 'docs.global_uncts' %}" id="global_uncts">UNCTs</a></li>
-          <li><a href="{% url 'docs.global_users' %}" id="global_users">Users</a></li>
-          <li><a href="{% url 'docs.global_repository' %}" id="global_repository">Repository</a></li>
-          <li><a href="{% url 'docs.global_surveys' %}" id="global_surveys">Global Surveys</a></li>
-          <li><a href="{% url 'docs.global_dashboard' %}" id="global_dashboard">Dashboard</a></li>
+          <li><a href="{% url 'docs.global_uncts' %}" id="global_uncts">{% trans "UNCTs" %}</a></li>
+          <li><a href="{% url 'docs.global_users' %}" id="global_users">{% trans "Users" %}</a></li>
+          <li><a href="{% url 'docs.global_repository' %}" id="global_repository">{% trans "Repository" %}</a></li>
+          <li><a href="{% url 'docs.global_surveys' %}" id="global_surveys">{% trans "Global Surveys" %}</a></li>
+          <li><a href="{% url 'docs.global_dashboard' %}" id="global_dashboard">{% trans "Dashboard" %}</a></li>
         </ul>
       </aside>
     </div>

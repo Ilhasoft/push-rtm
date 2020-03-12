@@ -7,17 +7,17 @@
     {% trans 'Global Documentation' %}
   </div>
   <div class="has-text-weight-bold is-size-5 bottom-p-5">
-    UNCTs
+    {% trans "UNCTs" %}
   </div>
 </article>
 <hr>
 <article class="p-30 columns">
   <div class="column">
     <p class="has-text-weight-bold is-size-5 bottom-p-5">
-      List
+      {% trans "List" %}
     </p>
-    <p>The homepage of UNCTs' session is a list of all registered UNCTs.
-        Where some actions are available, let's walk through it all.</p>
+    <p>{% trans "The homepage of UNCTs' session is a list of all registered UNCTs.
+        Where some actions are available, let's walk through it all." %}</p>
   </div>
   <div class="column">
     <figure class="image is-16by9">
@@ -30,10 +30,10 @@
 <article class="p-30 columns">
   <div class="column">
     <ul class="ul-docs">
-      <li class="has-text-weight-bold is-size-6 bottom-p-5">Sorting</li>
+      <li class="has-text-weight-bold is-size-6 bottom-p-5">{% trans "Sorting" %}</li>
     </ul>
-    <p>You can choose to sort by Name, Timezone or Language. The first click will apply
-        alphabetically descending order and the second ascending.</p>
+    <p>{% trans "You can choose to sort by Name, Timezone or Language. The first click will apply
+        alphabetically descending order and the second ascending." %}</p>
   </div>
   <div class="column">
     <figure class="image is-16by9">
@@ -46,13 +46,13 @@
 <article class="p-30 columns">
   <div class="column">
     <ul class="ul-docs">
-      <li class="has-text-weight-bold is-size-6 bottom-p-5">Search</li>
+      <li class="has-text-weight-bold is-size-6 bottom-p-5">{% trans "Search" %}</li>
     </ul>
-    <p>There's a search bar to find registered UNCTs, you just need to type and press
+    <p>{% trans "There's a search bar to find registered UNCTs, you just need to type and press
         enter. It's case insensitive and capable of searching for strings' fragments
         at the name field. In the example below the search was "L" and it found three
         UNCTs where the string was found in different spots. You can disengage the
-        search filter by clicking the X at the right of the bar</p>
+        search filter by clicking the X at the right of the bar" %}</p>
   </div>
   <div class="column">
     <figure class="image is-16by9">
@@ -66,16 +66,16 @@
 <article class="p-30 columns">
   <div class="column">
     <p class="has-text-weight-bold is-size-5 bottom-p-5">
-      Adding a new UNCT
+      {% trans "Adding a new UNCT" %}
     </p>
-    <p>By clicking the + UNCT button the process of registering a new UNCT will start.</p>
+    <p>{% trans "By clicking the + UNCT button the process of registering a new UNCT will start." %}</p>
     <br>
-    <p>First inputs are relative to platform properties. Name and Language are free
+    <p>{% trans "First inputs are relative to platform properties. Name and Language are free
         to choose, but RapidPro URL, RapidPro Token and Timezone should match exactly
         the values from the respective RapidPro workspace. Slug is a subdomain that
-        will be used to access the workspace.</p><br>
+        will be used to access the workspace." %}</p><br>
 
-        <p>EG. sandbox will create https://sandbox.rtm.ilhasoft.mobi</p>
+        <p>{% trans "EG. sandbox will create https://sandbox.rtm.ilhasoft.mobi" %}</p>
   </div>
   <div class="column">
     <figure class="image is-16by9">
@@ -87,22 +87,22 @@
 </article>
 <article class="p-30 columns">
   <div class="column">
-    <p>Backend configuration should be customized with the respective contact
+    <p>{% trans "Backend configuration should be customized with the respective contact
         settings on RapidPro. Fill Contact group with the main group name,
         where registered contacts are. The other fields should be filled with
-        the respective contact field's title for each piece of information: </p>
+        the respective contact field's title for each piece of information: " %}</p>
       <br>
-      <p>- Born Label for the year of born; </p><br>
-      <p>- Gender Label for gender; </p><br>
-      <p>- Occupation Label for the profession (optional);</p><br>
-      <p>- Registration Label for contact's registration date;</p><br>
-      <p>- State Label for the first region level, generally State;</p><br>
-      <p>- District Label for the second region level (optional);</p><br>
-      <p>- Ward Label for the third region level (optional);</p><br>
-      <p>Male Label and Female Label should be filled with the values that are
-          representing each gender. </p><br>
-      <p>EG. Male and Female, respectively.</p>
-      <p>Save clicking OK and it will take effect immediately.</p>
+      <p>- {% trans "Born Label for the year of born; " %}</p><br>
+      <p>- {% trans "Gender Label for gender; " %}</p><br>
+      <p>- {% trans "Occupation Label for the profession (optional);" %}</p><br>
+      <p>- {% trans "Registration Label for contact's registration date;" %}</p><br>
+      <p>- {% trans "State Label for the first region level, generally State;" %}</p><br>
+      <p>- {% trans "District Label for the second region level (optional);" %}</p><br>
+      <p>- {% trans "Ward Label for the third region level (optional);" %}</p><br>
+      <p>{% trans "Male Label and Female Label should be filled with the values that are
+          representing each gender. " %}</p><br>
+      <p>{% trans "EG. Male and Female, respectively." %}</p>
+      <p>{% trans "Save clicking OK and it will take effect immediately." %}</p>
   </div>
   <div class="column">
     <figure class="image is-16by9">
@@ -116,19 +116,19 @@
 <article class="p-30 columns">
   <div class="column">
     <p class="has-text-weight-bold is-size-5 bottom-p-5">
-      Editing
+      {% trans "Editing" %}
     </p>
-    <p>You can start editing UNCTs just by clicking the pencil icon
-        on its right side. You will have access to all fields.</p>
+    <p>{% trans "You can start editing UNCTs just by clicking the pencil icon
+        on its right side. You will have access to all fields." %}</p>
     <br>
     <ul class="ul-docs">
-      <li class="has-text-weight-bold is-size-6 bottom-p-5">CAUTION!!!</li>
+      <li class="has-text-weight-bold is-size-6 bottom-p-5">{% trans "CAUTION!!!" %}</li>
     </ul>
-    <p>Pay attention to the field you're editing. Saving incorrect values will
+    <p>{% trans "Pay attention to the field you're editing. Saving incorrect values will
         make the UNCT workspace become inaccessible and may affect values accuracy.
         Editing RapidPro Token or Backend configuration values is strongly not
         recommended and should be done only if oriented by a support member in
-        very specific situations.</p>
+        very specific situations." %}</p>
   </div>
   <div class="column">
     <figure class="image is-16by9">
@@ -142,11 +142,11 @@
 <article class="p-30 columns">
   <div class="column">
     <p class="has-text-weight-bold is-size-5 bottom-p-5">
-      UNCT users
+      {% trans "UNCT users" %}
     </p>
-    <p>It's possible to edit UNCT's account levels directly from Global workspace,
+    <p>{% trans "It's possible to edit UNCT's account levels directly from Global workspace,
         just click the group icon on its right side and those UNCT users' list will
-        be loaded.</p>
+        be loaded." %}</p>
   </div>
   <div class="column">
     <figure class="image is-16by9">
@@ -158,8 +158,8 @@
 </article>
 <article class="p-30 columns">
   <div class="column">
-    <p>Then you just have to click at the user's pencil icon and edit its access
-        level, similar to editing on a Local workspace.</p>
+    <p>{% trans "Then you just have to click at the user's pencil icon and edit its access
+        level, similar to editing on a Local workspace." %}</p>
   </div>
   <div class="column">
     <figure class="image is-16by9">

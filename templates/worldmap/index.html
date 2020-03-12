@@ -35,7 +35,7 @@
     <div id="mapLegend" class="map-legend">
       <div class="tooltip top align-center">
         <span class="is-size-6 teste">
-          UNCTs Engagement
+          {% trans "UNCTs Engagement" %}
         </span>
         <i class="material-icons info-worldmap info-icon left-m-5">info</i>
         <div class="map-legend__inner">
@@ -49,9 +49,9 @@
         </div>
         <div class="tooltip-content tooltip-map channel-tooltip flex flex-center p-20">
           <div class="flex has-text-centered">
-            Total percentage based on the amount of incoming and outgoing messages.
+            {% trans "Total percentage based on the amount of incoming and outgoing messages." %}
             <br><br>
-            (received/sent)*100 = %
+            ({% trans "received" %}/{% trans "sent" %})*100 = %
           </div>
         </div>
       </div>
@@ -63,8 +63,8 @@
       <div class="column is-half is-offset-one-quarter">
         <div class="has-text-centered">
           <span class="text-worldmap">
-            The boundaries and names shown and the designations used on this map do not imply official
-            endorsement or acceptance by the United Nations.
+            {% trans "The boundaries and names shown and the designations used on this map do not imply official
+            endorsement or acceptance by the United Nations." %}
           </span>
         </div>
       </div>
@@ -108,8 +108,8 @@
       </div>
 
       <div class="flex space-between btn-group group-button-map">
-        <button id="survey-results" class="button-details-country button primary-reverse">Survey Results</button>
-        <button id="dashboard" class="button-details-country button is-primary">Dashboard</button>
+        <button id="survey-results" class="button-details-country button primary-reverse">{% trans "Survey Results" %}</button>
+        <button id="dashboard" class="button-details-country button is-primary">{% trans "Dashboard" %}</button>
       </div>
     </div>
 

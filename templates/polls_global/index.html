@@ -48,8 +48,8 @@
         <th>{% autosort poll_date _("Initial Date") %}</th>
         <th>{% autosort poll_end_date _("Final Date") %}</th>
         <th>{% autosort is_active _("Status") %}</th>
-        <th>{% trans _("Edit") %}</th>
-        <th>{% trans _("Grant List") %}</th>
+        <th>{% trans "Edit" %}</th>
+        <th>{% trans "Grant List" %}</th>
       </tr>
     </thead>
     <tbody class="has-header">
@@ -60,7 +60,7 @@
               <a href="{% url 'results.global_poll_read' poll.id %}">
                   <span class="tooltip right">
                     {{ poll.title }}
-                    <span class="tooltip-content">See the results</span>
+                    <span class="tooltip-content">{% trans "See the results" %}</span>
                   </span>
               </a>
             {% else %}
