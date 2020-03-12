@@ -1,115 +1,155 @@
-{% extends "flowhub/base.html" %}
+{% extends "base.html" %}
 {% load i18n static sass_tags ureport %}
-
-{% block nav_item %}page-flowhub{% endblock %}
 
 {% block css_extra %}
 <link rel="stylesheet" href="{% sass_src 'css/flowhub/common.scss' %}"/>
 <link rel="stylesheet" href="{% sass_src 'css/flowhub/detail.scss' %}"/>
 {% endblock %}
 
-{% block flow_content %}
-<div class="column auto">
-  <div class="box is-shadowless is-paddingless">
-    <div class="p-30 border-bottom">
-      <div class="has-text-weight-bold is-size-5 bottom-p-5">
-          {{ subtitle }}
-      </div>
-      <div class="has-text-grey-light">
-          View all survey questions/surveys used by your UNCT. You can download a particular survey and use it.
-      </div>
-    </div>
-    <div class="columns">
-      <div class="column bottom-p-0">
-        <div class="control has-icons-left">
-          <form>
-            <input type="text" class="input is-medium search" name="search" value="{{ query }}" placeholder="Search">
-            <span class="icon is-left">
-              <i class="material-icons">search</i>
-            </span>
-            {% if query %}
-              <a class="clear-search-icon" href="{{ back_to }}">
-                <i class="material-icons">clear</i>
-              </a>
-            {% endif %}
-          </form>
+{% block nav_item %}page-flowhub{% endblock %}
+
+{% block content %}
+<section class="section top-p-0 bottom-p-0">
+  <nav class="breadcrumb" aria-label="breadcrumbs" id="breadcrumbs">
+    <ul>
+      <li><a href="{% url 'flowhub.flow_list' %}">{% trans 'Repository' %}</a></li>
+      <li class="is-active"><a href="">{{subtitle}}</a></li>
+    </ul>
+  </nav>
+</section>
+
+<section class="section">
+  <h1 class="title">{% trans "Repository" %}</h1>
+  <h2 class="subtitle top-p-5">Survey library for finding and sharing questions or surveys among UNCTs</h2>
+</section>
+
+<section class="section top-p-0" id="{% block flow_section_id %}{{ flow_section_id }}{% endblock %}">
+  <div class="columns is-desktop">
+    <div class="column is-one-quarter">
+      <div class="columns">
+        <div class="column right-p-0">
+          <aside class="menu">
+            <ul class="menu-list">
+              <li><a class="all" href="{% url 'flowhub.flow_list' %}">{% trans "All flows" %}</a></li>
+              <li><a class="global" href="{% url 'flowhub.flow_list_global' %}">{% trans "Global" %}</a></li>
+              {% if not request.user.is_superuser and request.org in request.user.get_user_orgs %}
+                <li><a class="my-org" href="{% url 'flowhub.my_org_flow_list' %}">{{ org.name }}</a></li>
+              {% endif %}
+              <li><a class="uncts" href="{% url 'flowhub.flow_uncts' %}">{% trans "UNCTs" %}</a></li>
+              {% if request.user|is_admin_user %}
+                <li><a class="upload" href="{% url 'flowhub.flow_create' %}">{% trans "Upload Flow" %}</a></li>
+              {% endif %}
+              {% if request.user.is_superuser and not request.org %}
+                <li><a class="upload" href="{% url 'flowhub.flow_create_global' %}">{% trans "Upload Global Flow" %}</a></li>
+              {% endif %}
+            </ul>
+          </aside>
         </div>
       </div>
     </div>
-  </div>
+    <div class="column auto">
+      <div class="box is-shadowless is-paddingless">
+        <div class="p-30 border-bottom">
+          <div class="has-text-weight-bold is-size-5 bottom-p-5">
+              {{ subtitle }}
+          </div>
+          <div class="has-text-grey-light">
+              View all survey questions/surveys used by your UNCT. You can download a particular survey and use it.
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column bottom-p-0">
+            <div class="control has-icons-left">
+              <form>
+                <input type="text" class="input is-medium search" name="search" value="{{ query }}" placeholder="Search">
+                <span class="icon is-left">
+                  <i class="material-icons">search</i>
+                </span>
+                {% if query %}
+                  <a class="clear-search-icon" href="{{ back_to }}">
+                    <i class="material-icons">clear</i>
+                  </a>
+                {% endif %}
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  <div class="flowhub-table-header">
-    <div class="filters">
+      <div class="flowhub-table-header">
+        <div class="filters">
+          <div>
+            <div class="dropdown">
+              <div class="dropdown-trigger">
+                <div>
+                  <span>{% trans "SDGs" %}</span>
+                  <i class="material-icons middle">keyboard_arrow_down</i>
+                </div>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                  <a href="{% url 'flowhub.flow_list' %}" class="dropdown-item">{% trans "None" %}</a>
+                  {% for id, name in sdgs %}
+                  <a href="?sdg={{ id }}&lang={{ language }}" class="dropdown-item">{{ name }}</a>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+            <div class="dropdown">
+              <div class="dropdown-trigger">
+                <div>
+                  <span>{% trans "Languages" %}</span>
+                  <i class="material-icons middle">keyboard_arrow_down</i>
+                </div>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                  <a href="{% url 'flowhub.flow_list' %}" class="dropdown-item">{% trans "None" %}</a>
+                  {% for id, name in languages %}
+                  <a href="?sdg={{ sdg }}&lang={{ id }}" class="dropdown-item">{{ name }}</a>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="dropdown is-right">
+              <div class="dropdown-trigger">
+                <div>
+                  <span>{% trans "Sort by" %}</span>
+                  <i class="material-icons middle">unfold_more</i>
+                </div>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                  <a href="{% autosort name '' true %}" class="dropdown-item">{% trans "Alphabetical" %}</a>
+                  <a href="{% autosort stars '' true %}" class="dropdown-item">{% trans "Most stars" %}</a>
+                  <a href="{% autosort created_on '' true %}" class="dropdown-item">{% trans "Newest" %}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <table class="table is-fullwidth">
+        <tbody>
+        {% for flow in flows %}
+          {% include "flowhub/global_flow_detail.html" with flow=flow section="all" %}
+        {% empty %}
+        <tr>
+          <td class="has-text-centered">{% trans "No results found" %}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+
       <div>
-        <div class="dropdown">
-          <div class="dropdown-trigger">
-            <div>
-              <span>{% trans "SDGs" %}</span>
-              <i class="material-icons middle">keyboard_arrow_down</i>
-            </div>
-          </div>
-          <div class="dropdown-menu" id="dropdown-menu" role="menu">
-            <div class="dropdown-content">
-              <a href="{% url 'flowhub.flow_list' %}" class="dropdown-item">{% trans "None" %}</a>
-              {% for id, name in sdgs %}
-              <a href="?sdg={{ id }}&lang={{ language }}" class="dropdown-item">{{ name }}</a>
-              {% endfor %}
-            </div>
-          </div>
-        </div>
-        <div class="dropdown">
-          <div class="dropdown-trigger">
-            <div>
-              <span>{% trans "Languages" %}</span>
-              <i class="material-icons middle">keyboard_arrow_down</i>
-            </div>
-          </div>
-          <div class="dropdown-menu" id="dropdown-menu" role="menu">
-            <div class="dropdown-content">
-              <a href="{% url 'flowhub.flow_list' %}" class="dropdown-item">{% trans "None" %}</a>
-              {% for id, name in languages %}
-              <a href="?sdg={{ sdg }}&lang={{ id }}" class="dropdown-item">{{ name }}</a>
-              {% endfor %}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div>
-        <div class="dropdown is-right">
-          <div class="dropdown-trigger">
-            <div>
-              <span>{% trans "Sort by" %}</span>
-              <i class="material-icons middle">unfold_more</i>
-            </div>
-          </div>
-          <div class="dropdown-menu" id="dropdown-menu" role="menu">
-            <div class="dropdown-content">
-              <a href="{% autosort name '' true %}" class="dropdown-item">{% trans "Alphabetical" %}</a>
-              <a href="{% autosort stars '' true %}" class="dropdown-item">{% trans "Most stars" %}</a>
-              <a href="{% autosort created_on '' true %}" class="dropdown-item">{% trans "Newest" %}</a>
-            </div>
-          </div>
-        </div>
+        {% include "paginator.html" with paginator=flows %}
       </div>
     </div>
   </div>
-
-  <table class="table is-fullwidth">
-    <tbody>
-    {% for flow in flows %}
-      {% include "flowhub/global_flow_detail.html" with flow=flow section="all" %}
-    {% empty %}
-    <tr>
-      <td class="has-text-centered">{% trans "No results found" %}</td>
-    </tr>
-    {% endfor %}
-    </tbody>
-  </table>
-
-  <div>
-    {% include "paginator.html" with paginator=flows %}
-  </div>
-</div>
+</section>
 {% endblock %}
 
 {% block js_extra %}

@@ -1,7 +1,5 @@
-{% extends "flowhub/base.html" %}
+{% extends "base.html" %}
 {% load i18n static sass_tags ureport %}
-
-{% block nav_item %}page-flowhub{% endblock %}
 
 {% block css_extra %}
 <link rel="stylesheet" href="{% sass_src 'plugins/choices/choices.scss' %}">
@@ -15,79 +13,121 @@
 </style>
 {% endblock %}
 
-{% block flow_content %}
-<div class="column auto">
-  <div class="box is-shadowless is-paddingless bottom-m-10">
-    <div class="p-30">
-      <div class="has-text-weight-bold is-size-5 bottom-p-5">{{ subtitle }}</div>
-      <div class="has-text-grey-light">
-        Add surveys you have used to the global repository. Other UNCTs will be able to see the questions you used. The results are not included on the files and will not be shared.
+{% block nav_item %}page-flowhub{% endblock %}
+
+{% block content %}
+<section class="section top-p-0 bottom-p-0">
+  <nav class="breadcrumb" aria-label="breadcrumbs" id="breadcrumbs">
+    <ul>
+      <li><a href="{% url 'flowhub.flow_list' %}">{% trans 'Repository' %}</a></li>
+      <li class="is-active"><a href="">{{subtitle}}</a></li>
+    </ul>
+  </nav>
+</section>
+
+<section class="section">
+  <h1 class="title">{% trans "Repository" %}</h1>
+  <h2 class="subtitle top-p-5">Survey library for finding and sharing questions or surveys among UNCTs</h2>
+</section>
+
+<section class="section top-p-0" id="{% block flow_section_id %}{{ flow_section_id }}{% endblock %}">
+  <div class="columns is-desktop">
+    <div class="column is-one-quarter">
+      <div class="columns">
+        <div class="column right-p-0">
+          <aside class="menu">
+            <ul class="menu-list">
+              <li><a class="all" href="{% url 'flowhub.flow_list' %}">{% trans "All flows" %}</a></li>
+              <li><a class="global" href="{% url 'flowhub.flow_list_global' %}">{% trans "Global" %}</a></li>
+              {% if not request.user.is_superuser and request.org in request.user.get_user_orgs %}
+                <li><a class="my-org" href="{% url 'flowhub.my_org_flow_list' %}">{{ org.name }}</a></li>
+              {% endif %}
+              <li><a class="uncts" href="{% url 'flowhub.flow_uncts' %}">{% trans "UNCTs" %}</a></li>
+              {% if request.user|is_admin_user %}
+                <li><a class="upload" href="{% url 'flowhub.flow_create' %}">{% trans "Upload Flow" %}</a></li>
+              {% endif %}
+              {% if request.user.is_superuser and not request.org %}
+                <li><a class="upload" href="{% url 'flowhub.flow_create_global' %}">{% trans "Upload Global Flow" %}</a></li>
+              {% endif %}
+            </ul>
+          </aside>
+        </div>
       </div>
+    </div>
+    <div class="column auto">
+      <div class="box is-shadowless is-paddingless bottom-m-10">
+        <div class="p-30">
+          <div class="has-text-weight-bold is-size-5 bottom-p-5">{{ subtitle }}</div>
+          <div class="has-text-grey-light">
+            Add surveys you have used to the global repository. Other UNCTs will be able to see the questions you used. The results are not included on the files and will not be shared.
+          </div>
+        </div>
+      </div>
+      <form class="generic-form box is-shadowless p-40" id="form-flowhub" action="#" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="files-form">
+          <div class="file has-name is-info field">
+            <label class="file-label">
+              {{ form.flow }}
+              <span class="file-cta">
+                <span class="file-label">
+                  Search file
+                </span>
+              </span>
+              <span class="file-name" id="file_name">
+                Select your json file
+              </span>
+            </label>
+            <p>
+              {{ form.flow.errors }}
+            </p>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">{% trans "Name" %}</label>
+          <div class="control">
+            {{ form.name }}
+            {{ form.name.errors }}
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">{% trans "Languages" %}</label>
+          <div class="control {% if form.languages.errors %}multiple-choices-error{% endif %}">
+            {{ form.languages}}
+            {{ form.languages.errors }}
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">{% trans "Description" %}</label>
+          <div class="control">
+            {{ form.description }}
+            {{ form.description.errors }}
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">{{ form.collected_data.label }}</label>
+          <div class="control">
+            {{ form.collected_data }}
+            {{ form.collected_data.errors }}
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">{% trans "Add tag" %}<span style="color: #7f8587;"> (Optional)</span></label>
+          <div class="control">
+            {{ form.tags }}
+            {{ form.tags.errors }}
+          </div>
+        </div>
+        <div class="columns wrapper-buttons">
+          <div class="column">
+            <button type="button" onclick="submitForm();" class="button is-primary">{% trans "OK" %}</button>
+            <a href="{% url 'flowhub.flow_list' %}" class="button primary-reverse">{% trans "Cancel" %}</a>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
-  <form class="generic-form box is-shadowless p-40" id="form-flowhub" action="#" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div class="files-form">
-      <div class="file has-name is-info field">
-        <label class="file-label">
-          {{ form.flow }}
-          <span class="file-cta">
-            <span class="file-label">
-              Search file
-            </span>
-          </span>
-          <span class="file-name" id="file_name">
-            Select your json file
-          </span>
-        </label>
-        <p>
-          {{ form.flow.errors }}
-        </p>
-      </div>
-    </div>
-    <div class="field">
-      <label class="label">{% trans "Name" %}</label>
-      <div class="control">
-        {{ form.name }}
-        {{ form.name.errors }}
-      </div>
-    </div>
-    <div class="field">
-      <label class="label">{% trans "Languages" %}</label>
-      <div class="control {% if form.languages.errors %}multiple-choices-error{% endif %}">
-        {{ form.languages}}
-        {{ form.languages.errors }}
-      </div>
-    </div>
-    <div class="field">
-      <label class="label">{% trans "Description" %}</label>
-      <div class="control">
-        {{ form.description }}
-        {{ form.description.errors }}
-      </div>
-    </div>
-    <div class="field">
-      <label class="label">{{ form.collected_data.label }}</label>
-      <div class="control">
-        {{ form.collected_data }}
-        {{ form.collected_data.errors }}
-      </div>
-    </div>
-    <div class="field">
-      <label class="label">{% trans "Add tag" %}<span style="color: #7f8587;"> (Optional)</span></label>
-      <div class="control">
-        {{ form.tags }}
-        {{ form.tags.errors }}
-      </div>
-    </div>
-    <div class="columns wrapper-buttons">
-      <div class="column">
-        <button type="button" onclick="submitForm();" class="button is-primary">{% trans "OK" %}</button>
-        <a href="{% url 'flowhub.flow_list' %}" class="button primary-reverse">{% trans "Cancel" %}</a>
-      </div>
-    </div>
-  </form>
-</div>
+</section>
 {% endblock %}
 
 {% block js_extra %}

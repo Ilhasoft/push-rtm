@@ -21,6 +21,12 @@ from ureport.utils import get_paginator, is_global_user
 from .models import Flow
 from .forms import FlowForm, FlowGlobalForm
 
+PATH_PREVIOUS_URLS_INFO = {
+    "/flowhub/global/": "All global flows",
+    "/flowhub/": "All flows",
+    "/flowhub/my-org/": "My unct"
+}
+
 
 class FlowBreadCrumbListView(SmartTemplateView):
 
@@ -264,7 +270,7 @@ class CreateView(FlowBreadCrumbListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["subtitle"] = _("Upload New Flow")
+        context["subtitle"] = _("Upload flow")
         context["flow_section_id"] = "flowhub-upload"
 
         context["form"] = FlowForm()
@@ -398,8 +404,17 @@ class InfoView(FlowBreadCrumbListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         queryset = Flow.objects.get(pk=kwargs.get("flow"))
+        subtitle = queryset.name
         context["redirect_to"] = str(base64.b64encode(
-            self.request.META.get("HTTP_REFERER").encode("UTF-8")), "UTF-8")
+            self.request.META.get("HTTP_REFERER", "").encode("UTF-8")), "UTF-8")
+
+        previous_url = urlparse(self.request.META.get("HTTP_REFERER", ""))
+        previous_path = previous_url.path
+        previous_subtitle = PATH_PREVIOUS_URLS_INFO.get(previous_path, None)
+        print(previous_path)
+        context["previous_subtitle"] = previous_subtitle
+        context["previous_path"] = previous_path
+        context["subtitle"] = subtitle
         context["flow"] = queryset
         return context
 
@@ -410,6 +425,7 @@ class CreateGlobalView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["subtitle"] = _("Upload global flow")
         context["form"] = FlowGlobalForm()
 
         return context
@@ -463,7 +479,7 @@ class EditGlobalView(EditView):
         }
 
         context["form"] = FlowGlobalForm(data=data, flow_is_required=False)
-        context["subtitle"] = _("Edit Flow")
+        context["subtitle"] = _("Edit global flow")
         return context
 
     def post(self, request, *args, **kwargs):
