@@ -13,14 +13,16 @@
   <nav class="breadcrumb" aria-label="breadcrumbs" id="breadcrumbs">
     <ul>
       <li><a href="{% url 'flowhub.flow_list' %}">{% trans 'Repository' %}</a></li>
-      {% if breadcrumbs.previous.path %}
-        <li><a href="{{breadcrumbs.previous.url}}" aria-current="page">{{breadcrumbs.previous.path}}</a></li>
+      {% if previous_subtitle %}
+        <li><a href="{{previous_path}}">
+          {% if previous_subtitle == "My unct" %}
+            {{request.org.name}}
+          {% else %}
+            {{previous_subtitle}}
+          {% endif %}
+        </a></li>
       {% endif %}
-      {% if breadcrumbs.current.path %}
-        <li class="is-active"><a href="" aria-current="page">{{breadcrumbs.current.path}}</a></li>
-      {% else %}
-        <li class="is-active"><a href="">{{subtitle}}</a></li>
-      {% endif %}
+      <li class="is-active"><a href="">{{subtitle}}</a></li>
     </ul>
   </nav>
 </section>

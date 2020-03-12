@@ -20,14 +20,7 @@
   <nav class="breadcrumb" aria-label="breadcrumbs" id="breadcrumbs">
     <ul>
       <li><a href="{% url 'flowhub.flow_list' %}">{% trans 'Repository' %}</a></li>
-      {% if breadcrumbs.previous.path %}
-        <li><a href="{{breadcrumbs.previous.url}}" aria-current="page">{{breadcrumbs.previous.path}}</a></li>
-      {% endif %}
-      {% if breadcrumbs.current.path %}
-        <li class="is-active"><a href="" aria-current="page">{{breadcrumbs.current.path}}</a></li>
-      {% else %}
-        <li class="is-active"><a href="">{{subtitle}}</a></li>
-      {% endif %}
+      <li class="is-active"><a href="">{{subtitle}}</a></li>
     </ul>
   </nav>
 </section>
@@ -46,10 +39,10 @@
             <ul class="menu-list">
               <li><a class="all" href="{% url 'flowhub.flow_list' %}">{% trans "All flows" %}</a></li>
               <li><a class="global" href="{% url 'flowhub.flow_list_global' %}">{% trans "Global" %}</a></li>
-              <li><a class="uncts" href="{% url 'flowhub.flow_uncts' %}">{% trans "UNCTs" %}</a></li>
               {% if not request.user.is_superuser and request.org in request.user.get_user_orgs %}
                 <li><a class="my-org" href="{% url 'flowhub.my_org_flow_list' %}">{{ org.name }}</a></li>
               {% endif %}
+              <li><a class="uncts" href="{% url 'flowhub.flow_uncts' %}">{% trans "UNCTs" %}</a></li>
               {% if request.user|is_admin_user %}
                 <li><a class="upload" href="{% url 'flowhub.flow_create' %}">{% trans "Upload Flow" %}</a></li>
               {% endif %}
