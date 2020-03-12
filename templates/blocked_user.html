@@ -59,11 +59,8 @@
   <div class="blocked-card">
     <div class="content">
       <img src="{% static 'svg/access-denied.svg' %}" alt="">
-      <h1 class="title">Access Denied</h1>
-      <p>You don't have access to this area. Contact an administrator to verify their permission</p>
-      <div class="is-pulled-right">
-        <a href="">Close</a>
-      </div>
+      <h1 class="title">{% trans "Access Denied" %}</h1>
+      <p>{% trans "You don't have access to this area. Contact an administrator to verify their permission" %}</p>
     </div>
   </div>
 </div>

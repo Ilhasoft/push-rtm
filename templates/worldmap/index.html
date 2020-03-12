@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static sass_tags utils_extra_accounts %}
+{% load i18n static sass_tags utils_extra_accounts %}
 
 {% block css_extra %}
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jqvmap.min.css">
@@ -14,6 +14,18 @@
       width: 200px;
       margin-bottom: -20px;
     }
+    body.has-navbar-fixed-top{
+      padding-top: 6rem !important;
+    }
+    .text-worldmap{
+      font-size: 14px;
+      font-family: Roboto-Regular;
+      color: #707070;
+    }
+    .info-worldmap {
+      vertical-align: -19%;
+      font-size: 18px !important;
+    }
   </style>
 {% endblock %}
 
@@ -22,7 +34,10 @@
     <div id="vmap" style="height: 80vh"></div>
     <div id="mapLegend" class="map-legend">
       <div class="tooltip top align-center">
-        <div class="is-size-6">UNCTs Engagement (%)</div>
+        <span class="is-size-6 teste">
+          {% trans "UNCTs Engagement" %}
+        </span>
+        <i class="material-icons info-worldmap info-icon left-m-5">info</i>
         <div class="map-legend__inner">
           <div>0</div>
           <div class="map-legend__inner__block__lighter"></div>
@@ -34,14 +49,28 @@
         </div>
         <div class="tooltip-content tooltip-map channel-tooltip flex flex-center p-20">
           <div class="flex has-text-centered">
-            Total percentage based on the amount of incoming and outgoing messages.
+            {% trans "Total percentage based on the amount of incoming and outgoing messages." %}
             <br><br>
-            (received/sent)*100 = %
+            ({% trans "received" %}/{% trans "sent" %})*100 = %
           </div>
         </div>
       </div>
     </div>
   </div>
+
+  <div class="container top-m-10">
+    <div class="columns is-mobile">
+      <div class="column is-half is-offset-one-quarter">
+        <div class="has-text-centered">
+          <span class="text-worldmap">
+            {% trans "The boundaries and names shown and the designations used on this map do not imply official
+            endorsement or acceptance by the United Nations." %}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div x-data="{ open: false, countryName: '' }" x-on:opendetail.window="countryName = $event.detail.countryName; open = true;">
 
   <div
@@ -79,8 +108,8 @@
       </div>
 
       <div class="flex space-between btn-group group-button-map">
-        <button id="survey-results" class="button-details-country button primary-reverse">Survey Results</button>
-        <button id="dashboard" class="button-details-country button is-primary">Dashboard</button>
+        <button id="survey-results" class="button-details-country button primary-reverse">{% trans "Survey Results" %}</button>
+        <button id="dashboard" class="button-details-country button is-primary">{% trans "Dashboard" %}</button>
       </div>
     </div>
 
@@ -96,6 +125,12 @@
   <script src="{% static 'plugins/worldmap/jquery.vmap.sampledata.js' %}" charset="utf-8"></script>
 
   <script>
+    $(".map-legend").hover(function(){
+      $(".info-worldmap").css("color", "#03AEEF");
+    }, function(){
+      $(".info-worldmap").css("color", "#707070");
+    });
+
     function get_subdomain(){
       return "{{ request.org.subdomain }}";
     };

@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-    {% if access_level == 'local' %}
+    {% if access_level == 'local' or request.org %}
     <section class="section">
       <h1 class="title bottom-m-0">
         {{ request.org }}
@@ -88,7 +88,7 @@
               <div class="modal-background"></div>
               <div class="modal-card">
                 <header class="modal-card-head">
-                  <p class="modal-card-title">UNCTs Tracked</p>
+                  <p class="modal-card-title">{% trans "UNCTs Tracked" %}</p>
                   <button class="delete" onclick="showModal();" aria-label="close"></button>
                 </header>
                 <section class="modal-card-body">

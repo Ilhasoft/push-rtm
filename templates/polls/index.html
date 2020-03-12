@@ -45,8 +45,8 @@
     {% endif %}
   </div>
   <div class="box is-radiusless is-shadowless border-bottom left-p-40 top-m-10 bottom-m-0">
-    <div class="has-text-weight-bold is-size-5 bottom-p-55">Survey Results</div>
-    <div class="has-text-grey-light">Click on a survey item below to see its results</div>
+    <div class="has-text-weight-bold is-size-5 bottom-p-55">{% trans "Survey Results" %}</div>
+    <div class="has-text-grey-light">{% trans "Click on a survey item below to see its results" %}</div>
   </div>
   <table class="table is-fullwidth is-hoverable">
     <thead>
@@ -69,7 +69,7 @@
             <a href="{% url 'results.poll_read' poll.id %}">
               <span class="tooltip right">
                 {{ poll.title }}
-                <span class="tooltip-content">See the results</span>
+                <span class="tooltip-content">{% trans "See the results" %}</span>
               </span>
             </a>
           {% else %}
@@ -80,7 +80,7 @@
           <a href="{% url 'polls.poll_questions' poll.id %}">
             <span class="tooltip right">
               {{ poll.get_questions.count }}
-              <span class="tooltip-content">Go to question edit</span>
+              <span class="tooltip-content">{% trans "Go to question edit" %}</span>
             </span>
           </a>
         </td>
@@ -89,18 +89,18 @@
           {% if poll.questions.count > 3 %}
           <span class="tooltip right">
             {% for sdg in poll.questions.distinct|get_value_in_qs:'sdgs'|slice:3 %}
-            <span class="tag sdg-{{ sdg }}">SDG {{ sdg }}</span>
+            <span class="tag sdg-{{ sdg }}">{% trans "SDG" %} {{ sdg }}</span>
             {% endfor %}
 
             <span class="tooltip-content">
               {% for sdg in poll.questions.distinct|get_value_in_qs:'sdgs' %}
-              <span class="tag sdg-{{ sdg }} bottom-m-5">SDG {{ sdg }}</span>
+              <span class="tag sdg-{{ sdg }} bottom-m-5">{% trans "SDG" %} {{ sdg }}</span>
               {% endfor %}
             </span>
           </span>
           {% else %}
           {% for sdg in poll.questions.distinct|get_value_in_qs:'sdgs' %}
-          <span class="tag sdg-{{ sdg }}">SDG {{ sdg }}</span>
+          <span class="tag sdg-{{ sdg }}">{% trans "SDG" %} {{ sdg }}</span>
           {% endfor %}
           {% endif%}
         </td>
@@ -123,7 +123,7 @@
           <a href="{% url 'polls.poll_update' poll.id %}">
             <span class="tooltip right">
               <i class="material-icons">border_color</i>
-              <span class="tooltip-content">Edit survey</span>
+              <span class="tooltip-content">{% trans "Edit survey" %}</span>
             </span>
           </a>
           {% endif %}

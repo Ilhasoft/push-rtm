@@ -51,18 +51,10 @@
       <div class="box is-shadowless is-paddingless">
         <div class="p-30 border-bottom">
           <div class="has-text-weight-bold is-size-5 bottom-p-5">
-            {% if flow_section_id == "flowhub-all" %}
               {{ subtitle }}
-            {% elif flow_section_id == "flowhub-my-org" %}
-              {{ org.name }}
-            {% endif %}
           </div>
           <div class="has-text-grey-light">
-            {% if flow_section_id == "flowhub-all" %}
-              View all survey questions/surveys used by all UNCTs. You can download a particular survey and use it.
-            {% elif flow_section_id == "flowhub-my-org" %}
-              View all survey questions/surveys used by your UNCT. You can download a particular survey and use it.
-            {% endif %}
+              {% trans "View all survey questions/surveys used by your UNCT. You can download a particular survey and use it." %}
           </div>
         </div>
         <div class="columns">
@@ -143,7 +135,7 @@
       <table class="table is-fullwidth">
         <tbody>
         {% for flow in flows %}
-          {% include "flowhub/flow_detail.html" with flow=flow section="all" %}
+          {% include "flowhub/global_flow_detail.html" with flow=flow section="all" %}
         {% empty %}
         <tr>
           <td class="has-text-centered">{% trans "No results found" %}</td>

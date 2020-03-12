@@ -64,7 +64,7 @@
           <div class="survey-filters-content p-30">
             <h3 class="bottom-m-10">
               <img class="right-m-5" src="{% static 'svg/sdg.svg' %}" alt="">
-              <span>SDG</span>
+              <span>{% trans "SDG" %}</span>
             </h3>
 
             {% for sdg in sdgs %}
@@ -224,14 +224,14 @@
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Embed Chart</p>
+        <p class="modal-card-title">{% trans "Embed Chart" %}</p>
         <button class="delete is-pulled-right" onclick="showModal({{question.title}})" aria-label="close"></button>
       </header>
       <section class="modal-card-body">
         <span id="url-iframe"></span>
       </section>
       <footer class="modal-card-foot">
-        <button class="button primary-reverse" id="copy-iframe" onclick="copyIframe();">Copy</button>
+        <button class="button primary-reverse" id="copy-iframe" onclick="copyIframe();">{% trans "Copy" %}</button>
         <div id="check-iframe">
           <svg id="Bold" class="check-svg" enable-background="new 0 0 24 24" height="15" viewBox="0 0 24 24" width="15" xmlns="http://www.w3.org/2000/svg">
             <path d="m.828 13.336c-.261.304-.388.691-.357 1.091s.215.764.52 1.024l7.403 6.346c.275.235.616.361.974.361.044 0 .089-.002.134-.006.405-.036.77-.229 1.028-.542l12.662-15.411c.254-.31.373-.7.334-1.099-.04-.399-.231-.759-.541-1.014l-2.318-1.904c-.639-.524-1.585-.432-2.111.207l-9.745 11.861-3.916-3.355c-.628-.536-1.576-.465-2.115.163z"/>
