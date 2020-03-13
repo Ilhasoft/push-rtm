@@ -573,7 +573,6 @@ INSTALLED_APPS = (
     "ureport.admins",
     "ureport.api",
     "ureport.contacts",
-    "ureport.countries",
     "ureport.locations",
     "ureport.polls",
     "ureport.stats",
@@ -706,7 +705,6 @@ GROUP_PERMISSIONS = {
     ),
     "Viewers": ("polls.poll_list",),
     "Global Viewers": ("flowhub.flowhub.*",),
-    "Global": ("countries.countryalias.*",),
 }
 
 # -----------------------------------------------------------------------------------
