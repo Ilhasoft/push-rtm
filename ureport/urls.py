@@ -3,66 +3,21 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from django.conf import settings
 from django.conf.urls import include, url
-
-# Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 from django.views import static
-from django.views.generic import RedirectView, TemplateView
-from django.views.i18n import JavaScriptCatalog
+from django.views.generic import TemplateView
 
 admin.autodiscover()
 
 
 urlpatterns = [
-    url(r"^v2/", include("ureport.public_v2.urls")),
-    url(r"^v2/manage/", include("ureport.admins.urls")),
-    url(r"^v2/manage/", include("dash.orgs.urls")),
-    url(r"^v2/manage/", include("dash.dashblocks.urls")),
-    url(r"^v2/manage/", include("dash.stories.urls")),
-    url(r"^v2/manage/", include("ureport.polls.urls")),
-    url(r"^v2/manage/", include("dash.categories.urls")),
-    url(r"^v2/manage/", include("ureport.news.urls")),
-    url(r"^v2/manage/", include("ureport.jobs.urls")),
-    url(r"^v2/manage/", include("ureport.countries.urls")),
-    url(r"^v2/manage/", include("ureport.assets.urls")),
-    url(r"^v2/users/", include("dash.users.urls")),
-    url(r"^v2/manage/", include("smartmin.csv_imports.urls")),
-    # url(r"^v1/", include("ureport.public.urls")),
-    url(r"^v1/manage/", include("ureport.admins.urls")),
-    url(r"^v1/manage/", include("dash.orgs.urls")),
-    url(r"^v1/manage/", include("dash.dashblocks.urls")),
-    url(r"^v1/manage/", include("dash.stories.urls")),
-    url(r"^v1/manage/", include("ureport.polls.urls")),
-    url(r"^v1/manage/", include("dash.categories.urls")),
-    url(r"^v1/manage/", include("ureport.news.urls")),
-    url(r"^v1/manage/", include("ureport.jobs.urls")),
-    url(r"^v1/manage/", include("ureport.countries.urls")),
-    url(r"^v1/manage/", include("ureport.assets.urls")),
-    url(r"^v1/users/", include("dash.users.urls")),
-    url(r"^v1/manage/", include("smartmin.csv_imports.urls")),
-    url(r"^public/", include("ureport.public.urls")),
-    url(r"^manage/", include("ureport.admins.urls")),
-    url(r"^manage/", include("dash.orgs.urls")),
-    url(r"^manage/", include("dash.dashblocks.urls")),
-    url(r"^manage/", include("dash.stories.urls")),
-    url(r"^manage/", include("ureport.polls.urls")),
-    url(r"^manage/", include("dash.categories.urls")),
-    url(r"^manage/", include("ureport.news.urls")),
-    url(r"^manage/", include("ureport.jobs.urls")),
-    url(r"^manage/", include("ureport.countries.urls")),
-    url(r"^manage/", include("ureport.assets.urls")),
+    url(r"^", include("ureport.dashboard.urls")),
     url(r"^users/", include("dash.users.urls")),
-    url(r"^manage/", include("smartmin.csv_imports.urls")),
-    url(r"^api/$", RedirectView.as_view(pattern_name="api.v1.docs", permanent=False), name="api"),
-    url(r"^api/v1/", include("ureport.api.urls")),
-    url(r"^jsi18n/$", JavaScriptCatalog.as_view(), name="javascript-catalog"),
-    # rtm custom urls
-    url(r"^uncts/", include("ureport.uncts.urls")),
     url(r"^users/", include("ureport.accounts.urls")),
+    url(r"^uncts/", include("ureport.uncts.urls")),
     url(r"^surveys/", include("ureport.polls.urls")),
     url(r"^results/", include("ureport.results.urls")),
     url(r"^flowhub/", include("ureport.flowhub.urls")),
-    url(r"^", include("ureport.dashboard.urls")),
     url(r"^authentication/", include("ureport.authentication.urls")),
     url(r"^surveys-global/", include("ureport.polls_global.urls")),
     url(r"^worldmap/", include("ureport.worldmap.urls")),
