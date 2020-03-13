@@ -13,10 +13,10 @@
 <hr>
 <article class="p-30 columns">
   <div class="column">
-    <p>{% trans "Account's management area that allows access level control and account removal.
-        On your first login, you'll receive viewer access permission. If you want new
-        user access, a UNCT administrator needs to change your access." %}</p>
-        <p>{% trans "The home page for all logged accounts is the Dashboard." %}</p>
+    <p>{% trans "Account's management area that allows access level control and account removal." %}
+       {% trans "On your first login, you'll receive viewer access permission." %}
+       {% trans "If you want new user access, a UNCT administrator needs to change your access." %}</p>
+       <p>{% trans "The home page for all logged accounts is the Dashboard." %}</p>
   </div>
 </article>
 <hr>
@@ -25,8 +25,7 @@
     <p class="has-text-weight-bold is-size-5 bottom-p-5">
       {% trans "Viewer" %}
     </p>
-    <p>{% trans "Allowed to access UNCT's Dashboard, Repository and Surveys a viewer account
-        can only see the data already there." %}</p>
+    <p>{% trans "Allowed to access UNCT's Dashboard, Repository and Surveys a viewer account can only see the data already there." %}</p>
   </div>
   <div class="column">
     <figure class="image is-16by9">
@@ -42,8 +41,8 @@
     <p class="has-text-weight-bold is-size-5 bottom-p-5">
       {% trans "Administrator" %}
     </p>
-    <p>{% trans "Administrators' accounts have full access to all tools. Additionally,
-      a user tab is offered to administrate accounts' access level and availability." %}</p>
+    <p>{% trans "Administrators' accounts have full access to all tools." %}
+       {% trans "Additionally, a user tab is offered to administrate accounts' access level and availability." %}</p>
   </div>
   <div class="column">
     <figure class="image is-16by9">
@@ -59,9 +58,8 @@
     <p class="has-text-weight-bold is-size-5 bottom-p-5">
       {% trans "Editing an account" %}
     </p>
-    <p>{% trans "In the image below you can see two sample accounts. As you mouse over the
-      pencil icon it will highlight and clicking will allow editing that
-      account's access level." %}</p>
+    <p>{% trans "In the image below you can see two sample accounts." %}
+       {% trans "As you mouse over the pencil icon it will highlight and clicking will allow editing that account's access level." %}</p>
   </div>
   <div class="column">
     <figure class="image is-16by9">
@@ -73,8 +71,7 @@
 </article>
 <article class="p-30 columns">
   <div class="column">
-    <p>{% trans "Changes take effect immediately but if the modified account is still
-      logging while being edited a fresh login may be needed." %}</p>
+    <p>{% trans "Changes take effect immediately but if the modified account is still logging while being edited a fresh login may be needed." %}</p>
   </div>
   <div class="column">
     <figure class="image is-16by9">
@@ -90,8 +87,7 @@
     <p class="has-text-weight-bold is-size-5 bottom-p-5">
       {% trans "Disabling an account" %}
     </p>
-    <p>{% trans "By clicking the trash icon the respective account will be blocked
-      and that login's credentials will be denied." %}</p>
+    <p>{% trans "By clicking the trash icon the respective account will be blocked and that login's credentials will be denied." %}</p>
   </div>
   <div class="column">
     <figure class="image is-16by9">
@@ -107,12 +103,10 @@
     <p class="has-text-weight-bold is-size-5 bottom-p-5">
       {% trans "User search tool" %}
     </p>
-    <p>{% trans "The search bar uses the account's name to query and you just need to
-      type and press enter. It's case insensitive and capable of searching
-      for strings' fragments. In the example bellow the search was "and" and
-      it found "Admin Sandbox" account name." %}</p>
-    <p> {% trans "It's also possible to clear the
-      query just by clicking the X button at the search bar." %}
+    <p>{% trans "The search bar uses the account's name to query and you just need to type and press enter. " %}
+      {% trans "It's case insensitive and capable of searching for strings' fragments. " %}
+      {% trans 'In the example bellow the search was "and" and it found "Admin Sandbox" account name.' %}</p>
+    <p> {% trans "It's also possible to clear the query just by clicking the X button at the search bar." %}
     </p>
   </div>
   <div class="column">
@@ -129,8 +123,7 @@
     <p class="has-text-weight-bold is-size-5 bottom-p-5">
       {% trans "Sorting" %}
     </p>
-    <p>{% trans "It's possible to order contacts by Name, ascending or descending,
-      just by clicking the columm's title." %}</p>
+    <p>{% trans "It's possible to order contacts by Name, ascending or descending, just by clicking the columm's title." %}</p>
   </div>
   <div class="column">
     <figure class="image is-16by9">
