@@ -17,7 +17,6 @@ from django.core.cache import cache
 from django.db.models import Sum
 from django.utils import timezone
 import pytz
-from ureport.assets.models import Image, FLAG, LOGO
 from raven.contrib.django.raven_compat.models import client
 
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
@@ -121,38 +120,6 @@ def chunk_list(iterable, size):
     while True:
         chunk_iter = islice(source_iter, size)
         yield chain([next(chunk_iter)], chunk_iter)
-
-
-def get_linked_orgs(authenticated=False):
-    all_orgs = Org.objects.filter(is_active=True).order_by("name")
-
-    linked_sites = list(getattr(settings, "PREVIOUS_ORG_SITES", []))
-    for elt in linked_sites:
-        elt["order_name"] = elt["name"]
-
-    # populate a ureport site for each org so we can link off to them
-    for org in all_orgs:
-        host = org.build_host_link(authenticated)
-        org.host = host
-        if org.get_config("common.is_on_landing_page"):
-            flag = Image.objects.filter(org=org, is_active=True, image_type=FLAG).first()
-            if flag:
-                linked_sites.append(
-                    dict(name=org.name, order_name=org.subdomain, host=host, flag=flag.image.url, is_static=False)
-                )
-
-    linked_sites_sorted = sorted(linked_sites, key=lambda k: k["order_name"].lower())
-
-    return linked_sites_sorted
-
-
-def get_logo(org):
-    logo_field = org.logo
-    logo = Image.objects.filter(org=org, is_active=True, image_type=LOGO).first()
-    if logo:
-        logo_field = logo.image
-    return logo_field
-
 
 def fetch_flows(org, backend=None):
     from ureport.polls.models import CACHE_ORG_FLOWS_KEY, UREPORT_ASYNC_FETCHED_DATA_CACHE_TIME
@@ -953,5 +920,4 @@ Org.get_ureporters_locations_response_rates = get_ureporters_locations_response_
 Org.get_sign_up_rate = get_sign_up_rate
 Org.get_sign_up_rate_gender = get_sign_up_rate_gender
 Org.get_sign_up_rate_age = get_sign_up_rate_age
-Org.get_logo = get_logo
 Org.get_sign_up_rate_location = get_sign_up_rate_location

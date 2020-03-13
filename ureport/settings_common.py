@@ -572,7 +572,6 @@ INSTALLED_APPS = (
     # ureport apps
     "ureport.admins",
     "ureport.api",
-    "ureport.assets",
     "ureport.contacts",
     "ureport.countries",
     "ureport.jobs",
@@ -639,7 +638,6 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "dash.orgs.context_processors.user_group_perms_processor",
                 "dash.orgs.context_processors.set_org_processor",
-                "ureport.assets.context_processors.set_assets_processor",
                 "ureport.dashboard.context_processors.sdg_list",
             ],
             "loaders": [

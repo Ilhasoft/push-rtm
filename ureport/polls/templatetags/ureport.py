@@ -15,7 +15,7 @@ from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.core.cache import cache
 from django.utils.timesince import timesince
 
-from ureport.utils import get_linked_orgs, json_date_to_datetime
+from ureport.utils import json_date_to_datetime
 from ureport.polls.models import Poll
 
 
@@ -154,18 +154,6 @@ class LessBlockNode(template.Node):
 
 # register our tag
 lessblock = register.tag(lessblock)
-
-
-@register.inclusion_tag("public/org_flags.html", takes_context=True)
-def show_org_flags(context):
-    request = context["request"]
-    linked_orgs = get_linked_orgs(request.user.is_authenticated)
-    return dict(
-        linked_orgs=linked_orgs,
-        break_pos=min(len(linked_orgs) / 2, 9),
-        STATIC_URL=settings.STATIC_URL,
-        is_iorg=context["is_iorg"],
-    )
 
 
 @register.inclusion_tag("v2/public/edit_content.html", takes_context=True)
