@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-12 18:21-0300\n"
+"POT-Creation-Date: 2020-03-13 10:59-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,7 +36,7 @@ msgstr ""
 
 #: templates/accounts/form.html:40 templates/accounts/global/form.html:40
 #: templates/accounts/global/index.html:32 templates/accounts/index.html:37
-#: templates/flowhub/form.html:104 templates/flowhub/global_form.html:97
+#: templates/flowhub/form.html:105 templates/flowhub/global_form.html:98
 #: templates/polls/index.html:54 templates/polls_global/grant_list.html:44
 #: templates/polls_global/grant_list.html:87
 #: templates/polls_global/index.html:47 templates/uncts/index.html:37
@@ -53,7 +53,7 @@ msgid "Groups"
 msgstr ""
 
 #: templates/accounts/form.html:80 templates/accounts/global/form.html:80
-#: templates/flowhub/form.html:148 templates/flowhub/global_form.html:133
+#: templates/flowhub/form.html:149 templates/flowhub/global_form.html:134
 #: templates/polls_global/form.html:89 templates/uncts/form.html:185
 msgid "OK"
 msgstr ""
@@ -62,8 +62,8 @@ msgstr ""
 #: templates/accounts/global/index.html:86
 #: templates/accounts/global/index.html:111 templates/accounts/index.html:80
 #: templates/accounts/index.html:117 templates/flowhub/flow_detail.html:87
-#: templates/flowhub/form.html:149 templates/flowhub/global_flow_detail.html:87
-#: templates/flowhub/global_form.html:134 templates/flowhub/info.html:158
+#: templates/flowhub/form.html:150 templates/flowhub/global_flow_detail.html:87
+#: templates/flowhub/global_form.html:135 templates/flowhub/info.html:158
 #: templates/polls/form.html:108 templates/polls_global/form.html:90
 #: templates/uncts/form.html:186
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/delete_confirm.html:24
@@ -112,7 +112,7 @@ msgid "Do you really want to active the user"
 msgstr ""
 
 #: templates/accounts/global/index.html:121 templates/accounts/index.html:128
-#: templates/flowhub/global_index.html:141 templates/flowhub/index.html:149
+#: templates/flowhub/global_index.html:141 templates/flowhub/index.html:151
 #: templates/flowhub/uncts.html:126 templates/polls/index.html:134
 #: templates/polls_global/grant_list.html:79
 #: templates/polls_global/grant_list.html:113
@@ -121,8 +121,8 @@ msgid "No results found"
 msgstr ""
 
 #: templates/accounts/index.html:165 templates/docs.html:52
-#: templates/docs/global_repository.html:57 templates/docs/global_uncts.html:10
-#: templates/docs/uncts_repository.html:67 templates/flowhub/form.html:54
+#: templates/docs/global_repository.html:54 templates/docs/global_uncts.html:10
+#: templates/docs/uncts_repository.html:62 templates/flowhub/form.html:54
 #: templates/flowhub/global_form.html:54 templates/flowhub/global_index.html:38
 #: templates/flowhub/index.html:38 templates/flowhub/info.html:44
 #: templates/flowhub/uncts.html:38 templates/header.html:22
@@ -231,8 +231,8 @@ msgid "There is no data for this filter"
 msgstr ""
 
 #: templates/dashboard/dashboard.html:162
-#: templates/docs/global_dashboard.html:83
-#: templates/docs/uncts_dashboard.html:89
+#: templates/docs/global_dashboard.html:77
+#: templates/docs/uncts_dashboard.html:83
 msgid "Surveys Partial Results"
 msgstr ""
 
@@ -246,8 +246,8 @@ msgstr ""
 
 #: templates/dashboard/dashboard.html:195
 #: templates/flowhub/global_index.html:91
-#: templates/flowhub/global_index.html:107 templates/flowhub/index.html:99
-#: templates/flowhub/index.html:115
+#: templates/flowhub/global_index.html:107 templates/flowhub/index.html:101
+#: templates/flowhub/index.html:117
 msgid "None"
 msgstr ""
 
@@ -259,8 +259,8 @@ msgid "SDG"
 msgstr ""
 
 #: templates/dashboard/dashboard.html:211
-#: templates/docs/global_dashboard.html:121
-#: templates/docs/uncts_dashboard.html:125
+#: templates/docs/global_dashboard.html:111
+#: templates/docs/uncts_dashboard.html:116
 msgid "Message Metrics"
 msgstr ""
 
@@ -284,7 +284,7 @@ msgstr ""
 msgid "These results are the sum of messages received and sent"
 msgstr ""
 
-#: templates/dashboard/dashboard.html:464 templates/docs/uncts_surveys.html:149
+#: templates/dashboard/dashboard.html:464 templates/docs/uncts_surveys.html:137
 #: templates/polls/index.html:55 templates/polls_global/grant_list.html:45
 #: templates/polls_global/grant_list.html:88
 msgid "Questions"
@@ -316,8 +316,8 @@ msgstr ""
 
 #: templates/dashboard/global_channels_contacts.html:36
 #: templates/dashboard/local_channels_contacts.html:77
-#: templates/docs/global_dashboard.html:173
-#: templates/docs/uncts_dashboard.html:157
+#: templates/docs/global_dashboard.html:159
+#: templates/docs/uncts_dashboard.html:147
 msgid "RapidPro Contacts"
 msgstr ""
 
@@ -400,7 +400,7 @@ msgstr ""
 #: templates/docs.html:45 templates/docs.html:56
 #: templates/docs/global_dashboard.html:10
 #: templates/docs/uncts_dashboard.html:10 templates/header.html:20
-#: templates/worldmap/index.html:112
+#: templates/worldmap/index.html:111
 msgid "Dashboard"
 msgstr ""
 
@@ -421,96 +421,331 @@ msgstr ""
 msgid "Global Surveys"
 msgstr ""
 
-#: templates/docs/global_dashboard.html:33
-#: templates/docs/uncts_dashboard.html:33
+#: templates/docs/global_dashboard.html:16
+#: templates/docs/uncts_dashboard.html:16
+msgid "This is the main session of the platform and also its homepage. "
+msgstr ""
+
+#: templates/docs/global_dashboard.html:17
+#: templates/docs/uncts_dashboard.html:17
+msgid ""
+"It's here where all the survey's data gathered will be available for "
+"analysis. "
+msgstr ""
+
+#: templates/docs/global_dashboard.html:18
+#: templates/docs/uncts_dashboard.html:18
+msgid ""
+"Like a main access point, it allows gathering different perceptions from "
+"ongoing surveys and useful RapidPro data metrics."
+msgstr ""
+
+#: templates/docs/global_dashboard.html:32
+#: templates/docs/uncts_dashboard.html:32
 msgid "Walkthrough"
 msgstr ""
 
-#: templates/docs/global_dashboard.html:38
+#: templates/docs/global_dashboard.html:34
+msgid "Global Dashboard aggregates all active surveys from UNCTs' workspaces. "
+msgstr ""
+
+#: templates/docs/global_dashboard.html:35
+msgid ""
+"Right below the page's title, it's the scope of the first Filter, which "
+"applies to the entire page range options."
+msgstr ""
+
+#: templates/docs/global_dashboard.html:36
 msgid "To ease the understanding, there's a block division for each data type."
 msgstr ""
 
-#: templates/docs/global_dashboard.html:49
-#: templates/docs/uncts_dashboard.html:56
+#: templates/docs/global_dashboard.html:37
+msgid ""
+"The first one is related to SDGs tracking, then Surveys Partial Results, "
+"Message Metrics, Most used Channels and lastly RapidPro Contacts."
+msgstr ""
+
+#: templates/docs/global_dashboard.html:38
+#: templates/docs/uncts_dashboard.html:37
+msgid ""
+"Each one has its own features and sorting options and we'll go through it "
+"all on the topics below."
+msgstr ""
+
+#: templates/docs/global_dashboard.html:45
+#: templates/docs/uncts_dashboard.html:52
 msgid "SDGs Tracking"
 msgstr ""
 
-#: templates/docs/global_dashboard.html:88
+#: templates/docs/global_dashboard.html:47
+#: templates/docs/uncts_dashboard.html:54
+msgid ""
+"In the bubble graph, you can see which SDG is being more tracked related to "
+"others. "
+msgstr ""
+
+#: templates/docs/global_dashboard.html:48
+msgid ""
+"In other words, it shows the number of received messages for questions that "
+"are linked to the respective SDG."
+msgstr ""
+
+#: templates/docs/global_dashboard.html:60
+#: templates/docs/uncts_dashboard.html:67
+msgid "There are two separate sections to display the SDGs tracking status. "
+msgstr ""
+
+#: templates/docs/global_dashboard.html:61
+#: templates/docs/uncts_dashboard.html:68
+msgid ""
+"The order doesn't interfere with the bubble size, it is ordered by crescent "
+"numerical order."
+msgstr ""
+
+#: templates/docs/global_dashboard.html:63
+#: templates/docs/uncts_dashboard.html:69
+msgid ""
+"To provide better readability there is a tooltip on each bubble displaying "
+"the SDG name and also the received messages count."
+msgstr ""
+
+#: templates/docs/global_dashboard.html:79
+msgid ""
+"To follow ongoing surveys and track how the answers are being structured as "
+"it comes from RapidPro, the partial results graph randomizes 20 questions to "
+"be displayed."
+msgstr ""
+
+#: templates/docs/global_dashboard.html:80
 msgid "It will bring a more close approach to all UNCT's ongoing surveys."
 msgstr ""
 
-#: templates/docs/global_dashboard.html:101
-#: templates/docs/global_dashboard.html:155
-#: templates/docs/uncts_dashboard.html:106
+#: templates/docs/global_dashboard.html:93
+#: templates/docs/global_dashboard.html:142
+#: templates/docs/uncts_dashboard.html:99
 msgid "Sorting and Filtering"
 msgstr ""
 
-#: templates/docs/global_dashboard.html:139
+#: templates/docs/global_dashboard.html:95
+#: templates/docs/uncts_dashboard.html:101
+msgid ""
+"There is a filter by SDG on the upper right corner, it allows to list "
+"questions that are linked to the selected SDG."
+msgstr ""
+
+#: templates/docs/global_dashboard.html:97
+#: templates/docs/global_dashboard.html:145
+#: templates/docs/uncts_dashboard.html:102
+msgid ""
+"By navigating through the questions you will get indicators from ongoing "
+"answers to each question."
+msgstr ""
+
+#: templates/docs/global_dashboard.html:113
+#: templates/docs/uncts_dashboard.html:118
+msgid "RapidPro registers message traffic information. "
+msgstr ""
+
+#: templates/docs/global_dashboard.html:114
+#: templates/docs/uncts_dashboard.html:119
+msgid ""
+"This information reflects the ongoing and finished survey's level of "
+"engagement. "
+msgstr ""
+
+#: templates/docs/global_dashboard.html:115
+msgid ""
+"This dashboard module shows the sum of aggregated values from messages sent "
+"and received. "
+msgstr ""
+
+#: templates/docs/global_dashboard.html:116
+msgid "The graph consolidates the traffic from all UNCT's workspaces. "
+msgstr ""
+
+#: templates/docs/global_dashboard.html:128
 msgid ""
 "There's also a tracking statistics by active channels on the UNCT's RapidPro "
 "workspace."
 msgstr ""
 
-#: templates/docs/global_repository.html:31
+#: templates/docs/global_dashboard.html:129
+#: templates/docs/uncts_dashboard.html:133
+msgid ""
+"The message metrics by channel board displays the sum of all sent and "
+"received messages for a general overview of all channels and its usage "
+"status."
+msgstr ""
+
+#: templates/docs/global_dashboard.html:144
+msgid ""
+"There is a filter by SDG on the upper right corner, it allows to list "
+"questions that are linked to the selected SDG. "
+msgstr ""
+
+#: templates/docs/global_dashboard.html:161
+#: templates/docs/uncts_dashboard.html:149
+msgid ""
+"The number of contacts is a very important piece of information provided by "
+"RapidPro. "
+msgstr ""
+
+#: templates/docs/global_dashboard.html:162
+msgid ""
+"It means the aggregated number of contacts inside the registered group from "
+"all UNCT's. "
+msgstr ""
+
+#: templates/docs/global_dashboard.html:163
+#: templates/docs/uncts_dashboard.html:151
+msgid "The graph allows for seeing this information from the last 6 months."
+msgstr ""
+
+#: templates/docs/global_repository.html:16
+msgid ""
+"The Global RTM Repository module provides access to all shared survey flows "
+"template files."
+msgstr ""
+
+#: templates/docs/global_repository.html:30
 msgid "Viewer and Administrator perspectives"
 msgstr ""
 
-#: templates/docs/global_repository.html:40
-#: templates/docs/uncts_repository.html:49 templates/flowhub/form.html:49
+#: templates/docs/global_repository.html:32
+msgid ""
+"In this particular case, features for both account levels are the same, "
+"let's walk through each one."
+msgstr ""
+
+#: templates/docs/global_repository.html:38
+#: templates/docs/uncts_repository.html:46 templates/flowhub/form.html:49
 #: templates/flowhub/global_form.html:49 templates/flowhub/global_index.html:33
 #: templates/flowhub/index.html:33 templates/flowhub/info.html:42
 #: templates/flowhub/uncts.html:33
 msgid "All flows"
 msgstr ""
 
-#: templates/docs/global_repository.html:59
-#: templates/docs/uncts_repository.html:69
+#: templates/docs/global_repository.html:40
+#: templates/docs/uncts_repository.html:48
+msgid ""
+"This is the Repository's homepage, where all available flows to download are "
+"listed. "
+msgstr ""
+
+#: templates/docs/global_repository.html:41
+#: templates/docs/uncts_repository.html:49
+msgid ""
+"It will present the survey title, the UNCT that uploaded it and a short "
+"description provided by the administrator who created that flow."
+msgstr ""
+
+#: templates/docs/global_repository.html:56
+#: templates/docs/uncts_repository.html:64
 msgid ""
 "See a list of all registered UNCTs to sort only its flows and easily "
 "download."
 msgstr ""
 
-#: templates/docs/global_repository.html:73 templates/docs/global_uncts.html:49
-#: templates/docs/uncts_repository.html:144
-#: templates/docs/uncts_surveys.html:251 templates/results/poll_result.html:56
+#: templates/docs/global_repository.html:70 templates/docs/global_uncts.html:49
+#: templates/docs/uncts_repository.html:138
+#: templates/docs/uncts_surveys.html:234 templates/results/poll_result.html:56
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/list.html:14
 msgid "Search"
 msgstr ""
 
-#: templates/docs/global_repository.html:106
-#: templates/docs/global_surveys.html:138 templates/docs/global_uncts.html:33
-#: templates/docs/global_users.html:130
-#: templates/docs/uncts_repository.html:163
-#: templates/docs/uncts_surveys.html:272 templates/docs/uncts_users.html:130
+#: templates/docs/global_repository.html:72
+#: templates/docs/global_surveys.html:113
+#: templates/docs/uncts_repository.html:140
+#: templates/docs/uncts_surveys.html:236
+msgid ""
+"There's a search bar to find surveys, you just need to type and press enter. "
+msgstr ""
+
+#: templates/docs/global_repository.html:73
+#: templates/docs/uncts_repository.html:141
+msgid ""
+"It's case insensitive and capable of searching for strings' fragments at the "
+"survey name or description. "
+msgstr ""
+
+#: templates/docs/global_repository.html:74
+msgid ""
+"In the example below the search was \"flow\" and it found five surveys where "
+"the string was found in different spots from multiple workspaces."
+msgstr ""
+
+#: templates/docs/global_repository.html:86
+msgid "Besides survey flows it's possible to search for UNCTs names. "
+msgstr ""
+
+#: templates/docs/global_repository.html:87
+msgid "See below a search for \"brasil\"."
+msgstr ""
+
+#: templates/docs/global_repository.html:101
+#: templates/docs/global_surveys.html:130 templates/docs/global_uncts.html:33
+#: templates/docs/global_users.html:124
+#: templates/docs/uncts_repository.html:156
+#: templates/docs/uncts_surveys.html:254 templates/docs/uncts_users.html:124
 msgid "Sorting"
 msgstr ""
 
-#: templates/docs/global_repository.html:122
-#: templates/docs/uncts_repository.html:178
+#: templates/docs/global_repository.html:103
+msgid "It's possible to sort surveys by stars, newest or alphabetically. "
+msgstr ""
+
+#: templates/docs/global_repository.html:104
+#: templates/docs/uncts_repository.html:159
+msgid ""
+"Clicking the option once will sort ascending and the second time will apply "
+"descending."
+msgstr ""
+
+#: templates/docs/global_repository.html:116
+#: templates/docs/uncts_repository.html:171
 msgid "You can also filter the list by one specific SDG or language."
 msgstr ""
 
-#: templates/docs/global_repository.html:145
-#: templates/docs/uncts_repository.html:196
+#: templates/docs/global_repository.html:139
+#: templates/docs/uncts_repository.html:189
 msgid ""
 "At the UNCTs session, it's possible to sort by Newest or Alphabetically as "
 "well."
 msgstr ""
 
-#: templates/docs/global_repository.html:159
-#: templates/docs/uncts_repository.html:210
+#: templates/docs/global_repository.html:153
+#: templates/docs/uncts_repository.html:203
 msgid "Star Score"
 msgstr ""
 
-#: templates/docs/global_repository.html:176
-#: templates/docs/uncts_repository.html:227
+#: templates/docs/global_repository.html:155
+#: templates/docs/uncts_repository.html:205
+msgid ""
+"Given the number of stars of a shared survey may assist you to choose one by "
+"popularity. "
+msgstr ""
+
+#: templates/docs/global_repository.html:156
+#: templates/docs/uncts_repository.html:206
+msgid "The ones you've starred will show a filled star."
+msgstr ""
+
+#: templates/docs/global_repository.html:170
+#: templates/docs/uncts_repository.html:220
 #: templates/flowhub/flow_detail.html:64
 #: templates/flowhub/global_flow_detail.html:64 templates/flowhub/info.html:135
 msgid "Download"
 msgstr ""
 
-#: templates/docs/global_repository.html:180
-#: templates/docs/uncts_repository.html:231
+#: templates/docs/global_repository.html:172
+#: templates/docs/uncts_repository.html:222
+msgid ""
+"After choosing the survey flow you want, just click Download and you'll save "
+"the JSON file to your computer."
+msgstr ""
+
+#: templates/docs/global_repository.html:173
+#: templates/docs/uncts_repository.html:223
 msgid ""
 "There's a download counter for how many hits the button has been clicked."
 msgstr ""
@@ -527,52 +762,217 @@ msgstr ""
 msgid "Starting a Global Survey"
 msgstr ""
 
-#: templates/docs/global_surveys.html:71
+#: templates/docs/global_surveys.html:35
+msgid ""
+"Clicking the + Global Surveys button will allow you to start a new event. "
+msgstr ""
+
+#: templates/docs/global_surveys.html:36
+msgid ""
+"Where all it's needed is to provide a Title, Date range and a Description. "
+msgstr ""
+
+#: templates/docs/global_surveys.html:37
+msgid ""
+"The title is how UNCTs' workspaces are going to choose which global survey "
+"to connect, so it's a good practice to make it short and self-explained. "
+msgstr ""
+
+#: templates/docs/global_surveys.html:38
+msgid ""
+"Start Date and End Date will set the results' range considered as relevant "
+"for this event. "
+msgstr ""
+
+#: templates/docs/global_surveys.html:39
+msgid "A description will explain the survey at the Surveys Result page."
+msgstr ""
+
+#: templates/docs/global_surveys.html:41
+msgid ""
+"Before clicking OK make sure you have checked the Is active option or the "
+"survey will be saved with deactivated status."
+msgstr ""
+
+#: templates/docs/global_surveys.html:53
+msgid ""
+"When you've completed this process, the global survey will become available "
+"for connection at UNCTs' workspaces by activating Connect to on ongoing "
+"global survey."
+msgstr ""
+
+#: templates/docs/global_surveys.html:67
 msgid "Connection evaluation"
 msgstr ""
 
-#: templates/docs/global_surveys.html:73
+#: templates/docs/global_surveys.html:69
 msgid ""
 "Clicking the + icon on the survey right side will open the evaluation module."
 msgstr ""
 
-#: templates/docs/global_surveys.html:116
+#: templates/docs/global_surveys.html:81
+msgid "Than you'll see two tabs, Pending and Approved. "
+msgstr ""
+
+#: templates/docs/global_surveys.html:82
+msgid "On Pending there's a list of all surveys requests. "
+msgstr ""
+
+#: templates/docs/global_surveys.html:83
+msgid ""
+"Clicking the survey Name will open the UNCT's respective content and the "
+"icons on its right side will approve or deny the request, respectivelly."
+msgstr ""
+
+#: templates/docs/global_surveys.html:95
+msgid ""
+"On Approved you can also load the respective content by clicking the survey "
+"name. "
+msgstr ""
+
+#: templates/docs/global_surveys.html:96
+msgid "The X button will unlink that survey from the global event."
+msgstr ""
+
+#: templates/docs/global_surveys.html:111
 msgid "Searching"
 msgstr ""
 
-#: templates/docs/global_surveys.html:159 templates/docs/uncts_surveys.html:348
+#: templates/docs/global_surveys.html:114 templates/docs/uncts_surveys.html:237
+msgid ""
+"It's case insensitive and capable of searching for strings' fragments at the "
+"name of active or inactive surveys. "
+msgstr ""
+
+#: templates/docs/global_surveys.html:115
+msgid ""
+"In the example below the search was \"global\" and it found three surveys "
+"where the string was found in different spots. "
+msgstr ""
+
+#: templates/docs/global_surveys.html:116 templates/docs/uncts_surveys.html:239
+msgid ""
+"You can disengage the search filter by clicking the X at the right of the "
+"bar."
+msgstr ""
+
+#: templates/docs/global_surveys.html:132
+msgid "It's possible to sort surveys by Name, Date and Status. "
+msgstr ""
+
+#: templates/docs/global_surveys.html:133 templates/docs/uncts_surveys.html:257
+msgid ""
+"Clicking the option once will sort ascending and the second time will apply "
+"descending. "
+msgstr ""
+
+#: templates/docs/global_surveys.html:134
+msgid ""
+"Sorting can be a very useful tool as your survey's list grow bigger, in the "
+"example below there's a search for 'global' and it's also sorting the list "
+"by Initial Date."
+msgstr ""
+
+#: templates/docs/global_surveys.html:148 templates/docs/uncts_surveys.html:323
 msgid "Disabled Surveys"
 msgstr ""
 
-#: templates/docs/global_surveys.html:178 templates/docs/uncts_surveys.html:367
+#: templates/docs/global_surveys.html:150 templates/docs/uncts_surveys.html:325
+msgid ""
+"A grayed survey line means that it has been disabled and become "
+"inaccessible. "
+msgstr ""
+
+#: templates/docs/global_surveys.html:151 templates/docs/uncts_surveys.html:326
+msgid "A disabled survey won't have its results synchronized. "
+msgstr ""
+
+#: templates/docs/global_surveys.html:152
+msgid ""
+"In most cases disabling a survey means that the result is no longer "
+"necessary or something went wrong with it."
+msgstr ""
+
+#: templates/docs/global_surveys.html:166 templates/docs/uncts_surveys.html:341
 msgid "Surveys' results"
 msgstr ""
 
-#: templates/docs/global_surveys.html:224
+#: templates/docs/global_surveys.html:168
+msgid ""
+"Here, you will find all surveys that were registered as Global on UNCTs. "
+msgstr ""
+
+#: templates/docs/global_surveys.html:169 templates/docs/uncts_surveys.html:344
+msgid ""
+"Survey results can be analyzed by selecting a survey on the survey's list."
+msgstr ""
+
+#: templates/docs/global_surveys.html:181 templates/docs/uncts_surveys.html:356
+msgid ""
+"When choosing a survey on the list you will be redirected to the survey "
+"results page, which displays all details and charts. "
+msgstr ""
+
+#: templates/docs/global_surveys.html:182
+msgid ""
+"It will show you how many questions have the selected survey, its Title, "
+"Description, Date and Linked SDGs. "
+msgstr ""
+
+#: templates/docs/global_surveys.html:183
+msgid "There's also a counter for applied UNCTs in this Global survey."
+msgstr ""
+
+#: templates/docs/global_surveys.html:195 templates/docs/uncts_surveys.html:357
+msgid ""
+"It's also possible to use the left panel and filter by SDG displaying only "
+"the questions that match the ones selected."
+msgstr ""
+
+#: templates/docs/global_surveys.html:209
 msgid "Search bar"
 msgstr ""
 
-#: templates/docs/global_surveys.html:226
+#: templates/docs/global_surveys.html:211
 msgid ""
 "Searching for UNTCs will allow confronting Global results against Local."
 msgstr ""
 
-#: templates/docs/global_surveys.html:240
+#: templates/docs/global_surveys.html:225
 msgid "Results' balance"
 msgstr ""
 
-#: templates/docs/global_surveys.html:255
+#: templates/docs/global_surveys.html:227
+msgid ""
+"By clicking Countries arrow option a list of connected UNCTs will load so "
+"you may choose one to balance the results."
+msgstr ""
+
+#: templates/docs/global_surveys.html:239
 msgid ""
 "Now, it's possible to collate each question's result by clicking the More "
 "arrow."
 msgstr ""
 
-#: templates/docs/global_surveys.html:283 templates/docs/global_uncts.html:119
-#: templates/docs/uncts_surveys.html:294
+#: templates/docs/global_surveys.html:251
+msgid ""
+"For each question, there's engagement counter, for applied UNCTs' surveys "
+"that has this question, and a segment by option to filter results by Age or "
+"Gender."
+msgstr ""
+
+#: templates/docs/global_surveys.html:265 templates/docs/global_uncts.html:115
+#: templates/docs/uncts_surveys.html:273
 msgid "Editing"
 msgstr ""
 
-#: templates/docs/global_surveys.html:298
+#: templates/docs/global_surveys.html:267
+msgid ""
+"You can edit a Global survey anytime just by clicking the pencil icon on its "
+"right side."
+msgstr ""
+
+#: templates/docs/global_surveys.html:279
 msgid "The edition session will also allow you to deactivate that survey."
 msgstr ""
 
@@ -580,62 +980,197 @@ msgstr ""
 msgid "List"
 msgstr ""
 
-#: templates/docs/global_uncts.html:69
+#: templates/docs/global_uncts.html:19
+msgid "The homepage of UNCTs' session is a list of all registered UNCTs. "
+msgstr ""
+
+#: templates/docs/global_uncts.html:20
+msgid " Where some actions are available, let's walk through it all."
+msgstr ""
+
+#: templates/docs/global_uncts.html:35
+msgid "You can choose to sort by Name, Timezone or Language. "
+msgstr ""
+
+#: templates/docs/global_uncts.html:36
+msgid ""
+"The first click will apply alphabetically descending order and the second "
+"ascending."
+msgstr ""
+
+#: templates/docs/global_uncts.html:51
+msgid ""
+"There's a search bar to find registered UNCTs, you just need to type and "
+"press enter. "
+msgstr ""
+
+#: templates/docs/global_uncts.html:52
+msgid ""
+"It's case insensitive and capable of searching for strings' fragments at the "
+"name field. "
+msgstr ""
+
+#: templates/docs/global_uncts.html:53
+msgid ""
+"In the example below the search was \"L\" and it found three UNCTs where the "
+"string was found in different spots. "
+msgstr ""
+
+#: templates/docs/global_uncts.html:54
+msgid ""
+"You can disengage the search filter by clicking the X at the right of the bar"
+msgstr ""
+
+#: templates/docs/global_uncts.html:68
 msgid "Adding a new UNCT"
 msgstr ""
 
-#: templates/docs/global_uncts.html:71
+#: templates/docs/global_uncts.html:70
 msgid ""
 "By clicking the + UNCT button the process of registering a new UNCT will "
 "start."
 msgstr ""
 
-#: templates/docs/global_uncts.html:78
+#: templates/docs/global_uncts.html:72
+msgid "First inputs are relative to platform properties. "
+msgstr ""
+
+#: templates/docs/global_uncts.html:73
+msgid ""
+"Name and Language are free to choose, but RapidPro URL, RapidPro Token and "
+"Timezone should match exactly the values from the respective RapidPro "
+"workspace. "
+msgstr ""
+
+#: templates/docs/global_uncts.html:74
+msgid "Slug is a subdomain that will be used to access the workspace."
+msgstr ""
+
+#: templates/docs/global_uncts.html:76
 msgid "EG. sandbox will create https://sandbox.rtm.ilhasoft.mobi"
 msgstr ""
 
-#: templates/docs/global_uncts.html:95
+#: templates/docs/global_uncts.html:88
+msgid ""
+"Backend configuration should be customized with the respective contact "
+"settings on RapidPro. "
+msgstr ""
+
+#: templates/docs/global_uncts.html:89
+msgid ""
+"Fill Contact group with the main group name, where registered contacts are. "
+msgstr ""
+
+#: templates/docs/global_uncts.html:90
+msgid ""
+"The other fields should be filled with the respective contact field's title "
+"for each piece of information: "
+msgstr ""
+
+#: templates/docs/global_uncts.html:92
 msgid "Born Label for the year of born; "
 msgstr ""
 
-#: templates/docs/global_uncts.html:96
+#: templates/docs/global_uncts.html:93
 msgid "Gender Label for gender; "
 msgstr ""
 
-#: templates/docs/global_uncts.html:97
+#: templates/docs/global_uncts.html:94
 msgid "Occupation Label for the profession (optional);"
 msgstr ""
 
-#: templates/docs/global_uncts.html:98
+#: templates/docs/global_uncts.html:95
 msgid "Registration Label for contact's registration date;"
 msgstr ""
 
-#: templates/docs/global_uncts.html:99
+#: templates/docs/global_uncts.html:96
 msgid "State Label for the first region level, generally State;"
 msgstr ""
 
-#: templates/docs/global_uncts.html:100
+#: templates/docs/global_uncts.html:97
 msgid "District Label for the second region level (optional);"
 msgstr ""
 
-#: templates/docs/global_uncts.html:101
+#: templates/docs/global_uncts.html:98
 msgid "Ward Label for the third region level (optional);"
 msgstr ""
 
-#: templates/docs/global_uncts.html:104
+#: templates/docs/global_uncts.html:99
+msgid ""
+"Male Label and Female Label should be filled with the values that are "
+"representing each gender. "
+msgstr ""
+
+#: templates/docs/global_uncts.html:100
 msgid "EG. Male and Female, respectively."
 msgstr ""
 
-#: templates/docs/global_uncts.html:105
+#: templates/docs/global_uncts.html:101
 msgid "Save clicking OK and it will take effect immediately."
 msgstr ""
 
-#: templates/docs/global_uncts.html:125
+#: templates/docs/global_uncts.html:117
+msgid ""
+"You can start editing UNCTs just by clicking the pencil icon on its right "
+"side. "
+msgstr ""
+
+#: templates/docs/global_uncts.html:118
+msgid "You will have access to all fields."
+msgstr ""
+
+#: templates/docs/global_uncts.html:121
 msgid "CAUTION!!!"
 msgstr ""
 
-#: templates/docs/global_uncts.html:145
+#: templates/docs/global_uncts.html:123
+msgid "Pay attention to the field you're editing. "
+msgstr ""
+
+#: templates/docs/global_uncts.html:124
+msgid ""
+"Saving incorrect values will make the UNCT workspace become inaccessible and "
+"may affect values accuracy. "
+msgstr ""
+
+#: templates/docs/global_uncts.html:125
+msgid ""
+"Editing RapidPro Token or Backend configuration values is strongly not "
+"recommended and should be done only if oriented by a support member in very "
+"specific situations."
+msgstr ""
+
+#: templates/docs/global_uncts.html:139
 msgid "UNCT users"
+msgstr ""
+
+#: templates/docs/global_uncts.html:141
+msgid ""
+"It's possible to edit UNCT's account levels directly from Global workspace, "
+"just click the group icon on its right side and those UNCT users' list will "
+"be loaded."
+msgstr ""
+
+#: templates/docs/global_uncts.html:153
+msgid ""
+"Then you just have to click at the user's pencil icon and edit its access "
+"level, similar to editing on a Local workspace."
+msgstr ""
+
+#: templates/docs/global_users.html:16 templates/docs/uncts_users.html:16
+msgid ""
+"Account's management area that allows access level control and account "
+"removal."
+msgstr ""
+
+#: templates/docs/global_users.html:17
+msgid "On your first login, you'll receive viewer access permission. "
+msgstr ""
+
+#: templates/docs/global_users.html:18
+msgid ""
+"If you want new user access, a UN Info administrator needs to change your "
+"access."
 msgstr ""
 
 #: templates/docs/global_users.html:19 templates/docs/uncts_users.html:19
@@ -646,32 +1181,86 @@ msgstr ""
 msgid "Viewer"
 msgstr ""
 
-#: templates/docs/global_users.html:43 templates/docs/uncts_users.html:43
+#: templates/docs/global_users.html:28
+msgid ""
+"Allowed to access Global's Dashboard and Repository a viewer account can "
+"only see the data already there."
+msgstr ""
+
+#: templates/docs/global_users.html:42 templates/docs/uncts_users.html:42
 msgid "Administrator"
 msgstr ""
 
-#: templates/docs/global_users.html:61 templates/docs/uncts_users.html:60
+#: templates/docs/global_users.html:44
+msgid "Administrators' accounts have full access to all tools. "
+msgstr ""
+
+#: templates/docs/global_users.html:45 templates/docs/uncts_users.html:45
+msgid ""
+"Additionally, a user tab is offered to administrate accounts' access level "
+"and availability."
+msgstr ""
+
+#: templates/docs/global_users.html:59 templates/docs/uncts_users.html:59
 msgid "Editing an account"
 msgstr ""
 
-#: templates/docs/global_users.html:92 templates/docs/uncts_users.html:91
+#: templates/docs/global_users.html:61
+msgid "In the image below you can see different sample accounts. "
+msgstr ""
+
+#: templates/docs/global_users.html:62 templates/docs/uncts_users.html:62
+msgid ""
+"As you mouse over the pencil icon it will highlight and clicking will allow "
+"editing that account's access level."
+msgstr ""
+
+#: templates/docs/global_users.html:74 templates/docs/uncts_users.html:74
+msgid ""
+"Changes take effect immediately but if the modified account is still logging "
+"while being edited a fresh login may be needed."
+msgstr ""
+
+#: templates/docs/global_users.html:88 templates/docs/uncts_users.html:88
 msgid "Disabling an account"
 msgstr ""
 
-#: templates/docs/global_users.html:94
+#: templates/docs/global_users.html:90
 msgid "Account disabling feature yet to be added."
 msgstr ""
 
-#: templates/docs/global_users.html:101
+#: templates/docs/global_users.html:97
 msgid "Enabling an account"
 msgstr ""
 
-#: templates/docs/global_users.html:103
+#: templates/docs/global_users.html:99
 msgid "Account enabling feature yet to be developed."
 msgstr ""
 
-#: templates/docs/global_users.html:110 templates/docs/uncts_users.html:108
+#: templates/docs/global_users.html:106 templates/docs/uncts_users.html:104
 msgid "User search tool"
+msgstr ""
+
+#: templates/docs/global_users.html:108 templates/docs/uncts_users.html:106
+msgid ""
+"The search bar uses the account's name to query and you just need to type "
+"and press enter. "
+msgstr ""
+
+#: templates/docs/global_users.html:109
+msgid "It's case insensitive and capable of searching for strings' fragments."
+msgstr ""
+
+#: templates/docs/global_users.html:110 templates/docs/uncts_users.html:109
+msgid ""
+"It's also possible to clear the query just by clicking the X button at the "
+"search bar."
+msgstr ""
+
+#: templates/docs/global_users.html:126 templates/docs/uncts_users.html:126
+msgid ""
+"It's possible to order contacts by Name, ascending or descending, just by "
+"clicking the columm's title."
 msgstr ""
 
 #: templates/docs/login.html:15
@@ -686,8 +1275,20 @@ msgstr ""
 msgid "Type your username, password and hit Log in."
 msgstr ""
 
+#: templates/docs/login.html:31
+msgid "Upon successful login you'll be redirected to the UN Info home screen. "
+msgstr ""
+
+#: templates/docs/login.html:32
+msgid "Now choose "
+msgstr ""
+
 #: templates/docs/login.html:32
 msgid "REAL TIME MONITORING"
+msgstr ""
+
+#: templates/docs/login.html:33
+msgid " option and click the UNCT you want to access."
 msgstr ""
 
 #: templates/docs/login.html:46
@@ -695,209 +1296,565 @@ msgid ""
 "A redirect window will open to take you to the requested UNCT workspace."
 msgstr ""
 
-#: templates/docs/uncts_dashboard.html:42
+#: templates/docs/login.html:59
+msgid ""
+"If you fail to login for five consecutive attempts, the account will be "
+"blocked for 10 minutes."
+msgstr ""
+
+#: templates/docs/uncts_dashboard.html:34
+msgid ""
+"The page's title is the UNCT workspace name and right below it's the scope "
+"of the first Filter. "
+msgstr ""
+
+#: templates/docs/uncts_dashboard.html:35
+msgid ""
+"To ease the understanding, there's a block division for each data type. "
+msgstr ""
+
+#: templates/docs/uncts_dashboard.html:36
+msgid ""
+"The first one is related to SDGs tracking, then Surveys Partial Results, "
+"Message Metrics, Most used Channels and lastly RapidPro Contacts. "
+msgstr ""
+
+#: templates/docs/uncts_dashboard.html:38
 msgid "This is how an empty workspace looks like."
 msgstr ""
 
-#: templates/docs/uncts_dashboard.html:129
+#: templates/docs/uncts_dashboard.html:55
+msgid ""
+"In other words, it shows the number of received messages from questions that "
+"are linked to the respective SDG."
+msgstr ""
+
+#: templates/docs/uncts_dashboard.html:85
+msgid ""
+"To follow ongoing surveys and track how the answers are being structured as "
+"it comes from RapidPro, the partial results graph randomizes 20 questions to "
+"be displayed. "
+msgstr ""
+
+#: templates/docs/uncts_dashboard.html:86
+msgid "It will bring a more close approach to ongoing surveys."
+msgstr ""
+
+#: templates/docs/uncts_dashboard.html:120
 msgid ""
 "This dashboard module shows the sum of aggregated values from messages sent "
 "and received."
 msgstr ""
 
-#: templates/docs/uncts_dashboard.html:130
+#: templates/docs/uncts_dashboard.html:121
 msgid ""
 "There's also a tracking statistics by active channels on the UNCT's RapidPro "
 "workspace. "
 msgstr ""
 
-#: templates/docs/uncts_repository.html:27
+#: templates/docs/uncts_dashboard.html:150
+msgid ""
+"It means the number of contacts inside the registered group and can be used "
+"to show the workspace's contact level of growth. "
+msgstr ""
+
+#: templates/docs/uncts_repository.html:16
+msgid ""
+"The RTM Repository module creates a collaborative ecosystem to share survey "
+"flows template files. "
+msgstr ""
+
+#: templates/docs/uncts_repository.html:17
+msgid ""
+"By sharing surveys, administrators can contribute to more success cases' "
+"with UNCTs aiming the same goal. "
+msgstr ""
+
+#: templates/docs/uncts_repository.html:18
+msgid ""
+"RapidPro is the platform that empowers social programmes within the "
+"necessary environment for collecting communities' thoughts and its core "
+"resides in Flow feature."
+msgstr ""
+
+#: templates/docs/uncts_repository.html:25
 msgid "How to share"
 msgstr ""
 
-#: templates/docs/uncts_repository.html:44 templates/docs/uncts_surveys.html:36
+#: templates/docs/uncts_repository.html:27
+msgid ""
+"Only administrators can add new flow files, and it's possible to choose to "
+"share it restricted to the UNCT you're in or globally."
+msgstr ""
+
+#: templates/docs/uncts_repository.html:41 templates/docs/uncts_surveys.html:33
 msgid "Viewer perspective"
 msgstr ""
 
-#: templates/docs/uncts_repository.html:46
+#: templates/docs/uncts_repository.html:43
 msgid "A viewer has access to all but adding new files to share."
 msgstr ""
 
-#: templates/docs/uncts_repository.html:82
+#: templates/docs/uncts_repository.html:77
 msgid "My UNCT"
 msgstr ""
 
-#: templates/docs/uncts_repository.html:84
+#: templates/docs/uncts_repository.html:79
 msgid "Restricts the list for your UNCT's flows only."
 msgstr ""
 
-#: templates/docs/uncts_repository.html:98 templates/docs/uncts_surveys.html:52
+#: templates/docs/uncts_repository.html:93 templates/docs/uncts_surveys.html:49
 msgid "Administrator perspective"
 msgstr ""
 
-#: templates/docs/uncts_repository.html:114 templates/flowhub/form.html:56
+#: templates/docs/uncts_repository.html:95
+msgid ""
+"An administrator has access to all features, including surveys' actions for "
+"adding new, removing and editing content."
+msgstr ""
+
+#: templates/docs/uncts_repository.html:108 templates/flowhub/form.html:56
 #: templates/flowhub/global_form.html:56 templates/flowhub/global_index.html:40
 #: templates/flowhub/index.html:40 templates/flowhub/info.html:49
 #: templates/flowhub/uncts.html:40
 msgid "Upload Flow"
 msgstr ""
 
-#: templates/docs/uncts_repository.html:116
+#: templates/docs/uncts_repository.html:110
 msgid ""
 "Share the flows build in RapidPro so other UNCTs may have access to your "
 "insights."
 msgstr ""
 
-#: templates/docs/uncts_repository.html:118
+#: templates/docs/uncts_repository.html:112
 msgid "Let's go step by step in this process:"
 msgstr ""
 
-#: templates/docs/uncts_repository.html:121
+#: templates/docs/uncts_repository.html:115
 msgid ""
 "Start adding the flow file by clicking the option Select your json file;"
 msgstr ""
 
-#: templates/docs/uncts_repository.html:122
+#: templates/docs/uncts_repository.html:116
 msgid ""
 "Switch Visible globally option to restrict this flow to your UNCT only or "
 "make it available for others;"
 msgstr ""
 
-#: templates/docs/uncts_repository.html:123
+#: templates/docs/uncts_repository.html:117
 msgid "Give the flow a Name;"
 msgstr ""
 
-#: templates/docs/uncts_repository.html:124
+#: templates/docs/uncts_repository.html:118
 msgid ""
 "Select the flow Language (you can choose more than one if there's a "
 "translation available);"
 msgstr ""
 
-#: templates/docs/uncts_repository.html:127
+#: templates/docs/uncts_repository.html:119
 msgid ""
-"Tell which data is this flow asking for. EG. a registration flow would ask "
-"for 'Age, Gender and Region';"
+"Describe the purpose of this flow and which data were you aiming to gather "
+"with it. "
 msgstr ""
 
-#: templates/docs/uncts_repository.html:128
+#: templates/docs/uncts_repository.html:120
+msgid "Giving examples would be a good practice too;"
+msgstr ""
+
+#: templates/docs/uncts_repository.html:121
+msgid ""
+"Tell which data is this flow asking for. EG. a registration flow would ask "
+"for \"Age, Gender and Region\";"
+msgstr ""
+
+#: templates/docs/uncts_repository.html:122
 msgid "Select which SGDs this flow matches;"
 msgstr ""
 
-#: templates/docs/uncts_repository.html:129
+#: templates/docs/uncts_repository.html:123
 msgid ""
 "Additionally, you can choose some Tags for the flow too. That's optional."
 msgstr ""
 
-#: templates/docs/uncts_surveys.html:38
+#: templates/docs/uncts_repository.html:142
+msgid ""
+"In the example below the search was \"flow\" and it found three surveys "
+"where the string was found in different spots."
+msgstr ""
+
+#: templates/docs/uncts_repository.html:158
+msgid "It's possible to sort surveys by stars, newest or alphabetically."
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:16
+msgid ""
+"The survey results module displays citizen-generated data from answers of "
+"ongoing or already finished surveys. "
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:17
+msgid ""
+"It represents a flow from RapidPro which was linked to the RTM platform and "
+"has synchronized data. "
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:18
+msgid ""
+"Navigating through surveys can be done using the top bar and also with the "
+"bread crumbs (right above the page's title) as you go further in options. "
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:19
+msgid ""
+"In the next steps we'll cover everything in order to engage a fully working "
+"survey content within all its features."
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:35
 msgid ""
 "As viewer, an account may access all Surveys data but no editing allowed."
 msgstr ""
 
-#: templates/docs/uncts_surveys.html:54
+#: templates/docs/uncts_surveys.html:51
 msgid ""
 "An administrator account will also be capable of add, edit or exclude "
 "content."
 msgstr ""
 
-#: templates/docs/uncts_surveys.html:68
+#: templates/docs/uncts_surveys.html:65
 msgid "Connecting a Survey"
 msgstr ""
 
-#: templates/docs/uncts_surveys.html:89
+#: templates/docs/uncts_surveys.html:67
+msgid ""
+"Connecting a Survey is basically the process of linking flows from a "
+"RapidPro UNCT workspace into the RTM platform and customizing its layout to "
+"better suit the RTM graphs and dashboards. "
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:68
+msgid ""
+"The first thing you need to do is clicking the Connect Survey button on the "
+"right side. "
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:69
+msgid ""
+"There are three major steps in the survey registration process, let's walk "
+"through each one."
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:83
 msgid "Survey General info"
 msgstr ""
 
-#: templates/docs/uncts_surveys.html:91
+#: templates/docs/uncts_surveys.html:85
 msgid ""
 "The first step is selecting which RapidPro flow will be the source of this "
 "survey."
 msgstr ""
 
-#: templates/docs/uncts_surveys.html:97
+#: templates/docs/uncts_surveys.html:86
+msgid ""
+"Title should be filled with the survey name that will be displayed, so you "
+"may describe it better than just the flow's name."
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:87
+msgid ""
+"Description is where you can highlight in which case has this survey been "
+"taking place and describe its goals."
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:89
 msgid "Than hit Next to move forward."
 msgstr ""
 
-#: templates/docs/uncts_surveys.html:111
+#: templates/docs/uncts_surveys.html:103
 msgid "Connect to a Global survey"
 msgstr ""
 
-#: templates/docs/uncts_surveys.html:113
+#: templates/docs/uncts_surveys.html:105
 msgid ""
 "Note there's a check-box to link this survey to an ongoing Global survey."
 msgstr ""
 
-#: templates/docs/uncts_surveys.html:127
+#: templates/docs/uncts_surveys.html:119
 msgid "Date setting"
 msgstr ""
 
-#: templates/docs/uncts_surveys.html:167
+#: templates/docs/uncts_surveys.html:121
+msgid "Set a date range is optional but is also an important step. "
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:122
+msgid ""
+"You can leave the default Start date, which is that date the RapidPro flow "
+"was created, but it also corresponds to the time when the survey was "
+"published live for the community. "
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:123
+msgid ""
+"Filling the end date field will set when the survey got unpublished, it "
+"means that the results will be shown on the time interval between these two "
+"dates."
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:139
+msgid ""
+"The survey structure that comes from RapidPro is raw, it must be customized "
+"in order to better display it at the Surveys results."
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:140
+msgid ""
+"It is defined by the administrator when choosing the respective question "
+"title, SDG and visibility."
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:153
 msgid "Identifying the question"
 msgstr ""
 
-#: templates/docs/uncts_surveys.html:184
+#: templates/docs/uncts_surveys.html:155
+msgid "You'll see a numbered title for each question available. "
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:156
+msgid "That title matches the Wait for response named variable. "
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:157
+msgid ""
+"In the example Result 1 goes for the first flow question step from RapidPro."
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:170
 msgid "Question's title"
 msgstr ""
 
-#: templates/docs/uncts_surveys.html:201
+#: templates/docs/uncts_surveys.html:172
+msgid ""
+"Here you may feel more comfortable to provide a larger question description "
+"and highlight different perspectives to encourage positive discussion. "
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:173
+msgid ""
+"The default value will be the respective question step from the RapidPro "
+"flow."
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:186
 msgid "Question's SDGs"
 msgstr ""
 
-#: templates/docs/uncts_surveys.html:217
+#: templates/docs/uncts_surveys.html:188
+msgid "Link which SDG is being tracked in this question. "
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:189
+msgid "More than one can be selected if that's the case."
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:202
 msgid "Question's visibility"
 msgstr ""
 
-#: templates/docs/uncts_surveys.html:234
+#: templates/docs/uncts_surveys.html:204
+msgid ""
+"RapidPro flow's questions aren't necessarily connected to the purpose of a "
+"survey, and if that's the case you can disable that step. "
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:205
+msgid ""
+"This means that question won't be visible in the Survey Results session."
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:218
 msgid "Publish the survey's results"
 msgstr ""
 
-#: templates/docs/uncts_surveys.html:257
+#: templates/docs/uncts_surveys.html:220
 msgid ""
-"You can disengage the search filter by clicking the X at the right of the "
-"bar."
+"After filling all necessary fields, you just need to save and those survey "
+"results will become accessible at the Surveys Results session."
 msgstr ""
 
-#: templates/docs/uncts_surveys.html:296
+#: templates/docs/uncts_surveys.html:238
+msgid ""
+"In the example below the search was \"a\" and it found five surveys where "
+"the string was found in different spots."
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:256
+msgid "It's possible to sort surveys by Name, number of Runs and Status. "
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:258
+msgid ""
+"Sorting can be a very useful tool as your survey's list grow bigger, in the "
+"example below there's a search for 'a' and it's also sorting the list by "
+"Name."
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:275
 msgid "When needed to have a survey modified, you can choose between two ways."
 msgstr ""
 
-#: templates/docs/uncts_surveys.html:309
+#: templates/docs/uncts_surveys.html:288
 msgid "Full survey editing"
 msgstr ""
 
-#: templates/docs/uncts_surveys.html:332
+#: templates/docs/uncts_surveys.html:290
+msgid ""
+"Clicking the pencil icon on the right side of the surveys' list will open a "
+"window similar to the one when you were adding a new survey. "
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:291
+msgid ""
+"But you'll be editing it. And the only unavailable option is the flow link."
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:292
+msgid "You can freely modify the Title and Description. "
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:293
+msgid ""
+"Note there's also a new option now Is active, where you can set if this hole "
+"survey should be visible or not. "
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:294
+msgid "Clicking next will move forward to each step until you finish editing."
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:307
 msgid "Directly questions"
 msgstr ""
 
-#: templates/docs/uncts_surveys.html:334
+#: templates/docs/uncts_surveys.html:309
 msgid ""
 "By clicking the question's number you'll be taken directly to questions' "
 "editing."
 msgstr ""
 
-#: templates/docs/uncts_surveys.html:398
+#: templates/docs/uncts_surveys.html:327
+msgid ""
+"In most cases disabling a survey means that result is no longer necessary or "
+"something went wrong with it."
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:343
+msgid "Here, you will find all surveys that were registered on your UNCT. "
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:370
 msgid "Question's segments"
 msgstr ""
 
-#: templates/docs/uncts_surveys.html:415
+#: templates/docs/uncts_surveys.html:372
+msgid ""
+"If you need to restrict the scope of one question, by Gender or Age, there's "
+"an option to do it at each question graph. "
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:373
+msgid ""
+"Choosing All will clear the restriction and display the full question's "
+"result."
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:386
 msgid "Charts and Answer Types"
 msgstr ""
 
-#: templates/docs/uncts_surveys.html:425
+#: templates/docs/uncts_surveys.html:388
+msgid ""
+"To get a clear view of each survey results we've plan to describe all "
+"questions and its answers in the following kinds of charts:"
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:395
 msgid "Horizontal Bars"
 msgstr ""
 
-#: templates/docs/uncts_surveys.html:441
+#: templates/docs/uncts_surveys.html:397
+msgid "Are used to display in a more simple and absolute approach. "
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:398 templates/docs/uncts_surveys.html:414
+msgid "Consolidation type: Age, Gender"
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:411
 msgid "Doughnut"
 msgstr ""
 
-#: templates/docs/uncts_surveys.html:457
+#: templates/docs/uncts_surveys.html:413
+msgid ""
+"Doughnut charts are going to be used to compare answers between results and "
+"percentages. "
+msgstr ""
+
+#: templates/docs/uncts_surveys.html:427
 msgid "Word cloud"
 msgstr ""
 
-#: templates/flowhub/flow_detail.html:40 templates/flowhub/form.html:111
+#: templates/docs/uncts_surveys.html:429
+msgid ""
+"Chart that allows users to overview open questions, this kind of chart is "
+"going to be good to compare the most commonly answered words."
+msgstr ""
+
+#: templates/docs/uncts_users.html:17
+msgid "On your first login, you'll receive viewer access permission."
+msgstr ""
+
+#: templates/docs/uncts_users.html:18
+msgid ""
+"If you want new user access, a UNCT administrator needs to change your "
+"access."
+msgstr ""
+
+#: templates/docs/uncts_users.html:28
+msgid ""
+"Allowed to access UNCT's Dashboard, Repository and Surveys a viewer account "
+"can only see the data already there."
+msgstr ""
+
+#: templates/docs/uncts_users.html:44
+msgid "Administrators' accounts have full access to all tools."
+msgstr ""
+
+#: templates/docs/uncts_users.html:61
+msgid "In the image below you can see two sample accounts."
+msgstr ""
+
+#: templates/docs/uncts_users.html:90
+msgid ""
+"By clicking the trash icon the respective account will be blocked and that "
+"login's credentials will be denied."
+msgstr ""
+
+#: templates/docs/uncts_users.html:107
+msgid "It's case insensitive and capable of searching for strings' fragments. "
+msgstr ""
+
+#: templates/docs/uncts_users.html:108
+msgid ""
+"In the example bellow the search was \"and\" and it found \"Admin Sandbox\" "
+"account name."
+msgstr ""
+
+#: templates/flowhub/flow_detail.html:40 templates/flowhub/form.html:112
 #: templates/flowhub/global_flow_detail.html:40
-#: templates/flowhub/global_form.html:104
-#: templates/flowhub/global_index.html:101 templates/flowhub/index.html:109
+#: templates/flowhub/global_form.html:105
+#: templates/flowhub/global_index.html:101 templates/flowhub/index.html:111
 #: templates/flowhub/info.html:98 templates/flowhub/info.html:113
 msgid "Languages"
 msgstr ""
@@ -924,34 +1881,46 @@ msgstr ""
 msgid "Upload Global Flow"
 msgstr ""
 
-#: templates/flowhub/form.html:84 templates/flowhub/global_form.html:84
+#: templates/flowhub/form.html:71 templates/flowhub/global_form.html:71
+msgid "Add surveys you have used to the global repository. "
+msgstr ""
+
+#: templates/flowhub/form.html:72 templates/flowhub/global_form.html:72
+msgid "Other UNCTs will be able to see the questions you used. "
+msgstr ""
+
+#: templates/flowhub/form.html:73 templates/flowhub/global_form.html:73
+msgid "The results are not included on the files and will not be shared."
+msgstr ""
+
+#: templates/flowhub/form.html:85 templates/flowhub/global_form.html:85
 msgid "Search file"
 msgstr ""
 
-#: templates/flowhub/form.html:88 templates/flowhub/global_form.html:88
+#: templates/flowhub/form.html:89 templates/flowhub/global_form.html:89
 msgid "Select your json file"
 msgstr ""
 
-#: templates/flowhub/form.html:96 templates/flowhub/info.html:80
+#: templates/flowhub/form.html:97 templates/flowhub/info.html:80
 msgid "Visible globally"
 msgstr ""
 
-#: templates/flowhub/form.html:118 templates/flowhub/global_form.html:111
+#: templates/flowhub/form.html:119 templates/flowhub/global_form.html:112
 #: templates/flowhub/info.html:85
 msgid "Description"
 msgstr ""
 
-#: templates/flowhub/form.html:132 templates/flowhub/global_index.html:85
-#: templates/flowhub/index.html:93 templates/flowhub/info.html:125
+#: templates/flowhub/form.html:133 templates/flowhub/global_index.html:85
+#: templates/flowhub/index.html:95 templates/flowhub/info.html:125
 #: templates/polls/index.html:57
 msgid "SDGs"
 msgstr ""
 
-#: templates/flowhub/form.html:140 templates/flowhub/global_form.html:125
+#: templates/flowhub/form.html:141 templates/flowhub/global_form.html:126
 msgid "Add tag"
 msgstr ""
 
-#: templates/flowhub/global_form.html:125
+#: templates/flowhub/global_form.html:126
 msgid "Optional"
 msgstr ""
 
@@ -961,23 +1930,35 @@ msgid ""
 "particular survey and use it."
 msgstr ""
 
-#: templates/flowhub/global_index.html:119 templates/flowhub/index.html:127
+#: templates/flowhub/global_index.html:119 templates/flowhub/index.html:129
 #: templates/flowhub/uncts.html:80
 msgid "Sort by"
 msgstr ""
 
-#: templates/flowhub/global_index.html:125 templates/flowhub/index.html:133
+#: templates/flowhub/global_index.html:125 templates/flowhub/index.html:135
 #: templates/flowhub/uncts.html:86
 msgid "Alphabetical"
 msgstr ""
 
-#: templates/flowhub/global_index.html:126 templates/flowhub/index.html:134
+#: templates/flowhub/global_index.html:126 templates/flowhub/index.html:136
 msgid "Most stars"
 msgstr ""
 
-#: templates/flowhub/global_index.html:127 templates/flowhub/index.html:135
+#: templates/flowhub/global_index.html:127 templates/flowhub/index.html:137
 #: templates/flowhub/uncts.html:88
 msgid "Newest"
+msgstr ""
+
+#: templates/flowhub/index.html:62
+msgid "View all survey questions/surveys used by all UNCTs. "
+msgstr ""
+
+#: templates/flowhub/index.html:63 templates/flowhub/index.html:66
+msgid "You can download a particular survey and use it."
+msgstr ""
+
+#: templates/flowhub/index.html:65
+msgid "View all survey questions/surveys used by your UNCT. "
 msgstr ""
 
 #: templates/flowhub/info.html:91
@@ -1111,7 +2092,7 @@ msgstr ""
 
 #: templates/polls/index.html:48 templates/results/global_poll_result.html:24
 #: templates/results/poll_result.html:35 templates/results/poll_result.html:41
-#: templates/worldmap/index.html:111
+#: templates/worldmap/index.html:110
 msgid "Survey Results"
 msgstr ""
 
@@ -1337,6 +2318,12 @@ msgstr ""
 
 #: templates/worldmap/index.html:54
 msgid "sent"
+msgstr ""
+
+#: templates/worldmap/index.html:66
+msgid ""
+"The boundaries and names shown and the designations used on this map do not "
+"imply official endorsement or acceptance by the United Nations."
 msgstr ""
 
 #: venv/lib/python3.6/site-packages/alabaster/layout.html:98
