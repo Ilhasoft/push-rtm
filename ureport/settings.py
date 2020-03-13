@@ -236,9 +236,6 @@ LOGOUT_URL = "/users/logout/"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "http://dataforallcloud.org/"
 
-SITE_CHOOSER_TEMPLATE = "public/index.html"
-SITE_CHOOSER_URL_NAME = "public.index"
-
 CELERYBEAT_SCHEDULE = {
     "refresh_flows": {"task": "polls.refresh_org_flows", "schedule": timedelta(minutes=1), "relative": True},
     "recheck_poll_flow_data": {

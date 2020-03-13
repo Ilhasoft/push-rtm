@@ -395,7 +395,7 @@ class Dashboard(SmartTemplateView):
             return redirect(reverse("users.user_login"))
 
         if self.access_level is None:
-            return redirect(reverse("public.index"))
+            return redirect(reverse("blocked"))
 
         context = self.get_context_data(**kwargs)
         return self.render_to_response(context)

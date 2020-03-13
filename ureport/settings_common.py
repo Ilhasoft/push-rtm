@@ -44,9 +44,6 @@ EMPTY_SUBDOMAIN_HOST = "http://localhost:8000"
 SITE_API_HOST = "http://localhost:8001"
 SITE_API_USER_AGENT = "ureport/0.1"
 HOSTNAME = "localhost:8000"
-SITE_CHOOSER_TEMPLATE = "public/org_chooser.haml"
-SITE_CHOOSER_URL_NAME = "public.home"
-
 
 SITE_BACKEND = "ureport.backend.rapidpro.RapidProBackend"
 
@@ -643,12 +640,6 @@ TEMPLATES = [
                 "dash.orgs.context_processors.user_group_perms_processor",
                 "dash.orgs.context_processors.set_org_processor",
                 "ureport.assets.context_processors.set_assets_processor",
-                "ureport.public.context_processors.set_has_better_domain",
-                "ureport.public.context_processors.set_is_iorg",
-                "ureport.public.context_processors.set_linked_sites",
-                "ureport.public.context_processors.set_config_display_flags",
-                "ureport.public.context_processors.set_org_lang_params",
-                "ureport.public.context_processors.set_story_widget_url",
                 "ureport.dashboard.context_processors.sdg_list",
             ],
             "loaders": [
@@ -862,8 +853,6 @@ UREPORT_DEFAULT_SECONDARY_COLOR = "#1F49BF"
 # non org urls
 # -----------------------------------------------------------------------------------
 SITE_ALLOW_NO_ORG = (
-    "public.countries",
-    "public.status",
     "api",
     "api.v1",
     "api.v1.docs",
