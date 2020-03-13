@@ -59,9 +59,11 @@
           </div>
           <div class="has-text-grey-light">
             {% if flow_section_id == "flowhub-all" %}
-              View all survey questions/surveys used by all UNCTs. You can download a particular survey and use it.
+              {% trans "View all survey questions/surveys used by all UNCTs. " %}
+              {% trans "You can download a particular survey and use it." %}
             {% elif flow_section_id == "flowhub-my-org" %}
-              View all survey questions/surveys used by your UNCT. You can download a particular survey and use it.
+              {% trans "View all survey questions/surveys used by your UNCT. " %}
+              {% trans "You can download a particular survey and use it." %}
             {% endif %}
           </div>
         </div>
