@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
 from django.conf import settings
@@ -141,7 +141,6 @@ class FlowBaseListView(LoginRequiredMixin, SearchSmartListViewMixin):
         if not is_global_user(self.request.user):
             queryset = queryset.filter(
                 Q(org=self.request.org) | Q(visible_globally=True))
-
         queryset = self.search(queryset)
         queryset = self.filter(queryset)
         self.query = self.request.GET.get(self.search_query_name, "")
@@ -155,7 +154,7 @@ class FlowBaseListView(LoginRequiredMixin, SearchSmartListViewMixin):
         unct = self.request.GET.get("unct")
 
         filters = {}
-        sortered = "stars"
+        sortered = "-stars"
 
         if language:
             filters["languages__contains"] = [language]
@@ -169,6 +168,10 @@ class FlowBaseListView(LoginRequiredMixin, SearchSmartListViewMixin):
         if sort_field:
             sortered = "{}{}".format(
                 "-" if sort_direction == "desc" else "", sort_field)
+
+        if "stars" in sortered:
+            sortered += "s"
+            queryset = queryset.annotate(starss=Count("stars"))
 
         return queryset.filter(**filters).order_by(sortered)
 

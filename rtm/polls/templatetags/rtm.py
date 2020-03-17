@@ -286,7 +286,7 @@ class SortAnchorNode(template.Node):
             getvars["dir"] = "desc"
             icon = "up-arrow"
         else:
-            getvars["dir"] = "asc"
+            getvars["dir"] = "desc"
             icon = "up-arrow"
 
         if len(getvars.keys()) > 0:
