@@ -282,8 +282,11 @@ class SortAnchorNode(template.Node):
         if sortby == self.field:
             getvars["dir"] = sortdir["inverse"]
             icon = sortdir["icon"]
-        else:
+        elif self.field == "created_on":
             getvars["dir"] = "desc"
+            icon = "up-arrow"
+        else:
+            getvars["dir"] = "asc"
             icon = "up-arrow"
 
         if len(getvars.keys()) > 0:
