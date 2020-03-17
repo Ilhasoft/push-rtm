@@ -141,9 +141,10 @@ class DashboardDataView(View):
                 ).aggregate(total=Sum("count"))["total"]
 
                 global_total = (
-                    ChannelDailyStats.objects.exclude(channel__org=self.request.org)
-                    .filter(channel__channel_type=channel.channel_type, **Dashboard.filter_by_date("date", filter_by))
-                    .aggregate(total=Sum("count"))["total"]
+                    ChannelDailyStats.objects.filter(
+                        channel__channel_type=channel.channel_type,
+                        **Dashboard.filter_by_date("date", filter_by)
+                    ).aggregate(total=Sum("count"))["total"]
                 )
 
                 if channel.channel_type not in channels_data:
@@ -210,8 +211,7 @@ class DashboardDataView(View):
             )
 
             most_used_global = (
-                ChannelDailyStats.objects.exclude(channel__org=self.request.org)
-                .filter(
+                ChannelDailyStats.objects.filter(
                     msg_direction__in=["I", "O"],
                     msg_type__in=["M", "I"],
                     **Dashboard.filter_by_date("date", filter_by),
@@ -420,7 +420,7 @@ class Dashboard(SmartTemplateView):
 
         if self.access_level == "local":
             context["surveys_local_total"] = Poll.objects.filter(org=self.request.org, is_active=True).count()
-            context["surveys_global_total"] = Poll.objects.exclude(org=self.request.org).filter(is_active=True).count()
+            context["surveys_global_total"] = Poll.objects.filter(is_active=True).count()
         else:
             context["orgs_total"] = Org.objects.all().count()
             context["orgs_name"] = Org.objects.all().values_list("name", flat=True).order_by("name")
