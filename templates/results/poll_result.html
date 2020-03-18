@@ -113,7 +113,7 @@
               </span>
             </div>
           </nav>
-          <div class="bottom-p-20">
+          <div class="bottom-p-20 header-surveys">
             <div class="columns bottom-m-10">
               <div class="column is-2 has-text-right">{% trans 'Title:'%}</div>
               <div class="column"><strong>{{ poll.title }}</strong></div>
@@ -281,18 +281,44 @@
       $("#modal-chart").toggleClass("is-active");
     }
 
-    function generatePdf(pollTitle){
-      var graphs = $(".div-graphs");
-      var pdf = new jsPDF('p', 'pt', 'a4');
-      pdf.internal.scaleFactor = 1.75;
-      var options = {
-        pagesplit: true
-      };
+    function getDataImageUrlFromCanvas(element){
+      var html2obj = html2canvas(element);
+      var queue  = html2obj.parse();
+      var canvas = html2obj.render(queue);
+      var data = canvas.toDataURL('image/png');
 
-      pdf.addHTML(graphs, options, function(){
-        pdf.save(pollTitle + ".pdf");
-      });
+      return data;
     }
+
+    function generatePdf(pollTitle){
+      var pdf = new jsPDF('p','mm','a4');
+      var width = pdf.internal.pageSize.getWidth();
+      var height = pdf.internal.pageSize.getHeight();
+
+      var headerSurveys = $(".header-surveys");
+
+      data = getDataImageUrlFromCanvas(headerSurveys);
+      pdf.addImage(data, 'png', 0, 0, width, height*0.4);
+      pdf.addPage();
+
+      width80percent = width * 0.8
+      height80percent = height * 0.8
+
+      var surveyCards = $(".survey-card")
+      var sizeOfSurveyCards = surveyCards.length;
+
+      surveyCards.each(function(index){
+        data = getDataImageUrlFromCanvas($(this));
+        pdf.addImage(data, 'png', (width-width80percent)/2, (height-height80percent)/2, width80percent, height80percent);
+
+        if(!(index === sizeOfSurveyCards - 1)){
+          pdf.addPage();
+        }
+      });
+      pdf.save(pollTitle + ".pdf");
+
+    }
+
 
     $("input:checkbox").click(function() {
       let isChecked = $("input:checkbox").filter(":checked");
