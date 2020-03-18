@@ -6,6 +6,7 @@ from django.utils.translation import gettext as _
 from smartmin.views import SmartTemplateView
 from rtm.utils import get_paginator
 from rtm.polls.models import Poll
+from rtm.flowhub.models import Flow
 
 from .models import PollGlobal, PollGlobalSurveys
 from .forms import PollGlobalForm
@@ -52,7 +53,23 @@ class CreateView(SmartTemplateView):
         form = PollGlobalForm(request.POST, request.FILES)
 
         if form.is_valid():
-            form.save(request.user)
+            cleaned_data = form.cleaned_data
+            instance_poll_global = form.save(request.user)
+            print(cleaned_data.get("published_flowhub", False))
+            if cleaned_data.get("published_flowhub", False):
+                flow_structure = instance_poll_global.get_flow()
+                post_flowhub = Flow.objects.create(
+                    name=cleaned_data.get("title", ""),
+                    description=cleaned_data.get("description", ""),
+                    collected_data=cleaned_data.get("collected_data", ""),
+                    languages=["en"],
+                    sdgs=[],
+                    visible_globally=True,
+                    created_by_id=self.request.user.pk,
+                    modified_by_id=self.request.user.pk,
+                    flow=flow_structure or "",
+                )
+
             messages.success(request, _("Survey created with success!"))
             return redirect(reverse("polls_global.poll_list"))
         else:
