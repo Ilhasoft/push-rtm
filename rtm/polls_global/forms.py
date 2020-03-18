@@ -41,6 +41,16 @@ class PollGlobalForm(forms.ModelForm):
         ),
     )
 
+    published_flowhub = forms.BooleanField(required=False)
+
+    """description_flowhub = forms.CharField(
+        label=_("Collected Data"),
+        required=False,
+        widget=forms.Textarea(
+            attrs={"placeholder": _("Collected Data"), "rows": 5, "class": "textarea", "required": False}
+        ),
+    )"""
+
     class Meta:
         fields = ["flow_uuid", "title", "poll_date", "poll_end_date", "is_active", "description"]
         model = PollGlobal
@@ -60,3 +70,5 @@ class PollGlobalForm(forms.ModelForm):
         instance.created_by = user
         instance.modified_by = user
         instance.save()
+
+        return instance
