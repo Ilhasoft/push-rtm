@@ -305,30 +305,42 @@
       var sizeOfSurveyCards = surveyCards.length;
 
       width50PDF = width * 0.5;
-      height60PDF = height * 0.6;
+      height50PDF = height * 0.5;
 
       /*surveyCards.each(function(index){
         data = getDataImageUrlFromCanvas($(this));
 
-        marginHeight = (height - height60PDF)/2;
+        //marginHeight = (height - height60PDF)/2;
 
-        pdf.addImage(data, 'png', 0, marginHeight, width50PDF, height60PDF);
-        pdf.addImage(data, 'png', width50PDF, marginHeight, width50PDF, height60PDF);
+        pdf.addImage(data, 'png', 0, 0, width50PDF, height50PDF);
+        pdf.addImage(data, 'png', width50PDF, 0, width50PDF, height50PDF);
+        pdf.addImage(data, 'png', 0, height50PDF, width50PDF, height50PDF);
+        pdf.addImage(data, 'png', width50PDF, height50PDF, width50PDF, height50PDF);
 
         if(!(index === sizeOfSurveyCards - 1)){
           pdf.addPage();
         }
       });*/
 
-      for(let i = 0; i < sizeOfSurveyCards; i = i+2){
-        marginHeight = (height - height60PDF)/2;
+      for(let i = 0; i < sizeOfSurveyCards; i = i+4){
+        //marginHeight = (height - height60PDF)/2;
 
         data1 = getDataImageUrlFromCanvas(surveyCards[i]);
-        pdf.addImage(data1, 'png', 0, marginHeight, width50PDF, height60PDF);
+        pdf.addImage(data1, 'png', 0, 0, width50PDF, height50PDF);
 
         if(surveyCards[i+1]){
           data2 = getDataImageUrlFromCanvas(surveyCards[i+1]);
-          pdf.addImage(data2, 'png', width50PDF, marginHeight, width50PDF, height60PDF);
+          pdf.addImage(data2, 'png', width50PDF, 0, width50PDF, height50PDF);
+        };
+
+
+        if(surveyCards[i+2]){
+          data3 = getDataImageUrlFromCanvas(surveyCards[i+2]);
+          pdf.addImage(data3, 'png', 0, height50PDF, width50PDF, height50PDF);
+        };
+        if(surveyCards[i+3]){
+          data4 = getDataImageUrlFromCanvas(surveyCards[i+3]);
+          pdf.addImage(data4, 'png', width50PDF, height50PDF, width50PDF, height50PDF);
         };
 
 
