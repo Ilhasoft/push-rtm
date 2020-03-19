@@ -298,7 +298,7 @@
       var headerSurveys = $(".header-surveys");
 
       data = getDataImageUrlFromCanvas(headerSurveys);
-      pdf.addImage(data, 'png', 0, 0, width, height*0.4);
+      pdf.addImage(data, 'png', 0, 0);
       pdf.addPage();
 
       width70percent = width * 0.7
@@ -306,6 +306,8 @@
 
       var surveyCards = $(".survey-card")
       var sizeOfSurveyCards = surveyCards.length;
+
+      pdf.internal.scaleFactor = 3;
 
       surveyCards.each(function(index){
         data = getDataImageUrlFromCanvas($(this));
