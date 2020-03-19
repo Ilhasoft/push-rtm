@@ -128,7 +128,7 @@
               </span>
             </div>
         </nav>
-        <div class="bottom-p-20">
+        <div class="bottom-p-20 header-surveys">
           <div class="columns bottom-m-10">
             <div class="column is-2 has-text-right">{% trans 'Title:'%}</div>
             <div class="column">{{ poll_global.title }}</div>
@@ -177,6 +177,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
 
 <script type="text/javascript">
+function getDataImageUrlFromCanvas(element){
+  var html2obj = html2canvas(element);
+  var queue  = html2obj.parse();
+  var canvas = html2obj.render(queue);
+  var data = canvas.toDataURL('image/png');
+  console.log(data);
+  return data;
+}
+
 function generatePdf(pollTitle){
   var buttons = $(".accordion-btn");
 
@@ -188,16 +197,33 @@ function generatePdf(pollTitle){
     $(this).trigger("click");
   });
 
-  var graphs = $("#chart-questions");
-  var pdf = new jsPDF('p', 'pt', 'a4');
-  pdf.internal.scaleFactor = 1.75;
-  var options = {
-    pagesplit: true
-  };
+  var pdf = new jsPDF('p','mm','a4');
+  var width = pdf.internal.pageSize.getWidth();
+  var height = pdf.internal.pageSize.getHeight();
 
-  pdf.addHTML(graphs, options, function(){
-    pdf.save(pollTitle + ".pdf");
+  var headerSurveys = $(".header-surveys");
+
+  data = getDataImageUrlFromCanvas(headerSurveys);
+  pdf.addImage(data, 'png', 0, 0);
+  pdf.addPage();
+
+  width70percent = width * 0.7
+  height70percent = height * 0.7
+
+  var surveyCards = $(".global-survey-card")
+  var sizeOfSurveyCards = surveyCards.length;
+
+  pdf.internal.scaleFactor = 3;
+
+  surveyCards.each(function(index){
+    data = getDataImageUrlFromCanvas($(this));
+    pdf.addImage(data, 'png', (width-width70percent)/2, (height-height70percent)/2, width70percent, height70percent);
+
+    if(!(index === sizeOfSurveyCards - 1)){
+      pdf.addPage();
+    }
   });
+  pdf.save(pollTitle + ".pdf");
 
 }
 
