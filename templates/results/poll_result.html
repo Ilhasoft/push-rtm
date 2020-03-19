@@ -301,15 +301,15 @@
       pdf.addImage(data, 'png', 0, 0, width, height*0.4);
       pdf.addPage();
 
-      width80percent = width * 0.8
-      height80percent = height * 0.8
+      width70percent = width * 0.7
+      height70percent = height * 0.7
 
       var surveyCards = $(".survey-card")
       var sizeOfSurveyCards = surveyCards.length;
 
       surveyCards.each(function(index){
         data = getDataImageUrlFromCanvas($(this));
-        pdf.addImage(data, 'png', (width-width80percent)/2, (height-height80percent)/2, width80percent, height80percent);
+        pdf.addImage(data, 'png', (width-width70percent)/2, (height-height70percent)/2, width70percent, height70percent);
 
         if(!(index === sizeOfSurveyCards - 1)){
           pdf.addPage();
