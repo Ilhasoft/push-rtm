@@ -291,7 +291,7 @@
     }
 
     function generatePdf(pollTitle){
-      var pdf = new jsPDF('p','mm','a4');
+      var pdf = new jsPDF('p','px','a4');
       var width = pdf.internal.pageSize.getWidth();
       var height = pdf.internal.pageSize.getHeight();
 
@@ -301,22 +301,42 @@
       pdf.addImage(data, 'png', 0, 0);
       pdf.addPage();
 
-      width70percent = width * 0.7
-      height70percent = height * 0.7
-
       var surveyCards = $(".survey-card")
       var sizeOfSurveyCards = surveyCards.length;
 
-      pdf.internal.scaleFactor = 3;
+      width50PDF = width * 0.5;
+      height60PDF = height * 0.6;
 
-      surveyCards.each(function(index){
+      /*surveyCards.each(function(index){
         data = getDataImageUrlFromCanvas($(this));
-        pdf.addImage(data, 'png', (width-width70percent)/2, (height-height70percent)/2, width70percent, height70percent);
+
+        marginHeight = (height - height60PDF)/2;
+
+        pdf.addImage(data, 'png', 0, marginHeight, width50PDF, height60PDF);
+        pdf.addImage(data, 'png', width50PDF, marginHeight, width50PDF, height60PDF);
 
         if(!(index === sizeOfSurveyCards - 1)){
           pdf.addPage();
         }
-      });
+      });*/
+
+      for(let i = 0; i < sizeOfSurveyCards; i = i+2){
+        marginHeight = (height - height60PDF)/2;
+
+        data1 = getDataImageUrlFromCanvas(surveyCards[i]);
+        pdf.addImage(data1, 'png', 0, marginHeight, width50PDF, height60PDF);
+
+        if(surveyCards[i+1]){
+          data2 = getDataImageUrlFromCanvas(surveyCards[i+1]);
+          pdf.addImage(data2, 'png', width50PDF, marginHeight, width50PDF, height60PDF);
+        };
+
+
+        if(!(i === sizeOfSurveyCards - 1)){
+          pdf.addPage();
+        }
+      }
+
       pdf.save(pollTitle + ".pdf");
 
     }
