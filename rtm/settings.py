@@ -233,7 +233,7 @@ SASS_PROCESSOR_INCLUDE_FILE_PATTERN = r"^.+\.scss$"
 
 LOGIN_URL = "/users/login/"
 LOGOUT_URL = "/users/logout/"
-LOGIN_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = "/worldmap"
 LOGOUT_REDIRECT_URL = "http://dataforallcloud.org/"
 
 CELERYBEAT_SCHEDULE = {
