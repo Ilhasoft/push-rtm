@@ -249,47 +249,45 @@ function getDataImageUrlFromCanvas(element){
   var queue  = html2obj.parse();
   var canvas = html2obj.render(queue);
   var data = canvas.toDataURL('image/png');
-  console.log(data);
+
   return data;
 }
 
 function generatePdf(pollTitle){
-  var buttons = $(".accordion-btn");
-
-  buttons.each(function(){
-    console.log($(this).children()[0].style.display === "none")
-    if($(this).children()[0].style.display === "none"){
-      return;
-    };
-    $(this).trigger("click");
-  });
-
   var pdf = new jsPDF('p','mm','a4');
   var width = pdf.internal.pageSize.getWidth();
   var height = pdf.internal.pageSize.getHeight();
 
   var headerSurveys = $(".header-surveys");
 
+  width50PDF = width * 0.5;
+  height50PDF = height * 0.5;
+
   data = getDataImageUrlFromCanvas(headerSurveys);
   pdf.addImage(data, 'png', 0, 0);
   pdf.addPage();
 
-  width70percent = width * 0.7
-  height70percent = height * 0.7
-
-  var surveyCards = $(".global-survey-card")
+  var surveyCards = $(".chart-pdf")
   var sizeOfSurveyCards = surveyCards.length;
 
-  pdf.internal.scaleFactor = 3;
+  $(".global-survey-chart").css("display", "inline");
 
-  surveyCards.each(function(index){
-    data = getDataImageUrlFromCanvas($(this));
-    pdf.addImage(data, 'png', (width-width70percent)/2, (height-height70percent)/2, width70percent, height70percent);
+  for(let i = 0; i < sizeOfSurveyCards; i = i+2){
+    data1 = getDataImageUrlFromCanvas(surveyCards[i]);
+    pdf.addImage(data1, 'png', 0, 0, width, height50PDF);
 
-    if(!(index === sizeOfSurveyCards - 1)){
+    if(surveyCards[i+1]){
+      data2 = getDataImageUrlFromCanvas(surveyCards[i+1]);
+      pdf.addImage(data2, 'png', 0, height50PDF, width, height50PDF);
+    };
+
+    if(!(i === sizeOfSurveyCards - 1)){
       pdf.addPage();
     }
-  });
+  }
+
+  $(".global-survey-chart").css("display", "none");
+
   pdf.save(pollTitle + ".pdf");
 
 }
@@ -652,7 +650,7 @@ function loadDataCountry(id_country, tab, first_access){
     localData.map(function(value, index){
       $("#chart-questions").append(
         `
-          <div class="global-survey-card box is-paddingless" x-data="accordion()" data-question-sdgs="${value.sdgs.join(",")}">
+          <div class="global-survey-card chart-pdf box is-paddingless" x-data="accordion()" data-question-sdgs="${value.sdgs.join(",")}">
               <div class="survey-question">
                 <div class="survey-question__number">${index+1}</div>
                 <div class="survey-question__info">
