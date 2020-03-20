@@ -8,6 +8,17 @@
 <link rel="stylesheet" href="{% static 'plugins/checkbox/checkbox.min.css' %}">
 <link rel="stylesheet" href="{% sass_src 'plugins/tooltip/tooltip.scss' %}">
 <link rel="stylesheet" href="{% sass_src 'css/polls/survey_results.scss' %}"/>
+<style>
+  #modal-chart{
+    z-index: 10001;
+  }
+  #url-iframe {
+    color: #707070;
+  }
+  #Bold{
+    fill: #28b533;
+  }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -162,6 +173,27 @@
     </div>
   </div>
 </div>
+
+<div class="modal" id="modal-chart">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">{% trans "Embed Chart" %}</p>
+      <button class="delete is-pulled-right" onclick="showModal({{question.title}})" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+      <span id="url-iframe"></span>
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button primary-reverse" id="copy-iframe" onclick="copyIframe();">{% trans "Copy" %}</button>
+      <div id="check-iframe">
+        <svg id="Bold" class="check-svg" enable-background="new 0 0 24 24" height="15" viewBox="0 0 24 24" width="15" xmlns="http://www.w3.org/2000/svg">
+          <path d="m.828 13.336c-.261.304-.388.691-.357 1.091s.215.764.52 1.024l7.403 6.346c.275.235.616.361.974.361.044 0 .089-.002.134-.006.405-.036.77-.229 1.028-.542l12.662-15.411c.254-.31.373-.7.334-1.099-.04-.399-.231-.759-.541-1.014l-2.318-1.904c-.639-.524-1.585-.432-2.111.207l-9.745 11.861-3.916-3.355c-.628-.536-1.576-.465-2.115.163z"/>
+        </svg>
+      </div>
+    </footer>
+  </div>
+</div>
 {% endblock %}
 
 {% block js_extra %}
@@ -177,6 +209,35 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
 
 <script type="text/javascript">
+function copyIframe(){
+  var spanIframe = $("#url-iframe");
+
+  var range = document.createRange();
+  range.selectNodeContents(spanIframe[0]);
+  var selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(range);
+
+  document.execCommand('copy');
+  $("#check-iframe").fadeIn();
+}
+
+function showModal(id_element_question_title){
+  $("#check-iframe").css("display", "none");
+  var question_title = $("#" + id_element_question_title).html();
+
+  var iframe_url = window.location.protocol + "//" + window.location.hostname + "{% url 'results.iframe' %}";
+  var params = "?scope-type=global&" +
+                "poll-title={{ poll_global.title }}&question-title=" + question_title;
+
+  var url = iframe_url + params;
+  var element_iframe = `
+    &#60;iframe src="${url}" width="430" height="500" frameborder="0"&#62;&#60;/iframe&#62;
+  `;
+  $("#url-iframe").html(element_iframe);
+  $("#modal-chart").toggleClass("is-active");
+}
+
 function getDataImageUrlFromCanvas(element){
   var html2obj = html2canvas(element);
   var queue  = html2obj.parse();
@@ -590,6 +651,8 @@ function loadDataCountry(id_country, tab, first_access){
                 <div class="survey-question__number">${index+1}</div>
                 <div class="survey-question__info">
                   <span class="survey-question__info__title">${value.title}</span>
+                  <a onclick="showModal('title-hidden-${value.id}');"><i class="material-icons">code</i></a>
+                  <span style="display: none;" id="title-hidden-${value.id}">${value.title}</span>
                   <div class="top-m-20">
                     <span class="right-m-30">Answered: ${value.get_responded}</span>
                     <span>Polled: ${value.get_polled}</span>

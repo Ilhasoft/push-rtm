@@ -277,6 +277,8 @@ class PollGlobalDataView(View):
                             }
 
                 else:
+                    # TODO: instead of adding 2 arrays, use 'categories' and 'counts' to create a
+                    #  dictionary and search for each key and its value then add
                     value_current_question_array = results_question.get(
                         "statistics").get("counts")
                     values_in_array_statistics = question_dict.get("statistics").get("counts")
