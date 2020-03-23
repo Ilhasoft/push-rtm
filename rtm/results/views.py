@@ -391,10 +391,65 @@ class ExportPollResultsBase(View):
 
 
 class PollResultsCSV(ExportPollResultsBase):
+    def _get_headers(self):
+        raw_header = ["Contact ID"]
+        ruleset_labels = self._get_ruleset_labels()
+
+        for label in ruleset_labels:
+            raw_header.append(label + " (category)")
+            raw_header.append(label + " (text)")
+
+        return raw_header
+
+    def _get_ruleset_labels(self):
+        pk = self.kwargs.get("pk")
+        rulesets = PollQuestion.objects.filter(poll__id=pk).values_list("ruleset_label", flat=True)
+
+        return list(rulesets)
+
+    def _format_poll_results_data(self):
+        results_data = list(self._get_poll_results_data())
+
+        formated_data = {}
+
+        for result in results_data:
+            contact_uuid, ruleset_question, category, text = result
+            dict_question_uuid = {}
+
+            if not formated_data.get(contact_uuid):
+                formated_data[contact_uuid] = {}
+
+            dict_question_uuid[ruleset_question] = [category, text]
+            formated_data[contact_uuid].update(dict_question_uuid)
+
+        return formated_data
+
     def _get_poll_results_data(self):
         poll_results = super()._get_poll_results_data().values_list(
-                "contact", "category", "text")
+                "contact", "ruleset", "category", "text")
+
         return poll_results
+
+    def _get_raw_results(self):
+        formated_result = self._format_poll_results_data()
+        raw_results = []
+
+        questions_ruleset_labels = self._get_ruleset_labels()
+        for contact_uuid, question_results in formated_result.items():
+            raw_result = [contact_uuid,]
+
+            for ruleset_label in questions_ruleset_labels:
+                #TODO: DEMORANDO MUITO ESSE FOR
+                question = PollQuestion.objects.filter(poll__id=self.kwargs.get("pk"), ruleset_label=ruleset_label)[0]
+                ruleset_uuid = question.ruleset_uuid
+
+                results = question_results.get(ruleset_uuid, ["", ""])
+                for result in results:
+                    raw_result.append(result)
+
+            raw_results.append(raw_result)
+
+        return raw_results
 
     def get(self, *args, **kwargs):
         response = HttpResponse(content_type="text/csv")
@@ -402,7 +457,7 @@ class PollResultsCSV(ExportPollResultsBase):
         writer = csv.writer(response)
         writer.writerow(self._get_headers())
 
-        poll_results = self._get_poll_results_data()
+        poll_results = self._get_raw_results()
         for result in poll_results:
             writer.writerow(result)
 
