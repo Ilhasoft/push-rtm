@@ -5,22 +5,14 @@ import os
 import sys
 from datetime import timedelta
 
-from django.forms import Textarea
 from django.utils.translation import ugettext_lazy as _
 
 from celery.schedules import crontab
 
-# -----------------------------------------------------------------------------------
-# Sets TESTING to True if this configuration is read during a unit test
-# -----------------------------------------------------------------------------------
-TESTING = sys.argv[1:2] == ["test"]
 
 DEBUG = True
 THUMBNAIL_DEBUG = DEBUG
 
-ADMINS = (("Nyaruka", "code@nyaruka.com"),)
-
-MANAGERS = ADMINS
 
 DATABASES = {
     "default": {
@@ -33,12 +25,6 @@ DATABASES = {
     }
 }
 
-# set the mail settings, we send throught gmail
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_HOST_USER = "server@nyaruka.com"
-DEFAULT_FROM_EMAIL = "server@nyaruka.com"
-EMAIL_HOST_PASSWORD = "NOTREAL"
-EMAIL_USE_TLS = True
 
 EMPTY_SUBDOMAIN_HOST = "http://localhost:8000"
 SITE_API_HOST = "http://localhost:8001"
@@ -127,7 +113,7 @@ STATICFILES_FINDERS = (
     "compressor.finders.CompressorFinder",
 )
 
-COMPRESS_PRECOMPILERS = (("text/coffeescript", "coffee --compile --stdio"), ("text/less", "lessc {infile} {outfile}"))
+COMPRESS_PRECOMPILERS = (("text/less", "lessc {infile} {outfile}"),)
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = "bangbangrootplaydeadn7#^+-u-#1wm=y3a$-#^jps5tihx5v_@-_(kxumq_$+$5r)bxo"
@@ -152,7 +138,6 @@ DATA_API_BACKENDS_CONFIG = {
 
 DATA_API_BACKEND_TYPES = (
     ("rtm.backend.rapidpro.RapidProBackend", "RapidPro Backend Type"),
-    ("rtm.backend.floip.FLOIPBackend", "FLOIP Backend Type"),
 )
 
 
@@ -223,326 +208,6 @@ BACKENDS_ORG_CONFIG_FIELDS = [
     ),
 ]
 
-ORG_CONFIG_FIELDS = [
-    dict(
-        name="is_on_landing_page",
-        field=dict(help_text=_("Whether this org should be show on the landing page"), required=False),
-        superuser_only=True,
-    ),
-    dict(
-        name="shortcode",
-        field=dict(
-            help_text=_("The shortcode that users will use to contact U-Report locally"),
-            label="Shortcode",
-            required=False,
-        ),
-    ),
-    dict(
-        name="whatsapp_number",
-        field=dict(
-            help_text=_("The whatapp number that users will use to contact U-Report if you have one"),
-            label="Whatapp Number",
-            required=False,
-        ),
-    ),
-    dict(
-        name="join_text",
-        field=dict(
-            help_text=_("The short text used to direct visitors to join U-Report"), label="Join Text", required=False
-        ),
-    ),
-    dict(
-        name="homepage_join_video_id",
-        field=dict(
-            help_text=_("The YouTube video ID for how to join U-Report section"),
-            label="Homepage Video ID",
-            required=False,
-        ),
-    ),
-    dict(
-        name="photos_section_title",
-        field=dict(
-            help_text=_("The title of the photos section U-Report homepage"),
-            label="Photos Section Title",
-            required=False,
-        ),
-    ),
-    dict(
-        name="photos_section_description",
-        field=dict(
-            help_text=_("The description of the photos section U-Report homepage"),
-            label="Photos Description",
-            required=False,
-        ),
-    ),
-    dict(
-        name="opinions_description",
-        field=dict(help_text=_("The description of the opinions page"), label="Opinions Description", required=False),
-    ),
-    dict(
-        name="stories_description",
-        field=dict(help_text=_("The description of the stories page"), label="Stories Description", required=False),
-    ),
-    dict(
-        name="engagement_description",
-        field=dict(
-            help_text=_("The description of the engagement page"), label="Engagement Description", required=False
-        ),
-    ),
-    dict(
-        name="engagement_footer_callout",
-        field=dict(
-            help_text=_("The callout message on the footer engagement section"),
-            label="Egagement callout messages",
-            required=False,
-        ),
-    ),
-    dict(
-        name="dark1_color",
-        field=dict(help_text=_("The primary color for styling for this organization, should be dark"), required=False),
-        superuser_only=True,
-    ),
-    dict(
-        name="dark2_color",
-        field=dict(
-            help_text=_("The secondary color for styling for this organization, should be dark"), required=False
-        ),
-        superuser_only=True,
-    ),
-    dict(
-        name="dark3_color",
-        field=dict(
-            help_text=_("The tertiary color for styling for this organization, should be dark"), required=False
-        ),
-        superuser_only=True,
-    ),
-    dict(
-        name="light1_color",
-        field=dict(
-            help_text=_("The primary highlight color for styling for this organization, should be light"),
-            required=False,
-        ),
-        superuser_only=True,
-    ),
-    dict(
-        name="light2_color",
-        field=dict(
-            help_text=_("The secondary highlight color for styling for this organization, should be light"),
-            required=False,
-        ),
-        superuser_only=True,
-    ),
-    dict(
-        name="colors",
-        field=dict(help_text=_("Up to 6 colors for styling charts, use comma between colors"), required=False),
-        superuser_only=True,
-    ),
-    # deprecated, can be removed after v2 launch
-    dict(
-        name="join_fg_color",
-        field=dict(help_text=_("The color used to draw the text on the join bar"), required=False),
-        superuser_only=True,
-    ),
-    # deprecated, can be removed after v2 launch
-    dict(
-        name="join_bg_color",
-        field=dict(help_text=_("The color used to draw the background on the join bar"), required=False),
-        superuser_only=True,
-    ),
-    # deprecated, should be replaced by dark1
-    dict(
-        name="primary_color",
-        field=dict(help_text=_("The primary color for styling for this organization"), required=False),
-        superuser_only=True,
-    ),
-    # deprecated, should be replaced by dark2
-    dict(
-        name="secondary_color",
-        field=dict(help_text=_("The secondary color for styling for this organization"), required=False),
-        superuser_only=True,
-    ),
-    # deprecated, can be removed after v2 launch
-    dict(
-        name="bg_color",
-        field=dict(help_text=_("The background color for the site"), required=False),
-        superuser_only=True,
-    ),
-    dict(
-        name="colors_map",
-        field=dict(
-            help_text=_("11 colors for styling maps, use comma between colors, not used if not 11 colors"),
-            required=False,
-        ),
-        superuser_only=True,
-    ),
-    dict(
-        name="limit_states",
-        field=dict(help_text=_("The states to show on maps only"), required=False),
-        superuser_only=True,
-    ),
-    dict(
-        name="google_tracking_id",
-        field=dict(
-            help_text=_("The Google Analytics Tracking ID for this organization"),
-            label="Google Tracking ID",
-            required=False,
-        ),
-    ),
-    dict(
-        name="youtube_channel_url",
-        field=dict(
-            help_text=_("The URL to the Youtube channel for this organization"),
-            label="Youtube Channel URL",
-            required=False,
-        ),
-    ),
-    dict(
-        name="facebook_page_url",
-        field=dict(
-            help_text=_("The URL to the Facebook page for this organization"),
-            label="Facebook Page URL",
-            required=False,
-        ),
-    ),
-    dict(
-        name="facebook_page_id",
-        field=dict(
-            help_text=_("The integer id to the Facebook page for this organization (optional)"),
-            label="Facebook Page ID",
-            required=False,
-        ),
-    ),
-    dict(
-        name="facebook_app_id",
-        field=dict(
-            help_text=_("The integer id to the Facebook app for this organization's chat app (optional)"),
-            label="Facebook App ID",
-            required=False,
-        ),
-    ),
-    dict(
-        name="facebook_welcome_text",
-        field=dict(
-            help_text=_("The short text used to greet users on Facebook Messenger Plugin"),
-            label="Facebook Welcome Text",
-            required=False,
-        ),
-    ),
-    dict(
-        name="facebook_pixel_id",
-        field=dict(
-            help_text=_("The id of the Facebook Pixel for this organization (optional)"),
-            label="Facebook Pixel ID",
-            required=False,
-        ),
-    ),
-    dict(
-        name="instagram_username",
-        field=dict(
-            help_text=_("The Instagram username for this organization"), label="Instagram Username", required=False
-        ),
-    ),
-    dict(
-        name="instagram_lightwidget_id",
-        field=dict(
-            help_text=_("The Instagram widget id from lightwidget.com"),
-            label="Instagram LightWidget ID",
-            required=False,
-        ),
-    ),
-    dict(
-        name="twitter_handle",
-        field=dict(help_text=_("The Twitter handle for this organization"), label="Twitter Handle", required=False),
-    ),
-    dict(
-        name="twitter_search_widget",
-        field=dict(
-            help_text=_("The Twitter widget used for searching"), label="Twitter Search Widget ID", required=False
-        ),
-    ),
-    dict(
-        name="ignore_words",
-        field=dict(
-            help_text=_("The words to filter out from the results on public site"),
-            label="Ignore Words",
-            required=False,
-        ),
-    ),
-    dict(
-        name="has_jobs",
-        field=dict(
-            help_text=_("If there are jobs to be shown on the public site."), label="Display Jobs Tab", required=False
-        ),
-    ),
-    dict(
-        name="is_global",
-        field=dict(
-            help_text=_("If this org if for global data. e.g: It shows a world map instead of a country map."),
-            required=False,
-        ),
-        superuser_only=True,
-    ),
-    dict(
-        name="has_extra_gender",
-        field=dict(help_text=_("Whether to activate an extra gender."), required=False),
-        superuser_only=True,
-        read_only=True,
-    ),
-    dict(
-        name="has_new_design",
-        field=dict(help_text=_("Whether to activate the new design."), required=False),
-        superuser_only=True,
-        read_only=True,
-    ),
-    dict(
-        name="iso_code",
-        field=dict(
-            help_text=_(
-                "The alpha-3 ISO code of the organization so that it appears the stories widget U-Report App. Example: BRA, NIG, CMR (Use GLOBAL if U-Report is Global)."
-            ),
-            label="Country ISO code",
-            required=False,
-        ),
-    ),
-    dict(
-        name="headline_font",
-        field=dict(help_text=_("The font used for headline texts"), required=False),
-        superuser_only=True,
-    ),
-    dict(
-        name="text_font", field=dict(help_text=_("The font used for normal text"), required=False), superuser_only=True
-    ),
-    dict(
-        name="is_participation_hidden",
-        field=dict(help_text=_("Hide participation stats"), required=False),
-        superuser_only=True,
-    ),
-    dict(
-        name="ureport_announcement",
-        field=dict(
-            help_text=_("The text to describe the sponsors of free messages"), label="Announcement", required=False
-        ),
-        superuser_only=True,
-    ),
-    dict(
-        name="text_small_font",
-        field=dict(help_text=_("The font used for small text"), required=False),
-        superuser_only=True,
-    ),
-    dict(
-        name="custom_html",
-        field=dict(
-            help_text=_(
-                "If you need to include some custom HTML codes in you org pages, like custom analytics code snippets"
-            ),
-            label="Custom HTML",
-            required=False,
-            widget=Textarea,
-        ),
-    ),
-]
-
-
 INSTALLED_APPS = (
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -605,11 +270,9 @@ LOGGING = {
 # -----------------------------------------------------------------------------------
 
 PROJECT_DIR = os.path.join(os.path.abspath(os.path.dirname(__file__)))
-RESOURCES_DIR = os.path.join(PROJECT_DIR, "../resources")
 
 LOCALE_PATHS = (os.path.join(PROJECT_DIR, "../locale"),)
 FIXTURE_DIRS = (os.path.join(PROJECT_DIR, "../fixtures"),)
-TESTFILES_DIR = os.path.join(PROJECT_DIR, "../testfiles")
 STATICFILES_DIRS = (os.path.join(PROJECT_DIR, "../static"), os.path.join(PROJECT_DIR, "../media"))
 STATIC_ROOT = os.path.join(PROJECT_DIR, "../sitestatic")
 MEDIA_ROOT = os.path.join(PROJECT_DIR, "../media")
@@ -643,7 +306,6 @@ TEMPLATES = [
                 "django.template.loaders.filesystem.Loader",
                 "django.template.loaders.app_directories.Loader",
             ],
-            "debug": False if TESTING else DEBUG,
         },
     }
 ]
@@ -712,7 +374,7 @@ GROUP_PERMISSIONS = {
 # -----------------------------------------------------------------------------------
 LOGIN_URL = "/users/login/"
 LOGOUT_URL = "/users/logout/"
-LOGIN_REDIRECT_URL = "/manage/org/choose/"
+LOGIN_REDIRECT_URL = "/worldmap"
 LOGOUT_REDIRECT_URL = "/"
 
 # -----------------------------------------------------------------------------------
@@ -751,18 +413,6 @@ CACHES = {
 if "test" in sys.argv:
     CACHES["default"]["LOCATION"] = "redis://127.0.0.1:6379/15"
 
-# -----------------------------------------------------------------------------------
-# SMS Configs
-# -----------------------------------------------------------------------------------
-
-RAPIDSMS_TABS = []
-SMS_APPS = ["mileage"]
-
-# change this to your specific backend for your install
-DEFAULT_BACKEND = "console"
-
-# change this to the country code for your install
-DEFAULT_COUNTRY_CODE = "250"
 
 # -----------------------------------------------------------------------------------
 # Debug Toolbar
@@ -830,223 +480,9 @@ CELERYBEAT_SCHEDULE = {
     },
 }
 
-# -----------------------------------------------------------------------------------
-# U-Report Defaults
-# -----------------------------------------------------------------------------------
-UREPORT_DEFAULT_PRIMARY_COLOR = "#FFD100"
-UREPORT_DEFAULT_SECONDARY_COLOR = "#1F49BF"
 
-
-# -----------------------------------------------------------------------------------
-# non org urls
-# -----------------------------------------------------------------------------------
-SITE_ALLOW_NO_ORG = (
-    "api",
-    "api.v1",
-    "api.v1.docs",
-    "api.v1.org_list",
-    "api.v1.org_details",
-    "api.v1.org_poll_list",
-    "api.v1.org_poll_featured",
-    "api.v1.poll_details",
-    "api.v1.org_newsitem_list",
-    "api.v1.newsitem_details",
-    "api.v1.org_video_list",
-    "api.v1.video_details",
-    "api.v1.org_asset_list",
-    "api.v1.asset_details",
-    "api.v1.org_story_list",
-    "api.v1.story_details",
-)
-
-
-# -----------------------------------------------------------------------------------
-# Old country sites
-# -----------------------------------------------------------------------------------
-PREVIOUS_ORG_SITES = [
-    dict(
-        name="Argentina",
-        host="//argentina.rtm.in/",
-        flag="flag_ar.png",
-        is_static=True,
-        count_link="http://argentina.ureport.in/count/",
-    ),
-    dict(
-        name="Bangladesh",
-        host="//bangladesh.rtm.in/",
-        flag="flag_bd.png",
-        is_static=True,
-        count_link="http://bangladesh.ureport.in/count/",
-    ),
-    dict(
-        name="Belize",
-        host="//belize.rtm.in/",
-        flag="flag_bz.png",
-        is_static=True,
-        count_link="http://belize.ureport.in/count/",
-    ),
-    dict(
-        name="Bolivia",
-        host="//bolivia.rtm.in/",
-        flag="flag_bo.png",
-        is_static=True,
-        count_link="http://bolivia.ureport.in/count/",
-    ),
-    dict(
-        name="Bosnia and Herzegovina",
-        host="//bih.rtm.in/",
-        flag="flag_bs.png",
-        is_static=True,
-        count_link="http://bih.ureport.in/count/",
-    ),
-    dict(
-        name="Brazil",
-        host="//ureportbrasil.org.br/",
-        flag="flag_br.png",
-        is_static=True,
-        count_link="http://brasil.ureport.in/count/",
-    ),
-    dict(
-        name="Ecuador",
-        host="//ecuador.rtm.in/",
-        flag="flag_ec.png",
-        is_static=True,
-        count_link="http://ecuador.ureport.in/count/",
-    ),
-    dict(
-        name="El Salvador",
-        host="//elsalvador.rtm.in/",
-        flag="flag_sv.png",
-        is_static=True,
-        count_link="http://elsalvador.ureport.in/count/",
-    ),
-    dict(
-        name="Guatemala",
-        host="//guatemala.rtm.in/",
-        flag="flag_gt.png",
-        is_static=True,
-        count_link="http://guatemala.ureport.in/count/",
-    ),
-    dict(
-        name="Honduras",
-        host="//honduras.rtm.in",
-        flag="flag_hn.png",
-        is_static=True,
-        count_link="http://honduras.ureport.in/count/",
-    ),
-    dict(
-        name="France",
-        host="//france.rtm.in",
-        flag="flag_fr.png",
-        is_static=True,
-        count_link="http://france.ureport.in/count/",
-    ),
-    dict(
-        name="India",
-        host="//india.rtm.in",
-        flag="flag_in.png",
-        is_static=True,
-        count_link="http://india.ureport.in/count/",
-    ),
-    dict(
-        name="Iraq",
-        host="//iraq.rtm.in",
-        flag="flag_iq.png",
-        is_static=True,
-        count_link="http://iraq.ureport.in/count/",
-    ),
-    dict(
-        name="Ireland",
-        host="//ireland.rtm.in",
-        flag="flag_ir.png",
-        is_static=True,
-        count_link="http://ireland.ureport.in/count/",
-    ),
-    dict(
-        name="Jamaica",
-        host="//jamaica.rtm.in/",
-        flag="flag_jm.png",
-        is_static=True,
-        count_link="http://jamaica.ureport.in/count/",
-    ),
-    dict(
-        name="Moldova",
-        host="//moldova.rtm.in",
-        flag="flag_md.png",
-        is_static=True,
-        count_link="http://moldova.ureport.in/count/",
-    ),
-    dict(
-        name="New Zealand",
-        host="//newzealand.rtm.in/",
-        flag="flag_nz.png",
-        is_static=True,
-        count_link="http://newzealand.ureport.in/count/",
-    ),
-    dict(
-        name="România",
-        host="//romania.rtm.in/",
-        flag="flag_ro.png",
-        is_static=True,
-        count_link="http://romania.ureport.in/count/",
-    ),
-    dict(
-        name="Serbia",
-        host="//serbia.rtm.in/",
-        flag="flag_sr.png",
-        is_static=True,
-        count_link="http://serbia.ureport.in/count/",
-    ),
-    dict(
-        name="South Africa",
-        host="//sa.rtm.in",
-        flag="flag_sa.png",
-        is_static=True,
-        count_link="http://sa.ureport.in/count/",
-    ),
-    dict(
-        name="Syria",
-        host="//syria.rtm.in",
-        flag="flag_sy.png",
-        is_static=True,
-        count_link="http://syria.ureport.in/count/",
-    ),
-    dict(
-        name="Thailand",
-        host="//thailand.rtm.in",
-        flag="flag_th.png",
-        is_static=True,
-        count_link="http://thailand.ureport.in/count/",
-    ),
-    dict(
-        name="Trinidad and Tobago",
-        host="//tt.rtm.in/",
-        flag="flag_tt.png",
-        is_static=True,
-        count_link="http://tt.ureport.in/count/",
-    ),
-    dict(
-        name="Uzbekistan",
-        host="//uzbekistan.rtm.in",
-        flag="flag_uz.png",
-        is_static=True,
-        count_link="http://uzbekistan.ureport.in/count/",
-    ),
-    dict(
-        name="Western Balkans",
-        host="//westernbalkans.rtm.in",
-        flag="flag_wb.png",
-        is_static=True,
-        count_link="http://westernbalkans.ureport.in/count/",
-    ),
-    dict(
-        name="Zambia",
-        host="//www.zambiaureport.com/home/",
-        flag="flag_zm.png",
-        is_static=True,
-        count_link="https://www.zambiaureport.com/count.txt/",
-    ),
-]
+RTM_PRIMARY_COLOR = "#FFD100"
+RTM_SECONDARY_COLOR = "#1F49BF"
 
 
 # -----------------------------------------------------------------------------------
@@ -1061,8 +497,6 @@ REST_FRAMEWORK = {
 
 
 SWAGGER_SETTINGS = {"SECURITY_DEFINITIONS": {"basic": {"type": "basic"}}}
-
-STORY_WIDGET_URL = "https://ureportapp.ilhasoft.mobi/widget/"
 
 
 LOGGING = {

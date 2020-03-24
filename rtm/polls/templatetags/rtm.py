@@ -108,8 +108,8 @@ def org_color(org, index):
             ]
         else:
             org_colors = [
-                getattr(settings, "UREPORT_DEFAULT_PRIMARY_COLOR"),
-                getattr(settings, "UREPORT_DEFAULT_SECONDARY_COLOR"),
+                getattr(settings, "RTM_PRIMARY_COLOR"),
+                getattr(settings, "RTM_SECONDARY_COLOR"),
             ]
 
     return org_colors[int(index) % len(org_colors)].strip()

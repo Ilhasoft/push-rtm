@@ -102,7 +102,7 @@ INSTALLED_APPS += (
     "rtm.worldmap",
 )
 
-SITE_ALLOW_NO_ORG += (
+SITE_ALLOW_NO_ORG = (
     "dashboard",
     "dashboard_data",
     "flowhub.flow_list",
@@ -317,8 +317,3 @@ OAUTHLIB_MOMSERVICE_USER_URL = config(
     "OAUTHLIB_MOMSERVICE_USER_URL", default="http://dataforallcloud.org/monservice/api/v1/rtmUserInfo"
 )
 OAUTHLIB_APP_ID = config("OAUTHLIB_APP_ID", default="uninfortm")
-
-
-## DOCS
-
-DOCS_ROOT = os.path.join(PROJECT_DIR, "../docs/_build/html")
