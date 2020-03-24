@@ -1,11 +1,11 @@
 {% load qurl i18n %}
 
 <nav class="pagination is-centered">
-  {% if paginator.has_previous %}
-    <a class="pagination-previous" href="{% qurl request.get_full_path page=paginator.previous_page_number %}">{% trans "Previous" %}</a>
-  {% endif %}
-
   <ul class="pagination-list">
+    {% if paginator.has_previous %}
+      <li><a class="pagination-previous" href="{% qurl request.get_full_path page=paginator.previous_page_number %}">{% trans "Previous" %}</a></li>
+    {% endif %}
+
     {% if paginator.has_previous and paginator.number > 3 %}
       <li><a class="pagination-link" href="{% qurl request.get_full_path page=1 %}">1</a></li>
       {% if paginator.number > 4 %}
@@ -29,9 +29,11 @@
         <li><a class="pagination-link" href="{% qurl request.get_full_path page=paginator.paginator.num_pages %}">{{ paginator.paginator.num_pages }}</a></li>
       {% endif %}
     {% endif %}
-  </ul>
 
-  {% if paginator.has_next %}
-    <a class="pagination-next" href="{% qurl request.get_full_path page=paginator.next_page_number %}">{% trans "Next" %}</a>
-  {% endif %}
+    {% if paginator.has_next %}
+      <li>
+        <a class="pagination-next" href="{% qurl request.get_full_path page=paginator.next_page_number %}">{% trans "Next" %}</a>
+      </li>
+    {% endif %}
+  </ul>
 </nav>

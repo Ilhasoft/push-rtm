@@ -115,3 +115,8 @@ input:checked + .slider:before {
     color: #707070;
   }
 }
+
+.modal-card-head, .modal-card-foot {
+  background-color: #f9f9f9;
+  border-color: #f3f3f3;
+}

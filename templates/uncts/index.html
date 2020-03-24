@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n static ureport %}
+{% load i18n static rtm %}
 
 {% block nav_item %}page-uncts{% endblock %}
 
@@ -37,14 +37,14 @@
         <th>{% autosort name _("Name") %}</th>
         <th>{% autosort timezone _("Timezone") %}</th>
         <th>{% autosort language _("Language") %}</th>
-        <th></th>
-        <th></th>
+        <th>{% trans "Edit" %}</th>
+        <th>{% trans "Users" %}</th>
       </tr>
     </thead>
     <tbody class="has-header">
       {% for org in orgs %}
         <tr class="is-tr">
-          <td>{{ org.name }}</td>
+          <td><a href="{% url 'uncts.redirect' subdomain=org.subdomain %}" target="_blank">{{ org.name }}</a></td>
           <td>{{ org.timezone }} </td>
           <td>{{ org.language }}</td>
           <td>
@@ -53,7 +53,7 @@
             </a>
           </td>
           <td>
-            <a href="{% url 'accounts.user_org_list' org.id %}">
+            <a href="{% url 'accounts.user_org_list' org.id %}?source=unct">
               <i class="material-icons">people</i>
             </a>
           </td>

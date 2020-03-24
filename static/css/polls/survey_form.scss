@@ -64,4 +64,13 @@
     border-bottom: 1px solid #000;
     padding-bottom: 0.7rem;
   }
+
+  #loaderDiv, #result-percent {
+    background-color: #F3F3F3;
+    border: 1px solid #03AEEF;
+    border-radius: 5px;
+    color: #03AEEF;
+    padding: 14px 12px;
+    margin-bottom: 2rem;
+  }
 }

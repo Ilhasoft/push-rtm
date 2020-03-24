@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+{% load i18n static sass_tags humanize rtm %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IFrame</title>
+    <link href="{% static 'icons/css/all.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% sass_src 'css/index.scss' %}" />
+    <link rel="stylesheet" href="{% static 'plugins/checkbox/checkbox.min.css' %}">
+    <link rel="stylesheet" href="{% sass_src 'plugins/tooltip/tooltip.scss' %}">
+    <link rel="stylesheet" href="{% sass_src 'css/polls/survey_results.scss' %}"/>
+    <style>
+        .number-question{
+            visibility: hidden;
+        }
+        .chart-canvas{
+            width: 100%;
+        }
+    </style>
+</head>
+<body id="page-surveys">
+    {% if messages %}
+        {% for message in messages %}
+            {{message}}
+        {% endfor %}
+    {% endif %}
+
+    <div class="is-half-desktop div-data-question" data-question-sdgs="{{ context.sdgs|join:',' }}">
+        <div class="survey-card box is-paddingless">
+          <div class="survey-question">
+            <div class="survey-question__number number-question"></div>
+            <div class="survey-question__info">
+              <span class="survey-question__info__title">{{ context.title }}</span>
+              <div class="top-m-20">
+                <span class="right-m-30">{% trans 'Answered:'%} {{ context.get_responded }}</span>
+                <span>{% trans 'Polled:'%} {{ context.get_polled }}</span>
+              </div>
+              <div class="top-m-30">
+                {% for sdg in context.sdgs %}
+                    <span class="tag sdg-{{ sdg }} right-m-5 bottom-m-5">{{ sdg }} {{ sdg|get_sdg }}</span>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          <div class="survey-chart p-20">
+            {% if not context.is_open_ended %}
+            <div class="is-flex flex-end right-m-20">
+              <div class="dropdown is-hoverable is-right bottom-m-10">
+                <div class="dropdown-trigger">
+                  <div aria-haspopup="true" aria-controls="dropdown-menu">
+                    <span>{% trans "Segment by" %}</span>
+                    <span class="icon is-small">
+                      <i class="fas fa-angle-down" aria-hidden="true"></i>
+                    </span>
+                  </div>
+                </div>
+                <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                  <div class="dropdown-content">
+                    <a onclick="showChart('statistics');" class="dropdown-item statistics">{% trans "All" %}</a>
+                    <a onclick="showChart('gender');" class="dropdown-item gender">{% trans "Gender" %}</a>
+                    <a onclick="showChart('age');" class="dropdown-item age">{% trans "Age" %}</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+
+            {% if not context.is_open_ended %}
+              <canvas
+                id="chart-question"
+                data-question-type="chart"
+                class="has-text-centered chart-canvas">
+              </canvas>
+            {% else %}
+              <div
+                class="has-text-centered chart-canvas"
+                id="chart-question-cloud"
+                data-question-type="cloud">
+              </div>
+            {% endif %}
+          </div>
+        </div>
+    </div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.7.3/dist/Chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+<script src="{% static 'plugins/wordcloud/d3.js' %}"></script>
+<script src="{% static 'plugins/wordcloud/d3.layout.cloud.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"
+      integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous">
+</script>
+<script src="{% static 'js/availableColors.js' %}"></script>
+
+<script type="text/javascript">
+    var myChart;
+    var data_chart = {{data_chart|safe}};
+    var element_canvas_chart = $("#chart-question");
+
+    function showChart(type_chart){
+        if(!($.isEmptyObject(myChart))){
+            myChart.destroy();
+        }
+
+        if(type_chart == "statistics"){
+            myChart = new Chart(element_canvas_chart, {
+                type: "doughnut",
+                data: {
+                    datasets: [{
+                      data: data_chart["statistics"]["counts"],
+                      backgroundColor: RTMConfigs.availableColors,
+                      borderColor: "rgba(255, 255, 255, 0.1)",
+                    }],
+                    labels: data_chart["statistics"]["labels"]
+                },
+                options: {
+                    legend: {
+                      labels: {
+                        usePointStyle: true,
+                      }
+                    },
+                    tooltips: {
+                      bodyFontSize: 16,
+                      titleFontSize: 16,
+                    },
+                    plugins: {
+                      datalabels: {
+                        font: {
+                          size: 20,
+                          weight: 'bold',
+                        },
+                        formatter:(value, element_canvas_chart) => {
+                          let sum = 0;
+                          let dataArr = element_canvas_chart.chart.data.datasets[0].data;
+                          dataArr.map(data => {
+                            sum += data;
+                          });
+                          let percentage = (value * 100 / sum);
+                          if (percentage < 5) return "";
+                          if (percentage === 100.00) return parseInt(percentage) + "%";
+                          return percentage.toFixed(2) + "%";
+                        },
+                        color: "#fff",
+                      }
+                    }
+                },
+            });
+        }else if(type_chart == "gender"){
+            myChart = new Chart(element_canvas_chart, {
+              type: "horizontalBar",
+              data: {
+                labels: data_chart["gender"]["categories"],
+                datasets: data_chart["gender"]["series"]
+              },
+              options: {
+                legend: {
+                  labels: {
+                    usePointStyle: true,
+                  }
+                },
+                plugins: {
+                  datalabels: {
+                    display: false,
+                  }
+                },
+                tooltips: {
+                  bodyFontSize: 16,
+                  titleFontSize: 16,
+                },
+                scales: {
+                  xAxes: [{
+                    stacked: true,
+                    ticks: {
+                      stepSize: 20,
+                    },
+                  }],
+                  yAxes: [{
+                    stacked: true,
+                    gridLines: {
+                      color: "rgba(0, 0, 0, 0)",
+                    },
+                  }]
+                }
+              }
+            });
+        }else{
+            myChart = new Chart(element_canvas_chart, {
+              type: "horizontalBar",
+              data: {
+                labels: data_chart["age"]["categories"],
+                datasets: data_chart["age"]["series"],
+              },
+              options: {
+                legend: {
+                  labels: {
+                    usePointStyle: true,
+                  }
+                },
+                plugins: {
+                  datalabels: {
+                    display: false,
+                  }
+                },
+                tooltips: {
+                  bodyFontSize: 16,
+                  titleFontSize: 16,
+                },
+                scales: {
+                  xAxes: [{
+                    stacked: true,
+                    ticks: {
+                      stepSize: 20,
+                    },
+                  }],
+                  yAxes: [{
+                    stacked: true,
+                    gridLines: {
+                      color: "rgba(0, 0, 0, 0)",
+                    }
+                  }]
+                }
+              }
+            });
+        }
+    }
+
+    if($.isEmptyObject(data_chart["word_cloud"])){
+        showChart("statistics");
+    }else{
+        console.log("IMPLEMENTAR WORD CLOUD");
+    }
+
+    /*let globalDataChart = {};
+    let localDataChart = {};
+    let globalData;
+    let localData;
+
+    function showChart(local_question, ruleset_label, tab){
+      let data_question_global = globalData[ruleset_label];
+      let data_question_local = localData[local_question];
+
+      let global_chart = $("#global-chart-question-"+data_question_global["id"]);
+      let local_chart = $("#chart-question-"+data_question_local["id"]);
+
+      if((globalDataChart[ruleset_label] != "") && (localDataChart[ruleset_label] != "")){
+        globalDataChart[ruleset_label].destroy();
+        localDataChart[ruleset_label].destroy();
+      }
+
+      if(tab == "statistics"){
+
+        globalDataChart[ruleset_label] = new Chart(global_chart, {
+          type: "doughnut",
+          data: {
+            datasets: [{
+              data: data_question_global["statistics"]["counts"],
+              backgroundColor: RTMConfigs.availableColors,
+              borderColor: "rgba(255, 255, 255, 0.1)",
+            }],
+            labels: data_question_global["statistics"]["labels"]
+          },
+          options: {
+            legend: {
+              labels: {
+                usePointStyle: true,
+              }
+            },
+            tooltips: {
+              bodyFontSize: 16,
+              titleFontSize: 16,
+            },
+            plugins: {
+              datalabels: {
+                font: {
+                  size: 20,
+                  weight: 'bold',
+                },
+                formatter:(value, ctx) => {
+                  let sum = 0;
+                  let dataArr = ctx.chart.data.datasets[0].data;
+                  dataArr.map(data => {
+                    sum += data;
+                  });
+                  let percentage = (value * 100 / sum);
+                  if (percentage < 5) return "";
+                  if (percentage === 100.00) return parseInt(percentage) + "%";
+                  return percentage.toFixed(2) + "%";
+                },
+                color: "#fff",
+              }
+            }
+          },
+        });
+
+      }else if(tab == "age"){
+
+        globalDataChart[ruleset_label] =
+
+      }else if(tab == "gender"){
+
+        globalDataChart[ruleset_label] =
+      }
+    };
+
+    localData = data.questions_local;
+    globalData = data.questions_global;
+
+    let data_local;
+    let data_global;
+    let sdgs = data.sdgs;
+
+    localData.map(function(value, index){
+
+      data_local = value.statistics.counts;
+      data_global = data.questions_global[value.ruleset_label].statistics.counts;
+
+      globalDataChart[value.ruleset_label] = "";
+      localDataChart[value.ruleset_label] = "";
+
+      showChart(index, value.ruleset_label, 'statistics');
+      if (first_access == 'sim'){
+        $(".column-unct").css("visibility", "hidden");
+      }
+
+
+      if(!($.isEmptyObject(value.word_cloud))){
+        words_global = []
+        words_local = []
+
+        $("#chart-question-" + value.id).replaceWith(`<div id='chart-question-${value.id}'></div>`);
+        $("#global-chart-question-" + data.questions_global[value.ruleset_label].id).replaceWith(`<div id='global-chart-question-${data.questions_global[value.ruleset_label].id}'></div>`);
+
+        $.each(value.word_cloud, function(key, data_word){
+          words_local.push(data_word);
+          words_global.push(data.questions_global[value.ruleset_label].word_cloud[key]);
+        });
+
+        const fillWordColor = function(d, i) {
+          return RTMConfigs.availableColors[i % RTMConfigs.availableColors.length];
+        };
+
+        let width = 300, height = 300;
+        let wordCloud = d3.scale.category20();
+        d3.layout.cloud()
+          .words(words_local)
+          .rotate(function() { return ~~(Math.random() * 2) * 90; })
+          .font("Impact")
+          .fontSize(function(d) { return d.size; })
+          .on("end", function(words){return draw(words, "#chart-question-" + value.id);})
+          .start();
+
+
+         d3.layout.cloud()
+          .words(words_global)
+          .rotate(function() { return ~~(Math.random() * 2) * 90; })
+          .font("Impact")
+          .fontSize(function(d) { return d.size; })
+          .on("end", function(words){return draw(words, "#global-chart-question-" + data.questions_global[value.ruleset_label].id);})
+          .start();
+
+
+          function draw(words, id_element) {
+            d3.select(id_element)
+            .append("svg")
+            .attr("width", "70%")
+            .attr("height", "70%")
+            .attr("viewBox","0 0 " + Math.min(width,height) + " " + Math.min(width,height))
+            .attr("preserveAspectRatio", "xMinYMin")
+            .append("g")
+            .attr("transform", "translate(" + Math.min(width,height) / 2 + "," + Math.min(width,height) / 2 + ")")
+            .selectAll("text")
+            .data(words)
+            .enter().append("text")
+            .style("font-size", function(d) {
+              return d.size + "px";
+            })
+            .style("font-family", "Roboto", "sans-serif")
+            .style("fill", function(d, i) {
+              return wordCloud(i);
+            })
+            .attr("text-anchor", "middle")
+            .attr("transform", function(d) {
+              return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+            })
+            .style('fill', fillWordColor)
+            .text(function(d) {
+              return d.text;
+            });
+          }
+        }
+
+    });*/
+</script>
+</body>
+</html>

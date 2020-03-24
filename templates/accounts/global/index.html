@@ -1,11 +1,19 @@
 {% extends "base.html" %}
-{% load i18n static ureport %}
+{% load i18n static rtm utils_extra_accounts %}
 
 {% block nav_item %}page-users{% endblock %}
 
+{% block css_extra %}
+<style>
+  .svg-lock, .svg-unlock{
+    fill: #707070;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
 <section class="section">
-  <h1 class="title">{% trans "Users" %}</h1>
+  <h1 class="title">Global {% trans "Users" %}</h1>
 </section>
 
 <section class="section">
@@ -17,19 +25,12 @@
           <span class="icon is-left">
             <i class="material-icons">search</i>
           </span>
+          {% if query %}
+            <a class="clear-search-icon" href="{{ back_to }}">
+              <i class="material-icons">clear</i>
+            </a>
+          {% endif %}
         </form>
-      </div>
-    </div>
-    <div class="column is-narrow">
-      <div class="control">
-        <a
-          class="button is-medium is-info"
-          href="{% url 'accounts.global_user_create' %}">
-          <span class="icon">
-            <i class="material-icons">add</i>
-          </span>
-          <span>{% trans "User" %}</span>
-        </a>
       </div>
     </div>
   </div>
@@ -40,7 +41,8 @@
         <th>{% trans "Username" %}</th>
         <th>{% trans "Email" %}</th>
         <th>{% trans "Permission" %}</th>
-        <th></th>
+        <th>{% trans "Edit" %}</th>
+        <th>{% trans "Block" %}</th>
       </tr>
     </thead>
     <tbody class="has-header">
@@ -52,16 +54,79 @@
           <td>
             {% if user.is_superuser %}
               {% trans "Global Admin" %}
-            {% else %}
+            {% elif user|is_global_viewer_active %}
               {% trans "Global Viewers" %}
+            {% else %}
+              {% trans "No Permission" %}
             {% endif %}
           </td>
           <td>
+            {% if not user.logs_permission_user.all %}
             <a
               href="{% url 'accounts.global_user_update' user.pk %}">
               <i class="material-icons">border_color</i>
             </a>
+            {% endif %}
           </td>
+          <td>
+          {% if not user.is_superuser %}
+              {% if user|is_global_viewer_active %}
+                <button class="button-no-bg" onclick=openModal('{{user.pk}}');>
+                  <svg class="svg-lock" xmlns="http://www.w3.org/2000/svg" width="11.623" height="16.551" viewBox="0 0 11.623 16.551">
+                    <path d="M134.226,84.32V82.234a5.085,5.085,0,1,0-10.169.049v2.04a1.088,1.088,0,0,0-.727,1.023v6.538a1.819,1.819,0,0,0,1.816,1.816h7.991a1.819,1.819,0,0,0,1.816-1.816V85.347A1.092,1.092,0,0,0,134.226,84.32Zm-7.99-.062V82.272a2.906,2.906,0,1,1,5.812-.037v2.023h-5.812Zm4.34,6.06a.363.363,0,0,1-.345.478h-2.179a.363.363,0,0,1-.344-.479l.453-1.358a1.431,1.431,0,0,1-.472-1.067,1.453,1.453,0,1,1,2.906,0,1.433,1.433,0,0,1-.472,1.068Z" transform="translate(-123.33 -77.15)"/>
+                  </svg>
+                </button>
+
+                <div id="deleteModal-{{user.pk}}" class="modal">
+                  <div class="modal-background"></div>
+                  <div class="modal-card">
+                    <header class="modal-card-head">
+                      <p class="modal-card-title">{% trans 'Are you sure?' %}</p>
+                      <button class="delete" aria-label="close" onclick=closeModal('{{user.pk}}');></button>
+                    </header>
+                    <section class="modal-card-body">
+                      {% trans 'Do you really want to block the user' %} "{{user.username}}" ?
+                    </section>
+                    <footer class="modal-card-foot">
+                      <form action="{% url 'accounts.global_user_delete' user.pk %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{ redirect_to }}" name="redirect_to"/>
+                        <button class="button is-danger right-m-5" type="submit">{% trans 'Confirm' %}</button>
+                      </form>
+                      <button class="button dark-reverse" onclick=closeModal('{{user.pk}}');>{% trans 'Cancel' %}</button>
+                    </footer>
+                  </div>
+                </div>
+              {% else %}
+                <button class="button-no-bg" onclick=openModalActive('{{user.pk}}');>
+                  <svg class="svg-unlock" xmlns="http://www.w3.org/2000/svg" width="18.886" height="17.434" viewBox="0 0 18.886 17.434">
+                    <path d="M54.2,57a5.09,5.09,0,0,0-5.085,5.085v2.152h0v.754H41.489A1.091,1.091,0,0,0,40.4,66.08v6.538a1.818,1.818,0,0,0,1.816,1.816h7.991a1.819,1.819,0,0,0,1.816-1.816V66.08a1.088,1.088,0,0,0-.726-1.023v-.821h0V62.085a2.905,2.905,0,0,1,5.811,0V63.9a.364.364,0,0,0,.364.363h1.453a.363.363,0,0,0,.363-.363V62.085A5.09,5.09,0,0,0,54.2,57ZM47.6,71.417a.361.361,0,0,1-.295.151H45.122a.362.362,0,0,1-.344-.478l.453-1.358a1.433,1.433,0,0,1-.472-1.068,1.453,1.453,0,1,1,2.906,0,1.43,1.43,0,0,1-.472,1.067l.453,1.358A.361.361,0,0,1,47.6,71.417Z" transform="translate(-40.4 -57)"/>
+                  </svg>
+                </button>
+
+                <div id="activeModal-{{user.pk}}" class="modal">
+                  <div class="modal-background"></div>
+                  <div class="modal-card">
+                    <header class="modal-card-head">
+                      <p class="modal-card-title">{% trans 'Are you sure?' %}</p>
+                      <button class="delete" aria-label="close" onclick=closeModalActive('{{user.pk}}');></button>
+                    </header>
+                    <section class="modal-card-body">
+                      {% trans 'Do you really want to active the user' %} "{{user.username}}" ?
+                    </section>
+                    <footer class="modal-card-foot">
+                      <form action="{% url 'accounts.global_user_activate' user.pk %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{ redirect_to }}" name="redirect_to"/>
+                        <button class="button is-danger right-m-5" type="submit">{% trans 'Confirm' %}</button>
+                      </form>
+                      <button class="button dark-reverse" onclick=closeModalActive('{{user.pk}}');>{% trans 'Cancel' %}</button>
+                    </footer>
+                  </div>
+                </div>
+              {% endif %}
+          {% endif %}
+            </td>
         </tr>
       {% empty %}
         <tr>
@@ -70,8 +135,45 @@
       {% endfor %}
     </tbody>
   </table>
-  <div class="is-pulled-right">
+  <div>
     {% include "paginator.html" with paginator=users %}
   </div>
 </section>
+{% endblock %}
+
+{% block js_extra %}
+<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script>
+    $(".svg-lock").hover(function(){
+      $(this).css("fill", "#E5243B");
+    }, function(){
+      $(this).css("fill", "#707070");
+    });
+
+    $(".svg-unlock").hover(function(){
+      $(this).css("fill", "#03aeef");
+    }, function(){
+      $(this).css("fill", "#707070");
+    });
+
+    function closeModal(userId){
+      let modal = document.getElementById("deleteModal-" + userId);
+      modal.classList.remove("is-active");
+    }
+
+    function openModal(userId){
+      let modal = document.getElementById("deleteModal-" + userId);
+      modal.classList.add("is-active");
+    }
+
+    function closeModalActive(userId){
+      let modal = document.getElementById("activeModal-" + userId);
+      modal.classList.remove("is-active");
+    }
+
+    function openModalActive(userId){
+      let modal = document.getElementById("activeModal-" + userId);
+      modal.classList.add("is-active");
+    }
+</script>
 {% endblock %}

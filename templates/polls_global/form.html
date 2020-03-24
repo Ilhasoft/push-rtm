@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% load i18n static sass_tags %}
+
+{% block nav_item %}page-surveys-global{% endblock %}
+
+{% block css_extra %}
+<link rel="stylesheet" href="{% sass_src 'css/polls/form.scss' %}">
+<link rel="stylesheet" href="{% static 'plugins/checkbox/checkbox.min.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.css">
+{% endblock %}
+
+{% block content %}
+<section class="section top-p-0 bottom-p-0">
+  <nav class="breadcrumb" aria-label="breadcrumbs">
+    <ul>
+      <li><a href="{% url 'polls_global.poll_list' %}">{% trans 'Global Surveys' %}</a></li>
+      <li class="is-active"><a href="#" aria-current="page">{{ page_subtitle }}</a></li>
+    </ul>
+  </nav>
+</section>
+
+<section class="section">
+  <h1 class="title">{% trans "Global Surveys" %}</h1>
+  <h2 class="subtitle">{{ page_subtitle }}</h2>
+</section>
+
+<section class="section">
+  <div class="columns">
+    <div class="column box is-paddingless">
+      <form class="generic-form" id="form-global-survey" method="post">
+        {% csrf_token %}
+        <div class="field bottom-m-20">
+          <label class="label">{{ form.flow_uuid.label }}</label>
+          <div class="select is-fullwidth">
+            {{ form.flow_uuid }}
+            {{ form.flow_uuid.errors }}
+          </div>
+        </div>
+        <div class="field bottom-m-20">
+          <label class="label">{{ form.title.label }}</label>
+          <div class="control">
+            {{ form.title }}
+            {{ form.title.errors }}
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label">
+                {{ form.poll_date.label }}
+              </label>
+              <div class="control has-icons-right">
+                {{ form.poll_date }}
+                <span class="icon is-small is-right">
+              <i class="material-icons">calendar_today</i>
+            </span>
+                {{ form.poll_date.errors }}
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label class="label">{{ form.poll_end_date.label }}</label>
+              <div class="control has-icons-right">
+                {{ form.poll_end_date }}
+                <span class="icon is-small is-right">
+              <i class="material-icons">calendar_today</i>
+            </span>
+                {{ form.poll_end_date.errors }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="field bottom-m-20">
+          <label class="label">{{ form.description.label }}</label>
+          <div class="control">
+            {{ form.description }}
+            {{ form.description.errors }}
+          </div>
+        </div>
+        {% if form.is_active %}
+          <div class="control">
+            {{ form.is_active }}
+            <label class="label" for="{{ form.is_active.auto_id }}">{{ form.is_active.label }}</label>
+          </div>
+          <p class="help">{{ field.help_text }}</p>
+        {% endif %}
+
+        {% if not form.initial %}
+          <div class="control">
+            {{ form.published_flowhub }}
+            <label class="label" for="{{ form.published_flowhub.auto_id }}">{{ form.published_flowhub.label }}</label>
+          </div>
+          <!--<div class="field bottom-m-20">
+            <label class="label">{{ form.description_flowhub.label }}</label>
+            <div class="control">
+              {{ form.description_flowhub }}
+              {{ form.description_flowhub.errors }}
+            </div>
+          </div>-->
+        {% endif %}
+
+        <!--<div class="modal" id="modal-publish-flow-global">
+          <div class="modal-background"></div>
+          <div class="modal-card">
+            <header class="modal-card-head">
+              <p class="modal-card-title">{% trans "Survey Global" %}</p>
+              <button class="delete" onclick="showModal();" aria-label="close"></button>
+            </header>
+            <section class="modal-card-body">
+              <div class="control">
+                {{ form.published_flowhub }}
+                <label class="label" for="{{ form.published_flowhub.auto_id }}">{{ form.published_flowhub.label }}</label>
+              </div>
+              <div class="field bottom-m-20">
+                <label class="label">{{ form.description_flowhub.label }}</label>
+                <div class="control">
+                  {{ form.description_flowhub }}
+                  {{ form.description_flowhub.errors }}
+                </div>
+              </div>
+              <div class="top-m-20">
+                <button type="submit" class="button is-medium is-info right-m-5">{% trans "OK" %}</button>
+                <button onclick="showModal();" type="button" class="button is-medium primary-reverse l-m-10">{% trans "Cancel" %}</button>
+              </div>
+            </section>
+          </div>
+        </div>-->
+
+        <div class="top-m-20">
+          <button class="button is-medium is-info right-m-5" type="submit">{% trans "OK" %}</button>
+          <a href="{% url 'polls_global.poll_list' %}" class="button is-medium primary-reverse l-m-10">{% trans "Cancel" %}</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block js_extra %}
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.js"></script>
+<script src="{% static 'js/forms/errors.js' %}"></script>
+<script type="text/javascript">
+function showModal(){
+  $("#modal-publish-flow-global").toggleClass("is-active");
+}
+/*
+function falseSubmit(){
+  var form;
+  $("#form-global-survey").submit(function(event){
+    form = this;
+    event.preventDefault();
+  });
+
+  if(formIsValid(form)){
+    showModal();
+  }
+}
+
+function formIsValid(form){
+  console.log(form.checkValidity());
+  if(form.checkValidity()){
+     return true;
+  }
+  return false;
+}*/
+
+$('#id_poll_date, #id_poll_end_date').datepicker({
+  format: 'yyyy-mm-dd'
+});
+{% for field in form.errors %}
+  setErrors('{{field}}');
+{% endfor %}
+</script>
+{% endblock %}

@@ -1,0 +1,167 @@
+{% extends "docs.html" %}
+{% load i18n static sass_tags humanize rtm %}
+
+{% block content_doc %}
+<article class="p-30">
+  <div class="has-text-grey-light">
+    {% trans 'UNCTs Documentation' %}
+  </div>
+  <div class="has-text-weight-bold is-size-5 bottom-p-5">
+    {% trans "Dashboard" %}
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p>{% trans "This is the main session of the platform and also its homepage. "%}
+        {% trans "It's here where all the survey's data gathered will be available for analysis. " %}
+        {% trans "Like a main access point, it allows gathering different perceptions from ongoing surveys and useful RapidPro data metrics." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_dashboard.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_dashboard.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      {% trans "Walkthrough" %}
+    </p>
+    <p>{% trans "The page's title is the UNCT workspace name and right below it's the scope of the first Filter. " %}</p>
+    <p>{% trans "To ease the understanding, there's a block division for each data type. " %}
+    {% trans "The first one is related to SDGs tracking, then Surveys Partial Results, Message Metrics, Most used Channels and lastly RapidPro Contacts. " %}
+    {% trans "Each one has its own features and sorting options and we'll go through it all on the topics below." %}</p>
+    <p>{% trans "This is how an empty workspace looks like." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_dashboard_walkthrough.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_dashboard_walkthrough.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      {% trans "SDGs Tracking" %}
+    </p>
+    <p>{% trans "In the bubble graph, you can see which SDG is being more tracked related to others. " %}
+      {% trans "In other words, it shows the number of received messages from questions that are linked to the respective SDG." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_dashboard_sdgs_tracking_01.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_dashboard_sdgs_tracking_01.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <p>{% trans "There are two separate sections to display the SDGs tracking status. " %}
+    {% trans "The order doesn't interfere with the bubble size, it is ordered by crescent numerical order." %}</p>
+    <p>{% trans "To provide better readability there is a tooltip on each bubble displaying the SDG name and also the received messages count." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_dashboard_sdgs_tracking_02.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_dashboard_sdgs_tracking_02.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      {% trans "Surveys Partial Results" %}
+    </p>
+    <p>{% trans "To follow ongoing surveys and track how the answers are being structured as it comes from RapidPro, the partial results graph randomizes 20 questions to be displayed. " %}
+    {% trans "It will bring a more close approach to ongoing surveys." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_dashboard_surveys_partial_results_01.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_dashboard_surveys_partial_results_01.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <ul class="ul-docs">
+      <li class="has-text-weight-bold is-size-6 bottom-p-5">{% trans "Sorting and Filtering" %}</li>
+    </ul>
+    <p>{% trans "There is a filter by SDG on the upper right corner, it allows to list questions that are linked to the selected SDG." %}</p>
+      <p>{% trans "By navigating through the questions you will get indicators from ongoing answers to each question." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_dashboard_surveys_partial_results_02.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_dashboard_surveys_partial_results_02.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      {% trans "Message Metrics" %}
+    </p>
+    <p>{% trans "RapidPro registers message traffic information. " %}
+      {% trans "This information reflects the ongoing and finished survey's level of engagement. " %}</p>
+    <p>{% trans "This dashboard module shows the sum of aggregated values from messages sent and received." %}</p>
+    <br><p>{% trans "There's also a tracking statistics by active channels on the UNCT's RapidPro workspace. " %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_dashboard_message_metrics_01.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_dashboard_message_metrics_01.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <p>{% trans "The message metrics by channel board displays the sum of all sent and received messages for a general overview of all channels and its usage status." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_dashboard_message_metrics_02.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_dashboard_message_metrics_02.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      {% trans "RapidPro Contacts" %}
+    </p>
+    <p>{% trans "The number of contacts is a very important piece of information provided by RapidPro. " %}
+      {% trans "It means the number of contacts inside the registered group and can be used to show the workspace's contact level of growth. " %}
+      {% trans "The graph allows for seeing this information from the last 6 months." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_dashboard_rapidpro_contacts.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_dashboard_rapidpro_contacts.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+{% endblock %}
+
+{% block js_extra %}
+<script>
+    document.getElementById("uncts_dashboard").classList.add("activate");
+</script>
+{% endblock %}

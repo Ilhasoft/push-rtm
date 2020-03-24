@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n static sass_tags humanize ureport %}
+{% load i18n static sass_tags humanize rtm %}
 
 {% block nav_item %}page-surveys{% endblock %}
 
@@ -7,17 +7,31 @@
   <link rel="stylesheet" href="{% static 'plugins/checkbox/checkbox.min.css' %}">
   <link rel="stylesheet" href="{% sass_src 'plugins/tooltip/tooltip.scss' %}">
   <link rel="stylesheet" href="{% sass_src 'css/polls/survey_results.scss' %}"/>
+  <style>
+    #modal-chart{
+      z-index: 10001;
+    }
+    #url-iframe {
+      color: #707070;
+    }
+    #Bold{
+      fill: #28b533;
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
-  <section class="section top-p-0">
+  <section class="section top-p-0 bottom-p-0">
     <nav class="breadcrumb" aria-label="breadcrumbs">
       <ul>
-        {% if request.user.is_superuser %}
-        <li><a href="{% url 'polls.poll_list' %}">{% trans 'Global Surveys'%}</a></li>
-        {% else %}
-        <li><a href="{% url 'polls.poll_list' %}">{% trans 'Surveys'%}</a></li>
-        {% endif %}
+        <li><a href="javascript:(function() {
+          if (window.location.search.includes('source=global&grantList=')) {
+            const id = location.search.slice(1).split('&')[1].split('=')[1];
+            window.location = '/surveys-global/' + id + '/grant/';
+          } else {
+            window.location = '/surveys/poll/list/';
+          }
+        })();">{% trans 'Surveys'%}</a></li>
         <li class="is-active"><a href="#" aria-current="page">{% trans 'Survey Results'%}</a></li>
       </ul>
     </nav>
@@ -26,7 +40,7 @@
   <section class="section">
     <h1 class="title">{% trans 'Survey Results'%}</h1>
   </section>
-  
+
   <section class="section">
     <div class="columns is-mobile">
       <div class="column is-one-third-mobile is-one-quarter">
@@ -50,7 +64,7 @@
           <div class="survey-filters-content p-30">
             <h3 class="bottom-m-10">
               <img class="right-m-5" src="{% static 'svg/sdg.svg' %}" alt="">
-              <span>SDG</span>
+              <span>{% trans "SDG" %}</span>
             </h3>
 
             {% for sdg in sdgs %}
@@ -66,7 +80,7 @@
       <div class="column">
         <div class="box is-paddingless">
           <nav class="level is-paddingless border-bottom is-mobile">
-            <div class="level-item border-right">
+            <div class="level-item">
               <span class="title right-m-10 left-m-10">{{ poll.get_questions.count }}</span>
               <span>{% trans "Question" %}{{ poll.get_questions.count|pluralize }}</span>
               <span class="tooltip top left-m-10">
@@ -76,14 +90,30 @@
             </div>
             <div class="level-item">
               <i class="material-icons export-icon right-m-5">save_alt</i>
-              <span>Export</span>
+              <div class="dropdown is-hoverable">
+                <div class="dropdown-trigger">
+                  <span aria-haspopup="true" aria-controls="export-dropdown">
+                    <span>{% trans "Export" %}</span>
+                    <span class="icon is-small">
+                      <i class="fas fa-angle-down" aria-hidden="true"></i>
+                    </span>
+                  </span>
+                </div>
+                <div class="dropdown-menu" role="menu">
+                  <div class="dropdown-content">
+                    <a href="{% url 'results.export_json' poll.pk %}"><span class="dropdown-item">JSON</span></a>
+                    <a href="{% url 'results.export_csv' poll.pk %}" target="_blank"><span class="dropdown-item">CSV</span></a>
+                    <a onclick="generatePdf('{{poll.title}}');"><span class="dropdown-item">PDF</span></a>
+                  </div>
+                </div>
+              </div>
               <span class="tooltip top left-m-10">
-              <i class="material-icons info-icon">info</i>
-              <span class="tooltip-content">{% trans 'Export results on .csv format'%}</span>
-            </span>
+                <i class="material-icons info-icon">info</i>
+                  <span class="tooltip-content">{% trans 'Export surveys results'%}</span>
+              </span>
             </div>
           </nav>
-          <div class="bottom-p-20">
+          <div class="bottom-p-20 header-surveys">
             <div class="columns bottom-m-10">
               <div class="column is-2 has-text-right">{% trans 'Title:'%}</div>
               <div class="column"><strong>{{ poll.title }}</strong></div>
@@ -106,17 +136,23 @@
                 {% endfor %}
               </div>
             </div>
+            <div class="columns bottom-m-10">
+              <div class="column is-2 has-text-right">{% trans 'Last answer:'%}</div>
+              <div class="column">{{ poll|get_poll_sync_status }}</div>
+            </div>
           </div>
         </div>
 
-        <div class="columns is-multiline">
+        <div class="columns is-multiline div-graphs">
           {% for question in poll.get_questions %}
-          <div class="column is-half-desktop" data-question-sdgs="{{ question.sdgs|join:"," }}">
+          <div class="column is-half-desktop div-data-question" data-question-sdgs="{{ question.sdgs|join:',' }}">
             <div class="survey-card box is-paddingless">
               <div class="survey-question">
                 <div class="survey-question__number">{{ forloop.counter }}</div>
                 <div class="survey-question__info">
                   <span class="survey-question__info__title">{{ question.title }}</span>
+                  <a onclick="showModal('title-hidden-{{ question.pk }}');"><i class="material-icons">code</i></a>
+                  <span style="display: none;" id="title-hidden-{{ question.pk }}">{{question.title}}</span>
                   <div class="top-m-20">
                     <span class="right-m-30">{% trans 'Answered:'%} {{ question.get_responded|intcomma }}</span>
                     <span>{% trans 'Polled:'%} {{ question.get_polled|intcomma }}</span>
@@ -143,10 +179,10 @@
                     <div class="dropdown-menu" id="dropdown-menu" role="menu">
                       <div class="dropdown-content">
                         <a href="javascript:showChart('statistics', {{ question.pk }});" class="dropdown-item statistics">{% trans "All" %}</a>
-                        {% if not is_iorg and show_gender_stats %} 
+                        {% if not is_iorg and show_gender_stats %}
                         <a href="javascript:showChart('gender', {{ question.pk }});" class="dropdown-item gender">{% trans "Gender" %}</a>
                         {% endif %}
-                        {% if not is_iorg and show_age_stats %} 
+                        {% if not is_iorg and show_age_stats %}
                         <a href="javascript:showChart('age', {{ question.pk }});" class="dropdown-item age">{% trans "Age" %}</a>
                         {% endif %}
                       </div>
@@ -179,7 +215,31 @@
         </div>
       </div>
     </div>
+
+    <a href="#top" class="bottom-anchor">
+      <i class="material-icons">keyboard_arrow_up</i>
+    </a>
   </section>
+  <div class="modal" id="modal-chart">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">{% trans "Embed Chart" %}</p>
+        <button class="delete is-pulled-right" onclick="showModal({{question.title}})" aria-label="close"></button>
+      </header>
+      <section class="modal-card-body">
+        <span id="url-iframe"></span>
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button primary-reverse" id="copy-iframe" onclick="copyIframe();">{% trans "Copy" %}</button>
+        <div id="check-iframe">
+          <svg id="Bold" class="check-svg" enable-background="new 0 0 24 24" height="15" viewBox="0 0 24 24" width="15" xmlns="http://www.w3.org/2000/svg">
+            <path d="m.828 13.336c-.261.304-.388.691-.357 1.091s.215.764.52 1.024l7.403 6.346c.275.235.616.361.974.361.044 0 .089-.002.134-.006.405-.036.77-.229 1.028-.542l12.662-15.411c.254-.31.373-.7.334-1.099-.04-.399-.231-.759-.541-1.014l-2.318-1.904c-.639-.524-1.585-.432-2.111.207l-9.745 11.861-3.916-3.355c-.628-.536-1.576-.465-2.115.163z"/>
+          </svg>
+        </div>
+      </footer>
+    </div>
+  </div>
 {% endblock %}
 
 {% block js_extra %}
@@ -188,26 +248,134 @@
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
   <script src="{% static 'plugins/wordcloud/d3.js' %}"></script>
   <script src="{% static 'plugins/wordcloud/d3.layout.cloud.js' %}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
 
   <script type="text/javascript">
+    function copyIframe(){
+      var spanIframe = $("#url-iframe");
+
+      var range = document.createRange();
+      range.selectNodeContents(spanIframe[0]);
+      var selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+
+      document.execCommand('copy');
+      $("#check-iframe").fadeIn();
+    }
+
+    function showModal(id_element_question_title){
+      $("#check-iframe").css("display", "none");
+      var question_title = $("#" + id_element_question_title).html();
+
+      var iframe_url = window.location.protocol + "//" + window.location.hostname + "{% url 'results.iframe' %}";
+      var params = "?scope-type=local&" +
+                    "poll-title={{poll.title}}&question-title=" + question_title;
+
+      var url = iframe_url + params;
+      var element_iframe = `
+        &#60;iframe src="${url}" width="430" height="500" frameborder="0"&#62;&#60;/iframe&#62;
+      `;
+      $("#url-iframe").html(element_iframe);
+      $("#modal-chart").toggleClass("is-active");
+    }
+
+    function getDataImageUrlFromCanvas(element){
+      var html2obj = html2canvas(element);
+      var queue  = html2obj.parse();
+      var canvas = html2obj.render(queue);
+      var data = canvas.toDataURL('image/png');
+
+      return data;
+    }
+
+    function generatePdf(pollTitle){
+      var pdf = new jsPDF('p','px','a4');
+      var width = pdf.internal.pageSize.getWidth();
+      var height = pdf.internal.pageSize.getHeight();
+
+      var headerSurveys = $(".header-surveys");
+
+      data = getDataImageUrlFromCanvas(headerSurveys);
+      pdf.addImage(data, 'png', 0, 0);
+      pdf.addPage();
+
+      var surveyCards = $(".survey-card")
+      var sizeOfSurveyCards = surveyCards.length;
+
+      width50PDF = width * 0.5;
+      height50PDF = height * 0.5;
+
+      /*surveyCards.each(function(index){
+        data = getDataImageUrlFromCanvas($(this));
+
+        //marginHeight = (height - height60PDF)/2;
+
+        pdf.addImage(data, 'png', 0, 0, width50PDF, height50PDF);
+        pdf.addImage(data, 'png', width50PDF, 0, width50PDF, height50PDF);
+        pdf.addImage(data, 'png', 0, height50PDF, width50PDF, height50PDF);
+        pdf.addImage(data, 'png', width50PDF, height50PDF, width50PDF, height50PDF);
+
+        if(!(index === sizeOfSurveyCards - 1)){
+          pdf.addPage();
+        }
+      });*/
+
+      for(let i = 0; i < sizeOfSurveyCards; i = i+4){
+        //marginHeight = (height - height60PDF)/2;
+
+        data1 = getDataImageUrlFromCanvas(surveyCards[i]);
+        pdf.addImage(data1, 'png', 0, 0, width50PDF, height50PDF);
+
+        if(surveyCards[i+1]){
+          data2 = getDataImageUrlFromCanvas(surveyCards[i+1]);
+          pdf.addImage(data2, 'png', width50PDF, 0, width50PDF, height50PDF);
+        };
+
+
+        if(surveyCards[i+2]){
+          data3 = getDataImageUrlFromCanvas(surveyCards[i+2]);
+          pdf.addImage(data3, 'png', 0, height50PDF, width50PDF, height50PDF);
+        };
+        if(surveyCards[i+3]){
+          data4 = getDataImageUrlFromCanvas(surveyCards[i+3]);
+          pdf.addImage(data4, 'png', width50PDF, height50PDF, width50PDF, height50PDF);
+        };
+
+
+        if(!(i === sizeOfSurveyCards - 1)){
+          pdf.addPage();
+        }
+      }
+
+      pdf.save(pollTitle + ".pdf");
+
+    }
+
+
     $("input:checkbox").click(function() {
       let isChecked = $("input:checkbox").filter(":checked");
-      
+
+      if (isChecked.length > 0) {
+        $("div[data-question-sdgs").each(function() {
+          $(this).hide();
+        });
+      }
+
       isChecked.map(function() {
         let sdg = this.value;
 
         $("div[data-question-sdgs").each(function() {
           let sdgs = $(this).attr("data-question-sdgs");
 
-          if (!sdgs.split(",").includes(sdg)) {
-            $(this).hide();
-          } else {
+          if (sdgs.split(",").includes(sdg)) {
             $(this).show();
           }
         });
       });
 
-      if (isChecked.length == 0) {
+      if (isChecked.length === 0) {
         $("div[data-question-sdgs").each(function() {
           $(this).show();
         });
@@ -227,6 +395,7 @@
         results_statistics[question] = {
           labels: [],
           series: [],
+          count: [],
         };
 
         {% with results=question|question_results %}
@@ -234,6 +403,7 @@
             {% for category in categories %}
               results_statistics[question]["labels"].push("{{ category.label|safe }}");
               results_statistics[question]["series"].push(parseInt("{% widthratio category.count results.set 100 %}"));
+              results_statistics[question]["count"].push(parseInt("{{ category.count }}"));
             {% endfor %}
           {% endwith %}
         {% endwith %}
@@ -258,7 +428,7 @@
                   };
                   results_age[question]["series"]["{{ forloop.counter0 }}"].data.push({{ category.count }});
                 {% endfor %}
-              {% endwith %}              
+              {% endwith %}
             {% endfor %}
           {% endwith %}
         {% endif %}
@@ -295,7 +465,7 @@
         type: "doughnut",
         data: {
           datasets: [{
-            data: result.series,
+            data: result.count,
             backgroundColor: RTMConfigs.availableColors,
             borderColor: "rgba(255, 255, 255, 0.1)",
           }],
@@ -323,8 +493,10 @@
                 dataArr.map(data => {
                   sum += data;
                 });
-                let percentage = parseInt((value * 100 / sum));
-                return percentage > 0 ? percentage + "%" : "";
+                let percentage = (value * 100 / sum);
+                if (percentage < 5) return "";
+                if (percentage === 100.00) return parseInt(percentage) + "%";
+                return percentage.toFixed(2) + "%";
               },
               color: "#fff",
             }
@@ -339,7 +511,7 @@
       let updateOptions = {};
       let chart = charts[question];
       let chartCanvas = document.getElementById("chart-question-" + question);
-      
+
       if (tab == "statistics") {
         chart.destroy();
         chart = new Chart(chartCanvas.getContext("2d"), {
@@ -374,8 +546,10 @@
                   dataArr.map(data => {
                     sum += data;
                   });
-                  let percentage = parseInt((value * 100 / sum)) + "%";
-                  return percentage;
+                  let percentage = (value * 100 / sum);
+                  if (percentage < 5) return "";
+                  if (percentage === 100.00) return parseInt(percentage) + "%";
+                  return percentage.toFixed(2) + "%";
                 },
                 color: "#fff",
               }
@@ -472,7 +646,7 @@
 
     const fillWordColor = function(d, i) {
       return RTMConfigs.availableColors[i % RTMConfigs.availableColors.length];
-    }
+    };
 
     $("div[data-question-type=\"cloud\"]").each(function() {
       const question = $(this).attr("data-question");
@@ -519,7 +693,7 @@
             .style("font-size", function(d) {
               return d.size + "px";
             })
-            .style("font-family", "Impact")
+            .style("font-family", "Roboto", "sans-serif")
             .style("fill", function(d, i) {
               return wordCloud(i);
             })
@@ -533,6 +707,21 @@
             });
           }
         }
+      });
+    });
+
+    $(document).ready(function() {
+      $(window).scroll(function(){
+        if ($(this).scrollTop() > 100) {
+          $('a[href="#top"]').fadeIn();
+        } else {
+          $('a[href="#top"]').fadeOut();
+        }
+      });
+
+      $('a[href="#top"]').click(function(){
+        $('html, body').animate({scrollTop : 0},800);
+        return false;
       });
     });
   </script>

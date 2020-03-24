@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n static sass_tags ureport %}
+{% load i18n static sass_tags rtm %}
 
 {% block nav_item %}page-users{% endblock %}
 
@@ -9,60 +9,72 @@
 {% endblock %}
 
 {% block content %}
+<section class="section top-p-0 bottom-p-0">
+  <nav class="breadcrumb" aria-label="breadcrumbs">
+    <ul>
+      <li><a href="{% url 'accounts.global_list' %}">{% trans 'Users'%}</a></li>
+      <li class="is-active"><a href="#" aria-current="page">{{ page_subtitle }}</a></li>
+    </ul>
+  </nav>
+</section>
+
 <section class="section">
   <h1 class="title">{% trans "Users" %}</h1>
   <h2 class="subtitle">{{ page_subtitle }}</h2>
 </section>
 
-<div class="column is-4 center-form">
-  <form class="generic-form box" method="post" enctype="multipart/form-data">
+<div class="column">
+  <form class="generic-form box p-40" method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <div class="field">
-      <label class="label">{% trans "Username" %}</label>
-      <div class="control">
-        {{ form.username }}
-        {{ form.username.errors }}
+    <div class="columns">
+      <div class="column">
+        <div class="field">
+          <label class="label">{% trans "Username" %}</label>
+          <div class="control">
+            <strong>{{ form.username.value }}</strong>
+          </div>
+        </div>
+      </div>
+      <div class="column">
+        <div class="field">
+          <label class="label">{% trans "Name" %}</label>
+          <div class="control">
+            <strong>{{ form.first_name.value }}</strong>
+          </div>
+        </div>
+      </div>
+      <div class="column">
+        <div class="field">
+          <label class="label">{% trans "Email" %}</label>
+          <div class="control">
+            <strong>{{ form.email.value }}</strong>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="field">
-      <label class="label">{{ form.new_password.label }}</label>
-      <div class="control">
-        {{ form.new_password }}
-        {{ form.new_password.errors }}
+    <hr>
+    <div class="columns">
+      <div class="column">
+        <div class="field">
+          <label class="label">{% trans "Permission" %}</label>
+          {% for group in form.groups.field.choices %}
+          <span class="field">
+            <input
+              class="is-checkradio"
+              id="id_choice_{{ group.0 }}"
+              value="{{ group.0 }}"
+              type="radio"
+              name="groups"
+              {% if group.0 in form.groups.data|items_to_list or group.0 in form.groups.initial|items_to_list %} checked="checked"{% endif %}>
+            <label for="id_choice_{{ group.0 }}">
+              {{ group.1 }}
+            </label>
+          </span>
+          {% endfor %}
+        </div>
       </div>
     </div>
-    <div class="field">
-      <label class="label">{% trans "Name" %}</label>
-      <div class="control">
-        {{ form.first_name }}
-        {{ form.first_name.errors }}
-      </div>
-    </div>
-    <div class="field">
-      <label class="label">{% trans "Email" %}</label>
-      <div class="control">
-        {{ form.email }}
-        {{ form.email.errors }}
-      </div>
-    </div>
-    <div class="field">
-    <label class="label">{% trans "Permission" %}</label>
-    {% for group in form.groups.field.choices %}
-      <div class="field">
-        <input
-          class="is-checkradio"
-          id="id_choice_{{ group.0 }}"
-          value="{{ group.0 }}"
-          type="radio"
-          name="groups"
-          {% if group.0 in form.groups.data|items_to_list or group.0 in form.groups.initial|items_to_list %} checked="checked"{% endif %}>
-        <label for="id_choice_{{ group.0 }}">
-          {{ group.1 }}
-        </label>
-      </div>
-    {% endfor %}
-  {{form.groups.errors}}
-  </div>
+    {{form.groups.errors}}
     <div class="columns">
       <div class="column is-centered">
         <button type="submit" class="button is-primary">{% trans "OK" %}</button>

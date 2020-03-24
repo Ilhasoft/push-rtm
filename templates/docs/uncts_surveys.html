@@ -1,0 +1,446 @@
+{% extends "docs.html" %}
+{% load i18n static sass_tags humanize rtm %}
+
+{% block content_doc %}
+<article class="p-30">
+  <div class="has-text-grey-light">
+    {% trans 'UNCTs Documentation' %}
+  </div>
+  <div class="has-text-weight-bold is-size-5 bottom-p-5">
+    {% trans "Surveys" %}
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p>{% trans "The survey results module displays citizen-generated data from answers of ongoing or already finished surveys. " %}
+      {% trans "It represents a flow from RapidPro which was linked to the RTM platform and has synchronized data. " %}
+      {% trans "Navigating through surveys can be done using the top bar and also with the bread crumbs (right above the page's title) as you go further in options. " %}
+      {% trans "In the next steps we'll cover everything in order to engage a fully working survey content within all its features." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_surveys.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_surveys.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      {% trans "Viewer perspective" %}
+    </p>
+    <p>{% trans "As viewer, an account may access all Surveys data but no editing allowed." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_surveys_viewer_perspective.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_surveys_viewer_perspective.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      {% trans "Administrator perspective" %}
+    </p>
+    <p>{% trans "An administrator account will also be capable of add, edit or exclude content." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/Local_surveys_administrator_perspective.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/Local_surveys_administrator_perspective.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      {% trans "Connecting a Survey" %}
+    </p>
+    <p>{% trans "Connecting a Survey is basically the process of linking flows from a RapidPro UNCT workspace into the RTM platform and customizing its layout to better suit the RTM graphs and dashboards. " %}
+      {% trans "The first thing you need to do is clicking the Connect Survey button on the right side. " %}
+      {% trans "There are three major steps in the survey registration process, let's walk through each one." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_surveys_connecting_a_survey.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_surveys_connecting_a_survey.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      {% trans "Survey General info" %}
+    </p>
+    <p>{% trans "The first step is selecting which RapidPro flow will be the source of this survey." %}</p>
+    <p>{% trans "Title should be filled with the survey name that will be displayed, so you may describe it better than just the flow's name." %}</p>
+    <p>{% trans "Description is where you can highlight in which case has this survey been taking place and describe its goals." %}</p>
+    <br>
+    <p>{% trans "Than hit Next to move forward." %}</p>
+
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_surveys_survey_general_info_01.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_surveys_survey_general_info_01.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <ul class="ul-docs">
+      <li class="has-text-weight-bold is-size-6 bottom-p-5">{% trans "Connect to a Global survey" %}</li>
+    </ul>
+    <p>{% trans "Note there's a check-box to link this survey to an ongoing Global survey." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_surveys_survey_general_info_02.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_surveys_survey_general_info_02.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      {% trans "Date setting" %}
+    </p>
+    <p>{% trans "Set a date range is optional but is also an important step. " %}
+       {% trans "You can leave the default Start date, which is that date the RapidPro flow was created, but it also corresponds to the time when the survey was published live for the community. " %}
+       {% trans "Filling the end date field will set when the survey got unpublished, it means that the results will be shown on the time interval between these two dates." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/Local_surveys_date_setting.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/Local_surveys_date_setting.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      {% trans "Questions" %}
+    </p>
+    <p>{% trans "The survey structure that comes from RapidPro is raw, it must be customized in order to better display it at the Surveys results." %}</p>
+    <p>{% trans "It is defined by the administrator when choosing the respective question title, SDG and visibility." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_surveys_questions_01.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_surveys_questions_01.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <ul class="ul-docs">
+      <li class="has-text-weight-bold is-size-6 bottom-p-5">{% trans "Identifying the question" %}</li>
+    </ul>
+    <p>{% trans "You'll see a numbered title for each question available. " %}
+       {% trans "That title matches the Wait for response named variable. " %}
+       {% trans "In the example Result 1 goes for the first flow question step from RapidPro." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_surveys_questions_02.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_surveys_questions_02.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <ul class="ul-docs">
+      <li class="has-text-weight-bold is-size-6 bottom-p-5">{% trans "Question's title" %}</li>
+    </ul>
+    <p>{% trans "Here you may feel more comfortable to provide a larger question description and highlight different perspectives to encourage positive discussion. " %}
+        {% trans "The default value will be the respective question step from the RapidPro flow." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_surveys_questions_03.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_surveys_questions_03.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <ul class="ul-docs">
+      <li class="has-text-weight-bold is-size-6 bottom-p-5">{% trans "Question's SDGs" %}</li>
+    </ul>
+    <p>{% trans "Link which SDG is being tracked in this question. " %}
+      {% trans "More than one can be selected if that's the case." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_surveys_questions_04.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_surveys_questions_04.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <ul class="ul-docs">
+      <li class="has-text-weight-bold is-size-6 bottom-p-5">{% trans "Question's visibility" %}</li>
+    </ul>
+    <p>{% trans "RapidPro flow's questions aren't necessarily connected to the purpose of a survey, and if that's the case you can disable that step. " %}
+      {% trans "This means that question won't be visible in the Survey Results session." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_surveys_questions_05.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_surveys_questions_05.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <ul class="ul-docs">
+      <li class="has-text-weight-bold is-size-6 bottom-p-5">{% trans "Publish the survey's results" %}</li>
+    </ul>
+    <p>{% trans "After filling all necessary fields, you just need to save and those survey results will become accessible at the Surveys Results session." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_surveys_questions_06.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_surveys_questions_06.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      {% trans "Search" %}
+    </p>
+    <p>{% trans "There's a search bar to find surveys, you just need to type and press enter. " %}
+       {% trans "It's case insensitive and capable of searching for strings' fragments at the name of active or inactive surveys. " %}
+       {% trans 'In the example below the search was "a" and it found five surveys where the string was found in different spots.' %}</p>
+        <p>{% trans "You can disengage the search filter by clicking the X at the right of the bar." %}</p>
+
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_surveys_search.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_surveys_search.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      {% trans "Sorting" %}
+    </p>
+    <p>{% trans "It's possible to sort surveys by Name, number of Runs and Status. " %}
+       {% trans "Clicking the option once will sort ascending and the second time will apply descending. " %}</p>
+      <p>{% trans "Sorting can be a very useful tool as your survey's list grow bigger, in the example below there's a search for 'a' and it's also sorting the list by Name." %}</p>
+
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_surveys_sorting.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_surveys_sorting.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      {% trans "Editing" %}
+    </p>
+    <p>{% trans "When needed to have a survey modified, you can choose between two ways." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_surveys_editing_01.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_surveys_editing_01.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <ul class="ul-docs">
+      <li class="has-text-weight-bold is-size-6 bottom-p-5">{% trans "Full survey editing" %}</li>
+    </ul>
+    <p>{% trans "Clicking the pencil icon on the right side of the surveys' list will open a window similar to the one when you were adding a new survey. " %}
+      {% trans "But you'll be editing it. And the only unavailable option is the flow link." %}</p>
+      <p>{% trans "You can freely modify the Title and Description. " %}
+        {% trans "Note there's also a new option now Is active, where you can set if this hole survey should be visible or not. " %}</p>
+      <p>{% trans "Clicking next will move forward to each step until you finish editing." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_surveys_editing_02.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_surveys_editing_02.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <ul class="ul-docs">
+      <li class="has-text-weight-bold is-size-6 bottom-p-5">{% trans "Directly questions" %}</li>
+    </ul>
+    <p>{% trans "By clicking the question's number you'll be taken directly to questions' editing." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_surveys_editing_03.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_surveys_editing_03.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      {% trans "Disabled Surveys" %}
+    </p>
+    <p>{% trans "A grayed survey line means that it has been disabled and become inaccessible. " %}
+       {% trans "A disabled survey won't have its results synchronized. " %}
+       {% trans "In most cases disabling a survey means that result is no longer necessary or something went wrong with it." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/Local_surveys_disabled_surveys.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/Local_surveys_disabled_surveys.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      {% trans "Surveys' results" %}
+    </p>
+    <p>{% trans "Here, you will find all surveys that were registered on your UNCT. " %}
+       {% trans "Survey results can be analyzed by selecting a survey on the survey's list." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_surveys_surveys_results_01.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_surveys_surveys_results_01.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <p>{% trans "When choosing a survey on the list you will be redirected to the survey results page, which displays all details and charts. " %}
+      {% trans "It's also possible to use the left panel and filter by SDG displaying only the questions that match the ones selected." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_surveys_surveys_results_02.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_surveys_surveys_results_02.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <ul class="ul-docs">
+      <li class="has-text-weight-bold is-size-6 bottom-p-5">{% trans "Question's segments" %}</li>
+    </ul>
+    <p>{% trans "If you need to restrict the scope of one question, by Gender or Age, there's an option to do it at each question graph. " %}
+      {% trans "Choosing All will clear the restriction and display the full question's result." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_surveys_surveys_results_03.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_surveys_surveys_results_03.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <ul class="ul-docs">
+      <li class="has-text-weight-bold is-size-6 bottom-p-5">{% trans "Charts and Answer Types" %}</li>
+    </ul>
+    <p>{% trans "To get a clear view of each survey results we've plan to describe all questions and its answers in the following kinds of charts:" %}</p>
+  </div>
+</article>
+<article class="p-30">
+    <article class="p-30 columns">
+      <div class="column">
+        <ul class="ul-docs">
+          <li class="has-text-weight-bold is-size-6 bottom-p-5">{% trans "Horizontal Bars" %}</li>
+        </ul>
+        <p>{% trans "Are used to display in a more simple and absolute approach. " %}
+            {% trans "Consolidation type: Age, Gender" %}</p>
+      </div>
+      <div class="column">
+        <figure class="image is-16by9">
+          <a href="{% static 'img/docs/local/local_surveys_surveys_results_04.png' %}" target="_blank">
+            <img src="{% static 'img/docs/local/local_surveys_surveys_results_04.png' %}">
+          </a>
+        </figure>
+      </div>
+    </article>
+    <article class="p-30 columns">
+      <div class="column">
+        <ul class="ul-docs">
+          <li class="has-text-weight-bold is-size-6 bottom-p-5">{% trans "Doughnut" %}</li>
+        </ul>
+        <p>{% trans "Doughnut charts are going to be used to compare answers between results and percentages. " %}
+          {% trans "Consolidation type: Age, Gender" %}</p>
+      </div>
+      <div class="column">
+        <figure class="image is-16by9">
+          <a href="{% static 'img/docs/local/local_surveys_surveys_results_05.png' %}" target="_blank">
+            <img src="{% static 'img/docs/local/local_surveys_surveys_results_05.png' %}">
+          </a>
+        </figure>
+      </div>
+    </article>
+    <article class="p-30 columns">
+      <div class="column">
+        <ul class="ul-docs">
+          <li class="has-text-weight-bold is-size-6 bottom-p-5">{% trans "Word cloud" %}</li>
+        </ul>
+        <p>{% trans "Chart that allows users to overview open questions, this kind of chart is going to be good to compare the most commonly answered words." %}</p>
+      </div>
+      <div class="column">
+        <figure class="image is-16by9">
+          <a href="{% static 'img/docs/local/local_surveys_surveys_results_06.png' %}" target="_blank">
+            <img src="{% static 'img/docs/local/local_surveys_surveys_results_06.png' %}">
+          </a>
+        </figure>
+      </div>
+    </article>
+</article>
+{% endblock %}
+
+{% block js_extra %}
+<script>
+    document.getElementById("uncts_surveys").classList.add("activate");
+</script>
+{% endblock %}

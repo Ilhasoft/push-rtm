@@ -37,6 +37,9 @@
 
   .survey-card {
     min-height: 65vh;
+  }
+
+  .survey-card, .global-survey-card {
     .survey-question {
       display: grid;
       grid-template-columns: 3rem 1fr;
@@ -62,6 +65,15 @@
           color: #3e3e3e;
         }
       }
+    }
+  }
+
+  .accordion-btn  {
+    cursor: pointer;
+    text-align: right;
+
+    .material-icons {
+      vertical-align: middle;
     }
   }
 

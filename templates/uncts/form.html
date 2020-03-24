@@ -4,31 +4,47 @@
 {% block nav_item %}page-uncts{% endblock %}
 
 {% block content %}
+<section class="section top-p-0 bottom-p-0">
+  <nav class="breadcrumb" aria-label="breadcrumbs">
+    <ul>
+      <li><a href="{% url 'uncts.unct_list' %}">{% trans "UNCT's" %}</a></li>
+      <li class="is-active"><a href="#" aria-current="page">{{ page_subtitle }}</a></li>
+    </ul>
+  </nav>
+</section>
+
+<section class="section">
+  <h1 class="title">{% trans "UNCTs" %}</h1>
+  <h2 class="subtitle">{{ page_subtitle }}</h2>
+</section>
 
 <section class="section">
   <div class="columns">
-    <div class="column box is-three-fifths is-offset-one-fifth">
+    <div class="column box is-paddingless">
       <form class="generic-form" method="post">
-          <h1 class="title">{% trans "UNCTs" %}</h1>
-          <h2 class="subtitle has-text-grey-light">{{ page_subtitle }}</h2>
         {% csrf_token %}
-        <div class="field bottom-m-20">
-          <label class="label">{{ form.name.label }}</label>
-          <div class="control">
-            {{ form.name }}
-            {{ form.name.errors }}
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label">{{ form.name.label }}</label>
+              <div class="control">
+                {{ form.name }}
+                {{ form.name.errors }}
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="field bottom-m-20">
-          <label class="label">{{ form.language.label }}</label>
-          <div class="control">
-            <div class="select is-fullwidth">
-              {{ form.language }}
-              {{ form.language.errors }}
+          <div class="column">
+            <div class="field">
+              <label class="label">{{ form.language.label }}</label>
+              <div class="control">
+                <div class="select is-fullwidth">
+                  {{ form.language }}
+                  {{ form.language.errors }}
+                </div>
+              </div>
             </div>
           </div>
         </div>
-
         <div class="field bottom-m-20">
           <label class="label">{{ form.host.label }}</label>
           <div class="control">
@@ -43,95 +59,131 @@
             {{ form.api_token.errors }}
           </div>
         </div>
-        <div class="field bottom-m-20">
-          <label class="label">{{ form.timezone.label }}</label>
-          <div class="control">
-            <div class="select">
-              {{ form.timezone }}
-              {{ form.timezone.errors }}
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label">{{ form.timezone.label }}</label>
+              <div class="control">
+                <div class="select is-fullwidth">
+                  {{ form.timezone }}
+                  {{ form.timezone.errors }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label class="label">{{ form.subdomain.label }}</label>
+              <div class="control">
+                {{ form.subdomain }}
+                {{ form.subdomain.errors }}
+              </div>
             </div>
           </div>
         </div>
-        <div class="field bottom-m-20">
-          <label class="label">{{ form.subdomain.label }}</label>
-          <div class="control">
-            {{ form.subdomain }}
-            {{ form.subdomain.errors }}
+        <h4 class="top-m-30 has-text-weight-bold bottom-p-30">{% trans "Backend Configuration" %}</h4>
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label">{{ form.reporter_group.label }}</label>
+              <div class="control">
+                {{ form.reporter_group }}
+                {{ form.reporter_group.errors }}
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label class="label">{{ form.born_label.label }}</label>
+              <div class="control">
+                {{ form.born_label }}
+                {{ form.born_label.errors }}
+              </div>
+            </div>
           </div>
         </div>
-        <h4 class="top-m-30 bottom-p-30">{% trans "Backend Configuration" %}</h4>
-        <div class="field bottom-m-20">
-          <label class="label">{{ form.reporter_group.label }}</label>
-          <div class="control">
-            {{ form.reporter_group }}
-            {{ form.reporter_group.errors }}
+        <div class="columns">
+          .<div class="column">
+            <div class="field">
+              <label class="label">{{ form.gender_label.label }}</label>
+              <div class="control">
+                {{ form.gender_label }}
+                {{ form.gender_label.errors }}
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label class="label">{{ form.occupation_label.label }}</label>
+              <div class="control">
+                {{ form.occupation_label }}
+                {{ form.occupation_label.errors }}
+              </div>
+            </div>
           </div>
         </div>
-        <div class="field bottom-m-20">
-          <label class="label">{{ form.born_label.label }}</label>
-          <div class="control">
-            {{ form.born_label }}
-            {{ form.born_label.errors }}
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label">{{ form.registration_label.label }}</label>
+              <div class="control">
+                {{ form.registration_label }}
+                {{ form.registration_label.errors }}
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label class="label">{{ form.state_label.label }}</label>
+              <div class="control">
+                {{ form.state_label }}
+                {{ form.state_label.errors }}
+              </div>
+            </div>
           </div>
         </div>
-        <div class="field bottom-m-20">
-          <label class="label">{{ form.gender_label.label }}</label>
-          <div class="control">
-            {{ form.gender_label }}
-            {{ form.gender_label.errors }}
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label">{{ form.district_label.label }}</label>
+              <div class="control">
+                {{ form.district_label }}
+                {{ form.district_label.errors }}
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label class="label">{{ form.ward_label.label }}</label>
+              <div class="control">
+                {{ form.ward_label }}
+                {{ form.ward_label.errors }}
+              </div>
+            </div>
           </div>
         </div>
-        <div class="field bottom-m-20">
-          <label class="label">{{ form.occupation_label.label }}</label>
-          <div class="control">
-            {{ form.occupation_label }}
-            {{ form.occupation_label.errors }}
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label">{{ form.male_label.label }}</label>
+              <div class="control">
+                {{ form.male_label }}
+                {{ form.male_label.errors }}
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label class="label">{{ form.female_label.label }}</label>
+              <div class="control">
+                {{ form.female_label }}
+                {{ form.female_label.errors }}
+              </div>
+            </div>
           </div>
         </div>
-        <div class="field bottom-m-20">
-          <label class="label">{{ form.registration_label.label }}</label>
-          <div class="control">
-            {{ form.registration_label }}
-            {{ form.registration_label.errors }}
-          </div>
-        </div>
-        <div class="field bottom-m-20">
-          <label class="label">{{ form.state_label.label }}</label>
-          <div class="control">
-            {{ form.state_label }}
-            {{ form.state_label.errors }}
-          </div>
-        </div>
-        <div class="field bottom-m-20">
-          <label class="label">{{ form.district_label.label }}</label>
-          <div class="control">
-            {{ form.district_label }}
-            {{ form.district_label.errors }}
-          </div>
-        </div>
-        <div class="field bottom-m-20">
-          <label class="label">{{ form.ward_label.label }}</label>
-          <div class="control">
-            {{ form.ward_label }}
-            {{ form.ward_label.errors }}
-          </div>
-        </div>
-        <div class="field bottom-m-20">
-          <label class="label">{{ form.male_label.label }}</label>
-          <div class="control">
-            {{ form.male_label }}
-            {{ form.male_label.errors }}
-          </div>
-        </div>
-        <div class="field bottom-m-20">
-          <label class="label">{{ form.female_label.label }}</label>
-          <div class="control">
-            {{ form.female_label }}
-            {{ form.female_label.errors }}
-          </div>
-        </div>
-        <button type="submit" class="button is-medium is-info right-m-20">{% trans "OK" %}</button>
-        <a href="{% url 'uncts.unct_list' %}" class="button is-medium primary-reverse l-m-10">{% trans "Cancel" %}</a>
+        <button type="submit" class="button is-info">{% trans "OK" %}</button>
+        <a href="{% url 'uncts.unct_list' %}" class="button primary-reverse l-m-10">{% trans "Cancel" %}</a>
       </form>
     </div>
   </div>

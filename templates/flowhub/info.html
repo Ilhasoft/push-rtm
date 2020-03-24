@@ -1,112 +1,184 @@
-{% extends "flowhub/base.html" %}
-{% load i18n static sass_tags %}
-
-{% block nav_item %}page-flowhub{% endblock %}
+{% extends "base.html" %}
+{% load i18n static sass_tags rtm %}
 
 {% block css_extra %}
 <link rel="stylesheet" href="{% sass_src 'css/flowhub/common.scss' %}" />
 <link rel="stylesheet" href="{% sass_src 'css/flowhub/info.scss' %}" />
 {% endblock %}
 
-{% block flow_section %}{% trans "All flows" %}{% endblock %}
-{% block flow_section_id %}{% if flow_section %}flowhub-{{ flow_section }}{% else %}flowhub-all{% endif %}{% endblock %}
+{% block nav_item %}page-flowhub{% endblock %}
 
-{% block flow_content %}
-<div class="column auto info">
-  {% if back %}
-  <div class="columns">
-    <div class="column">
-      <a href="{{ back }}" class="icon is-medium is-left back">
-        <img src="{% static 'svg/left-arrow.svg' %}" alt="{% trans 'back' %}">
-      </a>
-    </div>
-  </div>
-  {% endif %}
-  <div class="box detail">
-    <div class="columns">
-      <div class="column">
-        <strong>{{ flow.name }}</strong>
-        {% if request.org == flow.org %}
-          <form class="form-flowhub" action="{% url 'flowhub.flow_delete' flow.pk %}" method="POST">
-            {% csrf_token %}
-            <a href="{% url 'flowhub.flow_update' flow.pk %}">
-              <img src="{% static 'svg/pencil.svg' %}" alt="pencil">
-            </a>
-            <button class="button-no-bg" type="submit">
-              <img src="{% static 'svg/trash.svg' %}" alt="trash">
-            </button>
-          </form>
-        {% endif %}
-      </div>
-      <div class="column has-text-right">
-        {% trans "Visible globally" %} 
-        <label class="switch">
-          <input type="checkbox" disabled="disabled" {% if flow.visible_globally %}checked{% endif %}>
-          <span class="slider round"></span>
-        </label>
-      </div>
-    </div>
-    <div class="columns">
-      <div class="column">
-        {{ flow.org.name }}
-      </div>
-    </div>
-    <div class="columns">
-      <div class="column">
-        <p class="has-text-weight-bold">{% trans "Description" %}</p>
-        {{ flow.description }}
-      </div>
-    </div>
-    <div class="columns">
-      <div class="column">
-        <p class="has-text-weight-bold">{% trans "Collected data" %}</p>
-        {{ flow.collected_data }}
-      </div>
-    </div>
-    {% if flow.get_languages %}
-    <div class="columns">
-      <div class="column">
-        <p class="has-text-weight-bold">{% trans "Languages" %}</p>
-        {{ flow.get_languages }}
-      </div>
-    </div>
-    {% endif %}
-    <div class="columns">
-      <div class="column">
-        <p class="has-text-weight-bold">{% trans "Tags" %}</p>
-        {% for tag in flow.tags.all %}
-          <span class="tag">{{ tag }}</span>
-        {% endfor %}
-      </div>
-    </div>
-    <div class="columns">
-      <div class="column">
-        <p class="has-text-weight-bold">{% trans "Languages" %}</p>
-        {% for key in flow.languages %}
-          {% for choice in LANGUAGES %}
-            {% if key == choice.0 %}
-              <span class="tag">{{ choice.1 }}</span>
-            {% endif %}
-          {% endfor %}
-        {% endfor %}
-      </div>
-    </div>
-    <div class="columns">
-      <div class="column">
-        <p class="has-text-weight-bold">{% trans "SDGs" %}</p>
-        <div class="column">
-          {% for key, name in flow.get_sdgs.items %}
-            <span class="tag sdg-{{ key }}">{{ name }}</span>
-          {% endfor %}
+{% block content %}
+<section class="section top-p-0 bottom-p-0">
+  <nav class="breadcrumb" aria-label="breadcrumbs" id="breadcrumbs">
+    <ul>
+      <li><a href="{% url 'flowhub.flow_list' %}">{% trans 'Repository' %}</a></li>
+      {% if previous_subtitle %}
+        <li><a href="{{previous_path}}">
+          {% if previous_subtitle == "My unct" %}
+            {{request.org.name}}
+          {% else %}
+            {{previous_subtitle}}
+          {% endif %}
+        </a></li>
+      {% endif %}
+      <li class="is-active"><a href="">{{subtitle}}</a></li>
+    </ul>
+  </nav>
+</section>
+
+<section class="section">
+  <h1 class="title">{% trans "Repository" %}</h1>
+  <h2 class="subtitle top-p-5">{% trans "Survey library for finding and sharing questions or surveys among UNCTs" %}</h2>
+</section>
+
+<section class="section top-p-0" id="{% block flow_section_id %}{{ flow_section_id }}{% endblock %}">
+  <div class="columns is-desktop">
+    <div class="column is-one-quarter">
+      <div class="columns">
+        <div class="column right-p-0">
+          <aside class="menu">
+            <ul class="menu-list">
+              <li><a class="all" href="{% url 'flowhub.flow_list' %}">{% trans "All flows" %}</a></li>
+              <li><a class="global" href="{% url 'flowhub.flow_list_global' %}">{% trans "Global" %}</a></li>
+              <li><a class="uncts" href="{% url 'flowhub.flow_uncts' %}">{% trans "UNCTs" %}</a></li>
+              {% if not request.user.is_superuser and request.org in request.user.get_user_orgs %}
+                <li><a class="my-org" href="{% url 'flowhub.my_org_flow_list' %}">{{ org.name }}</a></li>
+              {% endif %}
+              {% if request.user|is_admin_user %}
+                <li><a class="upload" href="{% url 'flowhub.flow_create' %}">{% trans "Upload Flow" %}</a></li>
+              {% endif %}
+              {% if request.user.is_superuser and not request.org %}
+                <li><a class="upload" href="{% url 'flowhub.flow_create_global' %}">{% trans "Upload Global Flow" %}</a></li>
+              {% endif %}
+            </ul>
+          </aside>
         </div>
       </div>
     </div>
-    <div class="columns">
-      <div class="column download">
-        <a href="{% url 'flowhub.flow_download' flow.pk %}" class="button button-primary is-primary">{% trans "Download" %}</a>
-        <span>{{ flow.downloads }} {% trans "downloads" %}</span>
+    <div class="column auto info">
+      <div class="box detail">
+        <div class="columns">
+          <div class="column">
+            <strong>{{ flow.name }}</strong>
+            {% if request.org == flow.org and request.user|is_admin_user %}
+              <form class="form-flowhub">
+                {% csrf_token %}
+                <a href="{% url 'flowhub.flow_update' flow.pk %}">
+                  <img src="{% static 'svg/pencil.svg' %}" alt="pencil">
+                </a>
+              </form>
+            <button class="button-no-bg" id="showDeleteModal">
+              <img src="{% static 'svg/trash.svg' %}" alt="trash">
+            </button>
+            {% endif %}
+            <div class="has-text-grey-light">
+              {{ flow.org.name }}
+            </div>
+          </div>
+          <div class="column has-text-right">
+            {% trans "Visible globally" %}
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column">
+            <p class="has-text-weight-bold">{% trans "Description" %}</p>
+            {{ flow.description }}
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column">
+            <p class="has-text-weight-bold">{% trans "Collected data" %}</p>
+            {{ flow.collected_data }}
+          </div>
+        </div>
+        {% if flow.get_languages %}
+        <div class="columns">
+          <div class="column">
+            <p class="has-text-weight-bold">{% trans "Languages" %}</p>
+            {{ flow.get_languages }}
+          </div>
+        </div>
+        {% endif %}
+        <div class="columns">
+          <div class="column">
+            <p class="has-text-weight-bold">{% trans "Tags" %}</p>
+            {% for tag in flow.tags.all %}
+              <span class="tag">{{ tag }}</span>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column">
+            <p class="has-text-weight-bold">{% trans "Languages" %}</p>
+            {% for key in flow.languages %}
+              {% for choice in LANGUAGES %}
+                {% if key == choice.0 %}
+                  <span class="tag">{{ choice.1 }}</span>
+                {% endif %}
+              {% endfor %}
+            {% endfor %}
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column">
+            <p class="has-text-weight-bold">{% trans "SDGs" %}</p>
+            <div class="column">
+              {% for key, name in flow.get_sdgs.items %}
+                <span class="tag sdg-{{ key }}">{{ name }}</span>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column download">
+            <a href="{% url 'flowhub.flow_download' flow.pk %}" class="button button-primary is-primary">{% trans "Download" %}</a>
+            <span>{{ flow.downloads }} {% trans "downloads" %}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="deleteModal" class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">{% trans 'Are you sure?' %}</p>
+          <button class="delete" aria-label="close" id="modalClose"></button>
+        </header>
+        <section class="modal-card-body">
+          {% trans 'Do you really want to delete this flow?' %}
+        </section>
+        <footer class="modal-card-foot">
+          <form class="form-flowhub" action="{% url 'flowhub.flow_delete' flow.pk %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" value="{{ redirect_to }}" name="redirect_to"/>
+            <button class="button is-danger right-m-5" type="submit">{% trans "Confirm" %}</button>
+          </form>
+          <button class="button dark-reverse" id="cancelDelete">{% trans "Cancel" %}</button>
+        </footer>
       </div>
     </div>
   </div>
-</div>
+</section>
+{% endblock %}
+
+{% block js_extra %}
+<script>
+    let btn = document.querySelector('#showDeleteModal');
+    let modalDlg = document.querySelector('#deleteModal');
+    let modalCloseBtn = document.querySelector('#modalClose');
+    let cancelBtn = document.querySelector('#cancelDelete');
+    btn.addEventListener('click', function(){
+        modalDlg.classList.add('is-active');
+    });
+
+    modalCloseBtn.addEventListener('click', function(){
+        modalDlg.classList.remove('is-active');
+    });
+
+    cancelBtn.addEventListener('click', function(){
+        modalDlg.classList.remove('is-active');
+    });
+</script>
 {% endblock %}

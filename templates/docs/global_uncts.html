@@ -1,0 +1,169 @@
+{% extends "docs.html" %}
+{% load i18n static sass_tags humanize rtm %}
+
+{% block content_doc %}
+<article class="p-30">
+  <div class="has-text-grey-light">
+    {% trans 'Global Documentation' %}
+  </div>
+  <div class="has-text-weight-bold is-size-5 bottom-p-5">
+    {% trans "UNCTs" %}
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      {% trans "List" %}
+    </p>
+    <p>{% trans "The homepage of UNCTs' session is a list of all registered UNCTs. " %}
+       {% trans " Where some actions are available, let's walk through it all." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_uncts_list_01.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_uncts_list_01.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <ul class="ul-docs">
+      <li class="has-text-weight-bold is-size-6 bottom-p-5">{% trans "Sorting" %}</li>
+    </ul>
+    <p>{% trans "You can choose to sort by Name, Timezone or Language. " %}
+      {% trans "The first click will apply alphabetically descending order and the second ascending." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_uncts_list_02.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_uncts_list_02.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <ul class="ul-docs">
+      <li class="has-text-weight-bold is-size-6 bottom-p-5">{% trans "Search" %}</li>
+    </ul>
+    <p>{% trans "There's a search bar to find registered UNCTs, you just need to type and press enter. " %}
+      {% trans "It's case insensitive and capable of searching for strings' fragments at the name field. " %}
+      {% trans 'In the example below the search was "L" and it found three UNCTs where the string was found in different spots. ' %}
+      {% trans "You can disengage the search filter by clicking the X at the right of the bar" %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_uncts_list_03.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_uncts_list_03.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      {% trans "Adding a new UNCT" %}
+    </p>
+    <p>{% trans "By clicking the + UNCT button the process of registering a new UNCT will start." %}</p>
+    <br>
+    <p>{% trans "First inputs are relative to platform properties. " %}
+      {% trans "Name and Language are free to choose, but RapidPro URL, RapidPro Token and Timezone should match exactly the values from the respective RapidPro workspace. " %}
+      {% trans "Slug is a subdomain that will be used to access the workspace." %}</p><br>
+
+        <p>{% trans "EG. sandbox will create https://sandbox.rtm.ilhasoft.mobi" %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_uncts_adding_a_new_unct_01.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_uncts_adding_a_new_unct_01.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <p>{% trans "Backend configuration should be customized with the respective contact settings on RapidPro. " %}
+      {% trans "Fill Contact group with the main group name, where registered contacts are. " %}
+      {% trans "The other fields should be filled with the respective contact field's title for each piece of information: " %}</p>
+      <br>
+      <p>- {% trans "Born Label for the year of born; " %}</p><br>
+      <p>- {% trans "Gender Label for gender; " %}</p><br>
+      <p>- {% trans "Occupation Label for the profession (optional);" %}</p><br>
+      <p>- {% trans "Registration Label for contact's registration date;" %}</p><br>
+      <p>- {% trans "State Label for the first region level, generally State;" %}</p><br>
+      <p>- {% trans "District Label for the second region level (optional);" %}</p><br>
+      <p>- {% trans "Ward Label for the third region level (optional);" %}</p><br>
+      <p>{% trans "Male Label and Female Label should be filled with the values that are representing each gender. " %}</p><br>
+      <p>{% trans "EG. Male and Female, respectively." %}</p>
+      <p>{% trans "Save clicking OK and it will take effect immediately." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_uncts_adding_a_new_unct_02.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_uncts_adding_a_new_unct_02.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      {% trans "Editing" %}
+    </p>
+    <p>{% trans "You can start editing UNCTs just by clicking the pencil icon on its right side. " %}
+      {% trans "You will have access to all fields." %}</p>
+    <br>
+    <ul class="ul-docs">
+      <li class="has-text-weight-bold is-size-6 bottom-p-5">{% trans "CAUTION!!!" %}</li>
+    </ul>
+    <p>{% trans "Pay attention to the field you're editing. " %}
+      {% trans "Saving incorrect values will make the UNCT workspace become inaccessible and may affect values accuracy. " %}
+      {% trans "Editing RapidPro Token or Backend configuration values is strongly not recommended and should be done only if oriented by a support member in very specific situations." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_uncts_editing.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_uncts_editing.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      {% trans "UNCT users" %}
+    </p>
+    <p>{% trans "It's possible to edit UNCT's account levels directly from Global workspace, just click the group icon on its right side and those UNCT users' list will be loaded." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_uncts_unct_users_01.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_uncts_unct_users_01.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <p>{% trans "Then you just have to click at the user's pencil icon and edit its access level, similar to editing on a Local workspace." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/global/global_uncts_unct_users_02.png' %}" target="_blank">
+        <img src="{% static 'img/docs/global/global_uncts_unct_users_02.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+{% endblock %}
+
+{% block js_extra %}
+<script>
+    document.getElementById("global_uncts").classList.add("activate");
+</script>
+{% endblock %}

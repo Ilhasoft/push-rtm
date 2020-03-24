@@ -1,9 +1,22 @@
 #page-surveys {
-  td:first-child {
-    width: 50px;
-  }
-
   .tag {
     min-width: 70px;
+  }
+
+  td a {
+    .tooltip .tooltip-content {
+      min-width: 110px;
+      font-weight: bold;
+    }
+  }
+
+  .is-poll-inactive,
+  .is-poll-inactive td a,
+  .is-poll-inactive td a i, {
+    color: #a8a7a7;
+  }
+
+  .is-poll-inactive td .tag {
+    opacity: 50%;
   }
 }

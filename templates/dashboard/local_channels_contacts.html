@@ -1,4 +1,4 @@
-{% load i18n static humanize sass_tags ureport %}
+{% load i18n static humanize sass_tags rtm %}
 <div class="columns bottom-m-20" id="most_used">
   <div class="column right-p-5 bottom-p-0">
     <div class="box is-shadowless">
@@ -79,6 +79,7 @@
       <i class="material-icons info-icon">info</i>
       <span class="tooltip-content">{% trans "Overview of the contacts status on RapidPro" %}</span>
     </span>
+    <div class="has-text-grey-light bottom-m-20 is-size-6">{% trans "Last 6 months" %}</div>
   </div>
   <div class="columns p-20">
     <div class="column is-three-fifths">

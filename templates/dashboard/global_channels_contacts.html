@@ -1,8 +1,8 @@
-{% load i18n static humanize sass_tags ureport %}
+{% load i18n static humanize sass_tags rtm %}
 <div class="columns" id="most_used">
   <div class="column is-two-fifths">
-    <div class="box is-shadowless">
-      <div class="p-20 flex space-between">
+    <div class="box is-shadowless p-40">
+      <div class="flex space-between">
         <div class="card-title has-text-weight-bold">{% trans "Most used Channels" %}</div>
         <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
@@ -23,7 +23,7 @@
           </div>
         </div>
       </div>
-      <div class="left-p-20 bottom-p-20 has-text-grey-light" id="channels_most_used_time_ago"></div>
+      <div class="bottom-p-20 has-text-grey-light" id="channels_most_used_time_ago"></div>
       <div id="empty_global_most_used_channels">
         <div class="m-20">{% trans 'There are no data for this filter' %}</div>
       </div>
@@ -32,7 +32,10 @@
   </div>
   <div class="column">
     <div class="box is-shadowless">
-      <div class="card-title has-text-weight-bold p-20">{% trans "RapidPro Contacts" %}</div>
+      <div class="card-title p-20 bottom-m-0">
+        <div class="has-text-weight-bold">{% trans "RapidPro Contacts" %}</div>
+        <div class="bottom-p-20 has-text-grey-light is-size-6">{% trans "Last 6 months" %}</div>
+      </div>
       <canvas id="contactsChart"></canvas>
     </div>
   </div>

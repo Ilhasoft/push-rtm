@@ -1,6 +1,6 @@
 
 {% extends "base.html" %}
-{% load i18n static humanize sass_tags ureport %}
+{% load i18n static humanize sass_tags rtm utils_extra_accounts %}
 
 {% block nav_item %}page-dashboard{% endblock %}
 
@@ -10,11 +10,101 @@
 {% endblock %}
 
 {% block content %}
-  <section class="section">
-    <h1 class="title">
-        {% if access_level == 'local' %}{{ request.org }} {% else %} {% trans "Global Dashboard" %} {% endif %}
-    </h1>
-  </section>
+    {% if access_level == 'local' or request.org %}
+    <section class="section">
+      <h1 class="title bottom-m-0">
+        {{ request.org }}
+      </h1>
+      <div class="flex space-between">
+        <div class="has-text-grey-light" id="all_filter"></div>
+          <div class="dropdown is-hoverable">
+            <div class="dropdown-trigger">
+              <div aria-haspopup="true" aria-controls="dropdown-menu">
+                <span>{% trans "Filter by" %}</span>
+                <span class="icon is-small">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+              </span>
+              </div>
+        </div>
+        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+          <div class="dropdown-content">
+            <a href="javascript:loadAllChart('week')" class="dropdown-item">{% trans "Last 7 days" %}</a>
+            <a href="javascript:loadAllChart('month')" class="dropdown-item">{% trans "Last 30 days" %}</a>
+            <a href="javascript:loadAllChart('year')" class="dropdown-item">{% trans "Last 12 months" %}</a>
+            <a href="javascript:loadAllChart('inception')" class="dropdown-item">{% trans "Since Inception" %}</a>
+          </div>
+        </div>
+      </div>
+      </div>
+    </section>
+    {% else %}
+    <section class="section section-global-dashboard">
+      <div class="box box-global-dashboard is-shadowless left-p-40">
+        <h1 class="title bottom-m-0">
+          {% trans "Global Dashboard" %}
+        </h1>
+        <div class="flex space-between">
+          <div class="has-text-grey-light" id="all_filter"></div>
+            <div class="dropdown is-hoverable">
+              <div class="dropdown-trigger">
+                <div aria-haspopup="true" aria-controls="dropdown-menu">
+                  <span>{% trans "Filter by" %}</span>
+                  <span class="icon is-small">
+                  <i class="fas fa-angle-down" aria-hidden="true"></i>
+                </span>
+                </div>
+          </div>
+          <div class="dropdown-menu" id="dropdown-menu" role="menu">
+            <div class="dropdown-content">
+              <a href="javascript:loadAllChart('week')" class="dropdown-item">{% trans "Last 7 days" %}</a>
+              <a href="javascript:loadAllChart('month')" class="dropdown-item">{% trans "Last 30 days" %}</a>
+              <a href="javascript:loadAllChart('year')" class="dropdown-item">{% trans "Last 12 months" %}</a>
+              <a href="javascript:loadAllChart('inception')" class="dropdown-item">{% trans "Since Inception" %}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+        <hr class="top-m-5 bottom-m-5">
+        <div class="columns is-multiline">
+          <div class="column is-one-fifth">
+            <div class="flex">
+              <div class="tooltip top flex align-center">
+                <div class="right-m-10">
+                  <img src="{% static 'svg/flag.svg' %}">
+                </div>
+                <div class="left-m-20">
+                  <div class="flex align-center">
+                    <span class="is-size-6 has-text-grey-light">{% trans "UNCTs tracked" %}</span>
+                  </div>
+                  <span class="is-size-4">{{orgs_total}}</span>
+                </div>
+              </div>
+            </div>
+            <hr class="bottom-m-5 top-m-5">
+            <div class="has-text-centered">
+              <a class="is-size-7" onclick="showModal();">See all</a>
+            </div>
+            <div class="modal" id="modal-uncts-global">
+              <div class="modal-background"></div>
+              <div class="modal-card">
+                <header class="modal-card-head">
+                  <p class="modal-card-title">{% trans "UNCTs Tracked" %}</p>
+                  <button class="delete" onclick="showModal();" aria-label="close"></button>
+                </header>
+                <section class="modal-card-body">
+                  <ul>
+                    {% for name in orgs_name %}
+                      <li class="border-bottom p-5">{{name}}</li>
+                    {% endfor %}
+                  </ul>
+                </section>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    {% endif %}
 
   <section class="section">
     <div class="box is-shadowless p-40 bottom-m-20">
@@ -59,7 +149,9 @@
           <div id="empty_bubble_chart">
             <div>{% trans 'There is no data for this filter' %}</div>
           </div>
-          <div id="bubbleChart"></div>
+          <div id="bubbleChart">
+            <div class="bubble-tooltip"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -85,7 +177,10 @@
         </div>
         <div class="column is-paddingless" id="sdgQuestions">
           <div class="flex space-between p-30">
-            <div class="card-title has-text-weight-bold" id="partial_questions_count"></div>
+            <div>
+              <div class="card-title has-text-weight-bold" id="partial_questions_count"></div>
+              <div class="has-text-grey-light" id="sdg_number"></div>
+            </div>
             <div class="dropdown is-hoverable">
               <div class="dropdown-trigger">
                 <div aria-haspopup="true" aria-controls="dropdown-menu">
@@ -97,7 +192,7 @@
               </div>
               <div class="dropdown-menu" role="menu">
                 <div class="dropdown-content">
-                  <a href="{% url 'dashboard' %}#sdgQuestions" class="dropdown-item sdgLink">{% trans "None" %}</a>
+                  <a href="javascript:loadChartPartialResults('')" class="dropdown-item sdgLink">{% trans "None" %}</a>
                   {% for key, value in SDG_LIST %}
                     <a href="javascript:loadChartPartialResults('{{ key }}')" class="dropdown-item sdgLink">{% trans "SDG" %} {{ key }}</a>
                   {% endfor %}
@@ -119,6 +214,32 @@
             <span class="tooltip-content">{% trans "Breakdown of status messages into the unct and global view" %}</span>
           </span>
         </div>
+        <div class="flex flex-end bottom-m-20">
+          <div class="dropdown is-hoverable">
+            <div class="dropdown-trigger">
+              <div aria-haspopup="true" aria-controls="dropdown-menu">
+                <span>{% trans "Filter by" %}</span>
+                <span class="icon is-small">
+                  <i class="fas fa-angle-down" aria-hidden="true"></i>
+                </span>
+              </div>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+              <div class="dropdown-content">
+                  <a href="javascript:loadChartMessageMetricsByChannel()" class="dropdown-item">{% trans "All channels" %}</a>
+                {% for key, channel in channels_info.items %}
+                  <a href="javascript:loadChartMessageMetricsByChannel('{{ channel.type }}', '{{ channel.name }}')" class="dropdown-item">{{ channel.name }}</a>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="has-text-grey-light">
+        <span id="message_metrics_time_ago"></span>
+        <span id="message_metrics_channel"></span>
+      </div>
+      <div class="flex flex-end">
         <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
             <div aria-haspopup="true" aria-controls="dropdown-menu">
@@ -134,27 +255,6 @@
               <a href="javascript:loadChartMessageMetrics('month')" class="dropdown-item">{% trans "Last 30 days" %}</a>
               <a href="javascript:loadChartMessageMetrics('year')" class="dropdown-item">{% trans "Last 12 months" %}</a>
               <a href="javascript:loadChartMessageMetrics()" class="dropdown-item">{% trans "Since Inception" %}</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="bottom-p-20 has-text-grey-light" id="message_metrics_time_ago"></div>
-      <div class="flex flex-end top-m-20">
-        <div class="dropdown is-hoverable">
-          <div class="dropdown-trigger">
-            <div aria-haspopup="true" aria-controls="dropdown-menu">
-              <span>{% trans "Filter by" %}</span>
-              <span class="icon is-small">
-                <i class="fas fa-angle-down" aria-hidden="true"></i>
-              </span>
-            </div>
-          </div>
-          <div class="dropdown-menu" id="dropdown-menu" role="menu">
-            <div class="dropdown-content">
-                <a href="javascript:loadChartMessageMetricsByChannel()" class="dropdown-item">{% trans "All channels" %}</a>
-              {% for channel in channels_info %}
-                <a href="javascript:loadChartMessageMetricsByChannel('{{ channel.uuid }}')" class="dropdown-item">{{ channel.name }}</a>
-              {% endfor %}
             </div>
           </div>
         </div>
@@ -190,6 +290,10 @@
 <script src="{% static 'plugins/wordcloud/d3.layout.cloud.js' %}"></script>
 
 <script type="text/javascript">
+  function showModal(){
+    $("#modal-uncts-global").toggleClass("is-active");
+  }
+
   const dataUrl = "{% url 'dashboard_data' %}";
   let sdgsChart = null;
   let partialChart = null;
@@ -208,7 +312,7 @@
       url = `${url}&filter_by=${filterBy}`;
     }
     if (channelUUID) {
-      url = `${url}&uuid=${channelUUID}`;
+      url = `${url}&type=${channelUUID}`;
     }
     if (sdg) {
       url = `${url}&sdg=${sdg}`;
@@ -225,6 +329,10 @@
 
     // Clean up the charts.
     d3.select('#bubbleChart').selectAll('*').remove();
+
+    let tooltip = d3.select("#bubbleChart")
+        .append("div")
+        .attr('class', 'bubble-tooltip');
 
     let svg = d3.select("#bubbleChart")
       .append("svg")
@@ -260,11 +368,17 @@
       .attr("class", "node")
       .attr("transform", function(d) {
         return "translate(" + d.x + "," + d.y + ")";
-      });
-
-    node.append("title")
-      .text(function(d) {
-        return d.data.sdg + ': ' + d.data.count + ' messages';
+      })
+      .on("mouseover", function(d) {
+        return tooltip.style("visibility", "visible")
+            .text(d.data.sdg + ': ' + (d.data.count).toLocaleString() + ' messages received');
+      })
+      .on("mousemove", function() {
+        return tooltip.style("top", (event.pageY - 110) + "px")
+            .style("left", (event.pageX - 250) + "px");
+      })
+      .on("mouseout", function() {
+        return tooltip.style("visibility", "hidden");
       });
 
     node
@@ -280,9 +394,10 @@
       .attr("dy", ".2em")
       .style("text-anchor", "middle")
       .text(function(d) {
-        return d.data.name.substring(0, d.r / 3);
+        let sdg = d.data.name.substring(0,3) + ' ' + d.data.name.substring(3,5);
+        return sdg.substring(0, d.r / 3);
       })
-      .attr("font-family",  "Gill Sans", "Gill Sans MT")
+      .attr("font-family",  "Roboto", "sans-serif")
       .attr("font-size", function(d){
         return d.r/5;
       })
@@ -292,9 +407,9 @@
         .attr("dy", "1.3em")
         .style("text-anchor", "middle")
         .text(function(d) {
-            return d.data.count;
+            return (d.data.count).toLocaleString();
         })
-        .attr("font-family",  "Gill Sans", "Gill Sans MT")
+        .attr("font-family",  "Roboto", "sans-serif")
         .attr("font-size", function(d){
             return d.r/5;
         })
@@ -341,8 +456,10 @@
 
   function loadChartPartialResults(sdg) {
     getJsonData({card: "partial_results", sdg: sdg}).then(function(result) {
-      if (partialChart) {
-        partialChart.destroy();
+      if (sdg) {
+          $("#sdg_number").html("SDG" + sdg);
+      } else {
+          $("#sdg_number").html("");
       }
 
       if (result) {
@@ -354,7 +471,7 @@
         if (result.questions.length > 0) {
           $("#partial_questions_list").html(result.questions.map(function(question) {
             return `<div class="questions-list__item p-30 border-bottom">
-                    <a href="javascript:loadDonutPatialResult(${question.id});" id="" class="question-link">${question.title}</a>
+                    <a href="javascript:loadDonutPartialResult(${question.id});" id="" class="question-link">${question.title}</a>
                     </div>`;
           }));
         } else {
@@ -363,24 +480,21 @@
         }
 
         if (result.questions.length > 0) {
+          $("#partial_questions_url").show();
           $("#partial_question_title").html(result.questions[0].title);
           $("#partial_questions_url").attr("href", result.questions[0].url);
-          loadDonutPatialResult(result.questions[0].id);
+          loadDonutPartialResult(result.questions[0].id);
           $(".questions-list").find(".question-link").first().addClass("active");
+        } else {
+          $('#questionChart').hide();
+          d3.select("#wordCloud svg").remove();
+          $("#partial_questions_url").hide();
         }
       }
     });
   }
 
-  function loadDonutPatialResult(questionId) {
-    if (questionId == questionLastId) {
-      return;
-    }
-
-    if (partialChart) {
-      partialChart.destroy();
-    }
-
+  function loadDonutPartialResult(questionId) {
     let $questionList = $(".questions-list"),
         $questionsItems = $questionList.find(".question-link");
 
@@ -392,51 +506,67 @@
     let index = questionsList.map(question => question.id).indexOf(questionId);
     let question = questionsList[index];
 
-    d3.select("svg").remove();
+    d3.select("#wordCloud svg").remove();
     $("#partial_question_title").html(question.title);
     $("#partial_questions_url").attr("href", question.url);
 
     if (question.is_open_ended === false) {
       $('#questionChart').show();
-      partialChart = new Chart(document.getElementById("questionChart").getContext("2d"), {
-        type: "doughnut",
-        data: {
+      if (! partialChart) {
+        partialChart = new Chart(document.getElementById("questionChart").getContext("2d"), {
+          type: "doughnut",
+          data: {
+            datasets: [{
+              data: question.statistics.counts,
+              backgroundColor: RTMConfigs.availableColors,
+              borderColor: "rgba(255, 255, 255, 0.1)",
+            }],
+            labels: question.statistics.labels,
+          },
+          options: {
+            legend: {
+              labels: {
+                fontSize: 14,
+                padding: 18,
+                usePointStyle: true,
+              },
+              position: "left",
+            },
+            plugins: {
+              datalabels: {
+                font: {
+                  size: 20,
+                  weight: "bold",
+                },
+                formatter: (value, ctx) => {
+                  let sum = 0;
+                  let dataArr = ctx.chart.data.datasets[0].data;
+                  dataArr.map(data => {
+                      sum += data;
+                  });
+                  let percentage = (value * 100 / sum);
+                  if (percentage < 5) return "";
+                  if (percentage === 100.00) return parseInt(percentage) + "%";
+                  return percentage.toFixed(2) + "%";
+                },
+                color: "#fff",
+              }
+            }
+          }
+        });
+      } else {
+        partialChart.data = {
           datasets: [{
-            data: question.statistics.series,
+            data: question.statistics.counts,
             backgroundColor: RTMConfigs.availableColors,
             borderColor: "rgba(255, 255, 255, 0.1)",
           }],
           labels: question.statistics.labels,
-        },
-        options: {
-          legend: {
-            labels: {
-              fontSize: 14,
-              padding: 18,
-              usePointStyle: true,
-            },
-            position: "left",
-          },
-          plugins: {
-            datalabels: {
-              font: {
-                size: 20,
-                weight: "bold",
-              },
-              formatter: (value, ctx) => {
-                let sum = 0;
-                let dataArr = ctx.chart.data.datasets[0].data;
-                dataArr.map(data => {
-                  sum += data;
-                });
-                return value > 0 ? value + "%" : "";
-              },
-              color: "#fff",
-            }
-          }
-        }
-      });
-    } else {
+        };
+        partialChart.update();
+      }
+    }
+    else {
       let words = question.word_cloud;
       $('#questionChart').hide();
       const fillWordColor = function(d, i) {
@@ -472,15 +602,13 @@
           .style("font-size", function(d) { return d.size; })
           .style("fill", fillWordColor)
           .attr("text-anchor", "middle")
-          .style("font-family", "Impact")
+          .style("font-family", "Roboto", "sans-serif")
           .attr("transform", function(d) {
             return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
           })
           .text(function(d) { return d.text; });
       }
     }
-
-    questionLastId = questionId;
   }
 
   function loadChartMessageMetrics(filterBy, channelUUID) {
@@ -491,8 +619,9 @@
       }
       $("#message_metrics_time_ago").html("");
       $("#message_metrics_time_ago").html(result.time_ago);
-      if (result.channels_data.length > 0) {
-        $("#message_by_channel_list").html(result.channels_data.map(function(channel) {
+
+      if (Object.values(result.channels_data).length > 0) {
+        $("#message_by_channel_list").html(Object.values(result.channels_data).map(function(channel, key) {
           let trendingInfo = "";
 
           if (channel.global > channel.total) {
@@ -589,8 +718,14 @@
     });
   }
 
-  function loadChartMessageMetricsByChannel(channelUUID) {
+  function loadChartMessageMetricsByChannel(channelUUID, channelName) {
     loadChartMessageMetrics(messageMetricsFilterBy, channelUUID);
+
+    $("#message_metrics_channel").html("");
+
+    if (channelName) {
+      $("#message_metrics_channel").html(" - " + channelName);
+    }
   }
 
   function loadChartMostUsedChannels(filterBy) {
@@ -636,7 +771,7 @@
               plugins: {
                 datalabels: {
                   font: {
-                    size: 20,
+                    size: 18,
                     weight: "bold",
                   },
                   formatter: (value, ctx) => {
@@ -645,8 +780,10 @@
                     dataArr.map(data => {
                       sum += data;
                     });
-                    let percentage = parseInt((value * 100 / sum));
-                    return percentage > 0 ? percentage + "%" : "";
+                    let percentage = (value * 100 / sum);
+                    if (percentage < 5) return "";
+                    if (percentage === 100.00) return parseInt(percentage) + "%";
+                    return percentage.toFixed(1) + "%";
                   },
                   color: "#fff",
                 }
@@ -687,7 +824,7 @@
             plugins: {
               datalabels: {
                 font: {
-                  size: 20,
+                  size: 18,
                   weight: "bold",
                 },
                 formatter: (value, ctx) => {
@@ -696,8 +833,10 @@
                   dataArr.map(data => {
                       sum += data;
                   });
-                  let percentage = parseInt((value * 100 / sum));
-                  return percentage > 0 ? percentage + "%" : "";
+                  let percentage = (value * 100 / sum);
+                  if (percentage < 5) return "";
+                  if (percentage === 100.00) return parseInt(percentage) + "%";
+                  return percentage.toFixed(1) + "%";
                 },
                 color: "#fff",
               }
@@ -804,12 +943,30 @@
     });
   }
 
+  function loadAllChart(filterBy) {
+    loadChartTracked(filterBy);
+    loadChartMessageMetrics(filterBy);
+    loadChartMostUsedChannels(filterBy);
+
+    let textAgo = "{% trans 'Since Inception' %}";
+    if (filterBy === "month") {
+      textAgo = "{% trans 'Last 30 days' %}";
+    } else if (filterBy === "week") {
+      textAgo = "{% trans 'Last 7 days' %}";
+    } else if (filterBy === "year") {
+      textAgo = "{% trans 'Last 12 months' %}";
+    }
+
+    $("#all_filter").html(textAgo);
+  }
+
   $(document).ready(function() {
     loadChartTracked("year");
     loadChartPartialResults();
     loadChartMessageMetrics("year");
     loadChartMostUsedChannels("year");
     loadChartRapidProContacts();
+    $("#all_filter").html("{% trans 'Last 12 months' %}");
 
     $(window).scroll(function(){
       if ($(this).scrollTop() > 100) {
