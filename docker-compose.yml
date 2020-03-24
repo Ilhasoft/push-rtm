@@ -1,22 +1,6 @@
 version: "3"
 
 services:
-  rtm-web:
-    image: ${DOCKER_IMAGE_NAME:-uninfo/rtm}:${TAG:-latest}
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - 8000:8000
-    environment:
-      - DEBUG=${DEBUG:-true}
-      - COMPRESS_ENABLED=${COMPRESS_ENABLED:-false}
-      - COMPRESS_OFFLINE=${COMPRESS_OFFLINE:-false}
-      - DEFAULT_DATABASE=${DEFAULT_DATABASE:-postgis://rtm:rtm@database:5432/rtm}
-      - REDIS_HOST=${REDIS_HOST:-redis}
-    links:
-      - redis
-      - database
   redis:
     image: redis
     ports:
@@ -29,3 +13,19 @@ services:
       - POSTGRES_USER=${POSTGRES_USER:-rtm}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-rtm}
       - POSTGRES_DB=${POSTGRES_DB:-rtm}
+  rtm-web:
+    image: ${DOCKER_IMAGE_NAME:-uninfo/rtm}:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
+    environment:
+      - DEBUG=${DEBUG:-true}
+      - COMPRESS_ENABLED=${COMPRESS_ENABLED:-false}
+      - COMPRESS_OFFLINE=${COMPRESS_OFFLINE:-false}
+      - DEFAULT_DATABASE=${DEFAULT_DATABASE:-postgresql://rtm:rtm@database:5432/rtm}
+      - REDIS_HOST=${REDIS_HOST:-redis}
+    links:
+      - redis
+      - database

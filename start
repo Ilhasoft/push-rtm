@@ -3,7 +3,10 @@
 set -o errexit
 set -o nounset
 
+python ./manage.py makemigrations
+python ./manage.py migrate
 python ./manage.py collectstatic --noinput
+
 if [ "${COMPRESS_ENABLED}" = true ]; then
     python ./manage.py compress --extension=.html
 fi

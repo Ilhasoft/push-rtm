@@ -10,7 +10,7 @@ DEBUG = config("DEBUG", default=False, cast=bool)
 TEMPLATE_DEBUG = DEBUG
 
 EMPTY_SUBDOMAIN_HOST = config("EMPTY_SUBDOMAIN_HOST", "http://localhost:8000")
-HOSTNAME = config("APP_HOSTNAME", "localhost:8000")
+HOSTNAME = config("HOSTNAME", "localhost:8000")
 SITE_HOST_PATTERN = config("SITE_HOST_PATTERN", default="http://{}.localhost:8000")
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="*", cast=lambda v: [s.strip() for s in v.split(",")])
@@ -102,7 +102,7 @@ INSTALLED_APPS += (
     "rtm.worldmap",
 )
 
-SITE_ALLOW_NO_ORG += (
+SITE_ALLOW_NO_ORG = (
     "dashboard",
     "dashboard_data",
     "flowhub.flow_list",
@@ -317,8 +317,3 @@ OAUTHLIB_MOMSERVICE_USER_URL = config(
     "OAUTHLIB_MOMSERVICE_USER_URL", default="http://dataforallcloud.org/monservice/api/v1/rtmUserInfo"
 )
 OAUTHLIB_APP_ID = config("OAUTHLIB_APP_ID", default="uninfortm")
-
-
-## DOCS
-
-DOCS_ROOT = os.path.join(PROJECT_DIR, "../docs/_build/html")
