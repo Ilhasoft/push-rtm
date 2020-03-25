@@ -374,7 +374,7 @@ GROUP_PERMISSIONS = {
 # -----------------------------------------------------------------------------------
 LOGIN_URL = "/users/login/"
 LOGOUT_URL = "/users/logout/"
-LOGIN_REDIRECT_URL = "/worldmap"
+LOGIN_REDIRECT_URL = "/manage/org/choose/"
 LOGOUT_REDIRECT_URL = "/"
 
 # -----------------------------------------------------------------------------------
