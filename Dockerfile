@@ -5,7 +5,7 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app
 
 RUN apt-get update -y
-RUN apt-get install -y supervisor gdal-bin
+RUN apt-get install -y supervisor gdal-bin gunicorn
 
 COPY . .
 RUN pip install --no-cache-dir -r requirements.txt
