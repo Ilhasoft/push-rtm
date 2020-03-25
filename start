@@ -10,4 +10,4 @@ if [ "${COMPRESS_ENABLED}" = true ]; then
     python ./manage.py compress --extension=.html
 fi
 
-/usr/bin/gunicorn rtm.wsgi --bind 0.0.0.0:8000 --log-level=debug --access-logfile=./gunicorn.access --error-logfile=./gunicorn.errors --capture-output --chdir=/app
+/usr/local/bin/gunicorn rtm.wsgi --bind 0.0.0.0:8000 --log-level=debug --access-logfile=./gunicorn.access --error-logfile=./gunicorn.errors --capture-output --chdir=/app
