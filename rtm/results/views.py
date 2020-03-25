@@ -393,7 +393,7 @@ class ExportPollResultsBase(View):
 class PollResultsCSV(ExportPollResultsBase):
     def _get_headers(self):
         raw_header = ["Contact ID"]
-        ruleset_labels = self._get_ruleset_labels()
+        ruleset_labels = self._get_ruleset_labels().keys()
 
         for label in ruleset_labels:
             raw_header.append(label + " (category)")
@@ -403,9 +403,9 @@ class PollResultsCSV(ExportPollResultsBase):
 
     def _get_ruleset_labels(self):
         pk = self.kwargs.get("pk")
-        rulesets = PollQuestion.objects.filter(poll__id=pk).values_list("ruleset_label", flat=True)
+        rulesets = PollQuestion.objects.filter(poll__id=pk).values_list("ruleset_label", "ruleset_uuid")
 
-        return list(rulesets)
+        return dict(rulesets)
 
     def _format_poll_results_data(self):
         results_data = list(self._get_poll_results_data())
@@ -438,11 +438,7 @@ class PollResultsCSV(ExportPollResultsBase):
         for contact_uuid, question_results in formated_result.items():
             raw_result = [contact_uuid,]
 
-            for ruleset_label in questions_ruleset_labels:
-                #TODO: DEMORANDO MUITO ESSE FOR
-                question = PollQuestion.objects.filter(poll__id=self.kwargs.get("pk"), ruleset_label=ruleset_label)[0]
-                ruleset_uuid = question.ruleset_uuid
-
+            for ruleset_uuid in questions_ruleset_labels.values():
                 results = question_results.get(ruleset_uuid, ["", ""])
                 for result in results:
                     raw_result.append(result)
