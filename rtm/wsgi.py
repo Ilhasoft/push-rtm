@@ -5,6 +5,8 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
+from whitenoise.django import DjangoWhiteNoise
+
 """
 WSGI config for foo project.
 
@@ -17,3 +19,5 @@ https://docs.djangoproject.com/en/dev/howto/deployment/wsgi/
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "rtm.settings")
 application = get_wsgi_application()
+
+application = DjangoWhiteNoise(application)
