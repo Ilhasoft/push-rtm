@@ -25,11 +25,6 @@ urlpatterns = [
     url(r'^blocked/', TemplateView.as_view(template_name="blocked_user.html"), name="blocked"),
 ]
 
-urlpatterns = [
-    url(r"^media/(?P<path>.*)$", static.serve, {"document_root": settings.MEDIA_ROOT, "show_indexes": True}),
-    url(r"", include("django.contrib.staticfiles.urls")),
-] + urlpatterns
-
 if settings.DEBUG:
 
     try:
@@ -38,3 +33,8 @@ if settings.DEBUG:
         urlpatterns.append(url(r"^__debug__/", include(debug_toolbar.urls)))
     except ImportError:
         pass
+
+    urlpatterns = [
+        url(r"^media/(?P<path>.*)$", static.serve, {"document_root": settings.MEDIA_ROOT, "show_indexes": True}),
+        url(r"", include("django.contrib.staticfiles.urls")),
+    ] + urlpatterns
