@@ -24,7 +24,7 @@ services:
       - DEBUG=${DEBUG:-true}
       - COMPRESS_ENABLED=${COMPRESS_ENABLED:-false}
       - COMPRESS_OFFLINE=${COMPRESS_OFFLINE:-false}
-      - DEFAULT_DATABASE=${DEFAULT_DATABASE:-postgis://rtm:rtm@database:5432/rtm}
+      - DEFAULT_DATABASE=${DEFAULT_DATABASE:-postgresql://rtm:rtm@database:5432/rtm}
       - REDIS_HOST=${REDIS_HOST:-redis}
     links:
       - redis

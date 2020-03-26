@@ -23,8 +23,6 @@ urlpatterns = [
     url(r"^worldmap/", include("rtm.worldmap.urls")),
     url(r'^docs/', include("rtm.docs.urls")),
     url(r'^blocked/', TemplateView.as_view(template_name="blocked_user.html"), name="blocked"),
-    url(r"^media/(?P<path>.*)$", static.serve, {"document_root": settings.MEDIA_ROOT, "show_indexes": True}),
-    url(r"", include("django.contrib.staticfiles.urls")),
 ]
 
 if settings.DEBUG:
@@ -35,3 +33,8 @@ if settings.DEBUG:
         urlpatterns.append(url(r"^__debug__/", include(debug_toolbar.urls)))
     except ImportError:
         pass
+
+    urlpatterns = [
+        url(r"^media/(?P<path>.*)$", static.serve, {"document_root": settings.MEDIA_ROOT, "show_indexes": True}),
+        url(r"", include("django.contrib.staticfiles.urls")),
+    ] + urlpatterns
