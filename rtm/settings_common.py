@@ -613,7 +613,6 @@ RESOURCES_DIR = os.path.join(PROJECT_DIR, "../resources")
 LOCALE_PATHS = (os.path.join(PROJECT_DIR, "../locale"),)
 FIXTURE_DIRS = (os.path.join(PROJECT_DIR, "../fixtures"),)
 TESTFILES_DIR = os.path.join(PROJECT_DIR, "../testfiles")
-STATICFILES_DIRS = (os.path.join(PROJECT_DIR, "../sitestatic"), os.path.join(PROJECT_DIR, "../media"))
 STATIC_ROOT = os.path.join(PROJECT_DIR, "../sitestatic")
 MEDIA_ROOT = os.path.join(PROJECT_DIR, "../media")
 MEDIA_URL = "/media/"
