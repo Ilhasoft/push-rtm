@@ -1,6 +1,6 @@
 
 {% extends "base.html" %}
-{% load i18n static humanize sass_tags ureport utils_extra_accounts %}
+{% load i18n static humanize sass_tags rtm utils_extra_accounts %}
 
 {% block nav_item %}page-dashboard{% endblock %}
 
@@ -214,6 +214,32 @@
             <span class="tooltip-content">{% trans "Breakdown of status messages into the unct and global view" %}</span>
           </span>
         </div>
+        <div class="flex flex-end bottom-m-20">
+          <div class="dropdown is-hoverable">
+            <div class="dropdown-trigger">
+              <div aria-haspopup="true" aria-controls="dropdown-menu">
+                <span>{% trans "Filter by" %}</span>
+                <span class="icon is-small">
+                  <i class="fas fa-angle-down" aria-hidden="true"></i>
+                </span>
+              </div>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+              <div class="dropdown-content">
+                  <a href="javascript:loadChartMessageMetricsByChannel()" class="dropdown-item">{% trans "All channels" %}</a>
+                {% for key, channel in channels_info.items %}
+                  <a href="javascript:loadChartMessageMetricsByChannel('{{ channel.type }}', '{{ channel.name }}')" class="dropdown-item">{{ channel.name }}</a>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="has-text-grey-light">
+        <span id="message_metrics_time_ago"></span>
+        <span id="message_metrics_channel"></span>
+      </div>
+      <div class="flex flex-end">
         <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
             <div aria-haspopup="true" aria-controls="dropdown-menu">
@@ -229,30 +255,6 @@
               <a href="javascript:loadChartMessageMetrics('month')" class="dropdown-item">{% trans "Last 30 days" %}</a>
               <a href="javascript:loadChartMessageMetrics('year')" class="dropdown-item">{% trans "Last 12 months" %}</a>
               <a href="javascript:loadChartMessageMetrics()" class="dropdown-item">{% trans "Since Inception" %}</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="bottom-p-20 has-text-grey-light">
-        <span id="message_metrics_time_ago"></span>
-        <span id="message_metrics_channel"></span>
-      </div>
-      <div class="flex flex-end top-m-20">
-        <div class="dropdown is-hoverable">
-          <div class="dropdown-trigger">
-            <div aria-haspopup="true" aria-controls="dropdown-menu">
-              <span>{% trans "Filter by" %}</span>
-              <span class="icon is-small">
-                <i class="fas fa-angle-down" aria-hidden="true"></i>
-              </span>
-            </div>
-          </div>
-          <div class="dropdown-menu" id="dropdown-menu" role="menu">
-            <div class="dropdown-content">
-                <a href="javascript:loadChartMessageMetricsByChannel()" class="dropdown-item">{% trans "All channels" %}</a>
-              {% for key, channel in channels_info.items %}
-                <a href="javascript:loadChartMessageMetricsByChannel('{{ channel.type }}', '{{ channel.name }}')" class="dropdown-item">{{ channel.name }}</a>
-              {% endfor %}
             </div>
           </div>
         </div>

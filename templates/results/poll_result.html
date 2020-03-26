@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n static sass_tags humanize ureport %}
+{% load i18n static sass_tags humanize rtm %}
 
 {% block nav_item %}page-surveys{% endblock %}
 
@@ -113,7 +113,7 @@
               </span>
             </div>
           </nav>
-          <div class="bottom-p-20">
+          <div class="bottom-p-20 header-surveys">
             <div class="columns bottom-m-10">
               <div class="column is-2 has-text-right">{% trans 'Title:'%}</div>
               <div class="column"><strong>{{ poll.title }}</strong></div>
@@ -281,18 +281,78 @@
       $("#modal-chart").toggleClass("is-active");
     }
 
-    function generatePdf(pollTitle){
-      var graphs = $(".div-graphs");
-      var pdf = new jsPDF('p', 'pt', 'a4');
-      pdf.internal.scaleFactor = 1.75;
-      var options = {
-        pagesplit: true
-      };
+    function getDataImageUrlFromCanvas(element){
+      var html2obj = html2canvas(element);
+      var queue  = html2obj.parse();
+      var canvas = html2obj.render(queue);
+      var data = canvas.toDataURL('image/png');
 
-      pdf.addHTML(graphs, options, function(){
-        pdf.save(pollTitle + ".pdf");
-      });
+      return data;
     }
+
+    function generatePdf(pollTitle){
+      var pdf = new jsPDF('p','px','a4');
+      var width = pdf.internal.pageSize.getWidth();
+      var height = pdf.internal.pageSize.getHeight();
+
+      var headerSurveys = $(".header-surveys");
+
+      data = getDataImageUrlFromCanvas(headerSurveys);
+      pdf.addImage(data, 'png', 0, 0);
+      pdf.addPage();
+
+      var surveyCards = $(".survey-card")
+      var sizeOfSurveyCards = surveyCards.length;
+
+      width50PDF = width * 0.5;
+      height50PDF = height * 0.5;
+
+      /*surveyCards.each(function(index){
+        data = getDataImageUrlFromCanvas($(this));
+
+        //marginHeight = (height - height60PDF)/2;
+
+        pdf.addImage(data, 'png', 0, 0, width50PDF, height50PDF);
+        pdf.addImage(data, 'png', width50PDF, 0, width50PDF, height50PDF);
+        pdf.addImage(data, 'png', 0, height50PDF, width50PDF, height50PDF);
+        pdf.addImage(data, 'png', width50PDF, height50PDF, width50PDF, height50PDF);
+
+        if(!(index === sizeOfSurveyCards - 1)){
+          pdf.addPage();
+        }
+      });*/
+
+      for(let i = 0; i < sizeOfSurveyCards; i = i+4){
+        //marginHeight = (height - height60PDF)/2;
+
+        data1 = getDataImageUrlFromCanvas(surveyCards[i]);
+        pdf.addImage(data1, 'png', 0, 0, width50PDF, height50PDF);
+
+        if(surveyCards[i+1]){
+          data2 = getDataImageUrlFromCanvas(surveyCards[i+1]);
+          pdf.addImage(data2, 'png', width50PDF, 0, width50PDF, height50PDF);
+        };
+
+
+        if(surveyCards[i+2]){
+          data3 = getDataImageUrlFromCanvas(surveyCards[i+2]);
+          pdf.addImage(data3, 'png', 0, height50PDF, width50PDF, height50PDF);
+        };
+        if(surveyCards[i+3]){
+          data4 = getDataImageUrlFromCanvas(surveyCards[i+3]);
+          pdf.addImage(data4, 'png', width50PDF, height50PDF, width50PDF, height50PDF);
+        };
+
+
+        if(!(i === sizeOfSurveyCards - 1)){
+          pdf.addPage();
+        }
+      }
+
+      pdf.save(pollTitle + ".pdf");
+
+    }
+
 
     $("input:checkbox").click(function() {
       let isChecked = $("input:checkbox").filter(":checked");

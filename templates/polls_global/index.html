@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n static ureport sass_tags %}
+{% load i18n static rtm sass_tags %}
 
 {% block nav_item %}page-surveys-global{% endblock %}
 
@@ -60,7 +60,6 @@
               <a href="{% url 'results.global_poll_read' poll.id %}">
                   <span class="tooltip right">
                     {{ poll.title }}
-                    <span class="tooltip-content">{% trans "See the results" %}</span>
                   </span>
               </a>
             {% else %}

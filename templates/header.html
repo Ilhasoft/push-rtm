@@ -1,4 +1,4 @@
-{% load i18n ureport %}
+{% load i18n rtm %}
 
 <nav class="navbar is-fixed-top gap-navbar" role="navigation" aria-label="main navigation">
   <div class="container">
@@ -16,7 +16,7 @@
   {% if user_permissions %}
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
-        <a class="navbar-item worldmap" href="{% url 'worldmap.map_list' %}">{% trans "World Map" %}</a>
+        <a class="navbar-item worldmap-menu" href="{% url 'worldmap.map_list' %}">{% trans "World Map" %}</a>
         <a class="navbar-item dashboard" href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a>
         {% if request.user.is_superuser %}
           <a class="navbar-item uncts" href="{% url 'uncts.unct_list' %}">{% trans "UNCTs" %}</a>

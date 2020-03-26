@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% load i18n static sass_tags humanize ureport %}
+{% load i18n static sass_tags humanize rtm %}
 
 {% block content_doc %}
 <article class="p-30">
@@ -32,7 +32,7 @@
       {% trans "Walkthrough" %}
     </p>
     <p>{% trans "Global Dashboard aggregates all active surveys from UNCTs' workspaces. " %}
-        {% trans "Right below the page's title, it's the scope of the first Filter, which applies to the entire page range options." %}</p><br>
+       {% trans "Right below the page's title, it's the scope of the first Filter, which applies to the entire page range options." %}</p><br>
     <p>{% trans "To ease the understanding, there's a block division for each data type." %}</p>
     <p>{% trans "The first one is related to SDGs tracking, then Surveys Partial Results, Message Metrics, Most used Channels and lastly RapidPro Contacts." %}</p>
     <p>{% trans "Each one has its own features and sorting options and we'll go through it all on the topics below." %}</p>

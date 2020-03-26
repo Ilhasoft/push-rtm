@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% load i18n static sass_tags humanize ureport %}
+{% load i18n static sass_tags humanize rtm %}
 
 {% block content_doc %}
 <article class="p-30">
@@ -103,6 +103,22 @@
       <li class="has-text-weight-bold is-size-6 bottom-p-5">{% trans "Connect to a Global survey" %}</li>
     </ul>
     <p>{% trans "Note there's a check-box to link this survey to an ongoing Global survey." %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_surveys_survey_general_info_02.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_surveys_survey_general_info_02.png' %}">
+      </a>
+    </figure>
+  </div>
+</article>
+<article class="p-30 columns">
+  <div class="column">
+    <ul class="ul-docs">
+      <li class="has-text-weight-bold is-size-6 bottom-p-5">{% trans "Template similarity (Acceptance degree)" %}</li>
+    </ul>
+    <p>{% trans "Compatibility check with the template flow set in the Global workspace. " %}
+       {% trans "Taking its Wait for responses as a reference, it will calculate the percentage." %}</p>
   </div>
   <div class="column">
     <figure class="image is-16by9">
@@ -436,6 +452,23 @@
         </figure>
       </div>
     </article>
+</article>
+<hr>
+<article class="p-30 columns">
+  <div class="column">
+    <p class="has-text-weight-bold is-size-5 bottom-p-5">
+      {% trans "Data export" %}
+    </p>
+    <p>{% trans "The Export option will provide the survey data in JSON, CSV or PDF for further use in other applications." %}
+       {% trans "It will export all Survey graphics to the chosen format and allow you to download the file to your computer. " %}</p>
+  </div>
+  <div class="column">
+    <figure class="image is-16by9">
+      <a href="{% static 'img/docs/local/local_surveys_surveys_results_01.png' %}" target="_blank">
+        <img src="{% static 'img/docs/local/local_surveys_surveys_results_01.png' %}">
+      </a>
+    </figure>
+  </div>
 </article>
 {% endblock %}
 
