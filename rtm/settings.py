@@ -80,6 +80,8 @@ COMPRESS_ENABLED = config("COMPRESS_ENABLED", default=False, cast=bool)
 COMPRESS_OFFLINE = config("COMPRESS_OFFLINE", default=False, cast=bool)
 COMPRESS_CSS_FILTERS = ["compressor.filters.css_default.CssAbsoluteFilter", "compressor.filters.cssmin.CSSMinFilter"]
 COMPRESS_JS_FILTERS = ["compressor.filters.jsmin.JSMinFilter"]
+COMPRESS_CSS_HASHING_METHOD = "content"
+COMPRESS_OFFLINE_CONTEXT = dict(STATIC_URL=STATIC_URL, base_template='frame.html', debug=False, testing=False)
 
 INSTALLED_APPS += ('gunicorn', 'raven.contrib.django.raven_compat',)
 
