@@ -81,6 +81,8 @@ COMPRESS_OFFLINE = config("COMPRESS_OFFLINE", default=False, cast=bool)
 COMPRESS_CSS_FILTERS = ["compressor.filters.css_default.CssAbsoluteFilter", "compressor.filters.cssmin.CSSMinFilter"]
 COMPRESS_JS_FILTERS = ["compressor.filters.jsmin.JSMinFilter"]
 
+INSTALLED_APPS += ('gunicorn', 'raven.contrib.django.raven_compat',)
+
 sentry_sdk.init(dsn=config("RAVEN_CONFIG", default=""), integrations=[DjangoIntegration()])
 
 # custom configs
