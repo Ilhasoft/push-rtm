@@ -1,0 +1,23 @@
+.files-form {
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  margin: .5rem 0; }
+  @media screen and (max-width: 700px) {
+    .files-form {
+      flex-direction: column;
+      align-items: flex-start; }
+      .files-form .visible-flow {
+        margin: 1rem 0; } }
+.wrapper-buttons {
+  margin-top: 1.5rem; }
+
+.file {
+  display: flex;
+  flex-direction: column; }
+
+.choice-padding {
+  padding: 5px; }
+
+.multiple-choices-error .choices__inner {
+  border-color: red !important; }

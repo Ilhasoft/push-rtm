@@ -35,8 +35,6 @@ EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
 EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True, cast=bool)
 DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="no-reply@ilhasoft.com.br")
 
-DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-
 AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID", default="")
 AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY", default="")
 AWS_STORAGE_BUCKET_NAME = config("AWS_STORAGE_BUCKET_NAME", default="")
@@ -54,7 +52,6 @@ DATABASES["default"] = dj_database_url.parse(config("DEFAULT_DATABASE"))
 DATABASES["default"]["CONN_MAX_AGE"] = 0
 
 MIDDLEWARE = MIDDLEWARE + ("whitenoise.middleware.WhiteNoiseMiddleware",)
-STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
@@ -75,13 +72,6 @@ CACHES = {
 CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND", default=BROKER_URL)
 CELERY_ALWAYS_EAGER = config("CELERY_ALWAYS_EAGER", default=False, cast=bool)
 CELERY_EAGER_PROPAGATES_EXCEPTIONS = config("CELERY_EAGER_PROPAGATES_EXCEPTIONS", default=True, cast=bool)
-
-COMPRESS_ENABLED = config("COMPRESS_ENABLED", default=False, cast=bool)
-COMPRESS_OFFLINE = config("COMPRESS_OFFLINE", default=False, cast=bool)
-COMPRESS_CSS_FILTERS = ["compressor.filters.css_default.CssAbsoluteFilter", "compressor.filters.cssmin.CSSMinFilter"]
-COMPRESS_JS_FILTERS = ["compressor.filters.jsmin.JSMinFilter"]
-COMPRESS_CSS_HASHING_METHOD = "content"
-COMPRESS_OFFLINE_CONTEXT = dict(STATIC_URL=STATIC_URL, base_template='base.html', debug=False, testing=False)
 
 INSTALLED_APPS += ('gunicorn', 'raven.contrib.django.raven_compat',)
 
@@ -229,11 +219,7 @@ CHANNEL_TYPES = {
     "WA": {"name": "Whatsapp", "icon": "icon-whatsapp"},
 }
 
-STATICFILES_FINDERS += ("sass_processor.finders.CssFinder",)
-
 TOKEN_WORKSPACE_GLOBAL = "94fd5c1bd39368833f60150054cb99cb84799fe1"
-
-SASS_PROCESSOR_INCLUDE_FILE_PATTERN = r"^.+\.scss$"
 
 LOGIN_URL = "/users/login/"
 LOGOUT_URL = "/users/logout/"
