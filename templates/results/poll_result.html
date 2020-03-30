@@ -297,50 +297,43 @@
 
       var headerSurveys = $(".header-surveys");
 
-      data = getDataImageUrlFromCanvas(headerSurveys);
-      pdf.addImage(data, 'png', 0, 0);
-      pdf.addPage();
-
       var surveyCards = $(".survey-card")
       var sizeOfSurveyCards = surveyCards.length;
 
       width50PDF = width * 0.5;
       height50PDF = height * 0.5;
 
-      /*surveyCards.each(function(index){
-        data = getDataImageUrlFromCanvas($(this));
+      widthPDF = width50PDF - 10;
+      heightPDF = height50PDF - 10;
 
-        //marginHeight = (height - height60PDF)/2;
+      data = getDataImageUrlFromCanvas(headerSurveys);
+      pdf.addImage(data, 'png', 10, 10, width - 20, heightPDF - 80);
 
-        pdf.addImage(data, 'png', 0, 0, width50PDF, height50PDF);
-        pdf.addImage(data, 'png', width50PDF, 0, width50PDF, height50PDF);
-        pdf.addImage(data, 'png', 0, height50PDF, width50PDF, height50PDF);
-        pdf.addImage(data, 'png', width50PDF, height50PDF, width50PDF, height50PDF);
+      data1 = getDataImageUrlFromCanvas(surveyCards[0]);
+      pdf.addImage(data1, 'png', 10, height50PDF - 60, widthPDF, heightPDF + 60);
+      data2 = getDataImageUrlFromCanvas(surveyCards[1]);
+      pdf.addImage(data2, 'png', width50PDF, height50PDF - 60, widthPDF, heightPDF + 60);
 
-        if(!(index === sizeOfSurveyCards - 1)){
-          pdf.addPage();
-        }
-      });*/
+      pdf.addPage();
 
-      for(let i = 0; i < sizeOfSurveyCards; i = i+4){
-        //marginHeight = (height - height60PDF)/2;
+      for(let i = 2; i < sizeOfSurveyCards; i = i+4){
 
         data1 = getDataImageUrlFromCanvas(surveyCards[i]);
-        pdf.addImage(data1, 'png', 0, 0, width50PDF, height50PDF);
+        pdf.addImage(data1, 'png', 10, 10, widthPDF, heightPDF);
 
         if(surveyCards[i+1]){
           data2 = getDataImageUrlFromCanvas(surveyCards[i+1]);
-          pdf.addImage(data2, 'png', width50PDF, 0, width50PDF, height50PDF);
+          pdf.addImage(data2, 'png', width50PDF, 10, widthPDF, heightPDF);
         };
 
 
         if(surveyCards[i+2]){
           data3 = getDataImageUrlFromCanvas(surveyCards[i+2]);
-          pdf.addImage(data3, 'png', 0, height50PDF, width50PDF, height50PDF);
+          pdf.addImage(data3, 'png', 10, height50PDF, widthPDF, heightPDF);
         };
         if(surveyCards[i+3]){
           data4 = getDataImageUrlFromCanvas(surveyCards[i+3]);
-          pdf.addImage(data4, 'png', width50PDF, height50PDF, width50PDF, height50PDF);
+          pdf.addImage(data4, 'png', width50PDF, height50PDF, widthPDF, heightPDF);
         };
 
 

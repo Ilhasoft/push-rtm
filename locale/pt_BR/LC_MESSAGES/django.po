@@ -3,19 +3,24 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# Translators:
+# Jonathan Mieldazis <s.mieldazis@hotmail.com>, 2020
+# monique veronese <monique.veronese@ilhasoft.com.br>, 2020
+# lucas cesar <lucas.cesar@ilhasoft.com.br>, 2020
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-03-13 10:59-0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2020-03-23 21:28+0000\n"
+"Last-Translator: lucas cesar <lucas.cesar@ilhasoft.com.br>, 2020\n"
+"Language-Team: Portuguese (Brazil) (https://www.transifex.com/ilhasoft-3/teams/108369/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: templates/accounts/form.html:15 templates/accounts/form.html:22
@@ -27,12 +32,12 @@ msgstr ""
 #: templates/docs/uncts_users.html:10 templates/header.html:25
 #: templates/header.html:27 templates/uncts/index.html:41
 msgid "Users"
-msgstr ""
+msgstr "Usuários"
 
 #: templates/accounts/form.html:32 templates/accounts/global/form.html:32
 #: templates/accounts/global/index.html:33 templates/accounts/index.html:38
 msgid "Username"
-msgstr ""
+msgstr "Nome do usuário"
 
 #: templates/accounts/form.html:40 templates/accounts/global/form.html:40
 #: templates/accounts/global/index.html:32 templates/accounts/index.html:37
@@ -41,28 +46,29 @@ msgstr ""
 #: templates/polls_global/grant_list.html:87
 #: templates/polls_global/index.html:47 templates/uncts/index.html:37
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #: templates/accounts/form.html:48 templates/accounts/global/form.html:48
 #: templates/accounts/global/index.html:34 templates/accounts/index.html:39
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #: templates/accounts/form.html:59
 msgid "Groups"
-msgstr ""
+msgstr "Grupos"
 
 #: templates/accounts/form.html:80 templates/accounts/global/form.html:80
 #: templates/flowhub/form.html:149 templates/flowhub/global_form.html:134
 #: templates/polls_global/form.html:89 templates/uncts/form.html:185
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: templates/accounts/form.html:81 templates/accounts/global/form.html:81
 #: templates/accounts/global/index.html:86
 #: templates/accounts/global/index.html:111 templates/accounts/index.html:80
 #: templates/accounts/index.html:117 templates/flowhub/flow_detail.html:87
-#: templates/flowhub/form.html:150 templates/flowhub/global_flow_detail.html:87
+#: templates/flowhub/form.html:150
+#: templates/flowhub/global_flow_detail.html:87
 #: templates/flowhub/global_form.html:135 templates/flowhub/info.html:158
 #: templates/polls/form.html:108 templates/polls_global/form.html:90
 #: templates/uncts/form.html:186
@@ -70,46 +76,48 @@ msgstr ""
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/form.html:50
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/update.html:8
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #: templates/accounts/global/form.html:59
 #: templates/accounts/global/index.html:35 templates/accounts/index.html:40
 msgid "Permission"
-msgstr ""
+msgstr "Permissão"
 
 #: templates/accounts/global/index.html:48
 msgid "Global Admin"
-msgstr ""
+msgstr "Administrador Global"
 
 #: templates/accounts/global/index.html:50
 msgid "Global Viewers"
-msgstr ""
+msgstr "Visualizador Global"
 
 #: templates/accounts/global/index.html:52 templates/accounts/index.html:93
 msgid "No Permission"
-msgstr ""
+msgstr "Sem Permissão"
 
 #: templates/accounts/global/index.html:74
 #: templates/accounts/global/index.html:99 templates/accounts/index.html:67
 #: templates/accounts/index.html:104 templates/flowhub/flow_detail.html:75
-#: templates/flowhub/global_flow_detail.html:75 templates/flowhub/info.html:146
+#: templates/flowhub/global_flow_detail.html:75
+#: templates/flowhub/info.html:146
 msgid "Are you sure?"
-msgstr ""
+msgstr "Tem certeza?"
 
 #: templates/accounts/global/index.html:78 templates/accounts/index.html:71
 msgid "Do you really want to block the user"
-msgstr ""
+msgstr "Tem certeza que quer blocar esse usuário"
 
 #: templates/accounts/global/index.html:84
 #: templates/accounts/global/index.html:109 templates/accounts/index.html:78
 #: templates/accounts/index.html:115 templates/flowhub/flow_detail.html:85
-#: templates/flowhub/global_flow_detail.html:85 templates/flowhub/info.html:156
+#: templates/flowhub/global_flow_detail.html:85
+#: templates/flowhub/info.html:156
 msgid "Confirm"
-msgstr ""
+msgstr "Confirmar"
 
 #: templates/accounts/global/index.html:103 templates/accounts/index.html:108
 msgid "Do you really want to active the user"
-msgstr ""
+msgstr "Tem certeza que quer ativar esse usuário"
 
 #: templates/accounts/global/index.html:121 templates/accounts/index.html:128
 #: templates/flowhub/global_index.html:141 templates/flowhub/index.html:151
@@ -118,39 +126,42 @@ msgstr ""
 #: templates/polls_global/grant_list.html:113
 #: templates/polls_global/index.html:92 templates/uncts/index.html:63
 msgid "No results found"
-msgstr ""
+msgstr "Nenhum resultado encontrado"
 
 #: templates/accounts/index.html:165 templates/docs.html:52
-#: templates/docs/global_repository.html:54 templates/docs/global_uncts.html:10
-#: templates/docs/uncts_repository.html:62 templates/flowhub/form.html:54
-#: templates/flowhub/global_form.html:54 templates/flowhub/global_index.html:38
-#: templates/flowhub/index.html:38 templates/flowhub/info.html:44
-#: templates/flowhub/uncts.html:38 templates/header.html:22
-#: templates/uncts/form.html:17 templates/uncts/index.html:8
+#: templates/docs/global_repository.html:54
+#: templates/docs/global_uncts.html:10 templates/docs/uncts_repository.html:62
+#: templates/flowhub/form.html:54 templates/flowhub/global_form.html:54
+#: templates/flowhub/global_index.html:38 templates/flowhub/index.html:38
+#: templates/flowhub/info.html:44 templates/flowhub/uncts.html:38
+#: templates/header.html:22 templates/uncts/form.html:17
+#: templates/uncts/index.html:8
 msgid "UNCTs"
-msgstr ""
+msgstr "UNCTs"
 
 #: templates/authentication/login.html:7
 msgid "Redirecting"
-msgstr ""
+msgstr "Redirecionando"
 
 #: templates/authentication/login.html:10
 msgid "You are being redirected, if the page does not load,"
-msgstr ""
+msgstr "Você será redirecionado, se a página não carregar,"
 
 #: templates/authentication/login.html:11
 msgid "click here"
-msgstr ""
+msgstr "clique aqui"
 
 #: templates/blocked_user.html:62
 msgid "Access Denied"
-msgstr ""
+msgstr "Acesso Negado"
 
 #: templates/blocked_user.html:63
 msgid ""
-"You don't have access to this area. Contact an administrator to verify their "
-"permission"
+"You don't have access to this area. Contact an administrator to verify their"
+" permission"
 msgstr ""
+"Você não tem acesso para essa área. Entre em contato com o administrador "
+"para verificar sua permissão"
 
 #: templates/dashboard/dashboard.html:23 templates/dashboard/dashboard.html:51
 #: templates/dashboard/dashboard.html:122
@@ -159,7 +170,7 @@ msgstr ""
 #: templates/dashboard/global_channels_contacts.html:10
 #: templates/dashboard/local_channels_contacts.html:16
 msgid "Filter by"
-msgstr ""
+msgstr "Filtrar por"
 
 #: templates/dashboard/dashboard.html:31 templates/dashboard/dashboard.html:59
 #: templates/dashboard/dashboard.html:130
@@ -168,7 +179,7 @@ msgstr ""
 #: templates/dashboard/global_channels_contacts.html:18
 #: templates/dashboard/local_channels_contacts.html:24
 msgid "Last 7 days"
-msgstr ""
+msgstr "Últimos 7 dias"
 
 #: templates/dashboard/dashboard.html:32 templates/dashboard/dashboard.html:60
 #: templates/dashboard/dashboard.html:131
@@ -177,7 +188,7 @@ msgstr ""
 #: templates/dashboard/global_channels_contacts.html:19
 #: templates/dashboard/local_channels_contacts.html:25
 msgid "Last 30 days"
-msgstr ""
+msgstr "Últimos 30 dias"
 
 #: templates/dashboard/dashboard.html:33 templates/dashboard/dashboard.html:61
 #: templates/dashboard/dashboard.html:132
@@ -187,7 +198,7 @@ msgstr ""
 #: templates/dashboard/global_channels_contacts.html:20
 #: templates/dashboard/local_channels_contacts.html:26
 msgid "Last 12 months"
-msgstr ""
+msgstr "Últimos 12 meses"
 
 #: templates/dashboard/dashboard.html:34 templates/dashboard/dashboard.html:62
 #: templates/dashboard/dashboard.html:133
@@ -196,152 +207,155 @@ msgstr ""
 #: templates/dashboard/global_channels_contacts.html:21
 #: templates/dashboard/local_channels_contacts.html:27
 msgid "Since Inception"
-msgstr ""
+msgstr "Desde o início"
 
 #: templates/dashboard/dashboard.html:44
 msgid "Global Dashboard"
-msgstr ""
+msgstr "Painel Global"
 
 #: templates/dashboard/dashboard.html:77
 msgid "UNCTs tracked"
-msgstr ""
+msgstr "UNCTs acompanhadas"
 
 #: templates/dashboard/dashboard.html:91
 msgid "UNCTs Tracked"
-msgstr ""
+msgstr "UNCTs Acompanhadas"
 
 #: templates/dashboard/dashboard.html:113
 msgid "SDGs being tracked"
-msgstr ""
+msgstr "ODSs sendo acompanhadas"
 
 #: templates/dashboard/dashboard.html:116
 msgid "Number of total messages received addressing each SDG"
-msgstr ""
+msgstr "Número total de mensagens recebidas endereçadas para cada ODS"
 
 #: templates/dashboard/dashboard.html:143
 msgid "No SDGs being tracked in this period"
-msgstr ""
+msgstr "Sem ODS sendo acompanhadas nesse período"
 
 #: templates/dashboard/dashboard.html:145
 msgid "SDGs not being tracked"
-msgstr ""
+msgstr "Sem ODSs acompanhadas"
 
 #: templates/dashboard/dashboard.html:150
 msgid "There is no data for this filter"
-msgstr ""
+msgstr "Esse filtro não possuem resultados"
 
 #: templates/dashboard/dashboard.html:162
 #: templates/docs/global_dashboard.html:77
 #: templates/docs/uncts_dashboard.html:83
 msgid "Surveys Partial Results"
-msgstr ""
+msgstr "Resultados parciais das pesquisas"
 
 #: templates/dashboard/dashboard.html:165
 msgid "Partial SDG results for the lastest ongoing surveys"
-msgstr ""
+msgstr "Resultados parciais da ODS para as últimas pesquisas em andamento"
 
 #: templates/dashboard/dashboard.html:170
 msgid "See survey"
-msgstr ""
+msgstr "Visualizar pesquisa"
 
 #: templates/dashboard/dashboard.html:195
 #: templates/flowhub/global_index.html:91
 #: templates/flowhub/global_index.html:107 templates/flowhub/index.html:101
 #: templates/flowhub/index.html:117
 msgid "None"
-msgstr ""
+msgstr "Nenhum"
 
 #: templates/dashboard/dashboard.html:197 templates/polls/index.html:92
 #: templates/polls/index.html:97 templates/polls/index.html:103
 #: templates/results/global_poll_result.html:45
 #: templates/results/poll_result.html:67
 msgid "SDG"
-msgstr ""
+msgstr "ODS"
 
 #: templates/dashboard/dashboard.html:211
 #: templates/docs/global_dashboard.html:111
 #: templates/docs/uncts_dashboard.html:116
 msgid "Message Metrics"
-msgstr ""
+msgstr "Métrica de mensagens"
 
 #: templates/dashboard/dashboard.html:214
 msgid "Breakdown of status messages into the unct and global view"
 msgstr ""
+"É possível dividir a vizualização dos status da mensagem em unct e global"
 
 #: templates/dashboard/dashboard.html:220
 msgid "View by"
-msgstr ""
+msgstr "Visualizar"
 
 #: templates/dashboard/dashboard.html:252
 msgid "All channels"
-msgstr ""
+msgstr "Todos os canais"
 
 #: templates/dashboard/dashboard.html:262
 msgid "Messages by Channel"
-msgstr ""
+msgstr "Mensagens por Canal"
 
 #: templates/dashboard/dashboard.html:265
 msgid "These results are the sum of messages received and sent"
-msgstr ""
+msgstr "Esses resultados são o somatório das mensagens enviadas e recebidas"
 
-#: templates/dashboard/dashboard.html:464 templates/docs/uncts_surveys.html:137
-#: templates/polls/index.html:55 templates/polls_global/grant_list.html:45
+#: templates/dashboard/dashboard.html:464
+#: templates/docs/uncts_surveys.html:137 templates/polls/index.html:55
+#: templates/polls_global/grant_list.html:45
 #: templates/polls_global/grant_list.html:88
 msgid "Questions"
-msgstr ""
+msgstr "Questões"
 
 #: templates/dashboard/dashboard.html:477
 msgid "There are no questions registered with this SDG"
-msgstr ""
+msgstr "Não há perguntas registradas para essa ODS"
 
 #: templates/dashboard/dashboard.html:650
 #: templates/dashboard/dashboard.html:862
 msgid "Global Average"
-msgstr ""
+msgstr "Média Global"
 
 #: templates/dashboard/dashboard.html:902
 msgid "Other UNCTs"
-msgstr ""
+msgstr "Outras UNCTs"
 
 #: templates/dashboard/global_channels_contacts.html:6
 #: templates/dashboard/local_channels_contacts.html:7
 msgid "Most used Channels"
-msgstr ""
+msgstr "Canais mais usados"
 
 #: templates/dashboard/global_channels_contacts.html:28
 #: templates/dashboard/local_channels_contacts.html:37
 #: templates/dashboard/local_channels_contacts.html:44
 msgid "There are no data for this filter"
-msgstr ""
+msgstr "Esse filtro não possui resultados"
 
 #: templates/dashboard/global_channels_contacts.html:36
 #: templates/dashboard/local_channels_contacts.html:77
 #: templates/docs/global_dashboard.html:159
 #: templates/docs/uncts_dashboard.html:147
 msgid "RapidPro Contacts"
-msgstr ""
+msgstr "Contatos do RapidPro"
 
 #: templates/dashboard/global_channels_contacts.html:37
 #: templates/dashboard/local_channels_contacts.html:82
 msgid "Last 6 months"
-msgstr ""
+msgstr "Últimos 6 meses"
 
 #: templates/dashboard/local_channels_contacts.html:10
 msgid "Most used channels into the UNCT and around the globe"
-msgstr ""
+msgstr "Canais mais usados por UNCT e do geral"
 
 #: templates/dashboard/local_channels_contacts.html:36
 msgid "Local"
-msgstr ""
+msgstr "Local"
 
 #: templates/dashboard/local_channels_contacts.html:43
 #: templates/dashboard/local_channels_contacts.html:68
 #: templates/flowhub/form.html:50 templates/flowhub/global_flow_detail.html:8
-#: templates/flowhub/global_form.html:50 templates/flowhub/global_index.html:34
-#: templates/flowhub/index.html:34 templates/flowhub/info.html:43
-#: templates/flowhub/uncts.html:34 templates/polls/index.html:58
+#: templates/flowhub/global_form.html:50
+#: templates/flowhub/global_index.html:34 templates/flowhub/index.html:34
+#: templates/flowhub/info.html:43 templates/flowhub/uncts.html:34
+#: templates/polls/index.html:58
 msgid "Global"
-msgstr ""
+msgstr "Global"
 
 #: templates/dashboard/local_channels_contacts.html:55 templates/docs.html:44
 #: templates/docs/uncts_surveys.html:10 templates/header.html:31
@@ -351,65 +365,66 @@ msgstr ""
 #: templates/polls/form_questions.html:98 templates/polls/index.html:14
 #: templates/results/poll_result.html:34
 msgid "Surveys"
-msgstr ""
+msgstr "Pesquisas"
 
 #: templates/dashboard/local_channels_contacts.html:58
 msgid "Surveys being conducted through the RTM"
-msgstr ""
+msgstr "Pesquisas sendo conduzidas pelo RTM"
 
 #: templates/dashboard/local_channels_contacts.html:80
 msgid "Overview of the contacts status on RapidPro"
-msgstr ""
+msgstr "Visão geral de status dos contatos no RapidPro"
 
 #: templates/dashboard/local_channels_contacts.html:86
 msgid "Contacts growth over time"
-msgstr ""
+msgstr "Crescimento de contatos com o tempo"
 
 #: templates/dashboard/local_channels_contacts.html:90
 msgid "Portion of Global Total Contacts"
-msgstr ""
+msgstr "Porção total de contatos globais"
 
 #: templates/docs.html:25 templates/docs.html:32
 msgid "Documentation"
-msgstr ""
+msgstr "Documentação"
 
 #: templates/docs.html:35 templates/docs/login.html:10
 #: templates/smartmin/users/login.html:41
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/users/login.html:33
 msgid "Login"
-msgstr ""
+msgstr "Login"
 
 #: templates/docs.html:39 templates/docs/uncts_dashboard.html:7
 #: templates/docs/uncts_repository.html:7 templates/docs/uncts_surveys.html:7
 #: templates/docs/uncts_users.html:7
 msgid "UNCTs Documentation"
-msgstr ""
+msgstr "Documentação das UNCTs"
 
 #: templates/docs.html:43 templates/docs.html:54
 #: templates/docs/global_repository.html:10
 #: templates/docs/uncts_repository.html:10 templates/flowhub/form.html:22
 #: templates/flowhub/form.html:38 templates/flowhub/global_form.html:22
-#: templates/flowhub/global_form.html:38 templates/flowhub/global_index.html:15
+#: templates/flowhub/global_form.html:38
+#: templates/flowhub/global_index.html:15
 #: templates/flowhub/global_index.html:22 templates/flowhub/index.html:15
 #: templates/flowhub/index.html:22 templates/flowhub/info.html:15
 #: templates/flowhub/info.html:31 templates/flowhub/uncts.html:15
 #: templates/flowhub/uncts.html:22 templates/header.html:29
 msgid "Repository"
-msgstr ""
+msgstr "Repositório"
 
 #: templates/docs.html:45 templates/docs.html:56
 #: templates/docs/global_dashboard.html:10
 #: templates/docs/uncts_dashboard.html:10 templates/header.html:20
 #: templates/worldmap/index.html:111
 msgid "Dashboard"
-msgstr ""
+msgstr "Painel"
 
 #: templates/docs.html:49 templates/docs/global_dashboard.html:7
-#: templates/docs/global_repository.html:7 templates/docs/global_surveys.html:7
-#: templates/docs/global_uncts.html:7 templates/docs/global_users.html:7
-#: templates/docs/login.html:7
+#: templates/docs/global_repository.html:7
+#: templates/docs/global_surveys.html:7 templates/docs/global_uncts.html:7
+#: templates/docs/global_users.html:7 templates/docs/login.html:7
 msgid "Global Documentation"
-msgstr ""
+msgstr "Documentação Global"
 
 #: templates/docs.html:55 templates/docs/global_surveys.html:10
 #: templates/header.html:34 templates/polls_global/form.html:16
@@ -419,12 +434,12 @@ msgstr ""
 #: templates/polls_global/index.html:13 templates/polls_global/index.html:39
 #: templates/results/global_poll_result.html:17
 msgid "Global Surveys"
-msgstr ""
+msgstr "Pesquisas Globais"
 
 #: templates/docs/global_dashboard.html:16
 #: templates/docs/uncts_dashboard.html:16
 msgid "This is the main session of the platform and also its homepage. "
-msgstr ""
+msgstr "Essa é a sessão principal da plataforma e da página inicial."
 
 #: templates/docs/global_dashboard.html:17
 #: templates/docs/uncts_dashboard.html:17
@@ -432,6 +447,8 @@ msgid ""
 "It's here where all the survey's data gathered will be available for "
 "analysis. "
 msgstr ""
+"É aqui que todos os dados da pesquisa coletados estarão disponíveis para "
+"análise."
 
 #: templates/docs/global_dashboard.html:18
 #: templates/docs/uncts_dashboard.html:18
@@ -439,31 +456,44 @@ msgid ""
 "Like a main access point, it allows gathering different perceptions from "
 "ongoing surveys and useful RapidPro data metrics."
 msgstr ""
+"Como um ponto de acesso principal, ele permite reunir diferentes percepções "
+"de pesquisas em curso e métricas de dados úteis RapidPro."
 
 #: templates/docs/global_dashboard.html:32
 #: templates/docs/uncts_dashboard.html:32
 msgid "Walkthrough"
-msgstr ""
+msgstr "Passo a passo"
 
 #: templates/docs/global_dashboard.html:34
-msgid "Global Dashboard aggregates all active surveys from UNCTs' workspaces. "
+msgid ""
+"Global Dashboard aggregates all active surveys from UNCTs' workspaces. "
 msgstr ""
+"O Painel Global agrega todas as pesquisas ativas dos espaços de trabalho dos"
+" UNCTs."
 
 #: templates/docs/global_dashboard.html:35
 msgid ""
 "Right below the page's title, it's the scope of the first Filter, which "
 "applies to the entire page range options."
 msgstr ""
+"Abaixo do título é mostrado o primeiro Filtro, este que se aplica a todas as"
+" opções de intervalo de páginas."
 
 #: templates/docs/global_dashboard.html:36
-msgid "To ease the understanding, there's a block division for each data type."
+msgid ""
+"To ease the understanding, there's a block division for each data type."
 msgstr ""
+"Para facilitar o entendimento, existe uma divisão de blocos para cada tipo "
+"de dados."
 
 #: templates/docs/global_dashboard.html:37
 msgid ""
 "The first one is related to SDGs tracking, then Surveys Partial Results, "
 "Message Metrics, Most used Channels and lastly RapidPro Contacts."
 msgstr ""
+"O primeiro está relacionado ao acompanhamento das ODS, seguidos por "
+"Resultados parciais das pesquisas, Métricas de mensagem, Canais mais usados "
+"e, por último, Contatos do RapidPro."
 
 #: templates/docs/global_dashboard.html:38
 #: templates/docs/uncts_dashboard.html:37
@@ -471,11 +501,13 @@ msgid ""
 "Each one has its own features and sorting options and we'll go through it "
 "all on the topics below."
 msgstr ""
+"Cada um tem seus próprios recursos e opções de classificação e veremos tudo "
+"nos tópicos abaixo."
 
 #: templates/docs/global_dashboard.html:45
 #: templates/docs/uncts_dashboard.html:52
 msgid "SDGs Tracking"
-msgstr ""
+msgstr "ODSs Acompanhadas"
 
 #: templates/docs/global_dashboard.html:47
 #: templates/docs/uncts_dashboard.html:54
@@ -483,17 +515,23 @@ msgid ""
 "In the bubble graph, you can see which SDG is being more tracked related to "
 "others. "
 msgstr ""
+"No gráfico de bolhas, é possível ver qual ODS está sendo mais requisitada em"
+" relação as outras."
 
 #: templates/docs/global_dashboard.html:48
 msgid ""
 "In other words, it shows the number of received messages for questions that "
 "are linked to the respective SDG."
 msgstr ""
+"Em outras palavras, mostra o número de mensagens recebidas para perguntas "
+"vinculadas à respectiva ODS."
 
 #: templates/docs/global_dashboard.html:60
 #: templates/docs/uncts_dashboard.html:67
 msgid "There are two separate sections to display the SDGs tracking status. "
 msgstr ""
+"Existem duas seções separadas para exibir o status de acompanhamento das "
+"ODS."
 
 #: templates/docs/global_dashboard.html:61
 #: templates/docs/uncts_dashboard.html:68
@@ -501,6 +539,8 @@ msgid ""
 "The order doesn't interfere with the bubble size, it is ordered by crescent "
 "numerical order."
 msgstr ""
+"A ordem não interfere no tamanho da bolha, é organizada por ordem numérica "
+"crescente."
 
 #: templates/docs/global_dashboard.html:63
 #: templates/docs/uncts_dashboard.html:69
@@ -508,23 +548,30 @@ msgid ""
 "To provide better readability there is a tooltip on each bubble displaying "
 "the SDG name and also the received messages count."
 msgstr ""
+"Para facilitar a leitura, há um tooltip em cada balão exibindo o nome da ODS"
+" e também a contagem de mensagens recebidas."
 
 #: templates/docs/global_dashboard.html:79
 msgid ""
 "To follow ongoing surveys and track how the answers are being structured as "
-"it comes from RapidPro, the partial results graph randomizes 20 questions to "
-"be displayed."
+"it comes from RapidPro, the partial results graph randomizes 20 questions to"
+" be displayed."
 msgstr ""
+"Para acompanhar pesquisas em andamento e acompanhar como as respostas estão "
+"sendo estruturadas, como vem do RapidPro, o gráfico de resultados parciais "
+"randomiza 20 perguntas a serem exibidas."
 
 #: templates/docs/global_dashboard.html:80
 msgid "It will bring a more close approach to all UNCT's ongoing surveys."
 msgstr ""
+"Será exibido uma abordagem mais atual a todas as pesquisas da UNCT em "
+"andamento."
 
 #: templates/docs/global_dashboard.html:93
 #: templates/docs/global_dashboard.html:142
 #: templates/docs/uncts_dashboard.html:99
 msgid "Sorting and Filtering"
-msgstr ""
+msgstr "Ordenação e Filtragem"
 
 #: templates/docs/global_dashboard.html:95
 #: templates/docs/uncts_dashboard.html:101
@@ -532,6 +579,8 @@ msgid ""
 "There is a filter by SDG on the upper right corner, it allows to list "
 "questions that are linked to the selected SDG."
 msgstr ""
+"Há um filtro por ODS no canto superior direito, que permite listar perguntas"
+" que estão vinculadas à ODS selecionada."
 
 #: templates/docs/global_dashboard.html:97
 #: templates/docs/global_dashboard.html:145
@@ -540,11 +589,13 @@ msgid ""
 "By navigating through the questions you will get indicators from ongoing "
 "answers to each question."
 msgstr ""
+"Ao navegar pelas perguntas, você visualizará indicadores das respostas para "
+"cada pergunta."
 
 #: templates/docs/global_dashboard.html:113
 #: templates/docs/uncts_dashboard.html:118
 msgid "RapidPro registers message traffic information. "
-msgstr ""
+msgstr "O RapidPro registra as informações do tráfego de mensagens."
 
 #: templates/docs/global_dashboard.html:114
 #: templates/docs/uncts_dashboard.html:119
@@ -552,22 +603,29 @@ msgid ""
 "This information reflects the ongoing and finished survey's level of "
 "engagement. "
 msgstr ""
+"Essas informações refletem o nível de envolvimento na pesquisa em andamento "
+"e finalizada."
 
 #: templates/docs/global_dashboard.html:115
 msgid ""
 "This dashboard module shows the sum of aggregated values from messages sent "
 "and received. "
 msgstr ""
+"Este módulo do painel mostra a soma dos valores agregados das mensagens "
+"enviadas e recebidas."
 
 #: templates/docs/global_dashboard.html:116
 msgid "The graph consolidates the traffic from all UNCT's workspaces. "
 msgstr ""
+"O gráfico consolida o tráfego de todos os espaços de trabalho da UNCT."
 
 #: templates/docs/global_dashboard.html:128
 msgid ""
-"There's also a tracking statistics by active channels on the UNCT's RapidPro "
-"workspace."
+"There's also a tracking statistics by active channels on the UNCT's RapidPro"
+" workspace."
 msgstr ""
+"Também há estatísticas de acompanhamento por canais ativos no espaço de "
+"trabalho no RapidPro da UNCT."
 
 #: templates/docs/global_dashboard.html:129
 #: templates/docs/uncts_dashboard.html:133
@@ -576,12 +634,16 @@ msgid ""
 "received messages for a general overview of all channels and its usage "
 "status."
 msgstr ""
+"As métricas de mensagem por canal exibem a soma de todas as mensagens "
+"enviadas e recebidas para uma visão geral dos seus status de uso."
 
 #: templates/docs/global_dashboard.html:144
 msgid ""
 "There is a filter by SDG on the upper right corner, it allows to list "
 "questions that are linked to the selected SDG. "
 msgstr ""
+"Há um filtro por ODS no canto superior direito, que permite listar perguntas"
+" que estão vinculadas à ODS selecionada."
 
 #: templates/docs/global_dashboard.html:161
 #: templates/docs/uncts_dashboard.html:149
@@ -589,48 +651,58 @@ msgid ""
 "The number of contacts is a very important piece of information provided by "
 "RapidPro. "
 msgstr ""
+"O número de contatos é uma informação muito importante fornecida pelo "
+"RapidPro."
 
 #: templates/docs/global_dashboard.html:162
 msgid ""
 "It means the aggregated number of contacts inside the registered group from "
 "all UNCT's. "
 msgstr ""
+"Isso significa que o número agregado de contatos dentro do grupo foi "
+"registrado de todas as UNCTs."
 
 #: templates/docs/global_dashboard.html:163
 #: templates/docs/uncts_dashboard.html:151
 msgid "The graph allows for seeing this information from the last 6 months."
-msgstr ""
+msgstr "O gráfico permite visualizar as informações até últimos 6 meses."
 
 #: templates/docs/global_repository.html:16
 msgid ""
 "The Global RTM Repository module provides access to all shared survey flows "
 "template files."
 msgstr ""
+"O Repositório Global do RTM fornece acesso a todos os arquivos de modelo de "
+"fluxos de pesquisa compartilhados."
 
 #: templates/docs/global_repository.html:30
 msgid "Viewer and Administrator perspectives"
-msgstr ""
+msgstr "Perspectivas do Administrador e Visualizador"
 
 #: templates/docs/global_repository.html:32
 msgid ""
 "In this particular case, features for both account levels are the same, "
 "let's walk through each one."
 msgstr ""
+"Nesse caso específico, os recursos para os dois níveis de conta são os "
+"mesmos, vamos conhecer um de cada."
 
 #: templates/docs/global_repository.html:38
 #: templates/docs/uncts_repository.html:46 templates/flowhub/form.html:49
-#: templates/flowhub/global_form.html:49 templates/flowhub/global_index.html:33
-#: templates/flowhub/index.html:33 templates/flowhub/info.html:42
-#: templates/flowhub/uncts.html:33
+#: templates/flowhub/global_form.html:49
+#: templates/flowhub/global_index.html:33 templates/flowhub/index.html:33
+#: templates/flowhub/info.html:42 templates/flowhub/uncts.html:33
 msgid "All flows"
-msgstr ""
+msgstr "Todos os fluxos"
 
 #: templates/docs/global_repository.html:40
 #: templates/docs/uncts_repository.html:48
 msgid ""
-"This is the Repository's homepage, where all available flows to download are "
-"listed. "
+"This is the Repository's homepage, where all available flows to download are"
+" listed. "
 msgstr ""
+"Esta é a página inicial do Repositório, onde estão listados todos os fluxos "
+"disponíveis para download."
 
 #: templates/docs/global_repository.html:41
 #: templates/docs/uncts_repository.html:49
@@ -638,6 +710,8 @@ msgid ""
 "It will present the survey title, the UNCT that uploaded it and a short "
 "description provided by the administrator who created that flow."
 msgstr ""
+"Apresentará o título da pesquisa, a UNCT que o enviou e uma breve descrição "
+"fornecida pelo administrador que criou esse fluxo."
 
 #: templates/docs/global_repository.html:56
 #: templates/docs/uncts_repository.html:64
@@ -645,42 +719,53 @@ msgid ""
 "See a list of all registered UNCTs to sort only its flows and easily "
 "download."
 msgstr ""
+"Veja uma lista de todas as UNCTs registrados para classificar apenas seus "
+"fluxos e fazer o download facilmente."
 
-#: templates/docs/global_repository.html:70 templates/docs/global_uncts.html:49
+#: templates/docs/global_repository.html:70
+#: templates/docs/global_uncts.html:49
 #: templates/docs/uncts_repository.html:138
 #: templates/docs/uncts_surveys.html:234 templates/results/poll_result.html:56
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/list.html:14
 msgid "Search"
-msgstr ""
+msgstr "Buscar"
 
 #: templates/docs/global_repository.html:72
 #: templates/docs/global_surveys.html:113
 #: templates/docs/uncts_repository.html:140
 #: templates/docs/uncts_surveys.html:236
 msgid ""
-"There's a search bar to find surveys, you just need to type and press enter. "
+"There's a search bar to find surveys, you just need to type and press enter."
+" "
 msgstr ""
+"Essa barra de pesquisa é para realizar pesquisas, basta digitar e pressionar"
+" enter."
 
 #: templates/docs/global_repository.html:73
 #: templates/docs/uncts_repository.html:141
 msgid ""
-"It's case insensitive and capable of searching for strings' fragments at the "
-"survey name or description. "
+"It's case insensitive and capable of searching for strings' fragments at the"
+" survey name or description. "
 msgstr ""
+"Reconhece letras maiúsculas e minúsculas e é capaz de procurar fragmentos do"
+" nome ou descrição da pesquisa."
 
 #: templates/docs/global_repository.html:74
 msgid ""
-"In the example below the search was \"flow\" and it found five surveys where "
-"the string was found in different spots from multiple workspaces."
+"In the example below the search was \"flow\" and it found five surveys where"
+" the string was found in different spots from multiple workspaces."
 msgstr ""
+"No exemplo a seguir, a pesquisa foi \"flow\" e encontrou cinco pesquisas em "
+"que a sentença foi encontrada em diferentes locais em vários espaços de "
+"trabalho."
 
 #: templates/docs/global_repository.html:86
 msgid "Besides survey flows it's possible to search for UNCTs names. "
-msgstr ""
+msgstr "Além dos fluxos de pesquisa, é possível procurar nomes de UNCTs."
 
 #: templates/docs/global_repository.html:87
 msgid "See below a search for \"brasil\"."
-msgstr ""
+msgstr "Veja a seguir uma pesquisa por \"brasil\"."
 
 #: templates/docs/global_repository.html:101
 #: templates/docs/global_surveys.html:130 templates/docs/global_uncts.html:33
@@ -688,11 +773,13 @@ msgstr ""
 #: templates/docs/uncts_repository.html:156
 #: templates/docs/uncts_surveys.html:254 templates/docs/uncts_users.html:124
 msgid "Sorting"
-msgstr ""
+msgstr "Ordenação"
 
 #: templates/docs/global_repository.html:103
 msgid "It's possible to sort surveys by stars, newest or alphabetically. "
 msgstr ""
+"É possível ordenar pesquisas por estrelas, mais recentes ou em ordem "
+"alfabética."
 
 #: templates/docs/global_repository.html:104
 #: templates/docs/uncts_repository.html:159
@@ -700,11 +787,13 @@ msgid ""
 "Clicking the option once will sort ascending and the second time will apply "
 "descending."
 msgstr ""
+"Clicar na opção uma vez ordenar ascendente e a segunda vez será aplicada "
+"decrescente."
 
 #: templates/docs/global_repository.html:116
 #: templates/docs/uncts_repository.html:171
 msgid "You can also filter the list by one specific SDG or language."
-msgstr ""
+msgstr "Você também pode filtrar a lista por uma ODS ou idioma específico."
 
 #: templates/docs/global_repository.html:139
 #: templates/docs/uncts_repository.html:189
@@ -712,87 +801,101 @@ msgid ""
 "At the UNCTs session, it's possible to sort by Newest or Alphabetically as "
 "well."
 msgstr ""
+"Na sessão das UNCTs, também é possível ordenar por Mais Recente ou em ordem "
+"alfabética."
 
 #: templates/docs/global_repository.html:153
 #: templates/docs/uncts_repository.html:203
 msgid "Star Score"
-msgstr ""
+msgstr "Pontuação da Estrela"
 
 #: templates/docs/global_repository.html:155
 #: templates/docs/uncts_repository.html:205
 msgid ""
-"Given the number of stars of a shared survey may assist you to choose one by "
-"popularity. "
+"Given the number of stars of a shared survey may assist you to choose one by"
+" popularity. "
 msgstr ""
+"Determinado o número de estrelas de uma pesquisa compartilhada, você poderá "
+"escolher uma por popularidade."
 
 #: templates/docs/global_repository.html:156
 #: templates/docs/uncts_repository.html:206
 msgid "The ones you've starred will show a filled star."
-msgstr ""
+msgstr "As que foram marcadas com estrela mostrarão uma estrela cheia."
 
 #: templates/docs/global_repository.html:170
 #: templates/docs/uncts_repository.html:220
 #: templates/flowhub/flow_detail.html:64
-#: templates/flowhub/global_flow_detail.html:64 templates/flowhub/info.html:135
+#: templates/flowhub/global_flow_detail.html:64
+#: templates/flowhub/info.html:135
 msgid "Download"
-msgstr ""
+msgstr "Download"
 
 #: templates/docs/global_repository.html:172
 #: templates/docs/uncts_repository.html:222
 msgid ""
-"After choosing the survey flow you want, just click Download and you'll save "
-"the JSON file to your computer."
+"After choosing the survey flow you want, just click Download and you'll save"
+" the JSON file to your computer."
 msgstr ""
+"Depois de escolher o fluxo de pesquisa desejado, basta clicar em Download e "
+"você salvará o arquivo JSON no seu computador."
 
 #: templates/docs/global_repository.html:173
 #: templates/docs/uncts_repository.html:223
 msgid ""
 "There's a download counter for how many hits the button has been clicked."
-msgstr ""
+msgstr "Há um contador de downloads para mostrar quantas vezes foi baixado."
 
 #: templates/docs/global_surveys.html:17
 msgid "Global Surveys List"
-msgstr ""
+msgstr "Lista de Pesquisas Globais"
 
 #: templates/docs/global_surveys.html:19
 msgid "Add description here"
-msgstr ""
+msgstr "Adicione aqui a descrição"
 
 #: templates/docs/global_surveys.html:33
 msgid "Starting a Global Survey"
-msgstr ""
+msgstr "Começando uma Pesquisa Global"
 
 #: templates/docs/global_surveys.html:35
 msgid ""
 "Clicking the + Global Surveys button will allow you to start a new event. "
 msgstr ""
+"Clicar no botão + Pesquisas Globais permitirá iniciar uma nova pesquisa."
 
 #: templates/docs/global_surveys.html:36
 msgid ""
 "Where all it's needed is to provide a Title, Date range and a Description. "
-msgstr ""
+msgstr "É necessário fornecer em todos um Título, um Período e uma Descrição."
 
 #: templates/docs/global_surveys.html:37
 msgid ""
 "The title is how UNCTs' workspaces are going to choose which global survey "
 "to connect, so it's a good practice to make it short and self-explained. "
 msgstr ""
+"O título é como os espaços de trabalho das UNCTs escolherão qual pesquisa "
+"global conectar, por isso é uma boa prática torná-la curta e auto-explicada."
 
 #: templates/docs/global_surveys.html:38
 msgid ""
 "Start Date and End Date will set the results' range considered as relevant "
 "for this event. "
 msgstr ""
+"Data de início e Data de término definirão o intervalo de resultados "
+"considerado relevante para esta pesquisa."
 
 #: templates/docs/global_surveys.html:39
 msgid "A description will explain the survey at the Surveys Result page."
-msgstr ""
+msgstr "Uma descrição explicará a pesquisa na página Resultados da Pesquisa."
 
 #: templates/docs/global_surveys.html:41
 msgid ""
 "Before clicking OK make sure you have checked the Is active option or the "
 "survey will be saved with deactivated status."
 msgstr ""
+"Antes de clicar em OK, verifique se você marcou a opção Está Ativo ou a "
+"pesquisa será salva com o status desativado."
 
 #: templates/docs/global_surveys.html:53
 msgid ""
@@ -800,71 +903,91 @@ msgid ""
 "for connection at UNCTs' workspaces by activating Connect to on ongoing "
 "global survey."
 msgstr ""
+"Quando você concluir esse processo, a pesquisa global ficará disponível para"
+" ser anexada nos espaços de trabalho das UNCTs selecionando Conectar na "
+"pesquisa global em andamento."
 
 #: templates/docs/global_surveys.html:67
 msgid "Connection evaluation"
-msgstr ""
+msgstr "Avaliação da conexão"
 
 #: templates/docs/global_surveys.html:69
 msgid ""
-"Clicking the + icon on the survey right side will open the evaluation module."
+"Clicking the + icon on the survey right side will open the evaluation "
+"module."
 msgstr ""
+"Clicar no ícone + no lado direito da pesquisa abrirá o módulo de avaliação."
 
 #: templates/docs/global_surveys.html:81
 msgid "Than you'll see two tabs, Pending and Approved. "
-msgstr ""
+msgstr "Então serão visualizadas duas guias: Pendente e Aprovada."
 
 #: templates/docs/global_surveys.html:82
 msgid "On Pending there's a list of all surveys requests. "
-msgstr ""
+msgstr "Em Pendente, há uma lista de todas as solicitações de pesquisas."
 
 #: templates/docs/global_surveys.html:83
 msgid ""
 "Clicking the survey Name will open the UNCT's respective content and the "
 "icons on its right side will approve or deny the request, respectivelly."
 msgstr ""
+"Clicando no nome da pesquisa abrirá o respectivo conteúdo da UNCT e os "
+"ícones à direita aprovarão ou negarão a solicitação, de forma "
+"correspondente."
 
 #: templates/docs/global_surveys.html:95
 msgid ""
 "On Approved you can also load the respective content by clicking the survey "
 "name. "
 msgstr ""
+"Em Aprovado, você também pode carregar o respectivo conteúdo clicando no "
+"nome da pesquisa."
 
 #: templates/docs/global_surveys.html:96
 msgid "The X button will unlink that survey from the global event."
-msgstr ""
+msgstr "O botão X desvinculará essa pesquisa do evento global."
 
 #: templates/docs/global_surveys.html:111
 msgid "Searching"
-msgstr ""
+msgstr "Buscando"
 
-#: templates/docs/global_surveys.html:114 templates/docs/uncts_surveys.html:237
+#: templates/docs/global_surveys.html:114
+#: templates/docs/uncts_surveys.html:237
 msgid ""
-"It's case insensitive and capable of searching for strings' fragments at the "
-"name of active or inactive surveys. "
+"It's case insensitive and capable of searching for strings' fragments at the"
+" name of active or inactive surveys. "
 msgstr ""
+"Reconhece letras maiúsculas e minúsculas e é capaz de procurar fragmentos do"
+" nome das pesquisas ativas ou inativas."
 
 #: templates/docs/global_surveys.html:115
 msgid ""
 "In the example below the search was \"global\" and it found three surveys "
 "where the string was found in different spots. "
 msgstr ""
+"No exemplo abaixo, a pesquisa foi \"global\" e encontrou três pesquisas em "
+"que a sequência foi encontrada em locais diferentes."
 
-#: templates/docs/global_surveys.html:116 templates/docs/uncts_surveys.html:239
+#: templates/docs/global_surveys.html:116
+#: templates/docs/uncts_surveys.html:239
 msgid ""
 "You can disengage the search filter by clicking the X at the right of the "
 "bar."
 msgstr ""
+"Você pode desativar o filtro de pesquisa clicando no X à direita da barra."
 
 #: templates/docs/global_surveys.html:132
 msgid "It's possible to sort surveys by Name, Date and Status. "
-msgstr ""
+msgstr "É possível ordenar pesquisas por Nome, Data e Status."
 
-#: templates/docs/global_surveys.html:133 templates/docs/uncts_surveys.html:257
+#: templates/docs/global_surveys.html:133
+#: templates/docs/uncts_surveys.html:257
 msgid ""
 "Clicking the option once will sort ascending and the second time will apply "
 "descending. "
 msgstr ""
+"Clicar na opção uma vez ordenar ascendente e a segunda vez será aplicada "
+"decrescente."
 
 #: templates/docs/global_surveys.html:134
 msgid ""
@@ -872,87 +995,116 @@ msgid ""
 "example below there's a search for 'global' and it's also sorting the list "
 "by Initial Date."
 msgstr ""
+"A ordenação pode ser uma ferramenta muito útil, à medida que a lista da sua "
+"pesquisa aumenta, no exemplo abaixo, há uma pesquisa por 'global' e também a"
+" classificação por Data Inicial."
 
-#: templates/docs/global_surveys.html:148 templates/docs/uncts_surveys.html:323
+#: templates/docs/global_surveys.html:148
+#: templates/docs/uncts_surveys.html:323
 msgid "Disabled Surveys"
-msgstr ""
+msgstr "Pesquisas Desativadas"
 
-#: templates/docs/global_surveys.html:150 templates/docs/uncts_surveys.html:325
+#: templates/docs/global_surveys.html:150
+#: templates/docs/uncts_surveys.html:325
 msgid ""
 "A grayed survey line means that it has been disabled and become "
 "inaccessible. "
 msgstr ""
+"Uma linha de pesquisa acinzentada significa que foi desativada e se tornou "
+"inacessível."
 
-#: templates/docs/global_surveys.html:151 templates/docs/uncts_surveys.html:326
+#: templates/docs/global_surveys.html:151
+#: templates/docs/uncts_surveys.html:326
 msgid "A disabled survey won't have its results synchronized. "
-msgstr ""
+msgstr "Uma pesquisa desativada não terá seus resultados sincronizados."
 
 #: templates/docs/global_surveys.html:152
 msgid ""
 "In most cases disabling a survey means that the result is no longer "
 "necessary or something went wrong with it."
 msgstr ""
+"Na maioria dos casos, desabilitar uma pesquisa significa que o resultado não"
+" é mais necessário ou que algo deu errado."
 
-#: templates/docs/global_surveys.html:166 templates/docs/uncts_surveys.html:341
+#: templates/docs/global_surveys.html:166
+#: templates/docs/uncts_surveys.html:341
 msgid "Surveys' results"
-msgstr ""
+msgstr "Resultados da pesquisa"
 
 #: templates/docs/global_surveys.html:168
 msgid ""
 "Here, you will find all surveys that were registered as Global on UNCTs. "
 msgstr ""
+"Aqui, você encontrará todas as pesquisas registradas como Global nos UNCTs."
 
-#: templates/docs/global_surveys.html:169 templates/docs/uncts_surveys.html:344
+#: templates/docs/global_surveys.html:169
+#: templates/docs/uncts_surveys.html:344
 msgid ""
 "Survey results can be analyzed by selecting a survey on the survey's list."
 msgstr ""
+"Os resultados da pesquisa podem ser analisados selecionando uma pesquisa na "
+"lista da pesquisa."
 
-#: templates/docs/global_surveys.html:181 templates/docs/uncts_surveys.html:356
+#: templates/docs/global_surveys.html:181
+#: templates/docs/uncts_surveys.html:356
 msgid ""
 "When choosing a survey on the list you will be redirected to the survey "
 "results page, which displays all details and charts. "
 msgstr ""
+"Ao escolher uma pesquisa na lista, você será redirecionado para a página de "
+"resultados da pesquisa, que exibe todos os detalhes e gráficos."
 
 #: templates/docs/global_surveys.html:182
 msgid ""
 "It will show you how many questions have the selected survey, its Title, "
 "Description, Date and Linked SDGs. "
 msgstr ""
+"Ele mostrará quantas perguntas a pesquisa selecionada, seu título, "
+"descrição, data e ODSs vinculadas."
 
 #: templates/docs/global_surveys.html:183
 msgid "There's also a counter for applied UNCTs in this Global survey."
-msgstr ""
+msgstr "Há também um contador para UNCTs aplicados nesta pesquisa global."
 
-#: templates/docs/global_surveys.html:195 templates/docs/uncts_surveys.html:357
+#: templates/docs/global_surveys.html:195
+#: templates/docs/uncts_surveys.html:357
 msgid ""
 "It's also possible to use the left panel and filter by SDG displaying only "
 "the questions that match the ones selected."
 msgstr ""
+"Também é possível usar o painel esquerdo e filtrar pela ODS exibindo apenas "
+"as perguntas que correspondem às selecionadas."
 
 #: templates/docs/global_surveys.html:209
 msgid "Search bar"
-msgstr ""
+msgstr "Barra de busca"
 
 #: templates/docs/global_surveys.html:211
 msgid ""
 "Searching for UNTCs will allow confronting Global results against Local."
 msgstr ""
+"A pesquisa de UNTCs permitirá a comparação dos resultados globais com uma "
+"Local."
 
 #: templates/docs/global_surveys.html:225
 msgid "Results' balance"
-msgstr ""
+msgstr "Saldo de resultados"
 
 #: templates/docs/global_surveys.html:227
 msgid ""
 "By clicking Countries arrow option a list of connected UNCTs will load so "
 "you may choose one to balance the results."
 msgstr ""
+"Clicando na opção de Países, uma lista de UNCTs conectadas será carregada, "
+"para que você possa escolher uma para comparar os resultados."
 
 #: templates/docs/global_surveys.html:239
 msgid ""
 "Now, it's possible to collate each question's result by clicking the More "
 "arrow."
 msgstr ""
+"Agora, é possível agrupar o resultado de cada pergunta clicando na seta "
+"Mais."
 
 #: templates/docs/global_surveys.html:251
 msgid ""
@@ -960,80 +1112,99 @@ msgid ""
 "that has this question, and a segment by option to filter results by Age or "
 "Gender."
 msgstr ""
+"Para cada pergunta, há um contador de engajamento, para pesquisas de UNCTs "
+"aplicadas que possuem essa pergunta e um segmento por opção para filtrar os "
+"resultados por Idade ou Sexo."
 
 #: templates/docs/global_surveys.html:265 templates/docs/global_uncts.html:115
 #: templates/docs/uncts_surveys.html:273
 msgid "Editing"
-msgstr ""
+msgstr "Editando"
 
 #: templates/docs/global_surveys.html:267
 msgid ""
-"You can edit a Global survey anytime just by clicking the pencil icon on its "
-"right side."
+"You can edit a Global survey anytime just by clicking the pencil icon on its"
+" right side."
 msgstr ""
+"Você pode editar uma pesquisa global a qualquer momento, apenas clicando no "
+"ícone de lápis no lado direito."
 
 #: templates/docs/global_surveys.html:279
 msgid "The edition session will also allow you to deactivate that survey."
-msgstr ""
+msgstr "A sessão de edição também permitirá que você desative essa pesquisa."
 
 #: templates/docs/global_uncts.html:17
 msgid "List"
-msgstr ""
+msgstr "Lista"
 
 #: templates/docs/global_uncts.html:19
 msgid "The homepage of UNCTs' session is a list of all registered UNCTs. "
 msgstr ""
+"A página inicial da sessão das UNCTs é uma lista de todas as UNCTs "
+"registradas."
 
 #: templates/docs/global_uncts.html:20
 msgid " Where some actions are available, let's walk through it all."
-msgstr ""
+msgstr "Se algumas ações estiverem disponíveis, iremos analisar tudo."
 
 #: templates/docs/global_uncts.html:35
 msgid "You can choose to sort by Name, Timezone or Language. "
-msgstr ""
+msgstr "Você pode optar por ordenar por Nome, Fuso Horário ou Idioma."
 
 #: templates/docs/global_uncts.html:36
 msgid ""
 "The first click will apply alphabetically descending order and the second "
 "ascending."
 msgstr ""
+"O primeiro clique aplicará a ordem alfabética decrescente e o segundo "
+"crescente."
 
 #: templates/docs/global_uncts.html:51
 msgid ""
 "There's a search bar to find registered UNCTs, you just need to type and "
 "press enter. "
 msgstr ""
+"Essa barra de pesquisa é para realizar pesquisas, basta digitar e pressionar"
+" enter."
 
 #: templates/docs/global_uncts.html:52
 msgid ""
-"It's case insensitive and capable of searching for strings' fragments at the "
-"name field. "
+"It's case insensitive and capable of searching for strings' fragments at the"
+" name field. "
 msgstr ""
+"Reconhece letras maiúsculas e minúsculas e é capaz de procurar fragmentos no"
+" campo do nome."
 
 #: templates/docs/global_uncts.html:53
 msgid ""
-"In the example below the search was \"L\" and it found three UNCTs where the "
-"string was found in different spots. "
+"In the example below the search was \"L\" and it found three UNCTs where the"
+" string was found in different spots. "
 msgstr ""
+"No exemplo abaixo, a pesquisa foi \"L\" e encontrou três UNCTs em que o "
+"fragmento foi encontrado em locais diferentes."
 
 #: templates/docs/global_uncts.html:54
 msgid ""
-"You can disengage the search filter by clicking the X at the right of the bar"
+"You can disengage the search filter by clicking the X at the right of the "
+"bar"
 msgstr ""
+"Você pode desativar o filtro de pesquisa clicando no X à direita da barra."
 
 #: templates/docs/global_uncts.html:68
 msgid "Adding a new UNCT"
-msgstr ""
+msgstr "Adicionando uma nova UNCT"
 
 #: templates/docs/global_uncts.html:70
 msgid ""
 "By clicking the + UNCT button the process of registering a new UNCT will "
 "start."
 msgstr ""
+"Clicando no botão +UNCT o processo de registro de uma nova UNCT irá comear."
 
 #: templates/docs/global_uncts.html:72
 msgid "First inputs are relative to platform properties. "
 msgstr ""
+"Os primeiros campos de texto são relacionados às propriedades da plataforma."
 
 #: templates/docs/global_uncts.html:73
 msgid ""
@@ -1041,97 +1212,115 @@ msgid ""
 "Timezone should match exactly the values from the respective RapidPro "
 "workspace. "
 msgstr ""
+"O nome e o idioma são livres para escolher, mas o URL do RapidPro, o Token "
+"do RapidPro e o Fuso horário devem corresponder exatamente aos valores do "
+"respectivo espaço de trabalho do RapidPro."
 
 #: templates/docs/global_uncts.html:74
 msgid "Slug is a subdomain that will be used to access the workspace."
 msgstr ""
+"Slug é um subdomínio que será usado para acessar o espaço de trabalho."
 
 #: templates/docs/global_uncts.html:76
 msgid "EG. sandbox will create https://sandbox.rtm.ilhasoft.mobi"
-msgstr ""
+msgstr "Exemplo: 'sandbox' irá criar 'https://sandbox.rtm.ilhasoft.mobi'"
 
 #: templates/docs/global_uncts.html:88
 msgid ""
 "Backend configuration should be customized with the respective contact "
 "settings on RapidPro. "
 msgstr ""
+"A configuração de back-end deve ser personalizada com as respectivas "
+"configurações de contato no RapidPro."
 
 #: templates/docs/global_uncts.html:89
 msgid ""
 "Fill Contact group with the main group name, where registered contacts are. "
 msgstr ""
+"Preencha o grupo de contatos com o nome do grupo principal, no local que "
+"estão os contatos registrados."
 
 #: templates/docs/global_uncts.html:90
 msgid ""
 "The other fields should be filled with the respective contact field's title "
 "for each piece of information: "
 msgstr ""
+"Os outros campos devem ser preenchidos com o título do respectivo campo de "
+"contato para cada informação:"
 
 #: templates/docs/global_uncts.html:92
 msgid "Born Label for the year of born; "
-msgstr ""
+msgstr "O campo de texto Nascido é para o ano de nascimento;"
 
 #: templates/docs/global_uncts.html:93
 msgid "Gender Label for gender; "
-msgstr ""
+msgstr "O campo de texto Gênero é para o gênero;"
 
 #: templates/docs/global_uncts.html:94
 msgid "Occupation Label for the profession (optional);"
-msgstr ""
+msgstr "O campo de texto Ocupação é para a profissão (opcional);"
 
 #: templates/docs/global_uncts.html:95
 msgid "Registration Label for contact's registration date;"
-msgstr ""
+msgstr "O campo de texto Registro é para a data de registro do contato;"
 
 #: templates/docs/global_uncts.html:96
 msgid "State Label for the first region level, generally State;"
 msgstr ""
+"O campo de texto Estado é para o primeiro nível de região, geralmente "
+"Estado;"
 
 #: templates/docs/global_uncts.html:97
 msgid "District Label for the second region level (optional);"
-msgstr ""
+msgstr "O campo de texto Distrito é para o segundo nível (opcional);"
 
 #: templates/docs/global_uncts.html:98
 msgid "Ward Label for the third region level (optional);"
-msgstr ""
+msgstr "O campo de texto Região é para a terceiro nível (opcional);"
 
 #: templates/docs/global_uncts.html:99
 msgid ""
 "Male Label and Female Label should be filled with the values that are "
 "representing each gender. "
 msgstr ""
+"Os campos de texto Masculino e Feminino devem ser preenchidos com os termos "
+"que representam cada gênero."
 
 #: templates/docs/global_uncts.html:100
 msgid "EG. Male and Female, respectively."
-msgstr ""
+msgstr "Exemplo: Masculino e Feminino, respectivamente."
 
 #: templates/docs/global_uncts.html:101
 msgid "Save clicking OK and it will take effect immediately."
-msgstr ""
+msgstr "Salve clicando OK e estará funcionando imediatamente."
 
 #: templates/docs/global_uncts.html:117
 msgid ""
 "You can start editing UNCTs just by clicking the pencil icon on its right "
 "side. "
 msgstr ""
+"Você pode começar a editar UNCTs apenas clicando no ícone de lápis no lado "
+"direito."
 
 #: templates/docs/global_uncts.html:118
 msgid "You will have access to all fields."
-msgstr ""
+msgstr "Você terá acesso a todos os campos."
 
 #: templates/docs/global_uncts.html:121
 msgid "CAUTION!!!"
-msgstr ""
+msgstr "CUIDADO!!!"
 
 #: templates/docs/global_uncts.html:123
 msgid "Pay attention to the field you're editing. "
-msgstr ""
+msgstr "Preste atenção no campo que você está editando."
 
 #: templates/docs/global_uncts.html:124
 msgid ""
-"Saving incorrect values will make the UNCT workspace become inaccessible and "
-"may affect values accuracy. "
+"Saving incorrect values will make the UNCT workspace become inaccessible and"
+" may affect values accuracy. "
 msgstr ""
+"Salvar valores incorretos tornará o espaço de trabalho UNCT inacessível e "
+"poderá afetar a precisão dos valores."
 
 #: templates/docs/global_uncts.html:125
 msgid ""
@@ -1139,10 +1328,13 @@ msgid ""
 "recommended and should be done only if oriented by a support member in very "
 "specific situations."
 msgstr ""
+"A edição de valores de configuração do Token do RapidPro ou Back-end é "
+"altamente desaconselhado e deve ser feita apenas se orientada por um membro "
+"de suporte em situações muito específicas."
 
 #: templates/docs/global_uncts.html:139
 msgid "UNCT users"
-msgstr ""
+msgstr "Usuários da UNCT"
 
 #: templates/docs/global_uncts.html:141
 msgid ""
@@ -1150,225 +1342,280 @@ msgid ""
 "just click the group icon on its right side and those UNCT users' list will "
 "be loaded."
 msgstr ""
+"É possível editar os níveis de conta da UNCT diretamente da área de trabalho"
+" global, basta clicar no ícone do grupo à direita e a lista desses usuários "
+"da UNCT será carregada."
 
 #: templates/docs/global_uncts.html:153
 msgid ""
 "Then you just have to click at the user's pencil icon and edit its access "
 "level, similar to editing on a Local workspace."
 msgstr ""
+"Depois, basta clicar no ícone de lápis do usuário e editar seu nível de "
+"acesso, semelhante à edição em uma área de trabalho local."
 
 #: templates/docs/global_users.html:16 templates/docs/uncts_users.html:16
 msgid ""
 "Account's management area that allows access level control and account "
 "removal."
 msgstr ""
+"Área de gerenciamento de contas permite o controle de nível de acesso e "
+"remoção de contas."
 
 #: templates/docs/global_users.html:17
 msgid "On your first login, you'll receive viewer access permission. "
 msgstr ""
+"No seu primeiro login, você receberá permissão de acesso de visualizador."
 
 #: templates/docs/global_users.html:18
 msgid ""
 "If you want new user access, a UN Info administrator needs to change your "
 "access."
 msgstr ""
+"Se você deseja acesso a novos usuários, um administrador da ONU precisará "
+"alterar seu acesso."
 
 #: templates/docs/global_users.html:19 templates/docs/uncts_users.html:19
 msgid "The home page for all logged accounts is the Dashboard."
-msgstr ""
+msgstr "A página inicial de todas as contas registradas é o Painel."
 
 #: templates/docs/global_users.html:26 templates/docs/uncts_users.html:26
 msgid "Viewer"
-msgstr ""
+msgstr "Visualizador"
 
 #: templates/docs/global_users.html:28
 msgid ""
 "Allowed to access Global's Dashboard and Repository a viewer account can "
 "only see the data already there."
 msgstr ""
+"Com permissão para acessar o Painel Global e o Repositório Global, uma conta"
+" de visualizador pode ver apenas os dados já existentes."
 
 #: templates/docs/global_users.html:42 templates/docs/uncts_users.html:42
 msgid "Administrator"
-msgstr ""
+msgstr "Administrador"
 
 #: templates/docs/global_users.html:44
 msgid "Administrators' accounts have full access to all tools. "
-msgstr ""
+msgstr "As contas administradoras têm acesso total a todas as ferramentas."
 
 #: templates/docs/global_users.html:45 templates/docs/uncts_users.html:45
 msgid ""
 "Additionally, a user tab is offered to administrate accounts' access level "
 "and availability."
 msgstr ""
+"Ademais, é fornecido um guia do usuário para administrar o nível de acesso e"
+" a disponibilidade das contas."
 
 #: templates/docs/global_users.html:59 templates/docs/uncts_users.html:59
 msgid "Editing an account"
-msgstr ""
+msgstr "Editando uma conta"
 
 #: templates/docs/global_users.html:61
 msgid "In the image below you can see different sample accounts. "
-msgstr ""
+msgstr "Na imagem a seguir, é possível ver diferentes contas de amostra."
 
 #: templates/docs/global_users.html:62 templates/docs/uncts_users.html:62
 msgid ""
 "As you mouse over the pencil icon it will highlight and clicking will allow "
 "editing that account's access level."
 msgstr ""
+"Ao passar o mouse sobre o ícone de lápis, ele será destacado e o clique "
+"permitirá editar o nível de acesso dessa conta."
 
 #: templates/docs/global_users.html:74 templates/docs/uncts_users.html:74
 msgid ""
-"Changes take effect immediately but if the modified account is still logging "
-"while being edited a fresh login may be needed."
+"Changes take effect immediately but if the modified account is still logging"
+" while being edited a fresh login may be needed."
 msgstr ""
+"As alterações entram em vigor imediatamente, mas se a conta modificada ainda"
+" estiver registrando enquanto estiver sendo editada, um novo login poderá "
+"ser necessário."
 
 #: templates/docs/global_users.html:88 templates/docs/uncts_users.html:88
 msgid "Disabling an account"
-msgstr ""
+msgstr "Desativando uma conta"
 
 #: templates/docs/global_users.html:90
 msgid "Account disabling feature yet to be added."
-msgstr ""
+msgstr "Recurso de desativação de conta ainda será adicionado."
 
 #: templates/docs/global_users.html:97
 msgid "Enabling an account"
-msgstr ""
+msgstr "Ativando uma conta"
 
 #: templates/docs/global_users.html:99
 msgid "Account enabling feature yet to be developed."
-msgstr ""
+msgstr "Recurso de ativação de conta ainda será desenvolvido."
 
 #: templates/docs/global_users.html:106 templates/docs/uncts_users.html:104
 msgid "User search tool"
-msgstr ""
+msgstr "Ferramenta de busca do usuário"
 
 #: templates/docs/global_users.html:108 templates/docs/uncts_users.html:106
 msgid ""
 "The search bar uses the account's name to query and you just need to type "
 "and press enter. "
 msgstr ""
+"A barra de pesquisa usa o nome da conta para consultar e você só precisa "
+"digitar e pressionar enter."
 
 #: templates/docs/global_users.html:109
 msgid "It's case insensitive and capable of searching for strings' fragments."
 msgstr ""
+"Reconhece letras maiúsculas e minúsculas e é capaz de procurar por "
+"fragmentos das palavras."
 
 #: templates/docs/global_users.html:110 templates/docs/uncts_users.html:109
 msgid ""
 "It's also possible to clear the query just by clicking the X button at the "
 "search bar."
 msgstr ""
+"É possível limpar a consulta clicando no botão X na barra de pesquisa."
 
 #: templates/docs/global_users.html:126 templates/docs/uncts_users.html:126
 msgid ""
 "It's possible to order contacts by Name, ascending or descending, just by "
 "clicking the columm's title."
 msgstr ""
+"É possível ordenar contatos pelo Nome, crescente ou decrescente, apenas "
+"clicando no título da coluna."
 
 #: templates/docs/login.html:15
 msgid "You may access the RTM platform by entering credentials at "
-msgstr ""
+msgstr "Você pode acessar a plataforma do RTM inserindo as credenciais em"
 
 #: templates/docs/login.html:15
 msgid "UN Info portal"
-msgstr ""
+msgstr "Portal da ONU"
 
 #: templates/docs/login.html:16
 msgid "Type your username, password and hit Log in."
-msgstr ""
+msgstr "Digite seu nome de usuário, senha e clique em Login."
 
 #: templates/docs/login.html:31
-msgid "Upon successful login you'll be redirected to the UN Info home screen. "
+msgid ""
+"Upon successful login you'll be redirected to the UN Info home screen. "
 msgstr ""
+"Após o login bem-sucedido, você será redirecionado para a tela inicial de "
+"Informações da ONU."
 
 #: templates/docs/login.html:32
 msgid "Now choose "
-msgstr ""
+msgstr "Escolha agora"
 
 #: templates/docs/login.html:32
 msgid "REAL TIME MONITORING"
-msgstr ""
+msgstr "REAL TIME MONITORING"
 
 #: templates/docs/login.html:33
 msgid " option and click the UNCT you want to access."
-msgstr ""
+msgstr "opção e clique no UNCT que você deseja acessar."
 
 #: templates/docs/login.html:46
 msgid ""
 "A redirect window will open to take you to the requested UNCT workspace."
 msgstr ""
+"Uma janela de redirecionamento será aberta para levá-lo ao espaço de "
+"trabalho solicitado do UNCT."
 
 #: templates/docs/login.html:59
 msgid ""
 "If you fail to login for five consecutive attempts, the account will be "
 "blocked for 10 minutes."
 msgstr ""
+"Se você não conseguir fazer login por cinco tentativas consecutivas, a conta"
+" será bloqueada por 10 minutos."
 
 #: templates/docs/uncts_dashboard.html:34
 msgid ""
 "The page's title is the UNCT workspace name and right below it's the scope "
 "of the first Filter. "
 msgstr ""
+"O título da página é o nome da área de trabalho UNCT e logo abaixo é o campo"
+" do primeiro filtro."
 
 #: templates/docs/uncts_dashboard.html:35
 msgid ""
 "To ease the understanding, there's a block division for each data type. "
 msgstr ""
+"Para facilitar o entendimento, existe uma divisão de blocos para cada tipo "
+"de dados."
 
 #: templates/docs/uncts_dashboard.html:36
 msgid ""
 "The first one is related to SDGs tracking, then Surveys Partial Results, "
 "Message Metrics, Most used Channels and lastly RapidPro Contacts. "
 msgstr ""
+"O primeiro está relacionado ao rastreamento de ODS, depois resultados "
+"parciais da pesquisa, métricas de mensagem, canais mais usados e, por "
+"último, contatos do RapidPro."
 
 #: templates/docs/uncts_dashboard.html:38
 msgid "This is how an empty workspace looks like."
-msgstr ""
+msgstr "É assim que um espaço de trabalho vazio se parece."
 
 #: templates/docs/uncts_dashboard.html:55
 msgid ""
-"In other words, it shows the number of received messages from questions that "
-"are linked to the respective SDG."
+"In other words, it shows the number of received messages from questions that"
+" are linked to the respective SDG."
 msgstr ""
+"Em outras palavras, mostra o número de mensagens recebidas de perguntas "
+"vinculadas à respectiva ODS."
 
 #: templates/docs/uncts_dashboard.html:85
 msgid ""
 "To follow ongoing surveys and track how the answers are being structured as "
-"it comes from RapidPro, the partial results graph randomizes 20 questions to "
-"be displayed. "
+"it comes from RapidPro, the partial results graph randomizes 20 questions to"
+" be displayed. "
 msgstr ""
+"Para acompanhar pesquisas em andamento e acompanhar como as respostas estão "
+"sendo estruturadas, como vem do RapidPro, o gráfico de resultados parciais "
+"randomiza 20 perguntas a serem exibidas."
 
 #: templates/docs/uncts_dashboard.html:86
 msgid "It will bring a more close approach to ongoing surveys."
-msgstr ""
+msgstr "Isso trará uma abordagem mais próxima às pesquisas em andamento."
 
 #: templates/docs/uncts_dashboard.html:120
 msgid ""
 "This dashboard module shows the sum of aggregated values from messages sent "
 "and received."
 msgstr ""
+"Este módulo do painel mostra a soma dos valores agregados das mensagens "
+"enviadas e recebidas."
 
 #: templates/docs/uncts_dashboard.html:121
 msgid ""
-"There's also a tracking statistics by active channels on the UNCT's RapidPro "
-"workspace. "
+"There's also a tracking statistics by active channels on the UNCT's RapidPro"
+" workspace. "
 msgstr ""
+"Também há estatísticas de acompanhamento por canais ativos no espaço de "
+"trabalho no RapidPro da UNCT."
 
 #: templates/docs/uncts_dashboard.html:150
 msgid ""
 "It means the number of contacts inside the registered group and can be used "
 "to show the workspace's contact level of growth. "
 msgstr ""
+"Significa o número de contatos dentro do grupo registrado e pode ser usado "
+"para mostrar o nível de crescimento do contato da área de trabalho."
 
 #: templates/docs/uncts_repository.html:16
 msgid ""
 "The RTM Repository module creates a collaborative ecosystem to share survey "
 "flows template files. "
 msgstr ""
+"O Repositório do RTM cria um ecossistema colaborativo para compartilhar "
+"arquivos de fluxos de pesquisa."
 
 #: templates/docs/uncts_repository.html:17
 msgid ""
 "By sharing surveys, administrators can contribute to more success cases' "
 "with UNCTs aiming the same goal. "
 msgstr ""
+"Ao compartilhar pesquisas, os administradores podem contribuir para mais "
+"casos de sucesso com as UNCTs visando o mesmo objetivo."
 
 #: templates/docs/uncts_repository.html:18
 msgid ""
@@ -1376,154 +1623,195 @@ msgid ""
 "necessary environment for collecting communities' thoughts and its core "
 "resides in Flow feature."
 msgstr ""
+"O RapidPro é a plataforma que capacita os programas sociais no ambiente "
+"necessário para coletar os pensamentos das comunidades e seu foco é na "
+"construção de fluxos."
 
 #: templates/docs/uncts_repository.html:25
 msgid "How to share"
-msgstr ""
+msgstr "Como compartilhar"
 
 #: templates/docs/uncts_repository.html:27
 msgid ""
 "Only administrators can add new flow files, and it's possible to choose to "
 "share it restricted to the UNCT you're in or globally."
 msgstr ""
+"Somente os administradores podem adicionar novos arquivos de fluxo, e é "
+"possível optar por compartilhá-lo como restrito à UNCT em que você está ou "
+"globalmente."
 
-#: templates/docs/uncts_repository.html:41 templates/docs/uncts_surveys.html:33
+#: templates/docs/uncts_repository.html:41
+#: templates/docs/uncts_surveys.html:33
 msgid "Viewer perspective"
-msgstr ""
+msgstr "Perspectiva do Visualizador"
 
 #: templates/docs/uncts_repository.html:43
 msgid "A viewer has access to all but adding new files to share."
 msgstr ""
+"Um visualizador tem acesso geral, exceto adicionar novos arquivos para "
+"compartilhar."
 
 #: templates/docs/uncts_repository.html:77
 msgid "My UNCT"
-msgstr ""
+msgstr "Minha UNCT"
 
 #: templates/docs/uncts_repository.html:79
 msgid "Restricts the list for your UNCT's flows only."
-msgstr ""
+msgstr "Restringe a lista apenas para os fluxos da sua UNCT."
 
-#: templates/docs/uncts_repository.html:93 templates/docs/uncts_surveys.html:49
+#: templates/docs/uncts_repository.html:93
+#: templates/docs/uncts_surveys.html:49
 msgid "Administrator perspective"
-msgstr ""
+msgstr "Perspectiva do Administrador"
 
 #: templates/docs/uncts_repository.html:95
 msgid ""
 "An administrator has access to all features, including surveys' actions for "
 "adding new, removing and editing content."
 msgstr ""
+"Um administrador tem acesso a todos os recursos, incluindo ações de "
+"pesquisas para adicionar novo, remover e editar conteúdo."
 
 #: templates/docs/uncts_repository.html:108 templates/flowhub/form.html:56
-#: templates/flowhub/global_form.html:56 templates/flowhub/global_index.html:40
-#: templates/flowhub/index.html:40 templates/flowhub/info.html:49
-#: templates/flowhub/uncts.html:40
+#: templates/flowhub/global_form.html:56
+#: templates/flowhub/global_index.html:40 templates/flowhub/index.html:40
+#: templates/flowhub/info.html:49 templates/flowhub/uncts.html:40
 msgid "Upload Flow"
-msgstr ""
+msgstr "Envio de fluxo"
 
 #: templates/docs/uncts_repository.html:110
 msgid ""
 "Share the flows build in RapidPro so other UNCTs may have access to your "
 "insights."
 msgstr ""
+"Compartilhe os fluxos criados no RapidPro para que outras UNCTs possam ter "
+"acesso as suas ideias."
 
 #: templates/docs/uncts_repository.html:112
 msgid "Let's go step by step in this process:"
-msgstr ""
+msgstr "Vamos passo a passo neste processo:"
 
 #: templates/docs/uncts_repository.html:115
 msgid ""
 "Start adding the flow file by clicking the option Select your json file;"
 msgstr ""
+"Comece a adicionar o arquivo de fluxo clicando na opção Selecionar seu "
+"arquivo json;"
 
 #: templates/docs/uncts_repository.html:116
 msgid ""
 "Switch Visible globally option to restrict this flow to your UNCT only or "
 "make it available for others;"
 msgstr ""
+"Alterne a opção Visível Globalmente para restringir esse fluxo apenas à sua "
+"UNCT ou disponibilizá-lo para outros;"
 
 #: templates/docs/uncts_repository.html:117
 msgid "Give the flow a Name;"
-msgstr ""
+msgstr "Dê um Nome ao fluxo;"
 
 #: templates/docs/uncts_repository.html:118
 msgid ""
 "Select the flow Language (you can choose more than one if there's a "
 "translation available);"
 msgstr ""
+"Selecione o Idioma do fluxo (você pode escolher mais de um, se houver uma "
+"tradução disponível);"
 
 #: templates/docs/uncts_repository.html:119
 msgid ""
 "Describe the purpose of this flow and which data were you aiming to gather "
 "with it. "
 msgstr ""
+"Descreva o objetivo desse fluxo e quais dados você pretendia reunir com ele."
 
 #: templates/docs/uncts_repository.html:120
 msgid "Giving examples would be a good practice too;"
-msgstr ""
+msgstr "Dar exemplos também seria uma boa prática;"
 
 #: templates/docs/uncts_repository.html:121
 msgid ""
 "Tell which data is this flow asking for. EG. a registration flow would ask "
 "for \"Age, Gender and Region\";"
 msgstr ""
+"Diga quais dados esse fluxo está solicitando. Por exemplo, um fluxo de "
+"registro solicitaria \"Idade, Gênero e Região\";"
 
 #: templates/docs/uncts_repository.html:122
 msgid "Select which SGDs this flow matches;"
-msgstr ""
+msgstr "Selecione com quais ODSs esse fluxo corresponde;"
 
 #: templates/docs/uncts_repository.html:123
 msgid ""
 "Additionally, you can choose some Tags for the flow too. That's optional."
 msgstr ""
+"Além disso, você também pode escolher algumas tags para o fluxo. Isso é "
+"opcional."
 
 #: templates/docs/uncts_repository.html:142
 msgid ""
 "In the example below the search was \"flow\" and it found three surveys "
 "where the string was found in different spots."
 msgstr ""
+"No exemplo a seguir, a pesquisa foi \"flow\" e encontrou três pesquisas em "
+"que a sentença foi encontrada em locais diferentes."
 
 #: templates/docs/uncts_repository.html:158
 msgid "It's possible to sort surveys by stars, newest or alphabetically."
 msgstr ""
+"É possível ordenar pesquisas por estrelas, mais recentes ou em ordem "
+"alfabética."
 
 #: templates/docs/uncts_surveys.html:16
 msgid ""
 "The survey results module displays citizen-generated data from answers of "
 "ongoing or already finished surveys. "
 msgstr ""
+"Os resultados da pesquisa exibe dados gerados a partir de respostas de "
+"pesquisas em andamento ou já concluídas."
 
 #: templates/docs/uncts_surveys.html:17
 msgid ""
 "It represents a flow from RapidPro which was linked to the RTM platform and "
 "has synchronized data. "
 msgstr ""
+"Representa um fluxo do RapidPro que foi vinculado à plataforma do RTM e que "
+"teve os dados sincronizados."
 
 #: templates/docs/uncts_surveys.html:18
 msgid ""
 "Navigating through surveys can be done using the top bar and also with the "
 "bread crumbs (right above the page's title) as you go further in options. "
 msgstr ""
+"A navegação nas pesquisas pode ser feita usando a barra superior e também "
+"pelos breadcrumbs (logo acima do título da página) à medida que você avança "
+"nas opções."
 
 #: templates/docs/uncts_surveys.html:19
 msgid ""
 "In the next steps we'll cover everything in order to engage a fully working "
 "survey content within all its features."
 msgstr ""
+"Nas próximas etapas, abordaremos tudo para envolver um conteúdo de pesquisa "
+"totalmente funcional em todos os seus recursos."
 
 #: templates/docs/uncts_surveys.html:35
 msgid ""
 "As viewer, an account may access all Surveys data but no editing allowed."
 msgstr ""
+"Como visualizador, uma conta pode acessar todos os dados de pesquisas, mas "
+"nenhuma edição é permitida."
 
 #: templates/docs/uncts_surveys.html:51
 msgid ""
 "An administrator account will also be capable of add, edit or exclude "
 "content."
 msgstr ""
+"Uma conta administrador também poderá adicionar, editar ou excluir conteúdo."
 
 #: templates/docs/uncts_surveys.html:65
 msgid "Connecting a Survey"
-msgstr ""
+msgstr "Conectando uma Pesquisa"
 
 #: templates/docs/uncts_surveys.html:67
 msgid ""
@@ -1531,61 +1819,76 @@ msgid ""
 "RapidPro UNCT workspace into the RTM platform and customizing its layout to "
 "better suit the RTM graphs and dashboards. "
 msgstr ""
+"Conectar uma pesquisa é basicamente o processo de vincular fluxos de um "
+"espaço de trabalho da UNCT no RapidPro à plataforma do RTM e personalizar "
+"para melhor se adequar aos gráficos e painéis do RTM."
 
 #: templates/docs/uncts_surveys.html:68
 msgid ""
 "The first thing you need to do is clicking the Connect Survey button on the "
 "right side. "
 msgstr ""
+"A primeira coisa que você precisa fazer é clicar no botão Conectar pesquisa,"
+" no lado direito."
 
 #: templates/docs/uncts_surveys.html:69
 msgid ""
 "There are three major steps in the survey registration process, let's walk "
 "through each one."
 msgstr ""
+"Existem três etapas principais no processo de registro da pesquisa, vamos "
+"percorrer cada uma delas."
 
 #: templates/docs/uncts_surveys.html:83
 msgid "Survey General info"
-msgstr ""
+msgstr "Informações gerais da pesquisa"
 
 #: templates/docs/uncts_surveys.html:85
 msgid ""
 "The first step is selecting which RapidPro flow will be the source of this "
 "survey."
 msgstr ""
+"A primeira etapa é selecionar qual fluxo do RapidPro será a fonte dessa "
+"pesquisa."
 
 #: templates/docs/uncts_surveys.html:86
 msgid ""
 "Title should be filled with the survey name that will be displayed, so you "
 "may describe it better than just the flow's name."
 msgstr ""
+"O título deve ser preenchido com o nome da pesquisa que será exibido, para "
+"que você possa descrevê-lo melhor do que apenas o nome do fluxo."
 
 #: templates/docs/uncts_surveys.html:87
 msgid ""
 "Description is where you can highlight in which case has this survey been "
 "taking place and describe its goals."
 msgstr ""
+"A descrição é onde você pode destacar em qual caso essa pesquisa está "
+"ocorrendo e descrever seus objetivos."
 
 #: templates/docs/uncts_surveys.html:89
 msgid "Than hit Next to move forward."
-msgstr ""
+msgstr "Em seguida, pressione Próximo para avançar."
 
 #: templates/docs/uncts_surveys.html:103
 msgid "Connect to a Global survey"
-msgstr ""
+msgstr "Conectar a uma pesquisa global"
 
 #: templates/docs/uncts_surveys.html:105
 msgid ""
 "Note there's a check-box to link this survey to an ongoing Global survey."
 msgstr ""
+"Observe que há uma caixa de seleção para vincular esta pesquisa a uma "
+"pesquisa global em andamento."
 
 #: templates/docs/uncts_surveys.html:119
 msgid "Date setting"
-msgstr ""
+msgstr "Configuração de data"
 
 #: templates/docs/uncts_surveys.html:121
 msgid "Set a date range is optional but is also an important step. "
-msgstr ""
+msgstr "Definir um período é opcional, mas também é uma etapa importante."
 
 #: templates/docs/uncts_surveys.html:122
 msgid ""
@@ -1593,6 +1896,9 @@ msgid ""
 "was created, but it also corresponds to the time when the survey was "
 "published live for the community. "
 msgstr ""
+"Você pode deixar a data de início padrão, que é a data em que o fluxo do "
+"RapidPro foi criado, mas também corresponde à hora em que a pesquisa foi "
+"publicada ao vivo para a comunidade."
 
 #: templates/docs/uncts_surveys.html:123
 msgid ""
@@ -1600,98 +1906,121 @@ msgid ""
 "means that the results will be shown on the time interval between these two "
 "dates."
 msgstr ""
+"O preenchimento do campo Data final será definido quando a pesquisa for "
+"publicada, significa que os resultados serão mostrados no intervalo de tempo"
+" entre essas duas datas."
 
 #: templates/docs/uncts_surveys.html:139
 msgid ""
 "The survey structure that comes from RapidPro is raw, it must be customized "
 "in order to better display it at the Surveys results."
 msgstr ""
+"A estrutura de pesquisa que vem do RapidPro é bruta, deve ser personalizada "
+"para melhor exibi-la nos resultados das pesquisas."
 
 #: templates/docs/uncts_surveys.html:140
 msgid ""
 "It is defined by the administrator when choosing the respective question "
 "title, SDG and visibility."
 msgstr ""
+"É definido pelo administrador ao escolher o respectivo título da pergunta, "
+"ODS e visibilidade."
 
 #: templates/docs/uncts_surveys.html:153
 msgid "Identifying the question"
-msgstr ""
+msgstr "Identificando a pergunta"
 
 #: templates/docs/uncts_surveys.html:155
 msgid "You'll see a numbered title for each question available. "
-msgstr ""
+msgstr "Você verá um título numerado para cada pergunta disponível."
 
 #: templates/docs/uncts_surveys.html:156
 msgid "That title matches the Wait for response named variable. "
-msgstr ""
+msgstr "Esse título corresponde à variável \"Wait for response\" da resposta."
 
 #: templates/docs/uncts_surveys.html:157
 msgid ""
 "In the example Result 1 goes for the first flow question step from RapidPro."
 msgstr ""
+"No exemplo, o Resultado 1 vai para a primeira etapa da pergunta de fluxo do "
+"RapidPro."
 
 #: templates/docs/uncts_surveys.html:170
 msgid "Question's title"
-msgstr ""
+msgstr "Título da pergunta"
 
 #: templates/docs/uncts_surveys.html:172
 msgid ""
 "Here you may feel more comfortable to provide a larger question description "
 "and highlight different perspectives to encourage positive discussion. "
 msgstr ""
+"Aqui você pode se sentir mais à vontade para fornecer uma descrição maior da"
+" pergunta e destacar perspectivas diferentes para incentivar discussões "
+"positivas."
 
 #: templates/docs/uncts_surveys.html:173
 msgid ""
 "The default value will be the respective question step from the RapidPro "
 "flow."
 msgstr ""
+"O valor padrão será a respectiva etapa da pergunta no fluxo do RapidPro."
 
 #: templates/docs/uncts_surveys.html:186
 msgid "Question's SDGs"
-msgstr ""
+msgstr "ODSs da pergunta"
 
 #: templates/docs/uncts_surveys.html:188
 msgid "Link which SDG is being tracked in this question. "
-msgstr ""
+msgstr "Vincule qual ODS está sendo rastreada nesta pergunta."
 
 #: templates/docs/uncts_surveys.html:189
 msgid "More than one can be selected if that's the case."
-msgstr ""
+msgstr "Mais de um pode ser selecionado, se for esse o caso."
 
 #: templates/docs/uncts_surveys.html:202
 msgid "Question's visibility"
-msgstr ""
+msgstr "Visibilidade da pergunta"
 
 #: templates/docs/uncts_surveys.html:204
 msgid ""
 "RapidPro flow's questions aren't necessarily connected to the purpose of a "
 "survey, and if that's the case you can disable that step. "
 msgstr ""
+"As perguntas do fluxo do RapidPro não estão necessariamente relacionadas ao "
+"objetivo de uma pesquisa e, se for esse o caso, você pode desativar essa "
+"etapa."
 
 #: templates/docs/uncts_surveys.html:205
 msgid ""
 "This means that question won't be visible in the Survey Results session."
 msgstr ""
+"Isso significa que a pergunta não estará visível na sessão Resultados da "
+"pesquisa."
 
 #: templates/docs/uncts_surveys.html:218
 msgid "Publish the survey's results"
-msgstr ""
+msgstr "Publicar os resultados da pesquisa"
 
 #: templates/docs/uncts_surveys.html:220
 msgid ""
 "After filling all necessary fields, you just need to save and those survey "
 "results will become accessible at the Surveys Results session."
 msgstr ""
+"Depois de preencher todos os campos necessários, basta salvar e esses "
+"resultados da pesquisa se tornarão acessíveis na sessão Resultados da "
+"pesquisa."
 
 #: templates/docs/uncts_surveys.html:238
 msgid ""
 "In the example below the search was \"a\" and it found five surveys where "
 "the string was found in different spots."
 msgstr ""
+"No exemplo a seguir, a pesquisa foi \"a\" e encontrou cinco pesquisas em que"
+" a sentença foi encontrada em locais diferentes."
 
 #: templates/docs/uncts_surveys.html:256
 msgid "It's possible to sort surveys by Name, number of Runs and Status. "
-msgstr ""
+msgstr "É possível ordenar pesquisas por Nome, Número de execuções e Status."
 
 #: templates/docs/uncts_surveys.html:258
 msgid ""
@@ -1699,157 +2028,195 @@ msgid ""
 "example below there's a search for 'a' and it's also sorting the list by "
 "Name."
 msgstr ""
+"A ordenação pode ser uma ferramenta muito útil à medida que a lista de sua "
+"pesquisa aumenta, no exemplo abaixo, há uma pesquisa por 'a' e também está "
+"classificando a lista por Nome."
 
 #: templates/docs/uncts_surveys.html:275
-msgid "When needed to have a survey modified, you can choose between two ways."
+msgid ""
+"When needed to have a survey modified, you can choose between two ways."
 msgstr ""
+"Quando necessário, para modificar uma pesquisa, você pode escolher entre "
+"duas maneiras."
 
 #: templates/docs/uncts_surveys.html:288
 msgid "Full survey editing"
-msgstr ""
+msgstr "Edição completa da pesquisa"
 
 #: templates/docs/uncts_surveys.html:290
 msgid ""
 "Clicking the pencil icon on the right side of the surveys' list will open a "
 "window similar to the one when you were adding a new survey. "
 msgstr ""
+"Clicar no ícone de lápis no lado direito da lista de pesquisas abrirá uma "
+"janela semelhante à que você estava adicionando uma nova pesquisa."
 
 #: templates/docs/uncts_surveys.html:291
 msgid ""
 "But you'll be editing it. And the only unavailable option is the flow link."
 msgstr ""
+"Mas você estará editando. E a única opção indisponível é o link de fluxo."
 
 #: templates/docs/uncts_surveys.html:292
 msgid "You can freely modify the Title and Description. "
-msgstr ""
+msgstr "Você pode modificar livremente o título e a descrição."
 
 #: templates/docs/uncts_surveys.html:293
 msgid ""
-"Note there's also a new option now Is active, where you can set if this hole "
-"survey should be visible or not. "
+"Note there's also a new option now Is active, where you can set if this hole"
+" survey should be visible or not. "
 msgstr ""
+"Observe que também há uma nova opção agora Está ativa, onde é possível "
+"definir se esse levantamento de furos deve estar visível ou não."
 
 #: templates/docs/uncts_surveys.html:294
 msgid "Clicking next will move forward to each step until you finish editing."
-msgstr ""
+msgstr "Clicar em Avançar avançará para cada etapa até concluir a edição."
 
 #: templates/docs/uncts_surveys.html:307
 msgid "Directly questions"
-msgstr ""
+msgstr "Perguntas diretas"
 
 #: templates/docs/uncts_surveys.html:309
 msgid ""
 "By clicking the question's number you'll be taken directly to questions' "
 "editing."
 msgstr ""
+"Ao clicar no número da pergunta, você será levado diretamente para a edição "
+"das perguntas."
 
 #: templates/docs/uncts_surveys.html:327
 msgid ""
-"In most cases disabling a survey means that result is no longer necessary or "
-"something went wrong with it."
+"In most cases disabling a survey means that result is no longer necessary or"
+" something went wrong with it."
 msgstr ""
+"Na maioria dos casos, desabilitar uma pesquisa significa que o resultado não"
+" é mais necessário ou que algo deu errado."
 
 #: templates/docs/uncts_surveys.html:343
 msgid "Here, you will find all surveys that were registered on your UNCT. "
-msgstr ""
+msgstr "Aqui, você encontrará todas as pesquisas registradas no seu UNCT."
 
 #: templates/docs/uncts_surveys.html:370
 msgid "Question's segments"
-msgstr ""
+msgstr "Segmentos da pergunta"
 
 #: templates/docs/uncts_surveys.html:372
 msgid ""
-"If you need to restrict the scope of one question, by Gender or Age, there's "
-"an option to do it at each question graph. "
+"If you need to restrict the scope of one question, by Gender or Age, there's"
+" an option to do it at each question graph. "
 msgstr ""
+"Se você precisar restringir o escopo de uma pergunta, por Gênero ou Idade, "
+"há uma opção para fazer isso em cada gráfico de pergunta."
 
 #: templates/docs/uncts_surveys.html:373
 msgid ""
 "Choosing All will clear the restriction and display the full question's "
 "result."
 msgstr ""
+"Escolher Tudo limpará a restrição e exibirá o resultado completo da "
+"pergunta."
 
 #: templates/docs/uncts_surveys.html:386
 msgid "Charts and Answer Types"
-msgstr ""
+msgstr "Gráficos e tipos de resposta"
 
 #: templates/docs/uncts_surveys.html:388
 msgid ""
 "To get a clear view of each survey results we've plan to describe all "
 "questions and its answers in the following kinds of charts:"
 msgstr ""
+"Para obter uma visão clara dos resultados de cada pesquisa, planejamos "
+"descrever todas as perguntas e suas respostas nos seguintes tipos de "
+"gráficos:"
 
 #: templates/docs/uncts_surveys.html:395
 msgid "Horizontal Bars"
-msgstr ""
+msgstr "Barras Horizontais"
 
 #: templates/docs/uncts_surveys.html:397
 msgid "Are used to display in a more simple and absolute approach. "
-msgstr ""
+msgstr "São usados para exibir em uma abordagem mais simples e absoluta."
 
 #: templates/docs/uncts_surveys.html:398 templates/docs/uncts_surveys.html:414
 msgid "Consolidation type: Age, Gender"
-msgstr ""
+msgstr "Tipo de consolidação: Idade, Sexo"
 
 #: templates/docs/uncts_surveys.html:411
 msgid "Doughnut"
-msgstr ""
+msgstr "Donut"
 
 #: templates/docs/uncts_surveys.html:413
 msgid ""
 "Doughnut charts are going to be used to compare answers between results and "
 "percentages. "
 msgstr ""
+"Os gráficos donuts serão usados para comparar respostas entre resultados e "
+"porcentagens."
 
 #: templates/docs/uncts_surveys.html:427
 msgid "Word cloud"
-msgstr ""
+msgstr "Nuvem de palavras"
 
 #: templates/docs/uncts_surveys.html:429
 msgid ""
 "Chart that allows users to overview open questions, this kind of chart is "
 "going to be good to compare the most commonly answered words."
 msgstr ""
+"Gráfico que permite aos usuários visualizar perguntas abertas, esse tipo de "
+"gráfico será bom para comparar as palavras respondidas com mais frequência."
 
 #: templates/docs/uncts_users.html:17
 msgid "On your first login, you'll receive viewer access permission."
 msgstr ""
+"No seu primeiro login, você receberá permissão de acesso de visualizador."
 
 #: templates/docs/uncts_users.html:18
 msgid ""
 "If you want new user access, a UNCT administrator needs to change your "
 "access."
 msgstr ""
+"Se você deseja acesso a novos usuários, um administrador da UNCT precisa "
+"alterar seu acesso."
 
 #: templates/docs/uncts_users.html:28
 msgid ""
 "Allowed to access UNCT's Dashboard, Repository and Surveys a viewer account "
 "can only see the data already there."
 msgstr ""
+"Com permissão para acessar o Painel, Repositório e Pesquisas da UNCT, uma "
+"conta de visualizador pode ver apenas os dados já existentes."
 
 #: templates/docs/uncts_users.html:44
 msgid "Administrators' accounts have full access to all tools."
-msgstr ""
+msgstr "As contas administradoras têm acesso total a todas as ferramentas."
 
 #: templates/docs/uncts_users.html:61
 msgid "In the image below you can see two sample accounts."
-msgstr ""
+msgstr "Na imagem a seguir, você pode ver duas contas de amostra."
 
 #: templates/docs/uncts_users.html:90
 msgid ""
 "By clicking the trash icon the respective account will be blocked and that "
 "login's credentials will be denied."
 msgstr ""
+"Ao clicar no ícone da lixeira, a respectiva conta será bloqueada e as "
+"credenciais do login serão negadas."
 
 #: templates/docs/uncts_users.html:107
-msgid "It's case insensitive and capable of searching for strings' fragments. "
+msgid ""
+"It's case insensitive and capable of searching for strings' fragments. "
 msgstr ""
+"É sensível a maiúsculas e minúsculas e é capaz de procurar fragmentos de "
+"strings."
 
 #: templates/docs/uncts_users.html:108
 msgid ""
 "In the example bellow the search was \"and\" and it found \"Admin Sandbox\" "
 "account name."
 msgstr ""
+"No exemplo abaixo, a pesquisa foi \"and\" e encontrou o nome da conta "
+"\"Admin Sandbox\"."
 
 #: templates/flowhub/flow_detail.html:40 templates/flowhub/form.html:112
 #: templates/flowhub/global_flow_detail.html:40
@@ -1857,482 +2224,495 @@ msgstr ""
 #: templates/flowhub/global_index.html:101 templates/flowhub/index.html:111
 #: templates/flowhub/info.html:98 templates/flowhub/info.html:113
 msgid "Languages"
-msgstr ""
+msgstr "Idiomas"
 
 #: templates/flowhub/flow_detail.html:65
-#: templates/flowhub/global_flow_detail.html:65 templates/flowhub/info.html:136
+#: templates/flowhub/global_flow_detail.html:65
+#: templates/flowhub/info.html:136
 msgid "downloads"
-msgstr ""
+msgstr "downloads"
 
 #: templates/flowhub/flow_detail.html:79
 #: templates/flowhub/global_flow_detail.html:79
 msgid "Do you really want to delete the flow"
-msgstr ""
+msgstr "Deseja realmente excluir o fluxo"
 
 #: templates/flowhub/form.html:39 templates/flowhub/global_form.html:39
 #: templates/flowhub/global_index.html:23 templates/flowhub/index.html:23
 #: templates/flowhub/info.html:32 templates/flowhub/uncts.html:23
-msgid "Survey library for finding and sharing questions or surveys among UNCTs"
+msgid ""
+"Survey library for finding and sharing questions or surveys among UNCTs"
 msgstr ""
+"Biblioteca de pesquisa para encontrar e compartilhar perguntas ou pesquisas "
+"entre os UNCTs"
 
 #: templates/flowhub/form.html:59 templates/flowhub/global_form.html:59
 #: templates/flowhub/global_index.html:43 templates/flowhub/index.html:43
 #: templates/flowhub/info.html:52 templates/flowhub/uncts.html:43
 msgid "Upload Global Flow"
-msgstr ""
+msgstr "Carregar fluxo global"
 
 #: templates/flowhub/form.html:71 templates/flowhub/global_form.html:71
 msgid "Add surveys you have used to the global repository. "
-msgstr ""
+msgstr "Adicione pesquisas que você usou ao repositório global."
 
 #: templates/flowhub/form.html:72 templates/flowhub/global_form.html:72
 msgid "Other UNCTs will be able to see the questions you used. "
-msgstr ""
+msgstr "Outras UNCTs poderão ver as perguntas que você usou."
 
 #: templates/flowhub/form.html:73 templates/flowhub/global_form.html:73
 msgid "The results are not included on the files and will not be shared."
 msgstr ""
+"Os resultados não estão incluídos nos arquivos e não serão compartilhados."
 
 #: templates/flowhub/form.html:85 templates/flowhub/global_form.html:85
 msgid "Search file"
-msgstr ""
+msgstr "Pesquisar arquivo"
 
 #: templates/flowhub/form.html:89 templates/flowhub/global_form.html:89
 msgid "Select your json file"
-msgstr ""
+msgstr "Selecione seu arquivo json"
 
 #: templates/flowhub/form.html:97 templates/flowhub/info.html:80
 msgid "Visible globally"
-msgstr ""
+msgstr "Visível globalmente"
 
 #: templates/flowhub/form.html:119 templates/flowhub/global_form.html:112
 #: templates/flowhub/info.html:85
 msgid "Description"
-msgstr ""
+msgstr "Descrição"
 
 #: templates/flowhub/form.html:133 templates/flowhub/global_index.html:85
 #: templates/flowhub/index.html:95 templates/flowhub/info.html:125
 #: templates/polls/index.html:57
 msgid "SDGs"
-msgstr ""
+msgstr "ODSs"
 
 #: templates/flowhub/form.html:141 templates/flowhub/global_form.html:126
 msgid "Add tag"
-msgstr ""
+msgstr "Adicionar tag"
 
 #: templates/flowhub/global_form.html:126
 msgid "Optional"
-msgstr ""
+msgstr "Opcional"
 
 #: templates/flowhub/global_index.html:57
 msgid ""
 "View all survey questions/surveys used by your UNCT. You can download a "
 "particular survey and use it."
 msgstr ""
+"Veja todas as perguntas/pesquisas usadas pela sua UNCT. Você pode baixar uma"
+" pesquisa específica e usá-la."
 
 #: templates/flowhub/global_index.html:119 templates/flowhub/index.html:129
 #: templates/flowhub/uncts.html:80
 msgid "Sort by"
-msgstr ""
+msgstr "Ordenar por"
 
 #: templates/flowhub/global_index.html:125 templates/flowhub/index.html:135
 #: templates/flowhub/uncts.html:86
 msgid "Alphabetical"
-msgstr ""
+msgstr "Alfabética"
 
 #: templates/flowhub/global_index.html:126 templates/flowhub/index.html:136
 msgid "Most stars"
-msgstr ""
+msgstr "Mais estrelas"
 
 #: templates/flowhub/global_index.html:127 templates/flowhub/index.html:137
 #: templates/flowhub/uncts.html:88
 msgid "Newest"
-msgstr ""
+msgstr "Recente"
 
 #: templates/flowhub/index.html:62
 msgid "View all survey questions/surveys used by all UNCTs. "
-msgstr ""
+msgstr "Veja todas as perguntas/pesquisas utilizadas por todas as UNCTs."
 
 #: templates/flowhub/index.html:63 templates/flowhub/index.html:66
 msgid "You can download a particular survey and use it."
-msgstr ""
+msgstr "Você pode baixar uma pesquisa específica e usá-la."
 
 #: templates/flowhub/index.html:65
 msgid "View all survey questions/surveys used by your UNCT. "
-msgstr ""
+msgstr "Veja todas as perguntas/pesquisas usadas pela sua UNCT."
 
 #: templates/flowhub/info.html:91
 msgid "Collected data"
-msgstr ""
+msgstr "Dados coletados"
 
 #: templates/flowhub/info.html:105
 msgid "Tags"
-msgstr ""
+msgstr "Tags"
 
 #: templates/flowhub/info.html:150
 msgid "Do you really want to delete this flow?"
-msgstr ""
+msgstr "Deseja realmente excluir este fluxo?"
 
 #: templates/flowhub/uncts.html:54
 msgid "A list of all UNCTs that have uploaded flows to the repository."
-msgstr ""
+msgstr "Uma lista de todas as UNCTs que carregaram fluxos no repositório."
 
 #: templates/flowhub/uncts.html:111
 msgid "flow"
-msgstr ""
+msgstr "fluxo"
 
 #: templates/flowhub/uncts.html:115
 msgid "Registered"
-msgstr ""
+msgstr "Registrado"
 
 #: templates/header.html:19
 msgid "World Map"
-msgstr ""
+msgstr "Mapa do Mundo"
 
 #: templates/header.html:36
 msgid "Help"
-msgstr ""
+msgstr "Ajuda"
 
 #: templates/header.html:59
 #: venv/lib/python3.6/site-packages/rest_framework_swagger/templates/rest_framework_swagger/index.html:28
 msgid "Logout"
-msgstr ""
+msgstr "Sair"
 
 #: templates/paginator.html:6
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/list.html:95
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/list.html:97
 msgid "Previous"
-msgstr ""
+msgstr "Voltar"
 
 #: templates/paginator.html:35 templates/polls/form.html:109
 #: templates/polls/form_date.html:78
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/list.html:128
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/list.html:130
 msgid "Next"
-msgstr ""
+msgstr "Próximo"
 
 #: templates/polls/form.html:31 templates/polls/form_questions.html:106
 msgid "1 General"
-msgstr ""
+msgstr "1 Geral"
 
 #: templates/polls/form.html:32 templates/polls/form_date.html:32
 #: templates/polls/form_questions.html:107
 msgid "2 Date Setting"
-msgstr ""
+msgstr "2 Ajuste de Data"
 
 #: templates/polls/form.html:33
 msgid "3 Questions"
-msgstr ""
+msgstr "3 Perguntas"
 
 #: templates/polls/form.html:42
 msgid "General Information"
-msgstr ""
+msgstr "Informação Geral"
 
 #: templates/polls/form.html:43
 msgid "Fill the fields below"
-msgstr ""
+msgstr "Preencha os campos abaixo"
 
 #: templates/polls/form.html:53
 msgid "Create a new flow on RapidPro"
-msgstr ""
+msgstr "Crie um novo fluxo no RapidPro"
 
 #: templates/polls/form.html:96
 msgid "Global Survey Description"
-msgstr ""
+msgstr "Descrição da Pesquisa Global"
 
 #: templates/polls/form.html:101
 msgid "Checking surveys compatibility..."
-msgstr ""
+msgstr "Conferindo a compatibilidade das pesquisas..."
 
 #: templates/polls/form_date.html:31
 msgid "1 Poll for flow"
-msgstr ""
+msgstr "1  Pesquisa de fluxo"
 
 #: templates/polls/form_date.html:33 templates/polls/form_questions.html:108
 msgid "3 Survey Questions"
-msgstr ""
+msgstr "3 Perguntas da Pesquisa"
 
 #: templates/polls/form_date.html:41
 msgid "Date Setting"
-msgstr ""
+msgstr "Ajuste da Data"
 
 #: templates/polls/form_date.html:49
 msgid ""
 "Registration date or leave this field empty to keep the date flow creation "
 "date"
 msgstr ""
+"Registre uma data ou deixe este campo em branco para manter a data de "
+"criação do fluxo de datas"
 
 #: templates/polls/form_date.html:77 templates/polls/form_questions.html:179
 msgid "Back"
-msgstr ""
+msgstr "Voltar"
 
 #: templates/polls/form_questions.html:116
 msgid "Survey Questions"
-msgstr ""
+msgstr "Perguntas da Pesquisa"
 
 #: templates/polls/form_questions.html:135
 msgid "Edit the selected title(s)"
-msgstr ""
+msgstr "Editar o(s) título(s) selecionado(s)"
 
 #: templates/polls/form_questions.html:145
 msgid "Select the title corresponding to the question"
-msgstr ""
+msgstr "Selecione o título correspondente à pergunta"
 
 #: templates/polls/form_questions.html:149
 msgid "Select the title(s)"
-msgstr ""
+msgstr "Selecione o(s) título(s)"
 
 #: templates/polls/form_questions.html:180
 msgid "Save"
-msgstr ""
+msgstr "Salvar"
 
 #: templates/polls/index.html:41
 msgid "Connect Survey"
-msgstr ""
+msgstr "Conectar Pesquisa"
 
 #: templates/polls/index.html:48 templates/results/global_poll_result.html:24
 #: templates/results/poll_result.html:35 templates/results/poll_result.html:41
 #: templates/worldmap/index.html:110
 msgid "Survey Results"
-msgstr ""
+msgstr "Resultados da Pesquisa"
 
 #: templates/polls/index.html:49
 msgid "Click on a survey item below to see its results"
-msgstr ""
+msgstr "Clique em um item da pesquisa abaixo para ver seus resultados"
 
 #: templates/polls/index.html:56
 msgid "Runs"
-msgstr ""
+msgstr "Execuções"
 
 #: templates/polls/index.html:59 templates/polls_global/index.html:50
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #: templates/polls/index.html:72 templates/polls_global/index.html:63
 msgid "See the results"
-msgstr ""
+msgstr "Veja os resultados"
 
 #: templates/polls/index.html:83
 msgid "Go to question edit"
-msgstr ""
+msgstr "Ir para a edição de perguntas"
 
 #: templates/polls/index.html:109
 msgid "Yes"
-msgstr ""
+msgstr "Sim"
 
 #: templates/polls/index.html:111
 msgid "No"
-msgstr ""
+msgstr "Não"
 
 #: templates/polls/index.html:116 templates/polls_global/index.html:74
 msgid "Active"
-msgstr ""
+msgstr "Ativo"
 
 #: templates/polls/index.html:118 templates/polls_global/index.html:76
 msgid "Inactive"
-msgstr ""
+msgstr "Inativo"
 
 #: templates/polls/index.html:126
 msgid "Edit survey"
-msgstr ""
+msgstr "Editar pesquisa"
 
 #: templates/polls_global/grant_list.html:16
 msgid "Grant list"
-msgstr ""
+msgstr "Lista de permissão"
 
 #: templates/polls_global/grant_list.html:46
 #: templates/polls_global/grant_list.html:89
 msgid "Compatibility"
-msgstr ""
+msgstr "Compatibilidade"
 
 #: templates/polls_global/grant_list.html:47
 #: templates/polls_global/grant_list.html:90 templates/uncts/index.html:29
 msgid "UNCT"
-msgstr ""
+msgstr "UNCT"
 
 #: templates/polls_global/grant_list.html:48
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #: templates/polls_global/grant_list.html:91
 msgid "Joined"
-msgstr ""
+msgstr "Juntou-se"
 
 #: templates/polls_global/index.html:48
 msgid "Initial Date"
-msgstr ""
+msgstr "Data Inicial"
 
 #: templates/polls_global/index.html:49
 msgid "Final Date"
-msgstr ""
+msgstr "Data Final"
 
 #: templates/polls_global/index.html:51 templates/uncts/index.html:40
 msgid "Edit"
-msgstr ""
+msgstr "Editar"
 
 #: templates/polls_global/index.html:52
 msgid "Grant List"
-msgstr ""
+msgstr "Lista de Permissão"
 
 #: templates/public/home.html:6
 msgid "Hello"
-msgstr ""
+msgstr "Olá"
 
 #: templates/rest_framework/base.html:6
 msgid "Real Time Monitor - API"
-msgstr ""
+msgstr "Real Time Monitor - API"
 
 #: templates/results/global_poll_result.html:38
 msgid "Select the UNCT"
-msgstr ""
+msgstr "Selecionar a UNCT"
 
 #: templates/results/global_poll_result.html:60
 msgid "Select a Survey in "
-msgstr ""
+msgstr "Selecione uma pesquisa em"
 
 #: templates/results/global_poll_result.html:71
 #: templates/results/poll_result.html:85
 msgid "Question"
-msgstr ""
+msgstr "Questões"
 
 #: templates/results/global_poll_result.html:74
 #: templates/results/poll_result.html:88
 msgid "The amount of questions in this survey"
-msgstr ""
+msgstr "A quantidade de perguntas nesta pesquisa"
 
 #: templates/results/global_poll_result.html:83
 msgid "Countries"
-msgstr ""
+msgstr "Países"
 
 #: templates/results/global_poll_result.html:102
 msgid "Countries participating in this global survey"
-msgstr ""
+msgstr "Países participantes desta pesquisa global"
 
 #: templates/results/global_poll_result.html:110
 #: templates/results/poll_result.html:96
 msgid "Export"
-msgstr ""
+msgstr "Exportar"
 
 #: templates/results/global_poll_result.html:128
 #: templates/results/poll_result.html:112
 msgid "Export surveys results"
-msgstr ""
+msgstr "Exportar resultados da pesquisa"
 
 #: templates/results/global_poll_result.html:134
 #: templates/results/poll_result.html:118
 msgid "Title:"
-msgstr ""
+msgstr "Título:"
 
 #: templates/results/global_poll_result.html:139
 #: templates/results/poll_result.html:123
 msgid "Description:"
-msgstr ""
+msgstr "Descrição:"
 
 #: templates/results/global_poll_result.html:144
 #: templates/results/poll_result.html:128
 msgid "Date:"
-msgstr ""
+msgstr "Data:"
 
 #: templates/results/global_poll_result.html:148
 #: templates/results/poll_result.html:132
 msgid "Linked SDGs:"
-msgstr ""
+msgstr "ODS vinculadas:"
 
 #: templates/results/global_poll_result.html:159
 msgid "No Survey found for this Global Survey."
-msgstr ""
+msgstr "Nenhuma pesquisa encontrada para esta pesquisa global."
 
 #: templates/results/iframe.html:35 templates/results/poll_result.html:157
 msgid "Answered:"
-msgstr ""
+msgstr "Respondidas:"
 
 #: templates/results/iframe.html:36 templates/results/poll_result.html:158
 msgid "Polled:"
-msgstr ""
+msgstr "Perguntadas:"
 
 #: templates/results/iframe.html:51 templates/results/poll_result.html:173
 msgid "Segment by"
-msgstr ""
+msgstr "Filtrar por"
 
 #: templates/results/iframe.html:59 templates/results/poll_result.html:181
 msgid "All"
-msgstr ""
+msgstr "Todos"
 
 #: templates/results/iframe.html:60 templates/results/poll_result.html:183
 msgid "Gender"
-msgstr ""
+msgstr "Gênero"
 
 #: templates/results/iframe.html:61 templates/results/poll_result.html:186
 msgid "Age"
-msgstr ""
+msgstr "Idade"
 
 #: templates/results/poll_result.html:140
 msgid "Last answer:"
-msgstr ""
+msgstr "Última resposta:"
 
 #: templates/results/poll_result.html:227
 msgid "Embed Chart"
-msgstr ""
+msgstr "Incorporar gráfico"
 
 #: templates/results/poll_result.html:234
 msgid "Copy"
-msgstr ""
+msgstr "Copiar"
 
 #: templates/smartmin/users/login.html:7
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/users/login.html:10
 msgid "Sign in"
-msgstr ""
+msgstr "Registrar"
 
 #: templates/smartmin/users/login.html:46
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/users/login.html:35
 msgid "Forgot Password?"
-msgstr ""
+msgstr "Esqueceu a senha?"
 
 #: templates/uncts/form.html:10
 msgid "UNCT's"
-msgstr ""
+msgstr "UNCT's"
 
 #: templates/uncts/form.html:84
 msgid "Backend Configuration"
-msgstr ""
+msgstr "Configuração de back-end"
 
 #: templates/uncts/index.html:38
 msgid "Timezone"
-msgstr ""
+msgstr "Fuso horário"
 
 #: templates/uncts/index.html:39
 msgid "Language"
-msgstr ""
+msgstr "Idioma"
 
 #: templates/worldmap/index.html:38
 msgid "UNCTs Engagement"
-msgstr ""
+msgstr "Engajamento das UNTCs"
 
 #: templates/worldmap/index.html:52
-msgid "Total percentage based on the amount of incoming and outgoing messages."
+msgid ""
+"Total percentage based on the amount of incoming and outgoing messages."
 msgstr ""
+"Percentual total com base na quantidade de mensagens recebidas e enviadas."
 
 #: templates/worldmap/index.html:54
 msgid "received"
-msgstr ""
+msgstr "Recebido"
 
 #: templates/worldmap/index.html:54
 msgid "sent"
-msgstr ""
+msgstr "Enviado"
 
 #: templates/worldmap/index.html:66
 msgid ""
 "The boundaries and names shown and the designations used on this map do not "
 "imply official endorsement or acceptance by the United Nations."
 msgstr ""
+"Os limites e nomes mostrados e as designações usadas neste mapa não implicam"
+" endosso ou aceitação oficial pelas Nações Unidas."
 
 #: venv/lib/python3.6/site-packages/alabaster/layout.html:98
 msgid "Page source"
-msgstr ""
+msgstr "Fonte da página"
 
 #: venv/lib/python3.6/site-packages/alabaster/navigation.html:1
 msgid "Navigation"
-msgstr ""
+msgstr "Navegação"
 
 #: venv/lib/python3.6/site-packages/dash/orgs/templates/orgs/email/invitation_email.html:9
 #, python-format
@@ -2340,14 +2720,18 @@ msgid ""
 "\n"
 "      You've been invited to join %(org_name)s.\n"
 "      <br/>\n"
-"      To accept the invitation, <a href='%(host)s%(join_url)s'>click here</"
-"a>.\n"
+"      To accept the invitation, <a href='%(host)s%(join_url)s'>click here</a>.\n"
 "  "
 msgstr ""
+"\n"
+" Para aceitar o convite, clique aqui %(org_name)s.\n"
+"      <br/>\n"
+"      Para aceitar o convite, <a href='%(host)s%(join_url)s'>clique aqui</a>.\n"
+"  "
 
 #: venv/lib/python3.6/site-packages/django/views/templates/default_urlconf.html:6
 msgid "Django: the Web framework for perfectionists with deadlines."
-msgstr ""
+msgstr "Django: a estrutura da Web para perfeccionistas com prazos."
 
 #: venv/lib/python3.6/site-packages/django/views/templates/default_urlconf.html:345
 #, python-format
@@ -2355,63 +2739,71 @@ msgid ""
 "View <a href=\"https://docs.djangoproject.com/en/%(version)s/releases/\" "
 "target=\"_blank\" rel=\"noopener\">release notes</a> for Django %(version)s"
 msgstr ""
+"Visualizar as<a "
+"href=\"https://docs.djangoproject.com/en/%(version)s/releases/\" "
+"target=\"_blank\" rel=\"noopener\">notas de lançamento</a> para Django "
+"%(version)s"
 
 #: venv/lib/python3.6/site-packages/django/views/templates/default_urlconf.html:367
 msgid "The install worked successfully! Congratulations!"
-msgstr ""
+msgstr "A instalação funcionou com sucesso! Parabéns!"
 
 #: venv/lib/python3.6/site-packages/django/views/templates/default_urlconf.html:368
 #, python-format
 msgid ""
-"You are seeing this page because <a href=\"https://docs.djangoproject.com/en/"
-"%(version)s/ref/settings/#debug\" target=\"_blank\" rel=\"noopener"
-"\">DEBUG=True</a> is in your settings file and you have not configured any "
-"URLs."
+"You are seeing this page because <a "
+"href=\"https://docs.djangoproject.com/en/%(version)s/ref/settings/#debug\" "
+"target=\"_blank\" rel=\"noopener\">DEBUG=True</a> is in your settings file "
+"and you have not configured any URLs."
 msgstr ""
+"Você está vendo esta página porque <a "
+"href=\"https://docs.djangoproject.com/en/%(version)s/ref/settings/#debug\" "
+"target=\"_blank\" rel=\"noopener\">DEBUG=True</a> está no seu arquivo de "
+"configurações e você não configurou nenhum URL."
 
 #: venv/lib/python3.6/site-packages/django/views/templates/default_urlconf.html:383
 msgid "Django Documentation"
-msgstr ""
+msgstr "Documentação Django"
 
 #: venv/lib/python3.6/site-packages/django/views/templates/default_urlconf.html:384
 msgid "Topics, references, &amp; how-to's"
-msgstr ""
+msgstr "Tópicos, referências, &amp; instruções"
 
 #: venv/lib/python3.6/site-packages/django/views/templates/default_urlconf.html:395
 msgid "Tutorial: A Polling App"
-msgstr ""
+msgstr "Tutorial: Um aplicativo de Pesquisa"
 
 #: venv/lib/python3.6/site-packages/django/views/templates/default_urlconf.html:396
 msgid "Get started with Django"
-msgstr ""
+msgstr "Comece com Django"
 
 #: venv/lib/python3.6/site-packages/django/views/templates/default_urlconf.html:407
 msgid "Django Community"
-msgstr ""
+msgstr "Comunidade Django"
 
 #: venv/lib/python3.6/site-packages/django/views/templates/default_urlconf.html:408
 msgid "Connect, get help, or contribute"
-msgstr ""
+msgstr "Conectar, buscar ajuda, ou contribuir"
 
 #: venv/lib/python3.6/site-packages/rest_framework_swagger/templates/rest_framework_swagger/index.html:30
 msgid "Session Login"
-msgstr ""
+msgstr "Sessões de Acesso "
 
 #: venv/lib/python3.6/site-packages/rest_framework_swagger/templates/rest_framework_swagger/index.html:41
 msgid "You are logged in as: "
-msgstr ""
+msgstr "Voce está logado como:"
 
 #: venv/lib/python3.6/site-packages/rest_framework_swagger/templates/rest_framework_swagger/index.html:43
 msgid "Viewing as an anoymous user"
-msgstr ""
+msgstr "Visualizando como um usuário anônimo."
 
 #: venv/lib/python3.6/site-packages/rest_framework_swagger/templates/rest_framework_swagger/index.html:55
 msgid "Powered by "
-msgstr ""
+msgstr "Alimentado por"
 
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/delete_confirm.html:11
 msgid "Remove Item?"
-msgstr ""
+msgstr "Remover Item?"
 
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/delete_confirm.html:13
 #, python-format
@@ -2420,34 +2812,25 @@ msgid ""
 "    Are you sure you want to remove <b>%(object)s</b>?\n"
 "    "
 msgstr ""
+"\n"
+"Tem certeza que deseja remover <b>%(object)s</b>?"
 
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/delete_confirm.html:17
 msgid ""
 "Once it is removed, it will be gone forever. There is no way to undo this "
 "operation."
 msgstr ""
+"Uma vez removida, se perderá para sempre. Não existe uma forma de desfazer "
+"essa ação."
 
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/delete_confirm.html:26
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/update.html:10
 msgid "Remove"
-msgstr ""
+msgstr "Remover"
 
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/list.html:25
 msgid "Add"
-msgstr ""
-
-#: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/list.html:79
-#, python-format
-msgid ""
-"\n"
-"\t %(counter)s result\n"
-"\t"
-msgid_plural ""
-"\n"
-"         %(counter)s results\n"
-"        "
-msgstr[0] ""
-msgstr[1] ""
+msgstr "Adicionar"
 
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/list.html:85
 #, python-format
@@ -2456,27 +2839,30 @@ msgid ""
 "\tResults %(start)s-%(end)s of %(count)s\n"
 "\t"
 msgstr ""
+"\n"
+"\tResultados%(start)s-%(end)s de%(count)s"
 
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/read.html:13
 msgid "edit"
-msgstr ""
+msgstr "editar"
 
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/users/user_expired.html:7
 msgid "Token Expired"
-msgstr ""
+msgstr "Token Expirado"
 
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/users/user_failed.html:9
 msgid "Login Failure"
-msgstr ""
+msgstr "Falha de Login"
 
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/users/user_failed.html:11
 #, python-format
 msgid ""
 "\n"
-"      Sorry, you cannot log in at this time because we received "
-"%(failed_login_limit)s incorrect login attempts.\n"
+"      Sorry, you cannot log in at this time because we received %(failed_login_limit)s incorrect login attempts.\n"
 "      "
 msgstr ""
+"\n"
+"Desculpe, voce não pode logar neste momento nós recebemos %(failed_login_limit)s  tentativas incorretas."
 
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/users/user_failed.html:18
 #, python-format
@@ -2485,37 +2871,43 @@ msgid ""
 "      Please wait %(lockout_timeout)s minutes before to try log in again.\n"
 "      "
 msgstr ""
+"\n"
+"Por favor aguarde %(lockout_timeout)s minutos para tentar iniciar a sessão novamente."
 
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/users/user_failed.html:25
 msgid ""
 "Alternatively, you can fill out the form below to have your password reset "
 "via e-mail."
 msgstr ""
+"Se preferir, preencha o formulário abaixo para redefinir sua senha através "
+"do email."
 
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/users/user_failed.html:27
 msgid "Please contact the website administrator to have your password reset."
-msgstr ""
+msgstr "Por favor contact o administrador do site para redefinir sua senha."
 
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/users/user_failed.html:39
 msgid "Email Address"
-msgstr ""
+msgstr "Endereço de Email"
 
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/users/user_failed.html:41
 msgid "Recover"
-msgstr ""
+msgstr "Recuperar"
 
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/users/user_forget.html:6
 msgid ""
 "Please enter the email address you used to sign up and we will help you "
 "recover your password."
 msgstr ""
+"Por favor digite o email usado para registrar-se e nós o ajudaremos a "
+"recuperar sua senha."
 
 #: venv/lib/python3.6/site-packages/smartmin/templates/smartmin/users/user_newpassword.html:7
 #, python-format
 msgid ""
 "\n"
-"  <strong>Your password has expired.</strong> Site policy states that you "
-"must pick a new password every %(expire_days)s days, and that passwords must "
-"not have been used within the previous %(window_days)s days.\n"
+"  <strong>Your password has expired.</strong> Site policy states that you must pick a new password every %(expire_days)s days, and that passwords must not have been used within the previous %(window_days)s days.\n"
 "  "
 msgstr ""
+"\n"
+"<strong>Sua senha expirou.</strong> A política do site afirma que voce deve escolher uma nova senha a cada%(expire_days)s dias, e que a senha não deve ser a mesma usada em %(window_days)s dias."
