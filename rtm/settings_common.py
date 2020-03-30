@@ -9,7 +9,6 @@ from django.forms import Textarea
 from django.utils.translation import ugettext_lazy as _
 
 from celery.schedules import crontab
-from decouple import config
 
 # -----------------------------------------------------------------------------------
 # Sets TESTING to True if this configuration is read during a unit test
@@ -113,10 +112,25 @@ USE_I18N = True
 # calendars according to the current locale
 USE_L10N = True
 
+# URL prefix for static files.
+# Example: "http://media.lawrence.com/static/"
+STATIC_URL = "/sitestatic/"
+COMPRESS_URL = "/sitestatic/"
+
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
 ADMIN_MEDIA_PREFIX = "/sitestatic/admin/"
+
+# List of finder classes that know how to find static files in
+# various locations.
+STATICFILES_FINDERS = (
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "compressor.finders.CompressorFinder",
+)
+
+COMPRESS_PRECOMPILERS = (("text/coffeescript", "coffee --compile --stdio"), ("text/less", "lessc {infile} {outfile}"))
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = "bangbangrootplaydeadn7#^+-u-#1wm=y3a$-#^jps5tihx5v_@-_(kxumq_$+$5r)bxo"
@@ -599,6 +613,8 @@ RESOURCES_DIR = os.path.join(PROJECT_DIR, "../resources")
 LOCALE_PATHS = (os.path.join(PROJECT_DIR, "../locale"),)
 FIXTURE_DIRS = (os.path.join(PROJECT_DIR, "../fixtures"),)
 TESTFILES_DIR = os.path.join(PROJECT_DIR, "../testfiles")
+STATICFILES_DIRS = (os.path.join(PROJECT_DIR, "../static"), os.path.join(PROJECT_DIR, "../media"))
+STATIC_ROOT = os.path.join(PROJECT_DIR, "../sitestatic")
 MEDIA_ROOT = os.path.join(PROJECT_DIR, "../media")
 MEDIA_URL = "/media/"
 
@@ -1073,32 +1089,3 @@ LOGGING = {
         "django.db.backends": {"level": "ERROR", "handlers": ["console"], "propagate": False},
     },
 }
-
-
-# ----------------------------------
-# static configuration
-# ----------------------------------
-
-STATIC_ROOT = os.path.join(PROJECT_DIR, "../sitestatic")
-STATIC_URL = "/static/"
-STATICFILES_DIRS = (os.path.join(PROJECT_DIR, "../static"), os.path.join(PROJECT_DIR, "../media"))
-STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
-STATICFILES_FINDERS = (
-    "django.contrib.staticfiles.finders.FileSystemFinder",
-    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-    "compressor.finders.CompressorFinder",
-    "sass_processor.finders.CssFinder",
-)
-
-COMPRESS_URL = "/sitestatic/"
-COMPRESS_PRECOMPILERS = (("text/coffeescript", "coffee --compile --stdio"), ("text/less", "lessc {infile} {outfile}"))
-COMPRESS_ENABLED = config("COMPRESS_ENABLED", default=False, cast=bool)
-COMPRESS_OFFLINE = config("COMPRESS_OFFLINE", default=False, cast=bool)
-COMPRESS_CSS_FILTERS = ["compressor.filters.css_default.CssAbsoluteFilter", "compressor.filters.cssmin.CSSMinFilter"]
-COMPRESS_JS_FILTERS = ["compressor.filters.jsmin.JSMinFilter"]
-COMPRESS_CSS_HASHING_METHOD = "content"
-COMPRESS_OFFLINE_CONTEXT = dict(STATIC_URL=STATIC_URL, base_template='base.html', debug=False, testing=False)
-
-DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-
-SASS_PROCESSOR_INCLUDE_FILE_PATTERN = r"^.+\.scss$"
