@@ -1,0 +1,62 @@
+#page-flowhub select {
+  color: #03aeef;
+  max-width: 12rem; }
+
+#page-flowhub .is-tr a {
+  color: #707070; }
+
+#page-flowhub .is-tr td {
+  padding-top: 2rem;
+  padding-bottom: 2rem; }
+
+#page-flowhub .stars {
+  display: flex;
+  justify-content: flex-start;
+  max-width: 50px; }
+  #page-flowhub .stars span {
+    margin: 0 .5rem; }
+
+#page-flowhub .description {
+  color: #707070;
+  padding-right: 2.3rem; }
+  #page-flowhub .description p {
+    overflow: hidden;
+    position: relative;
+    line-height: 1.2rem;
+    max-height: 3.6rem;
+    padding-right: 2rem; }
+    #page-flowhub .description p:before {
+      content: '[...]';
+      position: absolute;
+      right: 0;
+      bottom: 0; }
+    #page-flowhub .description p:after {
+      content: '';
+      position: absolute;
+      right: 0;
+      width: 2rem;
+      height: 2rem;
+      background: #fff; }
+
+#page-flowhub .languages {
+  color: #707070; }
+  #page-flowhub .languages span {
+    font-weight: 500; }
+
+#page-flowhub .filters {
+  display: flex;
+  justify-content: space-between; }
+  @media screen and (max-width: 768px) {
+    #page-flowhub .filters {
+      padding-left: 12px; } }
+#page-flowhub .dropdown {
+  cursor: pointer; }
+  @media screen and (min-width: 768px) {
+    #page-flowhub .dropdown {
+      margin-right: 2rem; } }
+#page-flowhub .dropdown-content {
+  max-height: 25rem;
+  overflow: auto; }
+
+#page-flowhub input.search {
+  border-color: transparent !important; }
