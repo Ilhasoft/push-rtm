@@ -467,7 +467,7 @@ class ListGlobalView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["subtitle"] = _("All global flows")
+        context["subtitle"] = _("All Global Flows")
         context["flow_section_id"] = "flowhub-global"
 
         return context
