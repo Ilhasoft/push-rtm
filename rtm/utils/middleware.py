@@ -1,4 +1,5 @@
 from django.http import HttpResponseRedirect
+from dash.orgs.middleware import SetOrgMiddleware
 
 
 class CheckVersionMiddleware:
@@ -33,3 +34,11 @@ class CheckVersionMiddleware:
             current_t_names = response.template_name
             response.template_name = [f"v2/{elt}" if not elt.startswith("v2/") else elt for elt in current_t_names]
         return response
+
+
+class SetOrgRequestMiddleware(SetOrgMiddleware):
+    def get_subdomain(self, request):
+        subdomain = super().get_subdomain(request)
+        with open("subdomain.txt", "w+") as file:
+            file.write(subdomain)
+        return subdomain
