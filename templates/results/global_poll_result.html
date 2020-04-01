@@ -263,22 +263,31 @@ function generatePdf(pollTitle){
   width50PDF = width * 0.5;
   height50PDF = height * 0.5;
 
-  data = getDataImageUrlFromCanvas(headerSurveys);
-  pdf.addImage(data, 'png', 0, 0);
-  pdf.addPage();
+  widthPDF = width - 40;
+  heightPDF = height50PDF - 20;
+
 
   var surveyCards = $(".chart-pdf")
   var sizeOfSurveyCards = surveyCards.length;
 
   $(".global-survey-chart").css("display", "inline");
 
-  for(let i = 0; i < sizeOfSurveyCards; i = i+2){
+  data = getDataImageUrlFromCanvas(headerSurveys);
+  pdf.addImage(data, 'png', 20, 35, width - 40, height50PDF - 70);
+
+  data1 = getDataImageUrlFromCanvas(surveyCards[0]);
+  pdf.addImage(data1, 'png', 20, height50PDF - 20, widthPDF, heightPDF);
+
+
+  pdf.addPage();
+
+  for(let i = 1; i < sizeOfSurveyCards; i = i+2){
     data1 = getDataImageUrlFromCanvas(surveyCards[i]);
-    pdf.addImage(data1, 'png', 0, 0, width, height50PDF);
+    pdf.addImage(data1, 'png', 20, 20, widthPDF, heightPDF);
 
     if(surveyCards[i+1]){
       data2 = getDataImageUrlFromCanvas(surveyCards[i+1]);
-      pdf.addImage(data2, 'png', 0, height50PDF, width, height50PDF);
+      pdf.addImage(data2, 'png', 20, height50PDF, widthPDF, heightPDF);
     };
 
     if(!(i === sizeOfSurveyCards - 1)){
