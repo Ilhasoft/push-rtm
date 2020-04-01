@@ -1,6 +1,8 @@
 from django.http import HttpResponseRedirect
 from dash.orgs.middleware import SetOrgMiddleware
 
+from django.conf import settings
+
 
 class CheckVersionMiddleware:
     def __init__(self, get_response=None):
@@ -38,5 +40,44 @@ class CheckVersionMiddleware:
 
 class SetOrgRequestMiddleware(SetOrgMiddleware):
     def get_subdomain(self, request):
-        subdomain = super().get_subdomain(request)
-        return "lso"
+        subdomain = ""
+        parts = self.get_host_parts(request)
+        host_string = ".".join(parts)
+
+        # we only look up subdomains for localhost and the configured hostname only
+        top_domains = ["localhost:8000", "localhost", getattr(settings, "HOSTNAME", "")]
+        allowed_top_domain = False
+        for top in top_domains:
+            if host_string.endswith(top):
+                allowed_top_domain = True
+                break
+
+        # if empty parts or domain neither localhost nor hostname return ""
+        if not parts or not allowed_top_domain:
+            return "lso"
+
+        # if we have parts for domain like 'www.nigeria.ureport.in'
+        if len(parts) > 2:
+            subdomain = parts[0]
+            parts = parts[1:]
+
+            # we keep stripping subdomains if the subdomain is something
+            # like 'www' and there are more parts
+            while subdomain.lower() == "www" and len(parts) > 1:
+                subdomain = parts[0]
+                parts = parts[1:]
+
+        elif len(parts) > 0:
+            # for domains like 'ureport.in' we just take the first part
+            subdomain = parts[0]
+
+        # get the configured hostname
+        hostname = getattr(settings, "HOSTNAME", "")
+        domain_first_part = hostname.lower().split(".")[0]
+
+        # if the subdomain is the same as the first part of hostname
+        # ignore than and return ''
+        if subdomain.lower() in [domain_first_part, "localhost"]:
+            subdomain = ""
+
+        return subdomain
