@@ -142,8 +142,7 @@ MIDDLEWARE = (
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.locale.LocaleMiddleware",
-    #"dash.orgs.middleware.SetOrgMiddleware",
-    "rtm.utils.middleware.SetOrgRequestMiddleware",
+    "dash.orgs.middleware.SetOrgMiddleware",
     "rtm.utils.middleware.CheckVersionMiddleware",
 )
 
