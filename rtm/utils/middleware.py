@@ -39,6 +39,4 @@ class CheckVersionMiddleware:
 class SetOrgRequestMiddleware(SetOrgMiddleware):
     def get_subdomain(self, request):
         subdomain = super().get_subdomain(request)
-        with open("subdomain.txt", "w+") as file:
-            file.write(subdomain)
         return subdomain
