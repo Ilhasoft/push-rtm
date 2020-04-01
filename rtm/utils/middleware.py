@@ -39,4 +39,4 @@ class CheckVersionMiddleware:
 class SetOrgRequestMiddleware(SetOrgMiddleware):
     def get_subdomain(self, request):
         subdomain = super().get_subdomain(request)
-        return subdomain
+        return "lso"
