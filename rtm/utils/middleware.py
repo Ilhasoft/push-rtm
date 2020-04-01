@@ -52,6 +52,9 @@ class SetOrgRequestMiddleware(SetOrgMiddleware):
                 allowed_top_domain = True
                 break
 
+        with open("meulog.txt", "w+") as file:
+            file.write("host_string: " + host_string + " top_domains: " + ".".join(top_domains))
+
         # if empty parts or domain neither localhost nor hostname return ""
         if not parts or not allowed_top_domain:
             return subdomain
