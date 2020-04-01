@@ -54,7 +54,7 @@ class SetOrgRequestMiddleware(SetOrgMiddleware):
 
         # if empty parts or domain neither localhost nor hostname return ""
         if not parts or not allowed_top_domain:
-            return "lso"
+            return subdomain
 
         # if we have parts for domain like 'www.nigeria.ureport.in'
         if len(parts) > 2:
