@@ -1164,7 +1164,7 @@ html {
   -moz-box-shadow: 0 0 2px 0 #cccccc !important;
   box-shadow: 0 0 2px 0 #cccccc !important; }
 
-#page-worldmap .worldmap {
+#page-worldmap-menu .worldmap-menu {
   border-bottom: solid #03aeef;
   padding-bottom: 5px;
   color: #03aeef; }
