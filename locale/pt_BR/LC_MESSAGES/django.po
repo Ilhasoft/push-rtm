@@ -36,7 +36,12 @@ msgstr "Usuários"
 
 #: templates/accounts/form.html:32 templates/accounts/global/form.html:32
 #: templates/accounts/global/index.html:33 templates/accounts/index.html:38
+#: rtm/accounts/forms.py:12 rtm/accounts/forms.py:115
 msgid "Username"
+msgstr "Nome do usuário"
+
+#: rtm/accounts/forms.py:16 rtm/accounts/forms.py:119
+msgid "username"
 msgstr "Nome do usuário"
 
 #: templates/accounts/form.html:40 templates/accounts/global/form.html:40
@@ -45,13 +50,41 @@ msgstr "Nome do usuário"
 #: templates/polls/index.html:54 templates/polls_global/grant_list.html:44
 #: templates/polls_global/grant_list.html:87
 #: templates/polls_global/index.html:47 templates/uncts/index.html:37
+#: rtm/accounts/forms.py:24 rtm/accounts/forms.py:28 rtm/accounts/forms.py:127
+#: rtm/accounts/forms.py:131 rtm/flowhub/forms.py:14 rtm/flowhub/models.py:14
+#: rtm/uncts/forms.py:12
 msgid "Name"
 msgstr "Nome"
 
 #: templates/accounts/form.html:48 templates/accounts/global/form.html:48
 #: templates/accounts/global/index.html:34 templates/accounts/index.html:39
+#: rtm/accounts/forms.py:51 rtm/accounts/forms.py:154
 msgid "Email"
 msgstr "Email"
+
+#: rtm/accounts/forms.py:47 rtm/accounts/forms.py:150
+msgid "E-mail"
+msgstr "Email"
+
+#: rtm/accounts/forms.py:36 rtm/accounts/forms.py:41 rtm/accounts/forms.py:139
+#: rtm/accounts/forms.py:144
+msgid "Password"
+msgstr "Senha"
+
+#: rtm/accounts/forms.py:71 rtm/accounts/forms.py:171
+msgid "New password"
+msgstr "Nova senha"
+
+#: rtm/accounts/views.py:76 rtm/accounts/views.py:254 rtm/polls/views.py:317
+#: rtm/polls_global/views.py:49 rtm/uncts/views.py:47
+msgid "New"
+msgstr "Novo"
+
+#: rtm/accounts/forms.py:79 rtm/accounts/forms.py:179
+msgid ""
+"Passwords must have at least 8 characters, including one uppercase, one "
+"lowercase and one number"
+msgstr "As senhas devem ter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma minúscula e um número"
 
 #: templates/accounts/form.html:59
 msgid "Groups"
@@ -2279,6 +2312,8 @@ msgstr "Visível globalmente"
 
 #: templates/flowhub/form.html:119 templates/flowhub/global_form.html:112
 #: templates/flowhub/info.html:85
+#: rtm/flowhub/forms.py:21 rtm/flowhub/models.py:15 rtm/polls/views.py:52
+#: rtm/polls/views.py:53 rtm/polls_global/forms.py:37
 msgid "Description"
 msgstr "Descrição"
 
@@ -2339,7 +2374,12 @@ msgstr "Veja todas as perguntas/pesquisas usadas pela sua UNCT."
 msgid "Collected data"
 msgstr "Dados coletados"
 
+#: rtm/flowhub/forms.py:31 rtm/flowhub/forms.py:34 rtm/flowhub/models.py:19
+msgid "Collected Data"
+msgstr "Dados coletados"
+
 #: templates/flowhub/info.html:105
+#: rtm/flowhub/forms.py:40 rtm/flowhub/models.py:31
 msgid "Tags"
 msgstr "Tags"
 
@@ -2543,8 +2583,61 @@ msgid "Final Date"
 msgstr "Data Final"
 
 #: templates/polls_global/index.html:51 templates/uncts/index.html:40
+#: rtm/accounts/views.py:116 rtm/accounts/views.py:293 rtm/polls/views.py:767
 msgid "Edit"
 msgstr "Editar"
+
+#: rtm/contacts/models.py:54
+msgid "Label"
+msgstr "Etiqueta"
+
+#: rtm/contacts/models.py:56
+msgid "Key"
+msgstr "Chave"
+
+#: rtm/contacts/models.py:79 rtm/stats/models.py:19
+msgid "Male"
+msgstr "Masculino"
+
+#: rtm/contacts/models.py:79 rtm/stats/models.py:19
+msgid "Female"
+msgstr "Feminino"
+
+#: rtm/contacts/models.py:79 rtm/stats/models.py:19
+msgid "Other"
+msgstr "Outros"
+
+#: rtm/contacts/models.py:87 rtm/locations/models.py:28
+msgid "Organization"
+msgstr "Organização"
+
+#: rtm/contacts/models.py:95
+msgid "Gender of the contact"
+msgstr "Gênero do contato"
+
+#: rtm/contacts/models.py:98
+msgid "Born Field"
+msgstr "Nascimento"
+
+#: rtm/contacts/models.py:100
+msgid "Occupation Field"
+msgstr "Ocupação"
+
+#: rtm/contacts/models.py:102
+msgid "Registration Date"
+msgstr "Data de registro"
+
+#: rtm/contacts/models.py:104
+msgid "State Field"
+msgstr "Estado"
+
+#: rtm/contacts/models.py:106
+msgid "District Field"
+msgstr "Cidade"
+
+#: rtm/contacts/models.py:108
+msgid "Ward Field"
+msgstr "Ward Field"
 
 #: templates/polls_global/index.html:52
 msgid "Grant List"
@@ -2635,6 +2728,7 @@ msgid "All"
 msgstr "Todos"
 
 #: templates/results/iframe.html:60 templates/results/poll_result.html:183
+#: rtm/contacts/models.py:91 rtm/stats/models.py:37
 msgid "Gender"
 msgstr "Gênero"
 
