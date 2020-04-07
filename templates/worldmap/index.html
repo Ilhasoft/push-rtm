@@ -163,6 +163,10 @@
       data_map["{{key}}"] = parseInt("{{value}}");
     {% endfor %}
 
+    //value to be min and max because the one suggested by the application doesn't work
+    data_map["11"] = 0;
+    data_map["22"] = 100;
+
     let data_countries_map = {};
     {% for key, value in data_countries.items %}
       data_countries_map["{{key}}"] = {
@@ -183,7 +187,7 @@
         backgroundColor: '#fff',
         color: '#e3ecf1',
         hoverOpacity: 1,
-        scaleColors: ['#bee8fa', '#2c619a'],
+        scaleColors: ['#e3ecf1', '#BEE8FA', '#74CAF3', '#3F92CF', '#2c619a'],
         borderColor: '#ececec',
         borderWidth: .1,
         enableZoom: true,
