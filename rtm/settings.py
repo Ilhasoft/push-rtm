@@ -231,7 +231,7 @@ CHANNEL_TYPES = {
 
 STATICFILES_FINDERS += ("sass_processor.finders.CssFinder",)
 
-TOKEN_WORKSPACE_GLOBAL = config("TOKEN_WORKSPACE_GLOBAL", "")
+TOKEN_WORKSPACE_GLOBAL = config("TOKEN_WORKSPACE_GLOBAL", "your token for global workspace in rapidpro")
 
 SASS_PROCESSOR_INCLUDE_FILE_PATTERN = r"^.+\.scss$"
 
@@ -321,3 +321,7 @@ OAUTHLIB_MOMSERVICE_USER_URL = config(
     "OAUTHLIB_MOMSERVICE_USER_URL", default="http://dataforallcloud.org/monservice/api/v1/rtmUserInfo"
 )
 OAUTHLIB_APP_ID = config("OAUTHLIB_APP_ID", default="uninfortm")
+
+
+#============================================
+SECRET_KEY = config("SECRET_KEY", "your secret key must be here")
