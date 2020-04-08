@@ -13,7 +13,7 @@ Install dependencies
 ```
 
 You'll need to create the postgres db first
-and you must create a file called .env at the root of the project with the following data where:
+and you must create a file called **.env** at the root of the project with the following data where:
 
 **<db_name>**, **<db_username>**, **<db_password>** consecutively are the data of the postgres db that was created;
 **TOKEN_WORKSPACE_GLOBAL** is the token of the global workspace in rapidpro
