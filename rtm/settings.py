@@ -106,7 +106,7 @@ INSTALLED_APPS += (
     "rtm.worldmap",
 )
 
-SITE_ALLOW_NO_ORG += (
+SITE_ALLOW_NO_ORG = (
     "dashboard",
     "dashboard_data",
     "flowhub.flow_list",
