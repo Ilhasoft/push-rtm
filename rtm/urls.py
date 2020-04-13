@@ -12,6 +12,7 @@ admin.autodiscover()
 
 urlpatterns = [
     url(r"^", include("rtm.dashboard.urls")),
+    url(r"^api/", include("rtm.api.urls")),
     url(r"^users/", include("dash.users.urls")),
     url(r"^users/", include("rtm.accounts.urls")),
     url(r"^uncts/", include("rtm.uncts.urls")),
