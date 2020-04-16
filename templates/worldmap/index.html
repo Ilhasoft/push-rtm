@@ -138,7 +138,7 @@
 
     $(".button-details-country").click(function(e){
       let current_subdomain = "{{request.org.subdomain}}";
-      let subdomain_button = e.toElement.value;
+      let subdomain_button = e.target.value;
       let url = window.location.origin;
 
       if(current_subdomain){
@@ -150,7 +150,7 @@
         url = url_splitted_https.join("");
       };
 
-      if (e.toElement.id == "survey-results"){
+      if (e.target.id == "survey-results"){
         url = url + "/surveys/poll/list/";
       }
 
