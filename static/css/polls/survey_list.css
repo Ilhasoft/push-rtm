@@ -1,0 +1,14 @@
+#page-surveys .tag {
+  min-width: 70px; }
+
+#page-surveys td a .tooltip .tooltip-content {
+  min-width: 110px;
+  font-weight: bold; }
+
+#page-surveys .is-poll-inactive,
+#page-surveys .is-poll-inactive td a,
+#page-surveys .is-poll-inactive td a i {
+  color: #a8a7a7; }
+
+#page-surveys .is-poll-inactive td .tag {
+  opacity: 50%; }

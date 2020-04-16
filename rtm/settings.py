@@ -80,6 +80,8 @@ COMPRESS_ENABLED = config("COMPRESS_ENABLED", default=False, cast=bool)
 COMPRESS_OFFLINE = config("COMPRESS_OFFLINE", default=False, cast=bool)
 COMPRESS_CSS_FILTERS = ["compressor.filters.css_default.CssAbsoluteFilter", "compressor.filters.cssmin.CSSMinFilter"]
 COMPRESS_JS_FILTERS = ["compressor.filters.jsmin.JSMinFilter"]
+COMPRESS_CSS_HASHING_METHOD = "content"
+COMPRESS_OFFLINE_CONTEXT = dict(STATIC_URL=STATIC_URL, base_template='base.html', debug=False, testing=False)
 
 INSTALLED_APPS += ('gunicorn', 'raven.contrib.django.raven_compat',)
 
@@ -104,7 +106,7 @@ INSTALLED_APPS += (
     "rtm.worldmap",
 )
 
-SITE_ALLOW_NO_ORG += (
+SITE_ALLOW_NO_ORG = (
     "dashboard",
     "dashboard_data",
     "flowhub.flow_list",
@@ -229,7 +231,7 @@ CHANNEL_TYPES = {
 
 STATICFILES_FINDERS += ("sass_processor.finders.CssFinder",)
 
-TOKEN_WORKSPACE_GLOBAL = "94fd5c1bd39368833f60150054cb99cb84799fe1"
+TOKEN_WORKSPACE_GLOBAL = config("TOKEN_WORKSPACE_GLOBAL", "your token for global workspace in rapidpro")
 
 SASS_PROCESSOR_INCLUDE_FILE_PATTERN = r"^.+\.scss$"
 
@@ -319,3 +321,7 @@ OAUTHLIB_MOMSERVICE_USER_URL = config(
     "OAUTHLIB_MOMSERVICE_USER_URL", default="http://dataforallcloud.org/monservice/api/v1/rtmUserInfo"
 )
 OAUTHLIB_APP_ID = config("OAUTHLIB_APP_ID", default="uninfortm")
+
+
+#============================================
+SECRET_KEY = config("SECRET_KEY", "your secret key must be here")

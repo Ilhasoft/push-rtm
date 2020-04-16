@@ -1,0 +1,28 @@
+#page-surveys .tabs {
+  font-size: 16px;
+  text-align: center;
+  border: solid 1px #03aeef;
+  border-top-left-radius: 0.3rem;
+  border-top-right-radius: 0.3rem;
+  background-color: #fff;
+  color: #03aeef; }
+  #page-surveys .tabs .is-active {
+    background-color: #03aeef;
+    color: #fff;
+    font-weight: bold; }
+  #page-surveys .tabs .tab:not(:last-child) {
+    border-right: solid 1px #03aeef; }
+
+#page-surveys .box {
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px; }
+
+#page-surveys .has-border {
+  border-bottom: 1px solid #000;
+  padding-bottom: 0.7rem; }
+
+#page-surveys .info-icon {
+  font-size: 18px;
+  color: #b3b3b3;
+  cursor: default;
+  vertical-align: text-bottom; }
