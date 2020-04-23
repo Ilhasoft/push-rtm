@@ -28,10 +28,10 @@ class DashboardDataView(View):
         filter_by = self.request.GET.get("filter_by")
 
         if request.user.is_authenticated:
-            if request.user.is_superuser or request.user.groups.filter(name="Global Viewers"):
-                self.access_level = "global"
-            elif request.org in request.user.get_user_orgs():
+            if request.org:
                 self.access_level = "local"
+            elif request.user.is_superuser or request.user.groups.filter(name="Global Viewers"):
+                self.access_level = "global"
 
         response = dict()
         response["time_ago"] = Dashboard.get_text_time_ago(filter_by)
