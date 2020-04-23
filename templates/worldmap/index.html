@@ -205,11 +205,25 @@
           if (states.indexOf(code) <= -1 || data_country === undefined) {
             event.preventDefault();
           } else {
-            window.dispatchEvent(new CustomEvent('opendetail', {
+            (function () {
+              function CustomEvent ( event, params ) {
+                params = params || { bubbles: false, cancelable: false, detail: undefined };
+                var evt = document.createEvent( 'CustomEvent' );
+                evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+                return evt;
+               }
+
+              CustomEvent.prototype = window.Event.prototype;
+              window.CustomEvent = CustomEvent;
+            })();
+
+            let event = new CustomEvent('opendetail', {
               detail: {
                 countryName: label,
               },
-            }));
+            });
+            window.dispatchEvent(event);
+
             $("#dashboard").hide();
             $("#survey-results").hide();
             let subdomain = get_subdomain();
