@@ -417,6 +417,7 @@ class Dashboard(SmartTemplateView):
             }
 
         context["channels_info"] = channels_info
+        context["SDG_LIST"] = settings.SDG_LIST
 
         if self.access_level == "local":
             context["surveys_local_total"] = Poll.objects.filter(org=self.request.org, is_active=True).count()

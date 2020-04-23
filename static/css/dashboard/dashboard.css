@@ -1,0 +1,89 @@
+#page-dashboard .has-text-grey {
+  color: #707070 !important; }
+
+#page-dashboard .card-title {
+  font-size: 18px; }
+
+#page-dashboard .info-icon {
+  font-size: 18px;
+  color: #b3b3b3;
+  cursor: default;
+  vertical-align: sub; }
+
+#page-dashboard .questions-list {
+  height: 400px;
+  overflow: auto; }
+  #page-dashboard .questions-list__item a {
+    color: #707070; }
+  #page-dashboard .questions-list__item .active {
+    font-weight: bold; }
+  #page-dashboard .questions-list__item:last-child {
+    border-bottom: none; }
+
+#page-dashboard .surveys-info {
+  color: #4c4c4c; }
+  #page-dashboard .surveys-info__number {
+    font-size: 25px;
+    font-weight: bold; }
+
+#page-dashboard .surveys-card {
+  height: 100%; }
+
+#page-dashboard .untracked-sgd {
+  padding-left: 1rem; }
+  #page-dashboard .untracked-sgd__item {
+    display: flex;
+    align-items: center;
+    padding-bottom: 10px; }
+    #page-dashboard .untracked-sgd__item__color {
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      margin-right: 6px; }
+    #page-dashboard .untracked-sgd__item__label {
+      font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 14px;
+      color: #666; }
+
+#page-dashboard .tooltip .channel-number,
+#page-dashboard .tooltip .channel-icon {
+  color: #c2c8cc; }
+
+#page-dashboard .tooltip .channel-icon {
+  font-size: 42px; }
+
+#page-dashboard .tooltip .channel-tooltip {
+  min-width: 210px;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #000000; }
+
+#page-dashboard .tooltip:hover {
+  color: #000000; }
+  #page-dashboard .tooltip:hover .channel-number {
+    color: #000000; }
+  #page-dashboard .tooltip:hover .channel-icon {
+    color: #D0D0D0; }
+
+#page-dashboard select {
+  border-color: #ffffff;
+  text-align: right; }
+  #page-dashboard select:active, #page-dashboard select:focus {
+    box-shadow: none; }
+
+#page-dashboard .bubble-tooltip {
+  background-color: #ffffff;
+  border: 1px solid #cecece;
+  border-radius: 4px;
+  color: #555555;
+  padding: 4px 6px;
+  position: absolute;
+  text-align: center;
+  visibility: hidden;
+  z-index: 10; }
+
+.section-global-dashboard {
+  padding: 0rem 1.5rem; }
+
+.box-global-dashboard {
+  padding-bottom: 0rem; }
