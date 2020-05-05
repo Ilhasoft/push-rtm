@@ -227,6 +227,7 @@ CHANNEL_TYPES = {
     "TW": {"name": "Twitter", "icon": "icon-twitter"},
     "KN": {"name": "SMS", "icon": "icon-phone"},
     "WA": {"name": "Whatsapp", "icon": "icon-whatsapp"},
+    "FCM": {"name": "Firebase Chat Messaging", "icon": "icon-phone"},
 }
 
 STATICFILES_FINDERS += ("sass_processor.finders.CssFinder",)
