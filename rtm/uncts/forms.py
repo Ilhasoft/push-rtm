@@ -67,7 +67,7 @@ class UnctForm(forms.ModelForm):
     occupation_label = forms.CharField(
         label=_("Occupation Label"),
         help_text=_("The label of the Contact Field that contains the occupation of reporters"),
-        required=True,
+        required=False,
         max_length=255,
         widget=forms.TextInput(attrs={"placeholder": _("Occupation Label"), "required": False, "class": "input"}),
     )
