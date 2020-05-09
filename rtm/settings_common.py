@@ -135,9 +135,7 @@ DATA_API_BACKENDS_CONFIG = {
     "rapidpro": {"name": "RapidPro", "slug": "rapidpro", "class_type": "rtm.backend.rapidpro.RapidProBackend"}
 }
 
-DATA_API_BACKEND_TYPES = (
-    ("rtm.backend.rapidpro.RapidProBackend", "RapidPro Backend Type"),
-)
+DATA_API_BACKEND_TYPES = (("rtm.backend.rapidpro.RapidProBackend", "RapidPro Backend Type"),)
 
 
 INSTALLED_APPS = (

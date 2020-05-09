@@ -7,31 +7,33 @@ from rtm.backend.rapidpro import RapidProBackendGlobal
 
 class PollGlobalForm(forms.ModelForm):
     flow_uuid = forms.ChoiceField(
-        label=_("Select a flow on RapidPro that will shape your global survey"), help_text=_(
-            "Select a flow on RapidPro that will shape your global survey"), required=True, choices=[]
+        label=_("Select a flow on RapidPro that will shape your global survey"),
+        help_text=_("Select a flow on RapidPro that will shape your global survey"),
+        required=True,
+        choices=[],
     )
 
     title = forms.CharField(
-        max_length=255, widget=forms.TextInput(attrs={"placeholder": _(
-            "Insert the survey name"), "class": "input"})
+        max_length=255, widget=forms.TextInput(attrs={"placeholder": _("Insert the survey name"), "class": "input"})
     )
 
     poll_date = forms.DateField(
         label=_("Start Date"),
         required=True,
         widget=forms.DateInput(
-            attrs={"placeholder": _("Please set the date"), "class": "input", "autocomplete": "off"}),
+            attrs={"placeholder": _("Please set the date"), "class": "input", "autocomplete": "off"}
+        ),
     )
 
     poll_end_date = forms.DateField(
         label=_("End Date"),
         required=False,
-        widget=forms.DateInput(attrs={"placeholder": _(
-            "The date this survey was finished"), "class": "input", "autocomplete": "off"}),
+        widget=forms.DateInput(
+            attrs={"placeholder": _("The date this survey was finished"), "class": "input", "autocomplete": "off"}
+        ),
     )
 
-    is_active = forms.BooleanField(
-        required=False, widget=forms.CheckboxInput(attrs={"class": "is-checkradio"}))
+    is_active = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={"class": "is-checkradio"}))
 
     description = forms.CharField(
         label=_("Description"),

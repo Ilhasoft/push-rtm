@@ -6,13 +6,11 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('polls', '0060_auto_20200227_1535'),
+        ("polls", "0060_auto_20200227_1535"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='pollquestion',
-            name='title',
-            field=models.TextField(help_text='The title of this question'),
+            model_name="pollquestion", name="title", field=models.TextField(help_text="The title of this question"),
         ),
     ]

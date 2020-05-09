@@ -9,19 +9,15 @@ from rtm.api.views import OrgDetails, OrgList, PollDetails, PollList, DashboardD
 
 
 schema_view = get_schema_view(
-    openapi.Info(
-        title="RTM API",
-        default_version='v1',
-        description="Real Time Monitor",
-    ),
+    openapi.Info(title="RTM API", default_version="v1", description="Real Time Monitor",),
     public=True,
     permission_classes=(permissions.AllowAny,),
 )
 
 urlpatterns = [
     url(r"^$", RedirectView.as_view(pattern_name="api.v1.docs", permanent=False), name="api.v1"),
-    url(r'^schema(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name="api.v1.schema"),
-    url(r'^docs/$', schema_view.with_ui('swagger', cache_timeout=0), name="api.v1.docs"),
+    url(r"^schema(?P<format>\.json|\.yaml)$", schema_view.without_ui(cache_timeout=0), name="api.v1.schema"),
+    url(r"^docs/$", schema_view.with_ui("swagger", cache_timeout=0), name="api.v1.docs"),
     url(r"^orgs/$", OrgList.as_view(), name="api.v1.org_list"),
     url(r"^orgs/(?P<pk>[\w]+)/$", OrgDetails.as_view(), name="api.v1.org_details"),
     url(r"^polls/org/(?P<org>[\w]+)/$", PollList.as_view(), name="api.v1.org_poll_list"),

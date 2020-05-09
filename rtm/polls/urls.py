@@ -6,5 +6,9 @@ from .views import PollCRUDL, FlowDataView
 
 urlpatterns = PollCRUDL().as_urlpatterns()
 urlpatterns += [
-    url(r"^data/(?P<global_survey>[0-9]+)/(?P<flow_uuid>[\w\-]+)/$", FlowDataView.as_view(), name="polls.flow_data_view"),
+    url(
+        r"^data/(?P<global_survey>[0-9]+)/(?P<flow_uuid>[\w\-]+)/$",
+        FlowDataView.as_view(),
+        name="polls.flow_data_view",
+    ),
 ]

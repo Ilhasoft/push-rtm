@@ -1,1 +1,1 @@
-default_app_config = 'rtm.worldmap.apps.WorldmapConfig'
+default_app_config = "rtm.worldmap.apps.WorldmapConfig"

@@ -140,12 +140,9 @@ class DashboardDataView(View):
                     channel=channel, **Dashboard.filter_by_date("date", filter_by)
                 ).aggregate(total=Sum("count"))["total"]
 
-                global_total = (
-                    ChannelDailyStats.objects.filter(
-                        channel__channel_type=channel.channel_type,
-                        **Dashboard.filter_by_date("date", filter_by)
-                    ).aggregate(total=Sum("count"))["total"]
-                )
+                global_total = ChannelDailyStats.objects.filter(
+                    channel__channel_type=channel.channel_type, **Dashboard.filter_by_date("date", filter_by)
+                ).aggregate(total=Sum("count"))["total"]
 
                 if channel.channel_type not in channels_data:
                     channels_data[channel.channel_type] = {

@@ -53,9 +53,7 @@ class ListView(OrgObjPermsMixin, SmartTemplateView):
 
         queryset = queryset.filter(Q(org_admins=org) | Q(org_editors=org) | Q(org_viewers=org))
 
-        log_permission = LogPermissionUser.objects.filter(
-                                                user__first_name__icontains=query,
-                                                org=org)
+        log_permission = LogPermissionUser.objects.filter(user__first_name__icontains=query, org=org)
 
         context["users"] = get_paginator(queryset.filter(**filters, is_active=True).order_by(sortered), page)
         context["log_permission_users"] = log_permission
@@ -225,10 +223,11 @@ class GlobalListView(OrgPermsMixin, SmartTemplateView):
         queryset = (
             get_user_model()
             .objects.all()
-            .filter(Q(is_superuser=True) |
-                    Q(groups__name="Global Viewers") |
-                    Q(logs_permission_user__permission_id__name="Global Viewers")
-                    )
+            .filter(
+                Q(is_superuser=True)
+                | Q(groups__name="Global Viewers")
+                | Q(logs_permission_user__permission_id__name="Global Viewers")
+            )
             .exclude(password=None)
             .exclude(email__exact="")
         )

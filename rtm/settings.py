@@ -81,9 +81,12 @@ COMPRESS_OFFLINE = config("COMPRESS_OFFLINE", default=False, cast=bool)
 COMPRESS_CSS_FILTERS = ["compressor.filters.css_default.CssAbsoluteFilter", "compressor.filters.cssmin.CSSMinFilter"]
 COMPRESS_JS_FILTERS = ["compressor.filters.jsmin.JSMinFilter"]
 COMPRESS_CSS_HASHING_METHOD = "content"
-COMPRESS_OFFLINE_CONTEXT = dict(STATIC_URL=STATIC_URL, base_template='base.html', debug=False, testing=False)
+COMPRESS_OFFLINE_CONTEXT = dict(STATIC_URL=STATIC_URL, base_template="base.html", debug=False, testing=False)
 
-INSTALLED_APPS += ('gunicorn', 'raven.contrib.django.raven_compat',)
+INSTALLED_APPS += (
+    "gunicorn",
+    "raven.contrib.django.raven_compat",
+)
 
 sentry_sdk.init(dsn=config("RAVEN_CONFIG", default=""), integrations=[DjangoIntegration()])
 
@@ -158,7 +161,7 @@ SITE_ALLOW_NO_ORG = (
     "flowhub.flow_create_global",
     "flowhub.flow_list_global",
     "flowhub.flow_delete",
-    "flowhub.flow_update_global"
+    "flowhub.flow_update_global",
 )
 
 SDG_LIST = (
@@ -323,5 +326,5 @@ OAUTHLIB_MOMSERVICE_USER_URL = config(
 OAUTHLIB_APP_ID = config("OAUTHLIB_APP_ID", default="uninfortm")
 
 
-#============================================
+# ============================================
 SECRET_KEY = config("SECRET_KEY", "your secret key must be here")

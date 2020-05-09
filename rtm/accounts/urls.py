@@ -1,7 +1,15 @@
 from django.conf.urls import url
 
-from .views import ListView, EditView, DeleteView, GlobalListView, GlobalEditView, GlobalDeleteView, ActivateView, \
-    GlobalActivateView
+from .views import (
+    ListView,
+    EditView,
+    DeleteView,
+    GlobalListView,
+    GlobalEditView,
+    GlobalDeleteView,
+    ActivateView,
+    GlobalActivateView,
+)
 
 urlpatterns = [
     url(r"^$", ListView.as_view(), name="accounts.user_list"),

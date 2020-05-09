@@ -69,7 +69,7 @@ class PollGlobalReadView(SmartTemplateView):
 
         polls_local = []
         polls_global_surveys = poll_global.polls_global.filter(is_joined=True)
-        all_sdgs_arrays = polls_global_surveys.values_list('poll_local__questions__sdgs', flat=True)
+        all_sdgs_arrays = polls_global_surveys.values_list("poll_local__questions__sdgs", flat=True)
 
         all_orgs = []
         active_orgs = []
@@ -104,7 +104,6 @@ class PollGlobalReadView(SmartTemplateView):
 
 
 class PollGlobalDataView(View):
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._global_questions = {}
@@ -118,9 +117,9 @@ class PollGlobalDataView(View):
             for category in question.get_results()[0].get("categories"):
                 count = category.get("count")
                 word_cloud[category.get("label").upper()] = {
-                        "text": category.get("label").upper(),
-                        "size": count if count > 10 else 20 + count
-                    }
+                    "text": category.get("label").upper(),
+                    "size": count if count > 10 else 20 + count,
+                }
         else:
             labels = []
             series = []
@@ -130,19 +129,16 @@ class PollGlobalDataView(View):
             categories = results.get("categories")
             for category in categories:
                 labels.append(category.get("label"))
-                series.append("{0:.0f}".format(
-                    (category.get("count") / results.get("set") * 100) if results.get("set") else 0
-                ))
+                series.append(
+                    "{0:.0f}".format((category.get("count") / results.get("set") * 100) if results.get("set") else 0)
+                )
                 counts.append(category.get("count"))
 
             statistics["labels"] = labels
             statistics["series"] = series
             statistics["counts"] = counts
 
-        dict_result = {
-            "statistics": statistics,
-            "word_cloud": word_cloud
-        }
+        dict_result = {"statistics": statistics, "word_cloud": word_cloud}
         return dict_result
 
     def _get_question_segmented_results(self, question, tag):
@@ -165,23 +161,24 @@ class PollGlobalDataView(View):
             for category in result.get("categories"):
                 if category.get("label") not in label:
                     label.append(category.get("label"))
-                    data.append([category.get("count"), ])
+                    data.append(
+                        [category.get("count"),]
+                    )
                 else:
                     index_label = label.index(category.get("label"))
                     data[index_label].append(category.get("count"))
 
         for item in label:
-            series.append({
-                "label": item,
-                "data": data[label.index(item)],
-                "backgroundColor": AVAILABLE_COLORS[label.index(item)],
-                "borderColor": "rgba(255, 255, 255, 0.1)",
-            })
+            series.append(
+                {
+                    "label": item,
+                    "data": data[label.index(item)],
+                    "backgroundColor": AVAILABLE_COLORS[label.index(item)],
+                    "borderColor": "rgba(255, 255, 255, 0.1)",
+                }
+            )
 
-        dict_result = {
-            "categories": categories,
-            "series": series
-        }
+        dict_result = {"categories": categories, "series": series}
         return dict_result
 
     def _sum_values_arrays(self, array_all_values, array_local_values):
@@ -195,9 +192,11 @@ class PollGlobalDataView(View):
         values_to_return = []
         for value in values:
             current_value = value.get("data")
-            loop_value = self._get_formated_question_segmented_results(question, tag).get("series")[
-                values.index(value)].get(
-                "data")
+            loop_value = (
+                self._get_formated_question_segmented_results(question, tag)
+                .get("series")[values.index(value)]
+                .get("data")
+            )
             new_values_in_array = self._sum_values_arrays(current_value, loop_value)
             values_to_return.append(new_values_in_array)
 
@@ -232,24 +231,19 @@ class PollGlobalDataView(View):
             "sdgs": question.sdgs,
             "statistics": data_without_segment.get("statistics"),
             "age": self._get_formated_question_segmented_results(question, "age"),
-            "gender": self._get_formated_question_segmented_results(question, "gender")
+            "gender": self._get_formated_question_segmented_results(question, "gender"),
         }
         return result_dict
 
     def _get_response_data(self, global_survey, unct):
         response = {}
 
-        polls_local = PollGlobalSurveys.objects.filter(
-            poll_global_id=global_survey,
-            is_joined=True
-        )
+        polls_local = PollGlobalSurveys.objects.filter(poll_global_id=global_survey, is_joined=True)
 
         global_poll_local_id = polls_local.values_list("poll_local_id", flat=True)
 
         global_polls_questions = PollQuestion.objects.filter(
-            is_active=True,
-            poll_id__in=list(global_poll_local_id),
-            poll__is_active=True
+            is_active=True, poll_id__in=list(global_poll_local_id), poll__is_active=True
         )
 
         global_survey = polls_local[0].poll_global
@@ -269,27 +263,31 @@ class PollGlobalDataView(View):
                         global_value = global_data_word_cloud.get(local_label, None)
                         if global_value:
                             new_value = global_value.get("size", 0) + value.get("size", 0)
-                            self._global_questions[question.ruleset_label]["word_cloud"][local_label]["size"] = new_value
+                            self._global_questions[question.ruleset_label]["word_cloud"][local_label][
+                                "size"
+                            ] = new_value
                         else:
                             self._global_questions[question.ruleset_label][local_label] = {
                                 "text": local_label,
-                                "size": value.get("size")
+                                "size": value.get("size"),
                             }
 
                 else:
                     # TODO: instead of adding 2 arrays, use 'categories' and 'counts' to create a
                     #  dictionary and search for each key and its value then add
-                    value_current_question_array = results_question.get(
-                        "statistics").get("counts")
+                    value_current_question_array = results_question.get("statistics").get("counts")
                     values_in_array_statistics = question_dict.get("statistics").get("counts")
 
-                    new_values_in_array_statistics = self._sum_values_arrays(values_in_array_statistics,
-                                                                             value_current_question_array)
-                    self._global_questions[question.ruleset_label]["statistics"]["counts"] = new_values_in_array_statistics
+                    new_values_in_array_statistics = self._sum_values_arrays(
+                        values_in_array_statistics, value_current_question_array
+                    )
+                    self._global_questions[question.ruleset_label]["statistics"][
+                        "counts"
+                    ] = new_values_in_array_statistics
                     self._update_global_data(question, "age")
                     self._update_global_data(question, "gender")
             else:
-                self._global_questions[question.ruleset_label] = (self._get_results_in_dict(question))
+                self._global_questions[question.ruleset_label] = self._get_results_in_dict(question)
 
         local_poll_questions = PollQuestion.objects.filter(is_active=True, poll_id=unct, poll__is_active=True)
         local_poll_title = local_poll_questions[0].poll.title if local_poll_questions else None
@@ -321,7 +319,6 @@ class ResultsIFrame(PollGlobalDataView):
         scope_type = request.GET.get("scope-type")
         poll_title = request.GET.get("poll-title")
         question_title = request.GET.get("question-title")
-        print(request)
 
         try:
             if scope_type == "local":
@@ -349,10 +346,7 @@ class ResultsIFrame(PollGlobalDataView):
             "gender": context.get("gender", {}),
         }
 
-        return render(request, "results/iframe.html", {
-            "context": context,
-            "data_chart": json.dumps(data_chart)
-        })
+        return render(request, "results/iframe.html", {"context": context, "data_chart": json.dumps(data_chart)})
 
 
 class ExportPollResultsBase(View):
@@ -425,8 +419,7 @@ class PollResultsCSV(ExportPollResultsBase):
         return formated_data
 
     def _get_poll_results_data(self):
-        poll_results = super()._get_poll_results_data().values_list(
-                "contact", "ruleset", "category", "text")
+        poll_results = super()._get_poll_results_data().values_list("contact", "ruleset", "category", "text")
 
         return poll_results
 
@@ -436,7 +429,9 @@ class PollResultsCSV(ExportPollResultsBase):
 
         questions_ruleset_labels = self._get_ruleset_labels()
         for contact_uuid, question_results in formated_result.items():
-            raw_result = [contact_uuid,]
+            raw_result = [
+                contact_uuid,
+            ]
 
             for ruleset_uuid in questions_ruleset_labels.values():
                 results = question_results.get(ruleset_uuid, ["", ""])
@@ -464,7 +459,6 @@ class PollResultsCSV(ExportPollResultsBase):
 
 
 class PollResultsJSON(ExportPollResultsBase):
-
     def get(self, *args, **kwargs):
         poll_results = self._get_poll_results_data()
 
