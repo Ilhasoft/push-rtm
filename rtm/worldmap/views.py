@@ -1,7 +1,8 @@
 from smartmin.views import SmartTemplateView
 from dash.orgs.views import OrgObjPermsMixin
 
-from rtm.utils import get_messages_sent_org, get_messages_received_org, get_messages_engagement_org, get_sdgs_from_org
+from rtm.utils import get_sdgs_from_org
+from rtm.channels.utils import get_messages_sent_org, get_messages_received_org, get_messages_engagement_org
 from rtm.worldmap.models import OrgCountryCode
 
 

@@ -111,21 +111,3 @@ class EditView(SmartTemplateView):
             messages.error(request, form.non_field_errors())
             messages.error(request, _("Sorry, you did not complete the registration."))
             return render(request, self.template_name, context)
-
-
-class RedirectToUNCTView(RedirectView):
-    """Redirect the user to the UNCT of the subdomain sent in the url."""
-
-    def build_url_redirect(self, subdomain: str) -> str:
-        subdomain: str = f"{subdomain}." if subdomain else ""
-        scheme: str = self.request.scheme
-        hostname: str = settings.HOSTNAME
-        path = reverse("dashboard")
-
-        return f"{scheme}://{subdomain}{hostname}{path}"
-
-    def get_redirect_url(self, *args, **kwargs):
-        subdomain: str = kwargs.get("subdomain", "")
-        self.url: str = self.build_url_redirect(subdomain)
-
-        return super().get_redirect_url(*args, **kwargs)
