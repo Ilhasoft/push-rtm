@@ -170,8 +170,8 @@
     let data_countries_map = {};
     {% for key, value in data_countries.items %}
       data_countries_map["{{key}}"] = {
-        "org_id": "{{value.org.id}}",
-        "org_subdomain": "{{value.org.subdomain}}",
+        "org_id": "{{value.org_id}}",
+        "org_subdomain": "{{value.org_subdomain}}",
         "engagement": "{{value.engagement}}",
         "sent": "{{value.sent}}",
         "received": "{{value.received}}",

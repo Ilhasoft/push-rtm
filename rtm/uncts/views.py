@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
@@ -112,22 +113,19 @@ class EditView(SmartTemplateView):
             return render(request, self.template_name, context)
 
 
-class RedirectUrlWithSubdomainView(RedirectView):
-    def get_url(self):
-        return self.request.get_host()
+class RedirectToUNCTView(RedirectView):
+    """Redirect the user to the UNCT of the subdomain sent in the url."""
 
-    def get_scheme(self):
-        return self.request.scheme + "://"
+    def build_url_redirect(self, subdomain: str) -> str:
+        subdomain: str = f"{subdomain}." if subdomain else ""
+        scheme: str = self.request.scheme
+        hostname: str = settings.HOSTNAME
+        path = reverse("dashboard")
 
-    def build_url_with_subdomain(self, subdomain):
-        host_url = self.get_url()
-        if subdomain:
-            subdomain = subdomain + "."
-
-        url = self.get_scheme() + subdomain + host_url
-        return url
+        return f"{scheme}://{subdomain}{hostname}{path}"
 
     def get_redirect_url(self, *args, **kwargs):
-        subdomain = kwargs.get("subdomain", "")
-        self.url = self.build_url_with_subdomain(subdomain)
+        subdomain: str = kwargs.get("subdomain", "")
+        self.url: str = self.build_url_redirect(subdomain)
+
         return super().get_redirect_url(*args, **kwargs)
