@@ -1,14 +1,12 @@
 from smartmin.views import SmartTemplateView
-from dash.orgs.views import OrgObjPermsMixin
 
 from rtm.utils import get_sdgs_from_org
 from rtm.channels.utils import get_messages_sent_org, get_messages_received_org, get_messages_engagement_org
 from rtm.worldmap.models import OrgCountryCode
 
 
-class ListView(OrgObjPermsMixin, SmartTemplateView):
+class ListView(SmartTemplateView):
     template_name = "worldmap/index.html"
-    permission = "orgs.org_manage_accounts"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

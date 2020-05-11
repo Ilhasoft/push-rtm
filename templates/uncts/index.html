@@ -20,16 +20,18 @@
         </form>
       </div>
     </div>
-    <div class="column is-narrow">
-      <div class="control">
-        <a class="button is-medium is-info" href="{% url 'uncts.unct_create' %}">
-          <span class="icon">
-            <i class="material-icons">add</i>
-          </span>
-          <span>{% trans "UNCT" %}</span>
-        </a>
+    {% if request.user.is_staff and request.user.is_superuser %}
+      <div class="column is-narrow">
+        <div class="control">
+          <a class="button is-medium is-info" href="{% url 'uncts.unct_create' %}">
+            <span class="icon">
+              <i class="material-icons">add</i>
+            </span>
+            <span>{% trans "UNCT" %}</span>
+          </a>
+        </div>
       </div>
-    </div>
+    {% endif %}
   </div>
   <table class="table is-fullwidth">
     <thead>
@@ -37,7 +39,9 @@
         <th>{% autosort name _("Name") %}</th>
         <th>{% autosort timezone _("Timezone") %}</th>
         <th>{% autosort language _("Language") %}</th>
-        <th>{% trans "Edit" %}</th>
+        {% if request.user.is_staff and request.user.is_superuser %}
+          <th>{% trans "Edit" %}</th>
+        {% endif %}
         <th>{% trans "Users" %}</th>
       </tr>
     </thead>
@@ -47,11 +51,13 @@
           <td><a href="{{ org|get_org_url }}" target="_blank">{{ org.name }}</a></td>
           <td>{{ org.timezone }} </td>
           <td>{{ org.language }}</td>
-          <td>
-            <a href="{% url 'uncts.unct_update' org.id %}">
-              <i class="material-icons">border_color</i>
-            </a>
-          </td>
+          {% if request.user.is_staff and request.user.is_superuser %}
+            <td>
+              <a href="{% url 'uncts.unct_update' org.id %}">
+                <i class="material-icons">border_color</i>
+              </a>
+            </td>
+          {% endif %}
           <td>
             <a href="{% url 'accounts.user_org_list' org.id %}?source=unct">
               <i class="material-icons">people</i>
