@@ -57,6 +57,7 @@
           <td>{{ user.username }} </td>
           <td>{{ user.email }} </td>
           <td>{{ user|user_org_group:org }}</td>
+          {% if not user.is_superuser or not user.is_staff %}
           <td>
             <a
               href="{% if request.user.is_superuser %}{% url 'accounts.user_org_update' org.pk user.pk %}{% else %}{% url 'accounts.user_update' user.pk %}{% endif %}">
@@ -93,6 +94,7 @@
             </div>
 
           </td>
+          {% endif %}
         </tr>
       {% endfor %}
       {% for inactive_user in log_permission_users %}
