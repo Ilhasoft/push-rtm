@@ -6,13 +6,11 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('worldmap', '0001_initial'),
+        ("worldmap", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='orgcountrycode',
-            name='org_country_code',
-            field=models.CharField(max_length=2, unique=True),
+            model_name="orgcountrycode", name="org_country_code", field=models.CharField(max_length=2, unique=True),
         ),
     ]

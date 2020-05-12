@@ -12,14 +12,10 @@ class TestRapidProBackendGlobal(unittest.TestCase):
         self.backend_global = RapidProBackendGlobal()
 
     def test_get_host(self):
-        self.assertEqual(
-            self.backend_global.host, settings.SITE_API_HOST
-        )
+        self.assertEqual(self.backend_global.host, settings.SITE_API_HOST)
 
     def test_get_token(self):
-        self.assertEqual(
-            self.backend_global.token, settings.TOKEN_WORKSPACE_GLOBAL
-        )
+        self.assertEqual(self.backend_global.token, settings.TOKEN_WORKSPACE_GLOBAL)
 
     def test_get_temba_client(self):
         return isinstance(self.backend_global.temba_client, TembaClient)

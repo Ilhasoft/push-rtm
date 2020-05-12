@@ -60,6 +60,7 @@
               {% trans "No Permission" %}
             {% endif %}
           </td>
+          {% if not user.is_superuser %}
           <td>
             {% if not user.logs_permission_user.all %}
             <a
@@ -69,7 +70,6 @@
             {% endif %}
           </td>
           <td>
-          {% if not user.is_superuser %}
               {% if user|is_global_viewer_active %}
                 <button class="button-no-bg" onclick=openModal('{{user.pk}}');>
                   <svg class="svg-lock" xmlns="http://www.w3.org/2000/svg" width="11.623" height="16.551" viewBox="0 0 11.623 16.551">
@@ -125,8 +125,11 @@
                   </div>
                 </div>
               {% endif %}
-          {% endif %}
             </td>
+          {% else %}
+            <td></td>
+            <td></td>
+          {% endif %}
         </tr>
       {% empty %}
         <tr>

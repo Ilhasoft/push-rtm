@@ -23,6 +23,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.admin.models import ACTION_FLAG_CHOICES, LogEntry
 
+from rtm.channels.models import ChannelDailyStats
 from rtm.locations.models import Boundary
 from rtm.polls.models import Poll, PollResult
 from rtm.stats.models import PollStats, GenderSegment, AgeSegment
@@ -898,6 +899,19 @@ def populate_contact_activity(org):
         logger.info(
             "Processed poll results update %d / %d contacts in %ds" % (i, len(all_contacts), time.time() - start)
         )
+
+
+def get_sdgs_from_org(org):
+    org_sdgs = set()
+    for poll in org.polls.all():
+        poll_questions = poll.questions.all()
+        for question in poll_questions:
+            question_sdgs = question.sdgs
+            if question_sdgs:
+                question_sdg = set(question_sdgs)
+                org_sdgs = org_sdgs | question_sdg
+
+    return org_sdgs or ""
 
 
 Org.get_occupation_stats = get_occupation_stats

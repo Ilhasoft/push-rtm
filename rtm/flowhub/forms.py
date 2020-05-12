@@ -121,17 +121,11 @@ class FlowForm(forms.ModelForm):
 class FlowGlobalForm(FlowForm):
     class Meta:
         model = Flow
-        fields = [
-            "name",
-            "description",
-            "collected_data",
-            "tags",
-            "languages"
-        ]
+        fields = ["name", "description", "collected_data", "tags", "languages"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['sdgs'].required = False
+        self.fields["sdgs"].required = False
 
     def clean(self):
         cleaned_data = super().clean()

@@ -24,12 +24,11 @@ from .forms import FlowForm, FlowGlobalForm
 PATH_PREVIOUS_URLS_INFO = {
     "/flowhub/global/": "All global flows",
     "/flowhub/": "All flows",
-    "/flowhub/my-org/": "My unct"
+    "/flowhub/my-org/": "My unct",
 }
 
 
 class FlowBreadCrumbListView(SmartTemplateView):
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["breadcrumbs"] = self.get_breadcrumb()
@@ -38,13 +37,8 @@ class FlowBreadCrumbListView(SmartTemplateView):
 
     def get_breadcrumb(self):
         path_and_url = {
-            "previous": {
-                "url": self.get_previous_url(),
-                "path": self.get_previous_path()
-            },
-            "current": {
-                "path": self.get_current_path()
-            }
+            "previous": {"url": self.get_previous_url(), "path": self.get_previous_path()},
+            "current": {"path": self.get_current_path()},
         }
         return path_and_url
 
@@ -139,8 +133,7 @@ class FlowBaseListView(LoginRequiredMixin, SearchSmartListViewMixin):
         queryset = self.model.objects.filter(is_active=True).order_by("name")
 
         if not is_global_user(self.request.user):
-            queryset = queryset.filter(
-                Q(org=self.request.org) | Q(visible_globally=True))
+            queryset = queryset.filter(Q(org=self.request.org) | Q(visible_globally=True))
         queryset = self.search(queryset)
         queryset = self.filter(queryset)
         self.query = self.request.GET.get(self.search_query_name, "")
@@ -166,8 +159,7 @@ class FlowBaseListView(LoginRequiredMixin, SearchSmartListViewMixin):
             filters["org_id"] = unct
 
         if sort_field:
-            sortered = "{}{}".format(
-                "-" if sort_direction == "desc" else "", sort_field)
+            sortered = "{}{}".format("-" if sort_direction == "desc" else "", sort_field)
 
         if "stars" in sortered:
             sortered += "s"
@@ -196,8 +188,7 @@ class ListView(FlowBaseListView):
         context["flows"] = get_paginator(list(self.get_queryset()), page)
         context["query"] = self.query
         context["back_to"] = reverse("flowhub.flow_list")
-        context["redirect_to"] = str(base64.b64encode(
-            context["back_to"].encode("UTF-8")), "UTF-8")
+        context["redirect_to"] = str(base64.b64encode(context["back_to"].encode("UTF-8")), "UTF-8")
         return context
 
 
@@ -218,16 +209,14 @@ class UnctsView(SearchSmartListViewMixin):
         sortered = "name"
 
         if sort_field:
-            sortered = "{}{}".format(
-                "-" if sort_direction == "desc" else "", sort_field)
+            sortered = "{}{}".format("-" if sort_direction == "desc" else "", sort_field)
 
         queryset = self.model.objects.filter(is_active=True).order_by(sortered)
         queryset = self.search(queryset)
         self.query = self.request.GET.get("search", "")
 
         for org in queryset:
-            org.total_stars = sum([f.stars.all().count()
-                                   for f in org.flows.filter(is_active=True)])
+            org.total_stars = sum([f.stars.all().count() for f in org.flows.filter(is_active=True)])
 
         return queryset
 
@@ -261,8 +250,7 @@ class MyOrgListView(FlowBaseListView):
         context["flows"] = get_paginator(list(self.get_queryset()), page)
         context["query"] = self.query
         context["back_to"] = reverse("flowhub.my_org_flow_list")
-        context["redirect_to"] = str(base64.b64encode(
-            context["back_to"].encode("UTF-8")), "UTF-8")
+        context["redirect_to"] = str(base64.b64encode(context["back_to"].encode("UTF-8")), "UTF-8")
 
         return context
 
@@ -289,8 +277,7 @@ class CreateView(FlowBreadCrumbListView):
         else:
             context = self.get_context_data()
             context["form"] = form
-            messages.error(request, _(
-                "Sorry, you did not complete the registration."))
+            messages.error(request, _("Sorry, you did not complete the registration."))
             messages.error(request, form.non_field_errors())
             return render(request, self.template_name, context)
 
@@ -323,8 +310,7 @@ class EditView(FlowBreadCrumbListView):
 
     def post(self, request, *args, **kwargs):
         flow = get_object_or_404(Flow, pk=self.kwargs["flow"])
-        form = FlowForm(request.POST, request.FILES,
-                        instance=flow, flow_is_required=False)
+        form = FlowForm(request.POST, request.FILES, instance=flow, flow_is_required=False)
 
         if form.is_valid():
             form.save(self.request)
@@ -333,8 +319,7 @@ class EditView(FlowBreadCrumbListView):
         else:
             context = self.get_context_data()
             context["form"] = form
-            messages.error(request, _(
-                "Sorry, you did not complete the registration."))
+            messages.error(request, _("Sorry, you did not complete the registration."))
             messages.error(request, form.non_field_errors())
             return render(request, self.template_name, context)
 
@@ -347,18 +332,15 @@ class DownloadView(FlowBreadCrumbListView):
         queryset = Flow.objects.filter(pk=self.kwargs["flow"], is_active=True)
 
         if not is_global_user(self.request.user):
-            queryset = queryset.filter(
-                Q(org=self.request.org) | Q(visible_globally=True))
+            queryset = queryset.filter(Q(org=self.request.org) | Q(visible_globally=True))
 
         flow = queryset.first()
 
         if not flow:
             return redirect(reverse("flowhub.flow_list"))
 
-        response = HttpResponse(json.dumps(flow.flow),
-                                content_type="application/json")
-        response[
-            "Content-Disposition"] = "attachment; filename=flow-{}.json".format(flow.pk)
+        response = HttpResponse(json.dumps(flow.flow), content_type="application/json")
+        response["Content-Disposition"] = "attachment; filename=flow-{}.json".format(flow.pk)
 
         flow.increase_downloads()
 
@@ -370,8 +352,7 @@ class StarView(FlowBreadCrumbListView):
 
     def get(self, request, *args, **kwargs):
         super().get_context_data(**kwargs)
-        flow = Flow.objects.filter(
-            pk=self.kwargs["flow"], is_active=True).first()
+        flow = Flow.objects.filter(pk=self.kwargs["flow"], is_active=True).first()
 
         if flow:
             flow.decrease_stars(request.user) if request.user in flow.stars.all() else flow.increase_stars(
@@ -388,8 +369,7 @@ class DeleteView(FlowBreadCrumbListView):
         super().get_context_data(**kwargs)
 
         try:
-            flow = Flow.objects.get(pk=kwargs.get(
-                "flow"), is_active=True, org=request.org)
+            flow = Flow.objects.get(pk=kwargs.get("flow"), is_active=True, org=request.org)
         except Flow.DoesNotExist:
             flow = None
 
@@ -401,8 +381,7 @@ class DeleteView(FlowBreadCrumbListView):
 
         redirect_to = request.POST.get("redirect_to")
         if redirect_to:
-            redirect_to = str(base64.b64decode(
-                redirect_to.encode("UTF-8")), "UTF-8")
+            redirect_to = str(base64.b64decode(redirect_to.encode("UTF-8")), "UTF-8")
             return redirect(redirect_to)
         return redirect(self.request.META.get("HTTP_REFERER"))
 
@@ -414,8 +393,9 @@ class InfoView(FlowBreadCrumbListView):
         context = super().get_context_data(**kwargs)
         queryset = Flow.objects.get(pk=kwargs.get("flow"))
         subtitle = queryset.name
-        context["redirect_to"] = str(base64.b64encode(
-            self.request.META.get("HTTP_REFERER", "").encode("UTF-8")), "UTF-8")
+        context["redirect_to"] = str(
+            base64.b64encode(self.request.META.get("HTTP_REFERER", "").encode("UTF-8")), "UTF-8"
+        )
 
         previous_url = urlparse(self.request.META.get("HTTP_REFERER", ""))
         previous_path = previous_url.path
@@ -450,8 +430,7 @@ class CreateGlobalView(CreateView):
         else:
             context = self.get_context_data()
             context["form"] = form
-            messages.error(request, _(
-                "Sorry, you did not complete the registration."))
+            messages.error(request, _("Sorry, you did not complete the registration."))
             messages.error(request, form.non_field_errors())
             return render(request, self.template_name, context)
 
@@ -499,8 +478,7 @@ class EditGlobalView(EditView):
 
     def post(self, request, *args, **kwargs):
         flow = get_object_or_404(Flow, pk=self.kwargs["flow"])
-        form = FlowGlobalForm(request.POST, request.FILES,
-                        instance=flow, flow_is_required=False)
+        form = FlowGlobalForm(request.POST, request.FILES, instance=flow, flow_is_required=False)
 
         if form.is_valid():
             form.save(self.request)
@@ -509,7 +487,6 @@ class EditGlobalView(EditView):
         else:
             context = self.get_context_data()
             context["form"] = form
-            messages.error(request, _(
-                "Sorry, you did not complete the registration."))
+            messages.error(request, _("Sorry, you did not complete the registration."))
             messages.error(request, form.non_field_errors())
             return render(request, self.template_name, context)

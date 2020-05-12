@@ -6,13 +6,11 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('polls_global', '0003_auto_20200116_1400'),
+        ("polls_global", "0003_auto_20200116_1400"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='pollglobalsurveys',
-            name='percent_compability',
-            field=models.FloatField(blank=True, null=True),
+            model_name="pollglobalsurveys", name="percent_compability", field=models.FloatField(blank=True, null=True),
         ),
     ]

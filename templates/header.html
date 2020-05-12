@@ -18,22 +18,22 @@
       <div class="navbar-start">
         <a class="navbar-item worldmap-menu" href="{% url 'worldmap.map_list' %}">{% trans "World Map" %}</a>
         <a class="navbar-item dashboard" href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a>
-        {% if request.user.is_superuser %}
-          <a class="navbar-item uncts" href="{% url 'uncts.unct_list' %}">{% trans "UNCTs" %}</a>
-        {% endif %}
-        {% if request.user.is_superuser %}
-          <a class="navbar-item users" href="{% url 'accounts.global_list' %}">{% trans "Users" %}</a>
-        {% elif request.org and request.user|is_admin_user %}
-          <a class="navbar-item users" href="{% url 'accounts.user_list' %}">{% trans "Users" %}</a>
-        {% endif %}
-        <a class="navbar-item flowhub" href="{% url 'flowhub.flow_list' %}">{% trans "Repository" %}</a>
-        {% if request.org and request.org in request.user.get_user_orgs %}
+
+        {% if request.org %}
+          {% if request.user|is_admin_user %}
+            <a class="navbar-item users" href="{% url 'accounts.user_list' %}">{% trans "Users" %}</a>
+          {% endif %}
           <a class="navbar-item surveys" href="{% url 'polls.poll_list' %}">{% trans "Surveys" %}</a>
-        {% endif %}
-        {% if request.user.is_superuser %}
+        {% else %}
+          {% if request.user.is_superuser %}
+            <a class="navbar-item uncts" href="{% url 'uncts.unct_list' %}">{% trans "UNCTs" %}</a>
+            <a class="navbar-item users" href="{% url 'accounts.global_list' %}">{% trans "Users" %}</a>
+          {% endif %}
           <a class="navbar-item surveys-global" href="{% url 'polls_global.poll_list' %}">{% trans "Global Surveys" %}</a>
         {% endif %}
-         <a class="navbar-item rtm-help" href="{% url 'docs.login' %}">{% trans "Help" %}</a>
+
+        <a class="navbar-item flowhub" href="{% url 'flowhub.flow_list' %}">{% trans "Repository" %}</a>
+        <a class="navbar-item rtm-help" href="{% url 'docs.login' %}">{% trans "Help" %}</a>
       </div>
       <div class="navbar-end">
         <!-- <div class="navbar-item has-dropdown is-hoverable">

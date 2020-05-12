@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
@@ -110,24 +111,3 @@ class EditView(SmartTemplateView):
             messages.error(request, form.non_field_errors())
             messages.error(request, _("Sorry, you did not complete the registration."))
             return render(request, self.template_name, context)
-
-
-class RedirectUrlWithSubdomainView(RedirectView):
-    def get_url(self):
-        return self.request.get_host()
-
-    def get_scheme(self):
-        return self.request.scheme + "://"
-
-    def build_url_with_subdomain(self, subdomain):
-        host_url = self.get_url()
-        if subdomain:
-            subdomain = subdomain + "."
-
-        url = self.get_scheme() + subdomain + host_url
-        return url
-
-    def get_redirect_url(self, *args, **kwargs):
-        subdomain = kwargs.get("subdomain", "")
-        self.url = self.build_url_with_subdomain(subdomain)
-        return super().get_redirect_url(*args, **kwargs)

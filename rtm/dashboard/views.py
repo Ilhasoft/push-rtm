@@ -28,10 +28,10 @@ class DashboardDataView(View):
         filter_by = self.request.GET.get("filter_by")
 
         if request.user.is_authenticated:
-            if request.user.is_superuser or request.user.groups.filter(name="Global Viewers"):
-                self.access_level = "global"
-            elif request.org in request.user.get_user_orgs():
+            if request.org:
                 self.access_level = "local"
+            elif request.user.is_superuser or request.user.groups.filter(name="Global Viewers"):
+                self.access_level = "global"
 
         response = dict()
         response["time_ago"] = Dashboard.get_text_time_ago(filter_by)
@@ -140,12 +140,9 @@ class DashboardDataView(View):
                     channel=channel, **Dashboard.filter_by_date("date", filter_by)
                 ).aggregate(total=Sum("count"))["total"]
 
-                global_total = (
-                    ChannelDailyStats.objects.filter(
-                        channel__channel_type=channel.channel_type,
-                        **Dashboard.filter_by_date("date", filter_by)
-                    ).aggregate(total=Sum("count"))["total"]
-                )
+                global_total = ChannelDailyStats.objects.filter(
+                    channel__channel_type=channel.channel_type, **Dashboard.filter_by_date("date", filter_by)
+                ).aggregate(total=Sum("count"))["total"]
 
                 if channel.channel_type not in channels_data:
                     channels_data[channel.channel_type] = {

@@ -7,13 +7,15 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('polls_global', '0002_pollglobal_flow_uuid'),
+        ("polls_global", "0002_pollglobal_flow_uuid"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='pollglobalsurveys',
-            name='poll_local',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='polls_local', to='polls.Poll'),
+            model_name="pollglobalsurveys",
+            name="poll_local",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT, related_name="polls_local", to="polls.Poll"
+            ),
         ),
     ]

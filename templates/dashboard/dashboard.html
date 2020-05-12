@@ -10,8 +10,7 @@
 {% endblock %}
 
 {% block content %}
-    {% if access_level == 'local' or request.org %}
-    <section class="section">
+    <!--<section class="section header-dashboard">
       <h1 class="title bottom-m-0">
         {{ request.org }}
       </h1>
@@ -36,12 +35,15 @@
         </div>
       </div>
       </div>
-    </section>
-    {% else %}
+    </section>-->
     <section class="section section-global-dashboard">
-      <div class="box box-global-dashboard is-shadowless left-p-40">
+      <div class="box header-dashboard box-global-dashboard is-shadowless left-p-40 bottom-p-20">
         <h1 class="title bottom-m-0">
-          {% trans "Global Dashboard" %}
+          {% if access_level == 'local' or request.org %}
+            {{request.org}}
+          {% else %}
+            {% trans "Global Dashboard" %}
+          {% endif %}
         </h1>
         <div class="flex space-between">
           <div class="has-text-grey-light" id="all_filter"></div>
@@ -65,79 +67,107 @@
         </div>
       </div>
         <hr class="top-m-5 bottom-m-5">
-        <div class="columns is-multiline">
-          <div class="column is-one-fifth">
-            <div class="flex">
-              <div class="tooltip top flex align-center">
-                <div class="right-m-10">
-                  <img src="{% static 'svg/flag.svg' %}">
-                </div>
-                <div class="left-m-20">
-                  <div class="flex align-center">
-                    <span class="is-size-6 has-text-grey-light">{% trans "UNCTs tracked" %}</span>
+          <div class="flex space-between">
+            <div class="column is-one-fifth level-item">
+            {% if not request.org %}
+              <div class="flex">
+                <div class="tooltip top flex align-center">
+                  <div class="right-m-10">
+                    <img src="{% static 'svg/flag.svg' %}">
                   </div>
-                  <span class="is-size-4">{{orgs_total}}</span>
+                  <div class="left-m-20">
+                    <div class="flex align-center">
+                      <span class="is-size-6 has-text-grey-light">{% trans "UNCTs tracked" %}</span>
+                    </div>
+                    <span class="is-size-4">{{orgs_total}}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <hr class="bottom-m-5 top-m-5">
-            <div class="has-text-centered">
-              <a class="is-size-7" onclick="showModal();">See all</a>
-            </div>
-            <div class="modal" id="modal-uncts-global">
-              <div class="modal-background"></div>
-              <div class="modal-card">
-                <header class="modal-card-head">
-                  <p class="modal-card-title">{% trans "UNCTs Tracked" %}</p>
-                  <button class="delete" onclick="showModal();" aria-label="close"></button>
-                </header>
-                <section class="modal-card-body">
-                  <ul>
-                    {% for name in orgs_name %}
-                      <li class="border-bottom p-5">{{name}}</li>
-                    {% endfor %}
-                  </ul>
-                </section>
+              <hr class="bottom-m-5 top-m-5">
+              <div class="has-text-centered">
+                <a class="is-size-7" onclick="showModal();">See all</a>
               </div>
+              <div class="modal" id="modal-uncts-global">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                  <header class="modal-card-head">
+                    <p class="modal-card-title">{% trans "UNCTs Tracked" %}</p>
+                    <button class="delete" onclick="showModal();" aria-label="close"></button>
+                  </header>
+                  <section class="modal-card-body">
+                    <ul>
+                      {% for name in orgs_name %}
+                        <li class="border-bottom p-5">{{name}}</li>
+                      {% endfor %}
+                    </ul>
+                  </section>
+                </div>
+              </div>
+            {% endif %}
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    {% endif %}
 
-  <section class="section">
-    <div class="box is-shadowless p-40 bottom-m-20">
-      <div class="flex space-between">
-        <div>
-          <span class="card-title has-text-weight-bold">{% trans "SDGs being tracked" %}</span>
-          <span class="tooltip top left-m-10">
-            <i class="material-icons info-icon">info</i>
-            <span class="tooltip-content">{% trans "Number of total messages received addressing each SDG" %}</span>
-          </span>
-        </div>
-        <div class="dropdown is-hoverable">
-          <div class="dropdown-trigger">
-            <div aria-haspopup="true" aria-controls="dropdown-menu">
-              <span>{% trans "Filter by" %}</span>
-              <span class="icon is-small">
-                <i class="fas fa-angle-down" aria-hidden="true"></i>
+            <div class="level-item export-dashboard-dropdown top-p-5">
+              <i class="material-icons export-icon right-m-5">save_alt</i>
+              <div class="dropdown is-hoverable">
+                <div class="dropdown-trigger">
+                  <span aria-haspopup="true" aria-controls="export-dropdown">
+                    <span>{% trans "Export Dashboard" %}</span>
+                    <span class="icon is-small">
+                      <i class="fas fa-angle-down" aria-hidden="true"></i>
+                    </span>
+                  </span>
+                </div>
+                <div class="dropdown-menu" role="menu">
+                  <div class="dropdown-content">
+                    <a onclick="generatePdf();"><span class="dropdown-item">PDF</span></a>
+                  </div>
+                </div>
+              </div>
+              <span class="tooltip top left-m-10">
+                <i class="material-icons info-icon">info</i>
+                  <span class="tooltip-content">{% trans 'Export dashboard graphs'%}</span>
               </span>
             </div>
+
           </div>
-          <div class="dropdown-menu" id="dropdown-menu" role="menu">
-            <div class="dropdown-content">
-              <a href="javascript:loadChartTracked('week')" class="dropdown-item">{% trans "Last 7 days" %}</a>
-              <a href="javascript:loadChartTracked('month')" class="dropdown-item">{% trans "Last 30 days" %}</a>
-              <a href="javascript:loadChartTracked('year')" class="dropdown-item">{% trans "Last 12 months" %}</a>
-              <a href="javascript:loadChartTracked('inception')" class="dropdown-item">{% trans "Since Inception" %}</a>
+      </div>
+    </section>
+
+  <section class="section">
+    <div class="box is-shadowless p-40 bottom-m-20 sdgs-tracked">
+      <div id="header-sdgs-metrics">
+        <div class="flex space-between">
+          <div>
+            <span class="card-title has-text-weight-bold header-sdgs">{% trans "SDGs metrics" %}</span>
+            <span class="tooltip top left-m-10">
+              <i class="material-icons info-icon">info</i>
+              <span class="tooltip-content">{% trans "Number of total messages received addressing each SDG" %}</span>
+            </span>
+          </div>
+          <div class="dropdown is-hoverable">
+            <div class="dropdown-trigger">
+              <div aria-haspopup="true" aria-controls="dropdown-menu">
+                <span>{% trans "Filter by" %}</span>
+                <span class="icon is-small">
+                  <i class="fas fa-angle-down" aria-hidden="true"></i>
+                </span>
+              </div>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+              <div class="dropdown-content">
+                <a href="javascript:loadChartTracked('week')" class="dropdown-item">{% trans "Last 7 days" %}</a>
+                <a href="javascript:loadChartTracked('month')" class="dropdown-item">{% trans "Last 30 days" %}</a>
+                <a href="javascript:loadChartTracked('year')" class="dropdown-item">{% trans "Last 12 months" %}</a>
+                <a href="javascript:loadChartTracked('inception')" class="dropdown-item">{% trans "Since Inception" %}</a>
+              </div>
             </div>
           </div>
         </div>
+        <div class="has-text-grey-light" id="sdgs_tracked_ago"></div>
       </div>
-      <div class="has-text-grey-light" id="sdgs_tracked_ago"></div>
-      <div class="columns top-m-10" id="tracked_sdgs">
-        <div class="column is-two-fifths">
+      <div class="columns top-m-10">
+        <div class="column is-two-fifths sdgss">
+          <div class="card-title has-text-weight-bold bottom-p-20">{% trans "SDGs being tracked" %}</div>
           <ul class="tracked-sgd left-m-20 bottom-m-10" id="sdgs_tracked"></ul>
           <div id="empty_sdgs">
             <div class="left-m-20 bottom-m-20">{% trans 'No SDGs being tracked in this period' %}</div>
@@ -205,7 +235,7 @@
       </div>
     </div>
 
-    <div class="box is-shadowless p-40 bottom-m-20">
+    <div class="box is-shadowless p-40 bottom-m-20 metrics-message">
       <div class="flex space-between">
         <div class="card-title">
           <span class="has-text-weight-bold">{% trans "Message Metrics" %}</span>
@@ -280,6 +310,7 @@
       <i class="material-icons">keyboard_arrow_up</i>
     </a>
   </section>
+  <canvas style="display: none;" id="export-bubble"></canvas>
 {% endblock %}
 
 {% block js_extra %}
@@ -288,8 +319,92 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.3/d3.min.js"></script>
 <script src="{% static 'plugins/wordcloud/d3.layout.cloud.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://unpkg.com/canvg@3.0.4/lib/umd.js"></script>
 
 <script type="text/javascript">
+  function is_unct_page(){
+    var is_unct = "{{ request.org }}" != "None";
+    return is_unct;
+  }
+
+  function getDataImageUrlFromCanvas(element){
+    var html2obj = html2canvas(element);
+    var queue  = html2obj.parse();
+    var canvas = html2obj.render(queue);
+    var data = canvas.toDataURL('image/png');
+
+    return data;
+  }
+
+
+  function generatePdf(){
+    var bubble = $(".bubble");
+    var svgBubble = bubble.get(0);
+
+    // get svg data
+    var svgAsString = new XMLSerializer().serializeToString(svgBubble);
+
+    $("#export-bubble").css("display", "block");
+    const canvas = $("#export-bubble").get(0);
+    const ctx = canvas.getContext('2d');
+    v = canvg.Canvg.fromString(ctx, svgAsString);
+    v.start();
+
+    var svgCanvasData = canvas.toDataURL('image/png')
+
+
+    var pdf = new jsPDF('p','px','a4');
+    var width = pdf.internal.pageSize.getWidth();
+    var height = pdf.internal.pageSize.getHeight();
+
+    //esconde botao de export
+    $(".export-dashboard-dropdown").css("display", "none");
+
+    //tirando padding left do cabecalho dashboard
+    var header_dashboard = $(".header-dashboard");
+    header_dashboard.removeClass("left-p-40");
+    header_dashboard.css("padding-left", 0);
+
+    //pega as divs para transformar em imagem
+    var sdgs_tracked = $(".sdgss");
+    var metrics_messages = $(".metrics-message");
+    var most_used = $("#most_used");
+    var header_metrics_sdgs = $("#header-sdgs-metrics");
+
+    //gera imagem e adiciona ao pdf
+    data = getDataImageUrlFromCanvas(sdgs_tracked);
+    dataHeaderDashboard = getDataImageUrlFromCanvas(header_dashboard);
+    dataHeaderSDGMetrics = getDataImageUrlFromCanvas(header_metrics_sdgs);
+
+    if(is_unct_page()){
+      pdf.addImage(dataHeaderDashboard, "png", 20, 20, width-40, height*0.08);
+    }else{
+      pdf.addImage(dataHeaderDashboard, "png", 20, 20, width-40, height*0.15);
+    };
+
+    pdf.addImage(dataHeaderSDGMetrics, "png", 20, height*0.2, width-40, height*0.03);
+    pdf.addImage(data, "png", 20, height*0.25, (width*0.4)-20, height*0.4);
+    pdf.addImage(svgCanvasData, "png", width*0.4, height*0.25, (width*0.6)-20, height*0.4);
+    pdf.addPage();
+
+    data = getDataImageUrlFromCanvas(metrics_messages);
+    pdf.addImage(data, 'png', 20, 20, width-40, height*0.5);
+
+    data = getDataImageUrlFromCanvas(most_used);
+    pdf.addImage(data, 'png', 20, height*0.6, width-40, (height*0.3)-20);
+
+    pdf.save("dashboard.pdf");
+
+    //adicionando estilos novamente e limpando canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    $("#export-bubble").css("display", "none");
+    $(".export-dashboard-dropdown").css("display", "flex");
+    header_dashboard.addClass("left-p-40");
+    header_dashboard.css("padding-left", "1.25rem");
+  }
+
   function showModal(){
     $("#modal-uncts-global").toggleClass("is-active");
   }

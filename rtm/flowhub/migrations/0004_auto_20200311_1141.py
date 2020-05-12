@@ -7,13 +7,21 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('flowhub', '0003_auto_20191018_1148'),
+        ("flowhub", "0003_auto_20191018_1148"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='flow',
-            name='org',
-            field=models.ForeignKey(blank=True, help_text='The organization this flow is part of', null=True, on_delete=django.db.models.deletion.CASCADE, related_name='flows', to='orgs.Org', verbose_name='UNCT'),
+            model_name="flow",
+            name="org",
+            field=models.ForeignKey(
+                blank=True,
+                help_text="The organization this flow is part of",
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="flows",
+                to="orgs.Org",
+                verbose_name="UNCT",
+            ),
         ),
     ]

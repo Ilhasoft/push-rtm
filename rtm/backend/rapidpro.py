@@ -1066,7 +1066,12 @@ class RapidProBackendGlobal(object):
             flow_json["runs"] = flow.runs.active + flow.runs.expired + flow.runs.completed + flow.runs.interrupted
             flow_json["completed_runs"] = flow.runs.completed
             flow_json["results"] = [
-                {"key": result.key, "name": result.name, "categories": result.categories, "node_uuids": result.node_uuids}
+                {
+                    "key": result.key,
+                    "name": result.name,
+                    "categories": result.categories,
+                    "node_uuids": result.node_uuids,
+                }
                 for result in flow.results
             ]
 
