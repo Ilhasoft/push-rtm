@@ -14,5 +14,7 @@ def get_messages_received_org(org: Org) -> int:
     return received.get("total", 0)
 
 
-def get_messages_engagement_org(sent: int, received: int) -> int:
+def get_messages_engagement_org(sent: int = 0, received: int = 0) -> int:
+    sent = 0 if sent is None else sent
+    received = 0 if received is None else received
     return (100 * received) / sent if sent > 0 else 0

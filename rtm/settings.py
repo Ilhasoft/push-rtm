@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 import dj_database_url
 import sentry_sdk
 
@@ -230,6 +232,7 @@ CHANNEL_TYPES = {
     "KN": {"name": "SMS", "icon": "icon-phone"},
     "WA": {"name": "Whatsapp", "icon": "icon-whatsapp"},
     "FCM": {"name": "Firebase Chat Messaging", "icon": "icon-phone"},
+    "ZV": {"name": "Zenvia", "icon": "icon-phone"},
 }
 
 STATICFILES_FINDERS += ("sass_processor.finders.CssFinder",)
@@ -304,7 +307,7 @@ CELERYBEAT_SCHEDULE = {
 }
 
 
-## OAUTH2
+# OAUTH2
 
 OAUTHLIB_CLIENT_ID = config("OAUTHLIB_CLIENT_ID", default="")
 OAUTHLIB_SECRET = config("OAUTHLIB_SECRET", default="")
