@@ -224,17 +224,6 @@ AVAILABLE_COLORS = [
     "#170670",
 ]
 
-CHANNEL_TYPES = {
-    "EX": {"name": "External", "icon": "icon-phone"},
-    "TG": {"name": "Telegram", "icon": "icon-telegram"},
-    "FB": {"name": "Facebook", "icon": "icon-facebook"},
-    "TW": {"name": "Twitter", "icon": "icon-twitter"},
-    "KN": {"name": "SMS", "icon": "icon-phone"},
-    "WA": {"name": "Whatsapp", "icon": "icon-whatsapp"},
-    "FCM": {"name": "Firebase Chat Messaging", "icon": "icon-phone"},
-    "ZV": {"name": "Zenvia", "icon": "icon-phone"},
-}
-
 STATICFILES_FINDERS += ("sass_processor.finders.CssFinder",)
 
 TOKEN_WORKSPACE_GLOBAL = config("TOKEN_WORKSPACE_GLOBAL", "your token for global workspace in rapidpro")
