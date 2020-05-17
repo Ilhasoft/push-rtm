@@ -107,3 +107,9 @@ class ChannelMonthlyStats(models.Model):
                 outgoing_ivr_count=outgoing_ivr,
                 error_count=error_count,
             )
+
+
+class ChannelInfo(models.Model):
+    urn = models.CharField(max_length=5, unique=True)
+    name = models.CharField(max_length=100, null=True, blank=True)
+    icon = models.CharField(max_length=50, null=True, blank=True)
