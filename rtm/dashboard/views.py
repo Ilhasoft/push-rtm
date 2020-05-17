@@ -16,7 +16,7 @@ from smartmin.views import SmartTemplateView
 from dash.orgs.models import Org
 
 from rtm.polls.models import PollQuestion, Poll
-from rtm.channels.models import ChannelStats, ChannelDailyStats
+from rtm.channels.models import ChannelStats, ChannelDailyStats, ChannelInfo
 from rtm.contacts.models import Contact
 
 
@@ -378,8 +378,17 @@ class Dashboard(SmartTemplateView):
         return _("Since Inception")
 
     @classmethod
-    def channel_info(self, urn, field):
-        return dict(settings.CHANNEL_TYPES).get(urn).get(field)
+    def channel_info(cls, urn, field):
+        try:
+            channel_info = ChannelInfo.objects.get(urn=urn)
+            channel_info = {
+                "name": channel_info.name,
+                "icon": channel_info.icon,
+            }
+        except Exception:
+            channel_info = {"name": urn, "icon": "icon-phone"}
+
+        return channel_info.get(field)
 
     def get(self, request, *args, **kwargs):
         self.access_level = None
