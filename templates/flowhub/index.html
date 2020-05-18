@@ -36,7 +36,7 @@
                 <li><a class="my-org" href="{% url 'flowhub.my_org_flow_list' %}">{{ org.name }}</a></li>
               {% endif %}
               <li><a class="uncts" href="{% url 'flowhub.flow_uncts' %}">{% trans "UNCTs" %}</a></li>
-              {% if request.user|is_admin_user %}
+              {% if request.user|is_admin_user and request.org %}
                 <li><a class="upload" href="{% url 'flowhub.flow_create' %}">{% trans "Upload Flow" %}</a></li>
               {% endif %}
               {% if request.user.is_superuser and not request.org %}
