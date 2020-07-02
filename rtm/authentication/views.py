@@ -94,10 +94,7 @@ class LoginAuthView(SmartTemplateView):
                         self.request.org.viewers.add(user)
 
                     login(self.request, user)
-                    if is_global_user(user):
-                        return redirect(reverse("worldmap.map_list"))
-                    else:
-                        return redirect(reverse("dashboard"))
+                    return redirect(reverse("dashboard"))
 
                 else:
                     return redirect(reverse("blocked"))

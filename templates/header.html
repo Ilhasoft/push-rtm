@@ -16,7 +16,6 @@
   {% if user_permissions %}
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
-        <a class="navbar-item worldmap-menu" href="{% url 'worldmap.map_list' %}">{% trans "World Map" %}</a>
         <a class="navbar-item dashboard" href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a>
 
         {% if request.org %}
@@ -29,11 +28,7 @@
             <a class="navbar-item uncts" href="{% url 'uncts.unct_list' %}">{% trans "UNCTs" %}</a>
             <a class="navbar-item users" href="{% url 'accounts.global_list' %}">{% trans "Users" %}</a>
           {% endif %}
-          <a class="navbar-item surveys-global" href="{% url 'polls_global.poll_list' %}">{% trans "Global Surveys" %}</a>
         {% endif %}
-
-        <a class="navbar-item flowhub" href="{% url 'flowhub.flow_list' %}">{% trans "Repository" %}</a>
-        <a class="navbar-item rtm-help" href="{% url 'docs.login' %}">{% trans "Help" %}</a>
       </div>
       <div class="navbar-end">
         <!-- <div class="navbar-item has-dropdown is-hoverable">

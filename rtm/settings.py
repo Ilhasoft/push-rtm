@@ -99,27 +99,18 @@ INSTALLED_APPS += (
     "taggit",
     "widget_tweaks",
     "drf_yasg",
-    "docs",
     "rtm.uncts",
     "rtm.accounts",
     "rtm.results",
-    "rtm.flowhub",
     "rtm.dashboard",
     "rtm.channels",
     "rtm.authentication",
     "rtm.polls_global",
-    "rtm.worldmap",
 )
 
 SITE_ALLOW_NO_ORG = (
     "dashboard",
     "dashboard_data",
-    "flowhub.flow_list",
-    "flowhub.flow_uncts",
-    "flowhub.flow_create",
-    "flowhub.flow_star",
-    "flowhub.flow_download",
-    "flowhub.flow_info",
     "uncts.unct_create",
     "uncts.unct_list",
     "uncts.unct_update",
@@ -143,27 +134,12 @@ SITE_ALLOW_NO_ORG = (
     "results.poll_read",
     "results.global_poll_read",
     "results.global_poll_data",
-    "worldmap.map_list",
     "blocked",
     "results.export_csv",
     "results.global_export_csv",
     "results.export_json",
     "results.global_export_json",
-    "docs.login",
-    "docs.uncts_users",
-    "docs.uncts_repository",
-    "docs.uncts_surveys",
-    "docs.uncts_dashboard",
-    "docs.global_uncts",
-    "docs.global_users",
-    "docs.global_repository",
-    "docs.global_surveys",
-    "docs.global_dashboard",
     "results.iframe",
-    "flowhub.flow_create_global",
-    "flowhub.flow_list_global",
-    "flowhub.flow_delete",
-    "flowhub.flow_update_global",
 )
 
 SDG_LIST = (
@@ -230,10 +206,10 @@ TOKEN_WORKSPACE_GLOBAL = config("TOKEN_WORKSPACE_GLOBAL", "your token for global
 
 SASS_PROCESSOR_INCLUDE_FILE_PATTERN = r"^.+\.scss$"
 
-LOGIN_URL = "/users/login/"
+LOGIN_URL = "/authentication/"
 LOGOUT_URL = "/users/logout/"
-LOGIN_REDIRECT_URL = "/worldmap"
-LOGOUT_REDIRECT_URL = "http://dataforallcloud.org/"
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
 
 CELERYBEAT_SCHEDULE = {
     "refresh_flows": {"task": "polls.refresh_org_flows", "schedule": timedelta(minutes=1), "relative": True},
