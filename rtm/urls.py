@@ -7,6 +7,7 @@ from django.contrib import admin
 from django.views import static
 from django.views.generic import TemplateView
 
+
 admin.autodiscover()
 
 
@@ -18,11 +19,8 @@ urlpatterns = [
     url(r"^uncts/", include("rtm.uncts.urls")),
     url(r"^surveys/", include("rtm.polls.urls")),
     url(r"^results/", include("rtm.results.urls")),
-    url(r"^flowhub/", include("rtm.flowhub.urls")),
     url(r"^authentication/", include("rtm.authentication.urls")),
     url(r"^surveys-global/", include("rtm.polls_global.urls")),
-    url(r"^worldmap/", include("rtm.worldmap.urls")),
-    url(r"^docs/", include("rtm.docs.urls")),
     url(r"^blocked/", TemplateView.as_view(template_name="blocked_user.html"), name="blocked"),
 ]
 

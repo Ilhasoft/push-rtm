@@ -304,7 +304,6 @@ GROUP_PERMISSIONS = {
         "users.user_profile",
     ),
     "Viewers": ("polls.poll_list",),
-    "Global Viewers": ("flowhub.flowhub.*",),
     "Global": ("countries.countryalias.*",),
 }
 
