@@ -1,3 +1,7 @@
+v0.2.2
+----------
+* Add title to project
+
 v0.2.1
 ----------
 * Add org management
