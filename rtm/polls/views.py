@@ -27,7 +27,6 @@ from django.views.generic import View
 
 from dash.orgs.models import OrgBackend
 from rtm.utils import json_date_to_datetime, get_paginator
-from rtm.polls_global.models import PollGlobal, PollGlobalSurveys
 
 from .models import Poll, PollImage, PollQuestion
 
@@ -53,28 +52,6 @@ class PollForm(forms.ModelForm):
         widget=forms.Textarea(
             attrs={"placeholder": _("Insert the survey description"), "class": "textarea", "rows": 6}
         ),
-    )
-
-    connect_global = forms.BooleanField(
-        label=_("Connect to on ongoing global survey"),
-        required=False,
-        widget=forms.CheckboxInput(attrs={"class": "is-checkradio"}),
-    )
-
-    global_survey = forms.ModelChoiceField(
-        required=False,
-        empty_label=_("Select a global survey"),
-        label=_("Select a global survey"),
-        help_text=_("Select a global survey"),
-        queryset=PollGlobal.objects.filter(
-            Q(poll_end_date__gte=timezone.now()) | Q(poll_end_date__isnull=True),
-            poll_date__lte=timezone.now(),
-            is_active=True,
-        ),
-    )
-
-    percent_compability = forms.FloatField(
-        required=False, widget=forms.HiddenInput(attrs={"id": "percent-compability-hidden"})
     )
 
     def __init__(self, *args, **kwargs):
@@ -293,19 +270,13 @@ class PollCRUDL(SmartCRUDL):
         success_url = "id@polls.poll_poll_date"
         permission = "polls.poll_create"
         default_template = "polls/form.html"
-        fields = ("title", "flow_uuid", "response_content", "connect_global", "global_survey", "percent_compability")
+        fields = ("title", "flow_uuid", "response_content")
         success_message = _("Your survey has been created, now adjust the poll date.")
         title = _("Create Survey")
 
         def get_context_data(self, **kwargs):
             context = super().get_context_data(**kwargs)
             context["page_subtitle"] = _("New")
-            context["global_survey"] = PollGlobal.objects.filter(
-                Q(poll_end_date__gte=timezone.now()) | Q(poll_end_date__isnull=True),
-                poll_date__lte=timezone.now(),
-                is_active=True,
-            )
-            context["show_connect_global"] = True
             return context
 
         def get_form_kwargs(self):
@@ -356,13 +327,6 @@ class PollCRUDL(SmartCRUDL):
             obj.update_or_create_questions(user=self.request.user)
             Poll.pull_poll_results_task(obj)
             self.request.session["action_save"] = "New"
-
-            if self.form.cleaned_data["connect_global"]:
-                PollGlobalSurveys.objects.create(
-                    poll_global=self.form.cleaned_data["global_survey"],
-                    poll_local=obj,
-                    percent_compability=self.form.cleaned_data["percent_compability"],
-                )
 
             return obj
 
@@ -451,7 +415,6 @@ class PollCRUDL(SmartCRUDL):
                 fields.append("ruleset_%s_title" % question.ruleset_uuid)
                 fields.append("ruleset_%s_send_messages" % question.ruleset_uuid)
                 fields.append("ruleset_%s_include" % question.ruleset_uuid)
-                fields.append("ruleset_%s_sdgs" % question.ruleset_uuid)
 
             return fields
 
@@ -564,28 +527,10 @@ class PollCRUDL(SmartCRUDL):
                     widget=forms.CheckboxSelectMultiple(attrs={"class": "form-control send-message",}),
                 )
 
-                sdgs_field_name = "ruleset_%s_sdgs" % question.ruleset_uuid
-                sdgs_field_initial = initial.get(sdgs_field_name, "")
-                sdgs_field = forms.MultipleChoiceField(
-                    label=_("SDGs"),
-                    choices=settings.SDG_LIST,
-                    initial=sdgs_field_initial,
-                    required=False,
-                    widget=forms.SelectMultiple(
-                        attrs={
-                            "multiple": True,
-                            "class": "chosen-select form-control sdgs-select",
-                            "data": "chosen-select",
-                            "data-placeholder": _("Select one or more Tags."),
-                        }
-                    ),
-                )
-
                 counter += 1
                 self.form.fields[label_field_name] = label_field
                 self.form.fields[send_messages_field_name] = send_messages_field
                 self.form.fields[title_field_name] = title_field
-                self.form.fields[sdgs_field_name] = sdgs_field
                 self.form.fields[include_field_name] = include_field
 
             return self.form
@@ -602,10 +547,9 @@ class PollCRUDL(SmartCRUDL):
                 included = data.get("ruleset_%s_include" % r_uuid, False)
 
                 title = data["ruleset_%s_title" % r_uuid]
-                sdgs = data["ruleset_%s_sdgs" % r_uuid]
 
                 PollQuestion.objects.filter(poll=poll, ruleset_uuid=r_uuid).update(
-                    is_active=included, title=title, priority=0, sdgs=sdgs
+                    is_active=included, title=title, priority=0
                 )
 
             return self.object
@@ -628,7 +572,6 @@ class PollCRUDL(SmartCRUDL):
                 initial["ruleset_%s_label" % question.ruleset_uuid] = question.ruleset_label
                 initial["ruleset_%s_title" % question.ruleset_uuid] = question.title
                 initial["ruleset_%s_send_messages" % question.ruleset_uuid] = send_messages
-                initial["ruleset_%s_sdgs" % question.ruleset_uuid] = question.sdgs
 
             return initial
 
@@ -709,10 +652,7 @@ class PollCRUDL(SmartCRUDL):
             "is_active",
             "flow_uuid",
             "title",
-            "response_content",
-            "connect_global",
-            "global_survey",
-            "percent_compability",
+            "response_content"
         )
         success_url = "id@polls.poll_poll_date"
         default_template = "polls/form.html"
@@ -732,16 +672,7 @@ class PollCRUDL(SmartCRUDL):
         def get_context_data(self, **kwargs):
             context = super().get_context_data(**kwargs)
             context["page_subtitle"] = _("Edit")
-            context["global_survey"] = PollGlobal.objects.filter(
-                Q(poll_end_date__gte=timezone.now()) | Q(poll_end_date__isnull=True),
-                poll_date__lte=timezone.now(),
-                is_active=True,
-            )
-            in_global = PollGlobalSurveys.objects.filter(poll_local=self.object).first()
-            context["approve_pending"] = in_global
-            context["show_connect_global"] = False
-            if not in_global or in_global.is_joined is False:
-                context["show_connect_global"] = True
+
             return context
 
         def get_form_kwargs(self):
@@ -754,22 +685,7 @@ class PollCRUDL(SmartCRUDL):
             obj = super(PollCRUDL.Update, self).post_save(obj)
             obj.update_or_create_questions(user=self.request.user)
             self.request.session["action_save"] = "Edit"
-            if self.form.cleaned_data["connect_global"]:
-                try:
-                    global_survey = PollGlobalSurveys.objects.get(poll_local=self.object)
-                    global_survey.poll_global = self.form.cleaned_data["global_survey"]
-                    global_survey.percent_compability = self.form.cleaned_data["percent_compability"]
-                    global_survey.save()
-                except PollGlobalSurveys.DoesNotExist:
-                    PollGlobalSurveys.objects.create(
-                        poll_global=self.form.cleaned_data["global_survey"],
-                        poll_local=obj,
-                        percent_compability=self.form.cleaned_data["percent_compability"],
-                    )
-            else:
-                global_survey = PollGlobalSurveys.objects.filter(poll_local=self.object).first()
-                if global_survey and not global_survey.is_joined:
-                    global_survey.delete()
+
             return obj
 
     class PullRefresh(SmartUpdateView):
@@ -820,49 +736,3 @@ class PollCRUDL(SmartCRUDL):
             kwargs = super(PollCRUDL.Import, self).get_form_kwargs()
             kwargs["org"] = self.request.org
             return kwargs
-
-
-class FlowDataView(View):
-    def get_percent_compatibility(self, id_global_survey, local_flow_uuid):
-        """Get a global flow and a local flow and return the compatibility percentage between both."""
-        amount_local_flow_uuids = 0
-        amount_global_flow_uuids = 0
-        org_local = self.request.org
-
-        try:
-            global_survey = PollGlobal.objects.get(pk=id_global_survey)
-            global_flow = global_survey.get_flow().get("results", None)
-            global_flow_uuids = [question.get("key") for question in global_flow]
-
-            backend = OrgBackend.objects.get(pk=1)
-            local_flow = org_local.get_flows(backend=backend).get(local_flow_uuid).get("results", None)
-            local_flow_uuids = [
-                local_question.get("key")
-                for local_question in local_flow
-                if local_question.get("key") in global_flow_uuids
-            ]
-
-            amount_global_flow_uuids = len(global_flow_uuids)
-            amount_local_flow_uuids = len(local_flow_uuids)
-
-            percent_compatibility = (amount_local_flow_uuids * 100) / amount_global_flow_uuids
-
-        except ZeroDivisionError:
-            percent_compatibility = 0
-        except Exception:
-            percent_compatibility = None
-
-        return {
-            "percent_compatibility": percent_compatibility,
-            "amount_global_flow_uuids": amount_global_flow_uuids,
-            "amount_local_flow_uuids": amount_local_flow_uuids,
-        }
-
-    def get(self, request, *args, **kwargs):
-        global_survey = self.kwargs["global_survey"]
-        local_flow_uuid = self.kwargs["flow_uuid"]
-
-        percent_compatibility = self.get_percent_compatibility(global_survey, local_flow_uuid)
-        status_code = 200 if percent_compatibility is not None else 500
-
-        return JsonResponse(percent_compatibility, status=status_code)

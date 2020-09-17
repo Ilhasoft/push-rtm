@@ -1,6 +1,6 @@
 {% load i18n static humanize sass_tags rtm %}
-<div class="columns bottom-m-20" id="most_used">
-  <div class="column right-p-5 bottom-p-0">
+<div class="columns" id="most_used">
+  <div class="column is-two-fifths">
     <div class="box is-shadowless">
       <div class="p-20 flex space-between">
         <div class="card-title">
@@ -38,57 +38,26 @@
           </div>
           <canvas id="localMostUsedChannels"></canvas>
         </div>
-        <div class="column">
-          <div id="empty_global_most_used_channels">
-            <div class="m-20 has-text-weight-bold">{% trans 'Global' %}</div>
-            <div class="m-20">{% trans 'There are no data for this filter' %}</div>
-          </div>
-          <canvas id="globalMostUsedChannels"></canvas>
-        </div>
       </div>
     </div>
   </div>
 
-  <div class="column is-one-fifth bottom-p-0">
-    <div class="surveys-card grid box is-shadowless">
-      <div class="card-title left-p-10 top-p-10 bottom-p-20">
-        <span class="has-text-weight-bold">{% trans "Surveys" %}</span>
+  <div class="column">
+    <div class="box is-shadowless">
+      <div class="card-title p-20">
+        <span class="has-text-weight-bold">{% trans "Push Contacts" %}</span>
         <span class="tooltip top left-m-10">
           <i class="material-icons info-icon">info</i>
-          <span class="tooltip-content">{% trans "Surveys being conducted through the RTM" %}</span>
+          <span class="tooltip-content">{% trans "Overview of the contacts status on Push" %}</span>
         </span>
+        <div class="has-text-grey-light bottom-m-20 is-size-6">{% trans "Last 6 months" %}</div>
       </div>
-      <div class="grid align-center">
-        <div class="surveys-info has-text-centered bottom-p-30 border-bottom">
-          <div class="surveys-info__number">{{ surveys_local_total }}</div>
-          <div class="surveys-info_unct">{{ request.org.name }}</div>
-        </div>
-        <div class="surveys-info has-text-centered top-p-30 bottom-p-30">
-          <div class="surveys-info__number">{{ surveys_global_total }}</div>
-          <div class="surveys-info_unct">{% trans "Global" %}</div>
+      <div class="columns p-20">
+        <div class="column">
+          <div class="has-text-weight-bold bottom-m-20 has-text-grey">{% trans "Contacts growth over time" %}</div>
+          <canvas id="contactsChart"></canvas>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-
-<div class="box is-shadowless">
-  <div class="card-title p-20">
-    <span class="has-text-weight-bold">{% trans "RapidPro Contacts" %}</span>
-    <span class="tooltip top left-m-10">
-      <i class="material-icons info-icon">info</i>
-      <span class="tooltip-content">{% trans "Overview of the contacts status on RapidPro" %}</span>
-    </span>
-    <div class="has-text-grey-light bottom-m-20 is-size-6">{% trans "Last 6 months" %}</div>
-  </div>
-  <div class="columns p-20">
-    <div class="column is-three-fifths">
-      <div class="has-text-weight-bold bottom-m-20 has-text-grey">{% trans "Contacts growth over time" %}</div>
-      <canvas id="contactsChart"></canvas>
-    </div>
-    <div class="column">
-      <div class="has-text-weight-bold bottom-m-20 has-text-grey">{% trans "Portion of Global Total Contacts" %}</div>
-      <canvas id="globalContacts"></canvas>
     </div>
   </div>
 </div>

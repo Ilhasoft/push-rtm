@@ -104,8 +104,6 @@ INSTALLED_APPS += (
     "rtm.results",
     "rtm.dashboard",
     "rtm.channels",
-    "rtm.authentication",
-    "rtm.polls_global",
 )
 
 SITE_ALLOW_NO_ORG = (
@@ -125,12 +123,6 @@ SITE_ALLOW_NO_ORG = (
     "accounts.user_org_update",
     "accounts.user_org_delete",
     "accounts.user_org_activate",
-    "authentication.login",
-    "authentication.callback",
-    "polls_global.poll_list",
-    "polls_global.poll_create",
-    "polls_global.poll_update",
-    "polls_global.poll_grant",
     "results.poll_read",
     "results.global_poll_read",
     "results.global_poll_data",
@@ -206,7 +198,7 @@ TOKEN_WORKSPACE_GLOBAL = config("TOKEN_WORKSPACE_GLOBAL", "your token for global
 
 SASS_PROCESSOR_INCLUDE_FILE_PATTERN = r"^.+\.scss$"
 
-LOGIN_URL = "/authentication/"
+LOGIN_URL = "/users/login/"
 LOGOUT_URL = "/users/logout/"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
@@ -270,29 +262,6 @@ CELERYBEAT_SCHEDULE = {
         "args": ("rtm.channels.tasks.pull_channel_stats", "sync"),
     },
 }
-
-
-# OAUTH2
-
-OAUTHLIB_CLIENT_ID = config("OAUTHLIB_CLIENT_ID", default="")
-OAUTHLIB_SECRET = config("OAUTHLIB_SECRET", default="")
-OAUTHLIB_AUTHORIZATION_URL = config(
-    "OAUTHLIB_AUTHORIZATION_URL", default="http://dataforallcloud.org/oauth2/authorize"
-)
-OAUTHLIB_TOKEN_URL = config("OAUTHLIB_TOKEN_URL", default="http://dataforallcloud.org/oauth2/token")
-OAUTHLIB_INSECURE_TRANSPORT = config("OAUTHLIB_INSECURE_TRANSPORT", default=False)
-OAUTHLIB_REDIRECT_URI = config(
-    "OAUTHLIB_REDIRECT_URI", default="https://rtm-ilhasoft.ngrok.io/authentication/callback"
-)
-OAUTHLIB_USER_URL = config("OAUTHLIB_USER_URL", default="http://dataforallcloud.org/oauth2/userInfo")
-OAUTHLIB_MOMSERVICE_TOKEN_URL = config(
-    "OAUTHLIB_MOMSERVICE_TOKEN_URL", default="http://dataforallcloud.org/monservice/api/v1/token"
-)
-OAUTHLIB_MOMSERVICE_USER_URL = config(
-    "OAUTHLIB_MOMSERVICE_USER_URL", default="http://dataforallcloud.org/monservice/api/v1/rtmUserInfo"
-)
-OAUTHLIB_APP_ID = config("OAUTHLIB_APP_ID", default="uninfortm")
-
 
 # ============================================
 SECRET_KEY = config("SECRET_KEY", "your secret key must be here")
