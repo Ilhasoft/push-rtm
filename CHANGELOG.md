@@ -1,3 +1,7 @@
+v0.3.0
+----------
+* Update Visual
+
 v0.2.2
 ----------
 * Add title to project

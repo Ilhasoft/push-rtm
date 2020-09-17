@@ -10,32 +10,6 @@
 {% endblock %}
 
 {% block content %}
-    <!--<section class="section header-dashboard">
-      <h1 class="title bottom-m-0">
-        {{ request.org }}
-      </h1>
-      <div class="flex space-between">
-        <div class="has-text-grey-light" id="all_filter"></div>
-          <div class="dropdown is-hoverable">
-            <div class="dropdown-trigger">
-              <div aria-haspopup="true" aria-controls="dropdown-menu">
-                <span>{% trans "Filter by" %}</span>
-                <span class="icon is-small">
-                <i class="fas fa-angle-down" aria-hidden="true"></i>
-              </span>
-              </div>
-        </div>
-        <div class="dropdown-menu" id="dropdown-menu" role="menu">
-          <div class="dropdown-content">
-            <a href="javascript:loadAllChart('week')" class="dropdown-item">{% trans "Last 7 days" %}</a>
-            <a href="javascript:loadAllChart('month')" class="dropdown-item">{% trans "Last 30 days" %}</a>
-            <a href="javascript:loadAllChart('year')" class="dropdown-item">{% trans "Last 12 months" %}</a>
-            <a href="javascript:loadAllChart('inception')" class="dropdown-item">{% trans "Since Inception" %}</a>
-          </div>
-        </div>
-      </div>
-      </div>
-    </section>-->
     <section class="section section-global-dashboard">
       <div class="box header-dashboard box-global-dashboard is-shadowless left-p-40 bottom-p-20">
         <h1 class="title bottom-m-0">
@@ -134,57 +108,6 @@
     </section>
 
   <section class="section">
-    <div class="box is-shadowless p-40 bottom-m-20 sdgs-tracked">
-      <div id="header-sdgs-metrics">
-        <div class="flex space-between">
-          <div>
-            <span class="card-title has-text-weight-bold header-sdgs">{% trans "SDGs metrics" %}</span>
-            <span class="tooltip top left-m-10">
-              <i class="material-icons info-icon">info</i>
-              <span class="tooltip-content">{% trans "Number of total messages received addressing each SDG" %}</span>
-            </span>
-          </div>
-          <div class="dropdown is-hoverable">
-            <div class="dropdown-trigger">
-              <div aria-haspopup="true" aria-controls="dropdown-menu">
-                <span>{% trans "Filter by" %}</span>
-                <span class="icon is-small">
-                  <i class="fas fa-angle-down" aria-hidden="true"></i>
-                </span>
-              </div>
-            </div>
-            <div class="dropdown-menu" id="dropdown-menu" role="menu">
-              <div class="dropdown-content">
-                <a href="javascript:loadChartTracked('week')" class="dropdown-item">{% trans "Last 7 days" %}</a>
-                <a href="javascript:loadChartTracked('month')" class="dropdown-item">{% trans "Last 30 days" %}</a>
-                <a href="javascript:loadChartTracked('year')" class="dropdown-item">{% trans "Last 12 months" %}</a>
-                <a href="javascript:loadChartTracked('inception')" class="dropdown-item">{% trans "Since Inception" %}</a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="has-text-grey-light" id="sdgs_tracked_ago"></div>
-      </div>
-      <div class="columns top-m-10">
-        <div class="column is-two-fifths sdgss">
-          <div class="card-title has-text-weight-bold bottom-p-20">{% trans "SDGs being tracked" %}</div>
-          <ul class="tracked-sgd left-m-20 bottom-m-10" id="sdgs_tracked"></ul>
-          <div id="empty_sdgs">
-            <div class="left-m-20 bottom-m-20">{% trans 'No SDGs being tracked in this period' %}</div>
-          </div>
-          <div class="card-title has-text-weight-bold bottom-p-20">{% trans "SDGs not being tracked" %}</div>
-          <ul class="untracked-sgd" id="sdgs_untracked"></ul>
-        </div>
-        <div class="column flex flex-center align-center">
-          <div id="empty_bubble_chart">
-            <div>{% trans 'There is no data for this filter' %}</div>
-          </div>
-          <div id="bubbleChart">
-            <div class="bubble-tooltip"></div>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <div class="box is-shadowless is-paddingless bottom-m-20">
       <div class="columns is-marginless">
@@ -210,24 +133,6 @@
             <div>
               <div class="card-title has-text-weight-bold" id="partial_questions_count"></div>
               <div class="has-text-grey-light" id="sdg_number"></div>
-            </div>
-            <div class="dropdown is-hoverable">
-              <div class="dropdown-trigger">
-                <div aria-haspopup="true" aria-controls="dropdown-menu">
-                  <span>{% trans "Filter by" %}</span>
-                  <span class="icon is-small">
-                    <i class="fas fa-angle-down" aria-hidden="true"></i>
-                  </span>
-                </div>
-              </div>
-              <div class="dropdown-menu" role="menu">
-                <div class="dropdown-content">
-                  <a href="javascript:loadChartPartialResults('')" class="dropdown-item sdgLink">{% trans "None" %}</a>
-                  {% for key, value in SDG_LIST %}
-                    <a href="javascript:loadChartPartialResults('{{ key }}')" class="dropdown-item sdgLink">{% trans "SDG" %} {{ key }}</a>
-                  {% endfor %}
-                </div>
-              </div>
             </div>
           </div>
           <div class="questions-list" id="partial_questions_list"></div>

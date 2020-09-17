@@ -43,40 +43,6 @@
 
   <section class="section">
     <div class="columns is-mobile">
-      <div class="column is-one-third-mobile is-one-quarter">
-        <aside class="survey-filters">
-          {% if request.user.is_superuser %}
-            <!-- <div class="border-bottom p-30">
-              <h3 class="bottom-m-10">
-                <img class="right-m-5" src="{% static 'svg/unct.svg' %}" alt="">
-                <span>UNCTs</span>
-              </h3>
-              <div class="control has-icons-left">
-                <form>
-                  <input class="input is-medium search" name="query" placeholder="{% trans 'Search'%}" value="{{ query }}">
-                  <span class="icon is-left">
-                  <i class="material-icons">search</i>
-                </span>
-                </form>
-              </div>
-            </div> -->
-          {% endif %}
-          <div class="survey-filters-content p-30">
-            <h3 class="bottom-m-10">
-              <img class="right-m-5" src="{% static 'svg/sdg.svg' %}" alt="">
-              <span>{% trans "SDG" %}</span>
-            </h3>
-
-            {% for sdg in sdgs %}
-              <div class="sdg-checkbox">
-                <input class="is-checkradio" name="sdgs" type="checkbox" value="{{ sdg.0 }}" id="sdg{{ sdg.0 }}"/>
-                <label for="sdg{{ sdg.0 }}" title="{{ sdg.1 }}"><strong>{{ sdg.0 }}</strong> {{ sdg.1 }}</label>
-              </div>
-            {% endfor %}
-          </div>
-        </aside>
-      </div>
-
       <div class="column">
         <div class="box is-paddingless">
           <nav class="level is-paddingless border-bottom is-mobile">
@@ -129,14 +95,6 @@
               <div class="column">{{ poll.poll_date|date:"m/d/Y" }}</div>
             </div>
             <div class="columns bottom-m-10">
-              <div class="column is-2 has-text-right">{% trans 'Linked SDGs:'%}</div>
-              <div class="column">
-                {% for sdg in poll.questions.distinct|get_value_in_qs:'sdgs' %}
-                  <span class="tag sdg-{{ sdg }} right-m-5 bottom-m-5">{{ sdg }} {{ sdg|get_sdg }}</span>
-                {% endfor %}
-              </div>
-            </div>
-            <div class="columns bottom-m-10">
               <div class="column is-2 has-text-right">{% trans 'Last answer:'%}</div>
               <div class="column">{{ poll|get_poll_sync_status }}</div>
             </div>
@@ -156,11 +114,6 @@
                   <div class="top-m-20">
                     <span class="right-m-30">{% trans 'Answered:'%} {{ question.get_responded|intcomma }}</span>
                     <span>{% trans 'Polled:'%} {{ question.get_polled|intcomma }}</span>
-                  </div>
-                  <div class="top-m-30">
-                    {% for sdg in question.sdgs %}
-                    <span class="tag sdg-{{ sdg }} right-m-5 bottom-m-5">{{ sdg }} {{ sdg|get_sdg }}</span>
-                    {% endfor %}
                   </div>
                 </div>
               </div>

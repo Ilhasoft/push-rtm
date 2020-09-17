@@ -13,7 +13,7 @@ from smartmin.views import SmartReadView, SmartTemplateView
 
 from rtm.polls.models import Poll, PollQuestion, PollResult
 from rtm.polls.serializers import PollResultSerializer
-from rtm.polls_global.models import PollGlobal, PollGlobalSurveys
+#from rtm.polls_global.models import PollGlobal, PollGlobalSurveys
 from rtm.polls.templatetags.rtm import question_segmented_results
 from rtm.settings import AVAILABLE_COLORS
 
@@ -55,52 +55,6 @@ class PollQuestionResultsView(SmartReadView):
 
         return HttpResponse(json.dumps(results))
 
-
-class PollGlobalReadView(SmartTemplateView):
-    template_name = "results/global_poll_result.html"
-    model = PollGlobal
-
-    def calculate_percent_participating_unct(self, active_uncts, all_uncts):
-        return int((active_uncts * 100) / all_uncts) if all_uncts > 0 else 0
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        poll_global = get_object_or_404(PollGlobal, pk=self.kwargs["pk"])
-
-        polls_local = []
-        polls_global_surveys = poll_global.polls_global.filter(is_joined=True)
-        all_sdgs_arrays = polls_global_surveys.values_list("poll_local__questions__sdgs", flat=True)
-
-        all_orgs = []
-        active_orgs = []
-        for poll_local_iterator in polls_global_surveys:
-            polls_local.append(poll_local_iterator.poll_local)
-
-            org = poll_local_iterator.poll_local.org
-            all_orgs.append(org)
-            if org.is_active:
-                active_orgs.append(org)
-
-        all_sdgs = []
-        for sdg_array in all_sdgs_arrays:
-            if sdg_array:
-                [all_sdgs.append(sdg) for sdg in sdg_array]
-
-        all_sdgs = list(set(all_sdgs))
-        all_sdgs.sort()
-
-        amount_all_orgs = len(set(all_orgs))
-        amount_active_orgs = len(set(active_orgs))
-
-        context["poll_initial"] = polls_local[0].id if len(polls_local) > 0 else -1
-        context["participating_unct"] = self.calculate_percent_participating_unct(amount_active_orgs, amount_all_orgs)
-        context["poll_global"] = poll_global
-        context["all_local_polls"] = list(polls_local)
-        context["all_countries"] = list(set(all_orgs))
-        context["num_countries"] = amount_all_orgs
-        context["sdgs"] = settings.SDG_LIST
-        context["all_sdgs"] = all_sdgs
-        return context
 
 
 class PollGlobalDataView(View):

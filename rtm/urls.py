@@ -19,8 +19,6 @@ urlpatterns = [
     url(r"^uncts/", include("rtm.uncts.urls")),
     url(r"^surveys/", include("rtm.polls.urls")),
     url(r"^results/", include("rtm.results.urls")),
-    url(r"^authentication/", include("rtm.authentication.urls")),
-    url(r"^surveys-global/", include("rtm.polls_global.urls")),
     url(r"^blocked/", TemplateView.as_view(template_name="blocked_user.html"), name="blocked"),
 ]
 
