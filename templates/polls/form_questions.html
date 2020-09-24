@@ -88,14 +88,14 @@
 <section class="section top-p-0 bottom-p-0">
   <nav class="breadcrumb" aria-label="breadcrumbs">
     <ul>
-      <li><a href="{% url 'polls.poll_list' %}">{% trans 'Surveys' %}</a></li>
+      <li><a href="{% url 'polls.poll_list' %}">Fluxos</a></li>
       <li class="is-active"><a href="#" aria-current="page">{{ page_subtitle }}</a></li>
     </ul>
   </nav>
 </section>
 
 <section class="section">
-  <h1 class="title">{% trans "Surveys" %}</h1>
+  <h1 class="title">Fluxos</h1>
   <h2 class="subtitle">{{ page_subtitle }}</h2>
 </section>
 
@@ -103,9 +103,9 @@
   <div class="columns">
     <div class="column">
       <div class="columns tabs">
-        <div class="column tab">{% trans "1 General" %}</div>
-        <div class="column tab">{% trans "2 Date Setting" %}</div>
-        <div class="column tab is-active">{% trans "3 Survey Questions" %}</div>
+        <div class="column tab">1 - Geral</div>
+        <div class="column tab">2 - Ajuste de data</div>
+        <div class="column tab is-active">3 - Questões do fluxo</div>
       </div>
     </div>
   </div>
@@ -113,7 +113,7 @@
     <div class="column box is-paddingless">
       <form class="generic-form questions p-10" method="post">
         {% csrf_token %}
-        <h1 class="title p-30 bottom-m-0">{% trans "Survey Questions" %}</h1>
+        <h1 class="title p-30 bottom-m-0">Questões do fluxo</h1>
         {% for field in form %}
           {% if field.field.widget.input_type == "hidden" %}
             <div class="question left-p-30 right-p-30 top-p-20 bottom-p-20">
@@ -126,13 +126,13 @@
           {% if field.field.widget.input_type != "hidden" %}
           <div class="field left-p-30 right-p-30 top-p-20">
             {% if field.field.widget.input_type != 'checkbox' %}
-              {% if field.label == 'Question' %}
+              {% if field.label == 'Questões' %}
                 <div class="visible-flow">
                   <label class="switch">
                     <input value="{{field.name}}" class="edit-send-message" type="checkbox">
                     <span class="slider round"></span>
                   </label>
-                  <span>{% trans "Edit the selected title(s)" %}</span>
+                  <span>Editar o(s) título(s) selecionado(s)</span>
                 </div>
               {% else %}
                 <label class="label" for="{{ field.auto_id }}">{{ field.label }}</label>
@@ -142,11 +142,11 @@
             <div class="{% if field.field.widget.input_type == 'select' %}is-fullwidth{% else %}control{% endif %}">
               {% if field.field.widget.input_type == 'checkbox' %}
                 {% if field.label == 'Send Messages' %}
-                  <span>{% trans "Select the title corresponding to the question" %}</span>
+                  <span>Selecione o título correspondente à pergunta</span>
                   <div class="multiselect">
                     <div class="selectBox" onclick="showCheckboxes('{{field.auto_id}}')">
                       <select>
-                        <option>{% trans "Select the title(s)" %}</option>
+                        <option>Selecione o(s) título(s)</option>
                       </select>
                       <div class="overSelect"></div>
                     </div>
@@ -176,8 +176,8 @@
         <div class="columns wrapper-buttons left-p-30 right-p-30 bottom-p-30">
           <div class="column">
             <div class="flex flex-end">
-              <a href="{% url 'polls.poll_poll_date' poll.id %}" class="button primary-reverse right-m-5">{% trans "Back" %}</a>
-              <button onclick="enableTextArea();" type="submit" class="button is-primary">{% trans "Save" %}</button>
+              <a href="{% url 'polls.poll_poll_date' poll.id %}" class="button primary-reverse right-m-5">Voltar</a>
+              <button onclick="enableTextArea();" type="submit" class="button is-primary">Salvar</button>
             </div>
           </div>
         </div>

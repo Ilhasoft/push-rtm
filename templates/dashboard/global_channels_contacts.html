@@ -3,11 +3,11 @@
   <div class="column is-two-fifths">
     <div class="box is-shadowless p-40">
       <div class="flex space-between">
-        <div class="card-title has-text-weight-bold">{% trans "Most used Channels" %}</div>
+        <div class="card-title has-text-weight-bold">Canais mais utilizados</div>
         <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
             <div aria-haspopup="true" aria-controls="dropdown-menu">
-              <span>{% trans "Filter by" %}</span>
+              <span>Filtrar por</span>
               <span class="icon is-small">
                 <i class="fas fa-angle-down" aria-hidden="true"></i>
               </span>
@@ -15,17 +15,17 @@
           </div>
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
-              <a href="javascript:loadChartMostUsedChannels('week')" class="dropdown-item">{% trans "Last 7 days" %}</a>
-              <a href="javascript:loadChartMostUsedChannels('month')" class="dropdown-item">{% trans "Last 30 days" %}</a>
-              <a href="javascript:loadChartMostUsedChannels('year')" class="dropdown-item">{% trans "Last 12 months" %}</a>
-              <a href="javascript:loadChartMostUsedChannels()" class="dropdown-item">{% trans "Since Inception" %}</a>
+              <a href="javascript:loadChartMostUsedChannels('week')" class="dropdown-item">Últimos 7 dias</a>
+              <a href="javascript:loadChartMostUsedChannels('month')" class="dropdown-item">Últimos 30 dias</a>
+              <a href="javascript:loadChartMostUsedChannels('year')" class="dropdown-item">Últimos 12 meses</a>
+              <a href="javascript:loadChartMostUsedChannels()" class="dropdown-item">Desde o início</a>
             </div>
           </div>
         </div>
       </div>
       <div class="bottom-p-20 has-text-grey-light" id="channels_most_used_time_ago"></div>
       <div id="empty_global_most_used_channels">
-        <div class="m-20">{% trans 'There are no data for this filter' %}</div>
+        <div class="m-20">Não há dados para este filtro</div>
       </div>
       <canvas id="globalMostUsedChannels"></canvas>
     </div>
@@ -33,8 +33,8 @@
   <div class="column">
     <div class="box is-shadowless">
       <div class="card-title p-20 bottom-m-0">
-        <div class="has-text-weight-bold">{% trans "Push Contacts" %}</div>
-        <div class="bottom-p-20 has-text-grey-light is-size-6">{% trans "Last 6 months" %}</div>
+        <div class="has-text-weight-bold">Contatos do Push</div>
+        <div class="bottom-p-20 has-text-grey-light is-size-6">Últimos 6 meses</div>
       </div>
       <canvas id="contactsChart"></canvas>
     </div>

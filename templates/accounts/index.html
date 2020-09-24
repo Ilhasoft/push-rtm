@@ -18,7 +18,7 @@
 </section>
 
 <section class="section">
-  <h1 class="title">{{title}} {% trans "Users" %}</h1>
+  <h1 class="title">Usuários do {{title}}</h1>
 </section>
 
 <section class="section">
@@ -43,11 +43,11 @@
     <thead>
       <tr class="is-tr">
         <th>{% autosort first_name _("Name") %}</th>
-        <th>{% trans "Username" %}</th>
-        <th>{% trans "Email" %}</th>
-        <th>{% trans "Permission" %}</th>
-        <th>{% trans "Edit" %}</th>
-        <th>{% trans "Block" %}</th>
+        <th>Nome do usuário</th>
+        <th>Email</th>
+        <th>Permissão</th>
+        <th>Editar</th>
+        <th>Bloquear</th>
       </tr>
     </thead>
     <tbody class="has-header">
@@ -75,20 +75,20 @@
               <div class="modal-background"></div>
               <div class="modal-card">
                 <header class="modal-card-head">
-                  <p class="modal-card-title">{% trans 'Are you sure?' %}</p>
+                  <p class="modal-card-title">Você tem certeza?</p>
                   <button class="delete" aria-label="close" onclick=closeModal('{{org.pk}}','{{user.pk}}');></button>
                 </header>
                 <section class="modal-card-body">
-                  {% trans 'Do you really want to block the user' %} "{{user.username}}" ?
+                  Você deseja bloquear o usuário "{{user.username}}" ?
                 </section>
                 <footer class="modal-card-foot">
                   <form action="{% if request.user.is_superuser %}{% url 'accounts.user_org_delete' org.pk user.pk %}{% else %}{% url 'accounts.user_delete' user.pk %}{% endif %}"
                    method="POST">
                     {% csrf_token %}
                     <input type="hidden" value="{{ redirect_to }}" name="redirect_to"/>
-                    <button class="button is-danger right-m-5" type="submit">{% trans 'Confirm' %}</button>
+                    <button class="button is-danger right-m-5" type="submit">Confirmar</button>
                   </form>
-                  <button class="button dark-reverse" onclick=closeModal('{{org.pk}}','{{user.pk}}');>{% trans 'Cancel' %}</button>
+                  <button class="button dark-reverse" onclick=closeModal('{{org.pk}}','{{user.pk}}');>Cancelar</button>
                 </footer>
               </div>
             </div>
@@ -102,7 +102,7 @@
           <td>{{ inactive_user.user.first_name }} </td>
           <td>{{ inactive_user.user.username }} </td>
           <td>{{ inactive_user.user.email }} </td>
-          <td>{% trans 'No Permission' %}</td>
+          <td>Sem permissão</td>
           <td></td>
           <td>
             <button class="button-no-bg" onclick=openModalActive('{{org.pk}}','{{inactive_user.user.pk}}');>
@@ -115,20 +115,20 @@
               <div class="modal-background"></div>
               <div class="modal-card">
                 <header class="modal-card-head">
-                  <p class="modal-card-title">{% trans 'Are you sure?' %}</p>
+                  <p class="modal-card-title">Você tem certeza?</p>
                   <button class="delete" aria-label="close" onclick=closeModalActive('{{org.pk}}','{{inactive_user.user.pk}}');></button>
                 </header>
                 <section class="modal-card-body">
-                  {% trans 'Do you really want to active the user' %} "{{inactive_user.user.username}}" ?
+                  Voce deseja ativar o usuário "{{inactive_user.user.username}}" ?
                 </section>
                 <footer class="modal-card-foot">
                   <form action="{% url 'accounts.user_org_activate' org.pk inactive_user.user.pk %}"
                    method="POST">
                     {% csrf_token %}
                     <input type="hidden" value="{{ redirect_to }}" name="redirect_to"/>
-                    <button class="button is-danger right-m-5" type="submit">{% trans 'Confirm' %}</button>
+                    <button class="button is-danger right-m-5" type="submit">Confirmar</button>
                   </form>
-                  <button class="button dark-reverse" onclick=closeModalActive('{{org.pk}}','{{inactive_user.user.pk}}');>{% trans 'Cancel' %}</button>
+                  <button class="button dark-reverse" onclick=closeModalActive('{{org.pk}}','{{inactive_user.user.pk}}');>Cancelar</button>
                 </footer>
               </div>
             </div>
@@ -139,7 +139,7 @@
       {% endfor %}
       {% if not log_permission_users and not users %}
         <tr>
-          <td colspan="6" class="has-text-centered">{% trans "No results found" %}</td>
+          <td colspan="6" class="has-text-centered">Nenhum resultado</td>
         </tr>
       {% endif %}
     </tbody>
@@ -160,7 +160,7 @@
       });
 
       $(".svg-unlock").hover(function(){
-        $(this).css("fill", "#03aeef");
+        $(this).css("fill", "#A014DD");
       }, function(){
         $(this).css("fill", "#707070");
     });

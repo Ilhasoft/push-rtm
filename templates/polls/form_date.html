@@ -13,14 +13,14 @@
 <section class="section top-p-0 bottom-p-0">
   <nav class="breadcrumb" aria-label="breadcrumbs">
     <ul>
-      <li><a href="{% url 'polls.poll_list' %}">{% trans 'Surveys' %}</a></li>
+      <li><a href="{% url 'polls.poll_list' %}">Fluxos</a></li>
       <li class="is-active"><a href="#" aria-current="page">{{ page_subtitle }}</a></li>
     </ul>
   </nav>
 </section>
 
 <section class="section">
-  <h1 class="title">{% trans "Surveys" %}</h1>
+  <h1 class="title">Fluxos</h1>
   <h2 class="subtitle">{{ page_subtitle }}</h2>
 </section>
 
@@ -28,9 +28,9 @@
   <div class="columns">
     <div class="column">
       <div class="columns tabs">
-        <div class="column tab">{% trans "1 Poll for flow" %}</div>
-        <div class="column tab is-active">{% trans "2 Date Setting" %}</div>
-        <div class="column tab">{% trans "3 Survey Questions" %}</div>
+        <div class="column tab">1 - Geral</div>
+        <div class="column tab is-active">2 - Ajuste de data</div>
+        <div class="column tab">3 - Questões do fluxo</div>
       </div>
     </div>
   </div>
@@ -38,7 +38,7 @@
     <div class="column box is-paddingless">
       <form class="generic-form" method="post">
         {% csrf_token %}
-        <h1 class="title">{% trans "Date Setting" %}</h1>
+        <h1 class="title">Ajuste de data</h1>
         <div class="columns">
           <div class="column">
             <div class="field">
@@ -46,7 +46,7 @@
                 {{ form.poll_date.label }}
                 <span class="tooltip top left-m-10">
               <i class="material-icons info-icon">info</i>
-              <span class="tooltip-content">{% trans "Registration date or leave this field empty to keep the date flow creation date" %}</span>
+              <span class="tooltip-content">Data de registro ou deixe este campo vazio para manter a data de criação do fluxo</span>
             </span>
               </label>
               <div class="control has-icons-right">
@@ -74,8 +74,8 @@
         <div class="columns wrapper-buttons">
           <div class="column">
             <div class="flex flex-end">
-              <a href="{% url 'polls.poll_update' poll.id %}" class="button primary-reverse right-m-5">{% trans "Back" %}</a>
-              <button type="submit" class="button is-primary">{% trans "Next" %}</button>
+              <a href="{% url 'polls.poll_update' poll.id %}" class="button primary-reverse right-m-5">Voltar</a>
+              <button type="submit" class="button is-primary">Próximo</button>
             </div>
           </div>
         </div>

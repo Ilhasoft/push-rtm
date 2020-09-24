@@ -13,7 +13,7 @@
 
 {% block content %}
 <section class="section">
-  <h1 class="title">Global {% trans "Users" %}</h1>
+  <h1 class="title">Usuários</h1>
 </section>
 
 <section class="section">
@@ -38,11 +38,11 @@
     <thead>
       <tr class="is-tr">
         <th>{% autosort first_name _("Name") %}</th>
-        <th>{% trans "Username" %}</th>
-        <th>{% trans "Email" %}</th>
-        <th>{% trans "Permission" %}</th>
-        <th>{% trans "Edit" %}</th>
-        <th>{% trans "Block" %}</th>
+        <th>Nome do usuário</th>
+        <th>Email</th>
+        <th>Permissão</th>
+        <th>Editar</th>
+        <th>Bloquear</th>
       </tr>
     </thead>
     <tbody class="has-header">
@@ -57,7 +57,7 @@
             {% elif user|is_global_viewer_active %}
               {% trans "Global Viewers" %}
             {% else %}
-              {% trans "No Permission" %}
+              {% trans "Sem permissão" %}
             {% endif %}
           </td>
           {% if not user.is_superuser %}
@@ -81,19 +81,19 @@
                   <div class="modal-background"></div>
                   <div class="modal-card">
                     <header class="modal-card-head">
-                      <p class="modal-card-title">{% trans 'Are you sure?' %}</p>
+                      <p class="modal-card-title">Você tem certeza?</p>
                       <button class="delete" aria-label="close" onclick=closeModal('{{user.pk}}');></button>
                     </header>
                     <section class="modal-card-body">
-                      {% trans 'Do you really want to block the user' %} "{{user.username}}" ?
+                      Você quer bloquear o usuário "{{user.username}}" ?
                     </section>
                     <footer class="modal-card-foot">
                       <form action="{% url 'accounts.global_user_delete' user.pk %}" method="POST">
                         {% csrf_token %}
                         <input type="hidden" value="{{ redirect_to }}" name="redirect_to"/>
-                        <button class="button is-danger right-m-5" type="submit">{% trans 'Confirm' %}</button>
+                        <button class="button is-danger right-m-5" type="submit">Confirmar</button>
                       </form>
-                      <button class="button dark-reverse" onclick=closeModal('{{user.pk}}');>{% trans 'Cancel' %}</button>
+                      <button class="button dark-reverse" onclick=closeModal('{{user.pk}}');>Cancelar</button>
                     </footer>
                   </div>
                 </div>
@@ -108,19 +108,19 @@
                   <div class="modal-background"></div>
                   <div class="modal-card">
                     <header class="modal-card-head">
-                      <p class="modal-card-title">{% trans 'Are you sure?' %}</p>
+                      <p class="modal-card-title">Você tem certeza?</p>
                       <button class="delete" aria-label="close" onclick=closeModalActive('{{user.pk}}');></button>
                     </header>
                     <section class="modal-card-body">
-                      {% trans 'Do you really want to active the user' %} "{{user.username}}" ?
+                      Você deseja ativar o usuário "{{user.username}}" ?
                     </section>
                     <footer class="modal-card-foot">
                       <form action="{% url 'accounts.global_user_activate' user.pk %}" method="POST">
                         {% csrf_token %}
                         <input type="hidden" value="{{ redirect_to }}" name="redirect_to"/>
-                        <button class="button is-danger right-m-5" type="submit">{% trans 'Confirm' %}</button>
+                        <button class="button is-danger right-m-5" type="submit">Confirmar</button>
                       </form>
-                      <button class="button dark-reverse" onclick=closeModalActive('{{user.pk}}');>{% trans 'Cancel' %}</button>
+                      <button class="button dark-reverse" onclick=closeModalActive('{{user.pk}}');>Cancelar</button>
                     </footer>
                   </div>
                 </div>
@@ -133,7 +133,7 @@
         </tr>
       {% empty %}
         <tr>
-          <td colspan="6" class="has-text-centered">{% trans "No results found" %}</td>
+          <td colspan="6" class="has-text-centered">Nenhum resultado</td>
         </tr>
       {% endfor %}
     </tbody>
@@ -154,7 +154,7 @@
     });
 
     $(".svg-unlock").hover(function(){
-      $(this).css("fill", "#03aeef");
+      $(this).css("fill", "#A014DD");
     }, function(){
       $(this).css("fill", "#707070");
     });

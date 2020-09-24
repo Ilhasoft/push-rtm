@@ -31,14 +31,14 @@
           } else {
             window.location = '/surveys/poll/list/';
           }
-        })();">{% trans 'Surveys'%}</a></li>
-        <li class="is-active"><a href="#" aria-current="page">{% trans 'Survey Results'%}</a></li>
+        })();">Fluxos</a></li>
+        <li class="is-active"><a href="#" aria-current="page">Resultados do fluxo</a></li>
       </ul>
     </nav>
   </section>
 
   <section class="section">
-    <h1 class="title">{% trans 'Survey Results'%}</h1>
+    <h1 class="title">Resultados do fluxo</h1>
   </section>
 
   <section class="section">
@@ -48,10 +48,10 @@
           <nav class="level is-paddingless border-bottom is-mobile">
             <div class="level-item">
               <span class="title right-m-10 left-m-10">{{ poll.get_questions.count }}</span>
-              <span>{% trans "Question" %}{{ poll.get_questions.count|pluralize }}</span>
+              <span>Questão{{ poll.get_questions.count|pluralize }}</span>
               <span class="tooltip top left-m-10">
                 <i class="material-icons info-icon">info</i>
-                <span class="tooltip-content">{% trans 'The amount of questions in this survey'%}</span>
+                <span class="tooltip-content">A quantidade de perguntas nesse fluxo</span>
               </span>
             </div>
             <div class="level-item">
@@ -59,7 +59,7 @@
               <div class="dropdown is-hoverable">
                 <div class="dropdown-trigger">
                   <span aria-haspopup="true" aria-controls="export-dropdown">
-                    <span>{% trans "Export" %}</span>
+                    <span>Exportar</span>
                     <span class="icon is-small">
                       <i class="fas fa-angle-down" aria-hidden="true"></i>
                     </span>
@@ -75,27 +75,27 @@
               </div>
               <span class="tooltip top left-m-10">
                 <i class="material-icons info-icon">info</i>
-                  <span class="tooltip-content">{% trans 'Export surveys results'%}</span>
+                  <span class="tooltip-content">Exportar resultados do fluxo</span>
               </span>
             </div>
           </nav>
           <div class="bottom-p-20 header-surveys">
             <div class="columns bottom-m-10">
-              <div class="column is-2 has-text-right">{% trans 'Title:'%}</div>
+              <div class="column is-2 has-text-right">Título:</div>
               <div class="column"><strong>{{ poll.title }}</strong></div>
             </div>
             <div class="columns bottom-m-10">
               {% if poll.response_content %}
-                <div class="column is-2 has-text-right">{% trans 'Description:'%}</div>
+                <div class="column is-2 has-text-right">Descrição:</div>
                 <div class="column">{{ poll.response_content }}</div>
               {% endif %}
             </div>
             <div class="columns bottom-m-10">
-              <div class="column is-2 has-text-right">{% trans 'Date:'%}</div>
+              <div class="column is-2 has-text-right">Data:</div>
               <div class="column">{{ poll.poll_date|date:"m/d/Y" }}</div>
             </div>
             <div class="columns bottom-m-10">
-              <div class="column is-2 has-text-right">{% trans 'Last answer:'%}</div>
+              <div class="column is-2 has-text-right">Última resposta:</div>
               <div class="column">{{ poll|get_poll_sync_status }}</div>
             </div>
           </div>
@@ -112,8 +112,8 @@
                   <a onclick="showModal('title-hidden-{{ question.pk }}');"><i class="material-icons">code</i></a>
                   <span style="display: none;" id="title-hidden-{{ question.pk }}">{{question.title}}</span>
                   <div class="top-m-20">
-                    <span class="right-m-30">{% trans 'Answered:'%} {{ question.get_responded|intcomma }}</span>
-                    <span>{% trans 'Polled:'%} {{ question.get_polled|intcomma }}</span>
+                    <span class="right-m-30">Respondidas: {{ question.get_responded|intcomma }}</span>
+                    <span>Perguntadas: {{ question.get_polled|intcomma }}</span>
                   </div>
                 </div>
               </div>
@@ -123,7 +123,7 @@
                   <div class="dropdown is-hoverable is-right bottom-m-10">
                     <div class="dropdown-trigger">
                       <div aria-haspopup="true" aria-controls="dropdown-menu">
-                        <span>{% trans "Segment by" %}</span>
+                        <span>Filtrar por</span>
                         <span class="icon is-small">
                           <i class="fas fa-angle-down" aria-hidden="true"></i>
                         </span>
@@ -131,12 +131,12 @@
                     </div>
                     <div class="dropdown-menu" id="dropdown-menu" role="menu">
                       <div class="dropdown-content">
-                        <a href="javascript:showChart('statistics', {{ question.pk }});" class="dropdown-item statistics">{% trans "All" %}</a>
+                        <a href="javascript:showChart('statistics', {{ question.pk }});" class="dropdown-item statistics">Todos</a>
                         {% if not is_iorg and show_gender_stats %}
-                        <a href="javascript:showChart('gender', {{ question.pk }});" class="dropdown-item gender">{% trans "Gender" %}</a>
+                        <a href="javascript:showChart('gender', {{ question.pk }});" class="dropdown-item gender">Gênero</a>
                         {% endif %}
                         {% if not is_iorg and show_age_stats %}
-                        <a href="javascript:showChart('age', {{ question.pk }});" class="dropdown-item age">{% trans "Age" %}</a>
+                        <a href="javascript:showChart('age', {{ question.pk }});" class="dropdown-item age">Idade</a>
                         {% endif %}
                       </div>
                     </div>
@@ -177,14 +177,14 @@
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">{% trans "Embed Chart" %}</p>
+        <p class="modal-card-title">Incorporar gráfico</p>
         <button class="delete is-pulled-right" onclick="showModal({{question.title}})" aria-label="close"></button>
       </header>
       <section class="modal-card-body">
         <span id="url-iframe"></span>
       </section>
       <footer class="modal-card-foot">
-        <button class="button primary-reverse" id="copy-iframe" onclick="copyIframe();">{% trans "Copy" %}</button>
+        <button class="button primary-reverse" id="copy-iframe" onclick="copyIframe();">Copiar</button>
         <div id="check-iframe">
           <svg id="Bold" class="check-svg" enable-background="new 0 0 24 24" height="15" viewBox="0 0 24 24" width="15" xmlns="http://www.w3.org/2000/svg">
             <path d="m.828 13.336c-.261.304-.388.691-.357 1.091s.215.764.52 1.024l7.403 6.346c.275.235.616.361.974.361.044 0 .089-.002.134-.006.405-.036.77-.229 1.028-.542l12.662-15.411c.254-.31.373-.7.334-1.099-.04-.399-.231-.759-.541-1.014l-2.318-1.904c-.639-.524-1.585-.432-2.111.207l-9.745 11.861-3.916-3.355c-.628-.536-1.576-.465-2.115.163z"/>
