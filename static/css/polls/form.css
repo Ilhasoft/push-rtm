@@ -1,17 +1,17 @@
 #page-surveys .tabs {
   font-size: 16px;
   text-align: center;
-  border: solid 1px #03aeef;
+  border: solid 1px #A014DD;
   border-top-left-radius: 0.3rem;
   border-top-right-radius: 0.3rem;
   background-color: #fff;
-  color: #03aeef; }
+  color: #A014DD; }
   #page-surveys .tabs .is-active {
-    background-color: #03aeef;
+    background-color: #A014DD;
     color: #fff;
     font-weight: bold; }
   #page-surveys .tabs .tab:not(:last-child) {
-    border-right: solid 1px #03aeef; }
+    border-right: solid 1px #A014DD; }
 
 #page-surveys .box {
   border-top-left-radius: 0px;

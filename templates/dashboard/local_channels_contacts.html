@@ -4,16 +4,16 @@
     <div class="box is-shadowless">
       <div class="p-20 flex space-between">
         <div class="card-title">
-          <span class="has-text-weight-bold">{% trans "Most used Channels" %}</span>
+          <span class="has-text-weight-bold">Canais mais utilizados</span>
           <span class="tooltip top left-m-10">
             <i class="material-icons info-icon">info</i>
-            <span class="tooltip-content">{% trans "Most used channels into the UNCT and around the globe" %}</span>
+            <span class="tooltip-content">Canais mais utilizados na organização e em todo país</span>
           </span>
         </div>
         <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
             <div aria-haspopup="true" aria-controls="dropdown-menu">
-              <span>{% trans "Filter by" %}</span>
+              <span>Filtrar por</span>
               <span class="icon is-small">
                 <i class="fas fa-angle-down" aria-hidden="true"></i>
               </span>
@@ -21,10 +21,10 @@
           </div>
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
-              <a href="javascript:loadChartMostUsedChannels('week')" class="dropdown-item">{% trans "Last 7 days" %}</a>
-              <a href="javascript:loadChartMostUsedChannels('month')" class="dropdown-item">{% trans "Last 30 days" %}</a>
-              <a href="javascript:loadChartMostUsedChannels('year')" class="dropdown-item">{% trans "Last 12 months" %}</a>
-              <a href="javascript:loadChartMostUsedChannels()" class="dropdown-item">{% trans "Since Inception" %}</a>
+              <a href="javascript:loadChartMostUsedChannels('week')" class="dropdown-item">Últimos 7 dias</a>
+              <a href="javascript:loadChartMostUsedChannels('month')" class="dropdown-item">Últimos 30 dias</a>
+              <a href="javascript:loadChartMostUsedChannels('year')" class="dropdown-item">Últimos 12 meses</a>
+              <a href="javascript:loadChartMostUsedChannels()" class="dropdown-item">Desde o início</a>
             </div>
           </div>
         </div>
@@ -33,8 +33,8 @@
       <div class="columns">
         <div class="column">
           <div id="empty_most_used_channels">
-            <div class="m-20 has-text-weight-bold">{% trans 'Local' %}</div>
-            <div class="m-20">{% trans 'There are no data for this filter' %}</div>
+            <div class="m-20 has-text-weight-bold">Local</div>
+            <div class="m-20">Não há dados para este filtro</div>
           </div>
           <canvas id="localMostUsedChannels"></canvas>
         </div>
@@ -45,16 +45,16 @@
   <div class="column">
     <div class="box is-shadowless">
       <div class="card-title p-20">
-        <span class="has-text-weight-bold">{% trans "Push Contacts" %}</span>
+        <span class="has-text-weight-bold">Contatos do Push</span>
         <span class="tooltip top left-m-10">
           <i class="material-icons info-icon">info</i>
-          <span class="tooltip-content">{% trans "Overview of the contacts status on Push" %}</span>
+          <span class="tooltip-content">Visão geral do status dos contatos no Push</span>
         </span>
-        <div class="has-text-grey-light bottom-m-20 is-size-6">{% trans "Last 6 months" %}</div>
+        <div class="has-text-grey-light bottom-m-20 is-size-6">Últimos 6 meses</div>
       </div>
       <div class="columns p-20">
         <div class="column">
-          <div class="has-text-weight-bold bottom-m-20 has-text-grey">{% trans "Contacts growth over time" %}</div>
+          <div class="has-text-weight-bold bottom-m-20 has-text-grey">Crescimento de contatos ao longo do tempo</div>
           <canvas id="contactsChart"></canvas>
         </div>
       </div>

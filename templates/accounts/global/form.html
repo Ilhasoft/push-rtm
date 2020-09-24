@@ -12,14 +12,14 @@
 <section class="section top-p-0 bottom-p-0">
   <nav class="breadcrumb" aria-label="breadcrumbs">
     <ul>
-      <li><a href="{% url 'accounts.global_list' %}">{% trans 'Users'%}</a></li>
+      <li><a href="{% url 'accounts.global_list' %}">Usuários</a></li>
       <li class="is-active"><a href="#" aria-current="page">{{ page_subtitle }}</a></li>
     </ul>
   </nav>
 </section>
 
 <section class="section">
-  <h1 class="title">{% trans "Users" %}</h1>
+  <h1 class="title">Usuários</h1>
   <h2 class="subtitle">{{ page_subtitle }}</h2>
 </section>
 
@@ -29,7 +29,7 @@
     <div class="columns">
       <div class="column">
         <div class="field">
-          <label class="label">{% trans "Username" %}</label>
+          <label class="label">Nome do usuário</label>
           <div class="control">
             <strong>{{ form.username.value }}</strong>
           </div>
@@ -37,7 +37,7 @@
       </div>
       <div class="column">
         <div class="field">
-          <label class="label">{% trans "Name" %}</label>
+          <label class="label">Nome</label>
           <div class="control">
             <strong>{{ form.first_name.value }}</strong>
           </div>
@@ -45,7 +45,7 @@
       </div>
       <div class="column">
         <div class="field">
-          <label class="label">{% trans "Email" %}</label>
+          <label class="label">Email</label>
           <div class="control">
             <strong>{{ form.email.value }}</strong>
           </div>
@@ -56,7 +56,7 @@
     <div class="columns">
       <div class="column">
         <div class="field">
-          <label class="label">{% trans "Permission" %}</label>
+          <label class="label">Permissão</label>
           {% for group in form.groups.field.choices %}
           <span class="field">
             <input
@@ -77,8 +77,8 @@
     {{form.groups.errors}}
     <div class="columns">
       <div class="column is-centered">
-        <button type="submit" class="button is-primary">{% trans "OK" %}</button>
-        <a href="{% url 'accounts.global_list' %}" class="button primary-reverse">{% trans "Cancel" %}</a>
+        <button type="submit" class="button is-primary">OK</button>
+        <a href="{% url 'accounts.global_list' %}" class="button primary-reverse">Cancelar</a>
       </div>
     </div>
   </form>

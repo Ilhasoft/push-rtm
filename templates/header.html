@@ -16,34 +16,21 @@
   {% if user_permissions %}
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
-        <a class="navbar-item dashboard" href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a>
+        <a class="navbar-item dashboard" href="{% url 'dashboard' %}">Painel</a>
 
         {% if request.org %}
           {% if request.user|is_admin_user %}
-            <a class="navbar-item users" href="{% url 'accounts.user_list' %}">{% trans "Users" %}</a>
+            <a class="navbar-item users" href="{% url 'accounts.user_list' %}">Usuários</a>
           {% endif %}
-          <a class="navbar-item surveys" href="{% url 'polls.poll_list' %}">{% trans "Surveys" %}</a>
+          <a class="navbar-item surveys" href="{% url 'polls.poll_list' %}">Fluxos</a>
         {% else %}
           {% if request.user.is_superuser %}
-            <a class="navbar-item uncts" href="{% url 'uncts.unct_list' %}">{% trans "UNCTs" %}</a>
-            <a class="navbar-item users" href="{% url 'accounts.global_list' %}">{% trans "Users" %}</a>
+            <a class="navbar-item uncts" href="{% url 'uncts.unct_list' %}">Organizações</a>
+            <a class="navbar-item users" href="{% url 'accounts.global_list' %}">Usuários</a>
           {% endif %}
         {% endif %}
       </div>
       <div class="navbar-end">
-        <!-- <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link">
-            English
-          </a>
-          <div class="navbar-dropdown is-boxed custom-is-boxed">
-            <a class="navbar-item">
-              Spanish
-            </a>
-            <a class="navbar-item">
-              Japanese
-            </a>
-          </div>
-        </div> -->
         <div class="navbar-item">
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link">
@@ -51,7 +38,7 @@
             </a>
             <div class="navbar-dropdown is-boxed custom-is-boxed">
               <a href="/users/logout/" class="navbar-item">
-                {% trans "Logout" %}
+                Sair
               </a>
             </div>
           </div>

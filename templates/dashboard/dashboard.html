@@ -11,99 +11,196 @@
 
 {% block content %}
     <section class="section section-global-dashboard">
-      <div class="box header-dashboard box-global-dashboard is-shadowless left-p-40 bottom-p-20">
-        <h1 class="title bottom-m-0">
-          {% if access_level == 'local' or request.org %}
-            {{request.org}}
-          {% else %}
-            {% trans "Global Dashboard" %}
-          {% endif %}
-        </h1>
-        <div class="flex space-between">
-          <div class="has-text-grey-light" id="all_filter"></div>
-            <div class="dropdown is-hoverable">
-              <div class="dropdown-trigger">
-                <div aria-haspopup="true" aria-controls="dropdown-menu">
-                  <span>{% trans "Filter by" %}</span>
-                  <span class="icon is-small">
-                  <i class="fas fa-angle-down" aria-hidden="true"></i>
-                </span>
+      <h1 class="title bottom-m-0">
+        {% if access_level == 'local' or request.org %}
+          {{request.org}}
+        {% else %}
+          Painel
+        {% endif %}
+      </h1>
+      <br>
+      <div class="flex space-between">
+        <div class="box column level-item">
+        {% if not request.org %}
+          <div class="flex">
+            <div class="tooltip top flex align-center">
+              <div class="right-m-10">
+                <img src="{% static 'svg/flag.svg' %}">
+              </div>
+              <div class="left-m-20">
+                <div class="flex align-center">
+                  <span class="is-size-6 has-text-grey-light">Organizações</span>
                 </div>
+                <span class="is-size-4">{{orgs_total}}</span>
+              </div>
+            </div>
           </div>
-          <div class="dropdown-menu" id="dropdown-menu" role="menu">
-            <div class="dropdown-content">
-              <a href="javascript:loadAllChart('week')" class="dropdown-item">{% trans "Last 7 days" %}</a>
-              <a href="javascript:loadAllChart('month')" class="dropdown-item">{% trans "Last 30 days" %}</a>
-              <a href="javascript:loadAllChart('year')" class="dropdown-item">{% trans "Last 12 months" %}</a>
-              <a href="javascript:loadAllChart('inception')" class="dropdown-item">{% trans "Since Inception" %}</a>
+          <hr class="bottom-m-5 top-m-5">
+          <div class="has-text-centered">
+            <a class="is-size-7" onclick="showModal();">Ver todas</a>
+          </div>
+          <div class="modal" id="modal-uncts-global">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+              <header class="modal-card-head">
+                <p class="modal-card-title">Organizações</p>
+                <button class="delete" onclick="showModal();" aria-label="close"></button>
+              </header>
+              <section class="modal-card-body">
+                <ul>
+                  {% for name in orgs_name %}
+                    <li class="border-bottom p-5">{{name}}</li>
+                  {% endfor %}
+                </ul>
+              </section>
+            </div>
+          </div>
+        {% endif %}
+        </div>
+
+        <div class="box column left-m-10 level-item">
+          <div class="flex">
+            <div class="tooltip top flex align-center">
+              <div class="right-m-10">
+                <img src="{% static 'svg/flag.svg' %}">
+              </div>
+              <div class="left-m-20">
+                <div class="flex align-center">
+                  <span class="is-size-6 has-text-grey-light">Total de Usuários</span>
+                </div>
+                <span class="is-size-4">{{orgs_total}}</span>
+              </div>
+            </div>
+          </div>
+          <hr class="bottom-m-5 top-m-5">
+          <div class="has-text-centered">
+            <a class="is-size-7" onclick="showModal();">Ver todas</a>
+          </div>
+          <div class="modal" id="modal-uncts-global">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+              <header class="modal-card-head">
+                <p class="modal-card-title">Organizações</p>
+                <button class="delete" onclick="showModal();" aria-label="close"></button>
+              </header>
+              <section class="modal-card-body">
+                <ul>
+                  {% for name in orgs_name %}
+                    <li class="border-bottom p-5">{{name}}</li>
+                  {% endfor %}
+                </ul>
+              </section>
             </div>
           </div>
         </div>
-      </div>
-        <hr class="top-m-5 bottom-m-5">
-          <div class="flex space-between">
-            <div class="column is-one-fifth level-item">
-            {% if not request.org %}
-              <div class="flex">
-                <div class="tooltip top flex align-center">
-                  <div class="right-m-10">
-                    <img src="{% static 'svg/flag.svg' %}">
-                  </div>
-                  <div class="left-m-20">
-                    <div class="flex align-center">
-                      <span class="is-size-6 has-text-grey-light">{% trans "UNCTs tracked" %}</span>
-                    </div>
-                    <span class="is-size-4">{{orgs_total}}</span>
-                  </div>
-                </div>
-              </div>
-              <hr class="bottom-m-5 top-m-5">
-              <div class="has-text-centered">
-                <a class="is-size-7" onclick="showModal();">See all</a>
-              </div>
-              <div class="modal" id="modal-uncts-global">
-                <div class="modal-background"></div>
-                <div class="modal-card">
-                  <header class="modal-card-head">
-                    <p class="modal-card-title">{% trans "UNCTs Tracked" %}</p>
-                    <button class="delete" onclick="showModal();" aria-label="close"></button>
-                  </header>
-                  <section class="modal-card-body">
-                    <ul>
-                      {% for name in orgs_name %}
-                        <li class="border-bottom p-5">{{name}}</li>
-                      {% endfor %}
-                    </ul>
-                  </section>
-                </div>
-              </div>
-            {% endif %}
-            </div>
 
-            <div class="level-item export-dashboard-dropdown top-p-5">
-              <i class="material-icons export-icon right-m-5">save_alt</i>
-              <div class="dropdown is-hoverable">
-                <div class="dropdown-trigger">
-                  <span aria-haspopup="true" aria-controls="export-dropdown">
-                    <span>{% trans "Export Dashboard" %}</span>
-                    <span class="icon is-small">
-                      <i class="fas fa-angle-down" aria-hidden="true"></i>
-                    </span>
-                  </span>
-                </div>
-                <div class="dropdown-menu" role="menu">
-                  <div class="dropdown-content">
-                    <a onclick="generatePdf();"><span class="dropdown-item">PDF</span></a>
-                  </div>
-                </div>
+        <div class="box column left-m-10 level-item">
+          <div class="flex">
+            <div class="tooltip top flex align-center">
+              <div class="right-m-10">
+                <img src="{% static 'svg/flag.svg' %}">
               </div>
-              <span class="tooltip top left-m-10">
-                <i class="material-icons info-icon">info</i>
-                  <span class="tooltip-content">{% trans 'Export dashboard graphs'%}</span>
-              </span>
+              <div class="left-m-20">
+                <div class="flex align-center">
+                  <span class="is-size-6 has-text-grey-light">Interação com o chat</span>
+                </div>
+                <span class="is-size-4">{{orgs_total}}</span>
+              </div>
             </div>
-
           </div>
+          <hr class="bottom-m-5 top-m-5">
+          <div class="has-text-centered">
+            <a class="is-size-7" onclick="showModal();">Ver todas</a>
+          </div>
+          <div class="modal" id="modal-uncts-global">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+              <header class="modal-card-head">
+                <p class="modal-card-title">Total de fluxos</p>
+                <button class="delete" onclick="showModal();" aria-label="close"></button>
+              </header>
+              <section class="modal-card-body">
+                <ul>
+                  {% for name in orgs_name %}
+                    <li class="border-bottom p-5">{{name}}</li>
+                  {% endfor %}
+                </ul>
+              </section>
+            </div>
+          </div>
+        </div>
+
+        <div class="box column left-m-10 level-item">
+          <div class="flex">
+            <div class="tooltip top flex align-center">
+              <div class="right-m-10">
+                <img src="{% static 'svg/flag.svg' %}">
+              </div>
+              <div class="left-m-20">
+                <div class="flex align-center">
+                  <span class="is-size-6 has-text-grey-light">Mensagens enviadas</span>
+                </div>
+                <span class="is-size-4">{{orgs_total}}</span>
+              </div>
+            </div>
+          </div>
+          <hr class="bottom-m-5 top-m-5">
+          <div class="has-text-centered">
+            <a class="is-size-7" onclick="showModal();">Ver todas</a>
+          </div>
+          <div class="modal" id="modal-uncts-global">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+              <header class="modal-card-head">
+                <p class="modal-card-title">Organizações</p>
+                <button class="delete" onclick="showModal();" aria-label="close"></button>
+              </header>
+              <section class="modal-card-body">
+                <ul>
+                  {% for name in orgs_name %}
+                    <li class="border-bottom p-5">{{name}}</li>
+                  {% endfor %}
+                </ul>
+              </section>
+            </div>
+          </div>
+        </div>
+
+        <div class="box column left-m-10 level-item" style="margin-bottom: 1.5rem !important;">
+          <div class="flex">
+            <div class="tooltip top flex align-center">
+              <div class="right-m-10">
+                <img src="{% static 'svg/flag.svg' %}">
+              </div>
+              <div class="left-m-20">
+                <div class="flex align-center">
+                  <span class="is-size-6 has-text-grey-light">Organizações</span>
+                </div>
+                <span class="is-size-4">{{orgs_total}}</span>
+              </div>
+            </div>
+          </div>
+          <hr class="bottom-m-5 top-m-5">
+          <div class="has-text-centered">
+            <a class="is-size-7" onclick="showModal();">Ver todas</a>
+          </div>
+          <div class="modal" id="modal-uncts-global">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+              <header class="modal-card-head">
+                <p class="modal-card-title">Organizações</p>
+                <button class="delete" onclick="showModal();" aria-label="close"></button>
+              </header>
+              <section class="modal-card-body">
+                <ul>
+                  {% for name in orgs_name %}
+                    <li class="border-bottom p-5">{{name}}</li>
+                  {% endfor %}
+                </ul>
+              </section>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -112,15 +209,15 @@
     <div class="box is-shadowless is-paddingless bottom-m-20">
       <div class="columns is-marginless">
         <div class="column is-three-fifths border-right p-40">
-          <span class="card-title has-text-weight-bold">{% trans "Surveys Partial Results" %}</span>
+          <span class="card-title has-text-weight-bold">Resultados parciais dos Fluxos</span>
           <span class="tooltip top left-m-10">
             <i class="material-icons info-icon">info</i>
-            <span class="tooltip-content">{% trans "Partial SDG results for the lastest ongoing surveys" %}</span>
+            <span class="tooltip-content">Resultados dos Fluxos</span>
           </span>
           <div class="selected-question top-m-30">
             <div class="selected-question__title bottom-m-10 has-text-grey-light" id="partial_question_title"></div>
             <div class="bottom-m-30">
-              <a href="#" target="_blank" id="partial_questions_url">{% trans "See survey" %}</a>
+              <a href="#" target="_blank" id="partial_questions_url">Visualizar fluxo</a>
             </div>
             <div class="selected-question__chart">
               <div id="wordCloud"></div>
@@ -143,17 +240,17 @@
     <div class="box is-shadowless p-40 bottom-m-20 metrics-message">
       <div class="flex space-between">
         <div class="card-title">
-          <span class="has-text-weight-bold">{% trans "Message Metrics" %}</span>
+          <span class="has-text-weight-bold">Métricas de mensagens</span>
           <span class="tooltip top left-m-10">
             <i class="material-icons info-icon">info</i>
-            <span class="tooltip-content">{% trans "Breakdown of status messages into the unct and global view" %}</span>
+            <span class="tooltip-content">Métricas de mensagens</span>
           </span>
         </div>
         <div class="flex flex-end bottom-m-20">
           <div class="dropdown is-hoverable">
             <div class="dropdown-trigger">
               <div aria-haspopup="true" aria-controls="dropdown-menu">
-                <span>{% trans "Filter by" %}</span>
+                <span>Filtrar por</span>
                 <span class="icon is-small">
                   <i class="fas fa-angle-down" aria-hidden="true"></i>
                 </span>
@@ -161,7 +258,7 @@
             </div>
             <div class="dropdown-menu" id="dropdown-menu" role="menu">
               <div class="dropdown-content">
-                  <a href="javascript:loadChartMessageMetricsByChannel()" class="dropdown-item">{% trans "All channels" %}</a>
+                  <a href="javascript:loadChartMessageMetricsByChannel()" class="dropdown-item">Todos canais</a>
                 {% for key, channel in channels_info.items %}
                   <a href="javascript:loadChartMessageMetricsByChannel('{{ channel.type }}', '{{ channel.name }}')" class="dropdown-item">{{ channel.name }}</a>
                 {% endfor %}
@@ -178,7 +275,7 @@
         <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
             <div aria-haspopup="true" aria-controls="dropdown-menu">
-              <span>{% trans "View by" %}</span>
+              <span>Visualizar</span>
               <span class="icon is-small">
                 <i class="fas fa-angle-down" aria-hidden="true"></i>
               </span>
@@ -186,20 +283,20 @@
           </div>
           <div class="dropdown-menu" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
-              <a href="javascript:loadChartMessageMetrics('week')" class="dropdown-item">{% trans "Last 7 days" %}</a>
-              <a href="javascript:loadChartMessageMetrics('month')" class="dropdown-item">{% trans "Last 30 days" %}</a>
-              <a href="javascript:loadChartMessageMetrics('year')" class="dropdown-item">{% trans "Last 12 months" %}</a>
-              <a href="javascript:loadChartMessageMetrics()" class="dropdown-item">{% trans "Since Inception" %}</a>
+              <a href="javascript:loadChartMessageMetrics('week')" class="dropdown-item">Últimos 7 dias</a>
+              <a href="javascript:loadChartMessageMetrics('month')" class="dropdown-item">Últimos 30 dias</a>
+              <a href="javascript:loadChartMessageMetrics('year')" class="dropdown-item">Últimos 12 meses</a>
+              <a href="javascript:loadChartMessageMetrics()" class="dropdown-item">Desde o início</a>
             </div>
           </div>
         </div>
       </div>
       <canvas id="channelsChart" height="100"></canvas>
       <div class="card-title top-m-50">
-        <span class="has-text-weight-bold">{% trans "Messages by Channel" %}</span>
+        <span class="has-text-weight-bold">Mensagens por Canal</span>
         <span class="tooltip top left-m-10">
           <i class="material-icons info-icon">info</i>
-          <span class="tooltip-content">{% trans "These results are the sum of messages received and sent" %}</span>
+          <span class="tooltip-content">Esses resultados são o somatório das mensagens enviadas e recebidas</span>
         </span>
       </div>
       <div class="columns is-multiline top-m-30" id="message_by_channel_list"></div>
@@ -669,7 +766,7 @@
                             <span class="channel-icon ${channel.icon}"></span>
                           </div>
                           <div>
-                            <div class="is-size-6 bottom-p-20">{% trans "Global Average" %}</div>
+                            <div class="is-size-6 bottom-p-20">Média do país</div>
                             <div class="flex">
                               <div>
                                 <div class="flex align-center">
@@ -693,18 +790,18 @@
           labels: [...new Set(result.channels_stats.labels)],
           datasets: [{
             label: "Sent",
-            borderColor: "#97d9f6",
-            backgroundColor: "#97d9f6",
+            borderColor: "#730e9f",
+            backgroundColor: "#730e9f",
             data: Object.values(result.channels_stats.series.O),
           }, {
             label: "Received",
-            borderColor: "#03aeef",
-            backgroundColor: "#03aeef",
+            borderColor: "#A014DD",
+            backgroundColor: "#A014DD",
             data: Object.values(result.channels_stats.series.I),
           }, {
             label: "Fail",
-            borderColor: "#004f94",
-            backgroundColor: "#004f94",
+            borderColor: "#d285f4",
+            backgroundColor: "#d285f4",
             data: Object.values(result.channels_stats.series.E),
           }],
         },
@@ -874,16 +971,16 @@
       {% if access_level == "local" %}
       datasets.push({
         label: "{{ request.org.name }}",
-        borderColor: "#004f94",
-        backgroundColor: "#004f94",
+        borderColor: "#AE1EEC",
+        backgroundColor: "#AE1EEC",
         data: Object.values(result.contacts_over_time.series.local),
       });
       {% endif %}
 
       datasets.push({
-        label: "{% trans 'Global Average' %}",
-        borderColor: "#7bcff6",
-        backgroundColor: "#7bcff6",
+        label: "{% trans 'Média do país' %}",
+        borderColor: "#CF89EE",
+        backgroundColor: "#CF89EE",
         data: Object.values(result.contacts_over_time.series.global),
       });
 

@@ -2,21 +2,21 @@
   .tabs {
     font-size: 16px;
     text-align: center;
-    border: solid 1px #03aeef;
+    border: solid 1px #A014DD;
     border-top-left-radius: 0.3rem;
     border-top-right-radius: 0.3rem;
     background-color: #fff;
-    color: #03aeef;
+    color: #A014DD;
 
   .is-active {
-    background-color: #03aeef;
+    background-color: #A014DD;
     color: #fff;
     font-weight: bold;
   }
 
   .tab {
     &:not(:last-child) {
-       border-right: solid 1px #03aeef;
+       border-right: solid 1px #A014DD;
      }
     }
   }
@@ -47,7 +47,7 @@
       height: 32px;
       font-weight: bold;
       align-items: center;
-      background-color: #f2f6f9;
+      background-color: #F8E5FF;
     }
   }
 
@@ -67,9 +67,9 @@
 
   #loaderDiv, #result-percent {
     background-color: #F3F3F3;
-    border: 1px solid #03AEEF;
+    border: 1px solid #A014DD;
     border-radius: 5px;
-    color: #03AEEF;
+    color: #A014DD;
     padding: 14px 12px;
     margin-bottom: 2rem;
   }
