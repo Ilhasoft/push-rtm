@@ -3,7 +3,7 @@ appdirs==1.4.3
 attrs==19.3.0
 billiard==3.5.0.5
 black==19.10b0
-celery==4.2.1
+celery==5.2.2
 certifi==2019.11.28
 chardet==3.0.4
 click==7.1.2
